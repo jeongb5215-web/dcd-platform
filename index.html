@@ -32,8 +32,8 @@
     .lp-hero{position:relative;z-index:2;flex:1;min-width:260px;margin-bottom:4px}
     .lp-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:16px;color:var(--blue);font:11px var(--mono);letter-spacing:5px;text-transform:uppercase}
     .lp-eyebrow:before{content:"";display:block;width:32px;height:1px;background:var(--blue)}
-    .lp-main-title{font-size:88px;font-weight:900;line-height:.9;letter-spacing:-2px}
-    .lp-main-title span{color:var(--blue);font-size:.7em}
+    .lp-main-title{font-family:'Dancing Script',cursive;font-size:96px;font-weight:700;line-height:1;letter-spacing:0;color:#fff}
+    .lp-amp,.lp-cd{color:#4fa3ff}
     .lp-tagline{margin:12px 0 28px;color:var(--sub);font-size:13px;letter-spacing:3px;text-transform:uppercase}
     .actions{display:flex;flex-wrap:wrap;gap:10px}
     .btn-primary,.btn-secondary,.ghost-btn{border:1px solid transparent;padding:13px 26px;font-weight:800;letter-spacing:1px;transition:.16s}
@@ -181,7 +181,7 @@
 
     @media (max-width:760px){
       #screen-landing{padding:0 20px 28px;flex-direction:column;align-items:stretch;gap:20px;justify-content:flex-end}
-      .lp-main-title{font-size:62px}.bg-drone{opacity:.3;width:100%;right:-180px}
+      .lp-main-title{font-size:64px}
       .lp-intel{width:100%;background:rgba(10,18,30,.92)}
       .lp-intel-hd{border-bottom:1px solid rgba(106,168,255,.2)}
       .lp-intel-label{color:#f6f9ff}.lp-intel-plus{color:#4fa3ff}
@@ -216,31 +216,9 @@
   <main id="screen-landing" class="screen active">
     <div class="grid-bg"></div>
     <div class="scan-line"></div>
-    <div class="bg-drone" aria-hidden="true">
-      <svg viewBox="0 0 520 720" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="glow" cx="50%" cy="44%" r="42%"><stop offset="0%" stop-color="#4fa3ff" stop-opacity=".55"/><stop offset="100%" stop-color="#4fa3ff" stop-opacity="0"/></radialGradient>
-        </defs>
-        <ellipse cx="260" cy="320" rx="205" ry="165" fill="url(#glow)"/>
-        <line x1="220" y1="306" x2="88" y2="244" stroke="#62b5ff" stroke-width="4"/>
-        <line x1="300" y1="306" x2="432" y2="244" stroke="#62b5ff" stroke-width="4"/>
-        <line x1="220" y1="333" x2="88" y2="394" stroke="#62b5ff" stroke-width="4"/>
-        <line x1="300" y1="333" x2="432" y2="394" stroke="#62b5ff" stroke-width="4"/>
-        <rect x="215" y="286" width="90" height="64" rx="8" fill="#377bcf" stroke="#7bc4ff" stroke-width="2"/>
-        <rect x="231" y="306" width="58" height="31" rx="5" fill="#102d5a" stroke="#4fa3ff"/>
-        <circle cx="260" cy="321" r="13" fill="#06172d" stroke="#86d7ff" stroke-width="2"/>
-        <g fill="none" stroke="#7dcfff" stroke-width="5" opacity=".6">
-          <ellipse cx="88" cy="244" rx="52" ry="8"/><ellipse cx="88" cy="244" rx="8" ry="52"/>
-          <ellipse cx="432" cy="244" rx="52" ry="8"/><ellipse cx="432" cy="244" rx="8" ry="52"/>
-          <ellipse cx="88" cy="394" rx="52" ry="8"/><ellipse cx="88" cy="394" rx="8" ry="52"/>
-          <ellipse cx="432" cy="394" rx="52" ry="8"/><ellipse cx="432" cy="394" rx="8" ry="52"/>
-        </g>
-      </svg>
-      <div class="fade-left"></div>
-    </div>
     <div class="lp-hero">
       <div class="lp-eyebrow">DRONE &amp; COUNTER-DRONE INTELLIGENCE</div>
-      <h1 class="lp-main-title">D<span>c</span>D</h1>
+      <h1 class="lp-main-title">Drone <span class="lp-amp">&amp;</span> <span class="lp-cd">C-drone</span></h1>
       <p class="lp-tagline">드론 &amp; 대드론 전문 정보 플랫폼</p>
       <div class="actions">
         <button class="btn-primary" onclick="showScreen('login')">▶ 접속하기</button>
