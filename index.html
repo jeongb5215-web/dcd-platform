@@ -23,28 +23,33 @@
     .screen.active{display:flex}
     #screen-app{min-height:100vh}
 
-    #screen-landing{position:relative;align-items:center;overflow:hidden;background:#070a0f}
+    #screen-landing{position:relative;overflow:hidden;background:#070a0f;align-items:flex-end;padding:0 52px 52px;gap:28px}
     .grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(79,163,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(79,163,255,.06) 1px,transparent 1px);background-size:44px 44px}
     .scan-line{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(79,163,255,.6),transparent);animation:scan 5s linear infinite}
     @keyframes scan{from{top:-1px}to{top:100%}}
-    .landing-inner{position:relative;z-index:2;width:min(720px,100%);padding:48px 32px;margin-left:8vw}
-    .eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;color:var(--blue);font:11px var(--mono);letter-spacing:5px;text-transform:uppercase}
-    .eyebrow:before{content:"";display:block;width:32px;height:1px;background:var(--blue)}
-    .logo{font-size:88px;font-weight:900;line-height:.9;letter-spacing:-2px}
-    .logo span{color:var(--blue);font-size:.7em}
-    .tagline{margin-top:12px;margin-bottom:32px;color:var(--sub);font-size:14px;letter-spacing:3px;text-transform:uppercase}
-    .visual-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:32px}
-    .visual-card{height:92px;border:1px solid var(--line-strong);background:rgba(15,26,42,.78);position:relative;overflow:hidden}
-    .visual-card:before{content:"";position:absolute;inset:14px;border:1px solid rgba(79,163,255,.28);transform:skewX(-18deg)}
-    .visual-card:after{content:attr(data-label);position:absolute;left:10px;bottom:8px;color:rgba(141,204,255,.88);font:9px var(--mono);letter-spacing:2px}
-    .divider{display:flex;align-items:center;gap:14px;margin-bottom:30px;color:var(--blue);font:10px var(--mono);letter-spacing:4px}
-    .divider:before,.divider:after{content:"";height:1px;flex:1;background:var(--line-strong)}
+    /* Hero (bottom-left) */
+    .lp-hero{position:relative;z-index:2;flex:1;min-width:260px}
+    .lp-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:16px;color:var(--blue);font:11px var(--mono);letter-spacing:5px;text-transform:uppercase}
+    .lp-eyebrow:before{content:"";display:block;width:32px;height:1px;background:var(--blue)}
+    .lp-main-title{font-size:88px;font-weight:900;line-height:.9;letter-spacing:-2px}
+    .lp-main-title span{color:var(--blue);font-size:.7em}
+    .lp-tagline{margin:12px 0 28px;color:var(--sub);font-size:13px;letter-spacing:3px;text-transform:uppercase}
     .actions{display:flex;flex-wrap:wrap;gap:10px}
     .btn-primary,.btn-secondary,.ghost-btn{border:1px solid transparent;padding:13px 26px;font-weight:800;letter-spacing:1px;transition:.16s}
     .btn-primary{background:var(--blue);color:#06101e}
     .btn-primary:hover{background:#79bbff}
     .btn-secondary{background:transparent;color:var(--sub);border-color:var(--muted)}
     .btn-secondary:hover{border-color:#fff;color:#fff}
+    /* Intel panel (bottom-right) */
+    .lp-intel{position:relative;z-index:2;width:330px;flex-shrink:0;background:rgba(255,255,255,.97)}
+    .lp-intel-hd{display:flex;align-items:center;justify-content:space-between;padding:15px 20px 14px;border-bottom:1px solid #e8ecf3}
+    .lp-intel-label{font-size:14px;font-weight:800;color:#1a1a2e;letter-spacing:.3px}
+    .lp-intel-plus{font-size:22px;color:#4fa3ff;cursor:pointer;font-weight:300;line-height:1}
+    .lp-intel-item{padding:12px 20px;border-bottom:1px solid #edf0f5;cursor:pointer;transition:.12s}
+    .lp-intel-item:hover{background:#f4f7ff}
+    .lp-intel-ttl{font-size:13px;font-weight:600;color:#1a1a2e;line-height:1.45;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+    .lp-intel-date{margin-top:4px;font-size:11px;color:#999;font-family:var(--mono)}
+    /* Drone BG */
     .bg-drone{position:absolute;right:-60px;top:0;bottom:0;width:min(58vw,760px);opacity:.9}
     .bg-drone svg{width:100%;height:100%}
     .fade-left{position:absolute;inset:0;background:linear-gradient(90deg,#070a0f 0%,rgba(7,10,15,.72) 32%,rgba(7,10,15,0) 72%)}
@@ -174,8 +179,14 @@
     }
 
     @media (max-width:760px){
-      .landing-inner{margin-left:0;padding:34px 22px}.logo{font-size:68px}.bg-drone{opacity:.35;width:100%;right:-180px}
-      .visual-row,.form-row,.stats-grid{grid-template-columns:1fr}
+      #screen-landing{padding:0 20px 28px;flex-direction:column;align-items:stretch;gap:20px;justify-content:flex-end}
+      .lp-main-title{font-size:62px}.bg-drone{opacity:.3;width:100%;right:-180px}
+      .lp-intel{width:100%;background:rgba(10,18,30,.92)}
+      .lp-intel-hd{border-bottom:1px solid rgba(106,168,255,.2)}
+      .lp-intel-label{color:#f6f9ff}.lp-intel-plus{color:#4fa3ff}
+      .lp-intel-item{border-bottom:1px solid rgba(106,168,255,.12)}.lp-intel-item:hover{background:rgba(79,163,255,.08)}
+      .lp-intel-ttl{color:#f6f9ff}.lp-intel-date{color:#7d9abb}
+      .form-row,.stats-grid{grid-template-columns:1fr}
       .topbar{height:auto;min-height:56px;flex-wrap:wrap;padding:10px}.top-right{width:100%;margin-left:0}
       .panel{padding:20px 14px}.article-header{grid-template-columns:auto 1fr auto}.article-source,.article-date{display:none}
       .admin-bar{align-items:flex-start;flex-direction:column}.admin-track{width:100%}
@@ -226,21 +237,22 @@
       </svg>
       <div class="fade-left"></div>
     </div>
-    <section class="landing-inner">
-      <div class="eyebrow">JBH2S Intelligence</div>
-      <h1 class="logo">D<span>c</span>D</h1>
-      <p class="tagline">Drone & Counter-Drone Intelligence Platform</p>
-      <div class="visual-row" aria-hidden="true">
-        <div class="visual-card" data-label="UAV INTEL"></div>
-        <div class="visual-card" data-label="C-UAS"></div>
-        <div class="visual-card" data-label="TACTICS"></div>
-      </div>
-      <div class="divider"><span>MEMBER ACCESS ONLY</span></div>
+    <div class="lp-hero">
+      <div class="lp-eyebrow">DRONE &amp; COUNTER-DRONE INTELLIGENCE</div>
+      <h1 class="lp-main-title">D<span>c</span>D</h1>
+      <p class="lp-tagline">드론 &amp; 대드론 전문 정보 플랫폼</p>
       <div class="actions">
-        <button class="btn-primary" onclick="showScreen('login')">로그인</button>
-        <button class="btn-secondary" onclick="showScreen('register')">회원가입 신청</button>
+        <button class="btn-primary" onclick="showScreen('login')">▶ 접속하기</button>
+        <button class="btn-secondary" onclick="showScreen('register')">신규 등록 신청</button>
       </div>
-    </section>
+    </div>
+    <div class="lp-intel">
+      <div class="lp-intel-hd">
+        <span class="lp-intel-label">최신 정보</span>
+        <span class="lp-intel-plus" onclick="showScreen('login')">+</span>
+      </div>
+      <div id="lp-intel-list"></div>
+    </div>
   </main>
 
   <section id="screen-register" class="screen">
@@ -493,11 +505,22 @@
     function clearForm(){['post-source','post-title','post-body'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});const file=document.getElementById('file-name');if(file)file.textContent='PDF 또는 TXT 파일'}
     function handleFile(input){if(input.files[0])document.getElementById('file-name').textContent=input.files[0].name}
     function setLang(lang,btn){btn.closest('.translate-bar').querySelectorAll('.translate-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(lang==='en')showNotif('영문 버전은 AI 번역 연동 단계에서 제공됩니다.')}
+    function renderIntelPanel(){
+      const list=document.getElementById('lp-intel-list');
+      if(!list)return;
+      const recent=[...articles].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+      list.innerHTML=recent.map(a=>`
+        <div class="lp-intel-item" onclick="showScreen('login')">
+          <div class="lp-intel-ttl">${a.title}</div>
+          <div class="lp-intel-date">${a.date}</div>
+        </div>`).join('');
+    }
     function updateMemberCount(){const el=document.getElementById('member-count');if(el)el.textContent=members.length}
     function showNotif(msg,isErr=false){const el=document.getElementById('notif');el.textContent=msg;el.className='notif'+(isErr?' error':'');el.style.display='block';setTimeout(()=>el.style.display='none',3000)}
 
     updateMemberCount();
     renderAll();
+    renderIntelPanel();
     document.getElementById('site-footer').style.display='';
   </script>
 </body>
