@@ -6,7 +6,23 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>DcD | Drone & Counter-Drone Intelligence Platform v4</title>
+  <title>DcD | Drone & Counter-Drone Intelligence Platform v5</title>
+  <script>
+    // Force clear service workers and caches
+    const SITE_VERSION = '20260509-v5';
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
+    }
+    if ('caches' in window) {
+      caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+    }
+    if (localStorage.getItem('dcd_version') !== SITE_VERSION) {
+      localStorage.setItem('dcd_version', SITE_VERSION);
+      if (performance.navigation && performance.navigation.type !== 1) {
+        location.reload(true);
+      }
+    }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   <style>
@@ -434,7 +450,7 @@
         <button class="btn-primary" onclick="showScreen('login')">▶ 접속하기</button>
         <button class="btn-secondary" onclick="showScreen('register')">신규 등록 신청</button>
       </div>
-      <div style="margin-top:16px;font-size:11px;color:rgba(79,163,255,.5);font-family:monospace;letter-spacing:2px">BUILD v4 · CHATHAM LAYOUT</div>
+      <div style="margin-top:16px;font-size:11px;color:rgba(79,163,255,.5);font-family:monospace;letter-spacing:2px">BUILD v5 · CHATHAM LAYOUT</div>
     </div>
     <div class="lp-intel">
       <div class="lp-intel-hd">
@@ -523,7 +539,7 @@
       <button class="nav-tab" onclick="switchPanel('tactics',this)">TACTICS</button>
       <button class="nav-tab" onclick="switchPanel('other',this)">OTHER</button>
       <button id="admin-tab" class="nav-tab admin-tab" onclick="switchPanel('admin',this)" style="display:none">ADMIN</button>
-      <div class="top-right"><span class="ver-badge">v4</span><span id="user-badge" class="user-badge">GUEST</span><button class="logout-btn" onclick="doLogout()">로그아웃</button></div>
+      <div class="top-right"><span class="ver-badge">v5</span><span id="user-badge" class="user-badge">GUEST</span><button class="logout-btn" onclick="doLogout()">로그아웃</button></div>
     </nav>
     <div class="app-content">
       <section id="panel-drone" class="panel active"></section>
@@ -1398,7 +1414,7 @@
     /* Version check — remove after confirming layout */
     document.addEventListener('DOMContentLoaded',function(){
       var t=document.querySelector('.top-logo');
-      if(t&&!document.querySelector('.ver-badge'))t.insertAdjacentHTML('afterend','<span class="ver-badge">v4</span>');
+      if(t&&!document.querySelector('.ver-badge'))t.insertAdjacentHTML('afterend','<span class="ver-badge">v5</span>');
     });
   </script>
 </body>
