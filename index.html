@@ -61,13 +61,14 @@
     .btn-secondary{background:transparent;color:var(--sub);border-color:var(--muted)}
     .btn-secondary:hover{border-color:#fff;color:#fff}
     /* Intel panel (bottom-right) — 청와대 브리핑 스타일 */
-    .lp-intel{position:relative;z-index:2;width:320px;flex-shrink:0;background:#fff;box-shadow:0 2px 16px rgba(0,0,0,.18)}
-    .lp-intel-hd{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 16px;background:#fff}
+    .lp-intel{position:relative;z-index:2;width:320px;flex-shrink:0;background:#fff;box-shadow:0 2px 16px rgba(0,0,0,.18);overflow:hidden}
+    .lp-intel::after{content:'';position:absolute;right:-10px;bottom:-10px;width:260px;height:260px;background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect x='86' y='86' width='28' height='28' rx='4' fill='%23001030'/><rect x='96' y='78' width='8' height='44' rx='2' fill='%23001030'/><rect x='78' y='96' width='44' height='8' rx='2' fill='%23001030'/><line x1='93' y1='93' x2='36' y2='36' stroke='%23001030' stroke-width='6' stroke-linecap='round'/><line x1='107' y1='93' x2='164' y2='36' stroke='%23001030' stroke-width='6' stroke-linecap='round'/><line x1='93' y1='107' x2='36' y2='164' stroke='%23001030' stroke-width='6' stroke-linecap='round'/><line x1='107' y1='107' x2='164' y2='164' stroke='%23001030' stroke-width='6' stroke-linecap='round'/><circle cx='26' cy='26' r='20' fill='none' stroke='%23001030' stroke-width='5'/><circle cx='174' cy='26' r='20' fill='none' stroke='%23001030' stroke-width='5'/><circle cx='26' cy='174' r='20' fill='none' stroke='%23001030' stroke-width='5'/><circle cx='174' cy='174' r='20' fill='none' stroke='%23001030' stroke-width='5'/><line x1='14' y1='26' x2='38' y2='26' stroke='%23001030' stroke-width='3'/><line x1='26' y1='14' x2='26' y2='38' stroke='%23001030' stroke-width='3'/><line x1='162' y1='26' x2='186' y2='26' stroke='%23001030' stroke-width='3'/><line x1='174' y1='14' x2='174' y2='38' stroke='%23001030' stroke-width='3'/><line x1='14' y1='174' x2='38' y2='174' stroke='%23001030' stroke-width='3'/><line x1='26' y1='162' x2='26' y2='186' stroke='%23001030' stroke-width='3'/><line x1='162' y1='174' x2='186' y2='174' stroke='%23001030' stroke-width='3'/><line x1='174' y1='162' x2='174' y2='186' stroke='%23001030' stroke-width='3'/><circle cx='100' cy='100' r='7' fill='none' stroke='%23001030' stroke-width='3'/></svg>") center/contain no-repeat;opacity:.07;pointer-events:none;z-index:0}
+    .lp-intel-hd{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 16px;background:transparent;position:relative;z-index:1}
     .lp-intel-label{font-size:22px;font-weight:700;color:#111;letter-spacing:0;font-family:var(--font)}
     .lp-intel-plus{font-size:18px;color:#666;cursor:pointer;font-weight:400;transition:.12s;line-height:1}
     .lp-intel-plus:hover{color:#111}
-    .lp-intel-item{padding:14px 22px;border-top:1px solid #e5e5e5;cursor:pointer;transition:.1s;background:#fff}
-    .lp-intel-item:hover{background:#f7f7f7}
+    .lp-intel-item{padding:14px 22px;border-top:1px solid #e5e5e5;cursor:pointer;transition:.1s;background:transparent;position:relative;z-index:1}
+    .lp-intel-item:hover{background:rgba(0,0,0,.03)}
     .lp-intel-ttl{font-size:13.5px;font-weight:600;color:#111;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .lp-intel-date{margin-top:5px;font-size:12px;color:#999;font-family:var(--font)}
     /* Drone BG */
