@@ -63,11 +63,16 @@
     /* Intel panel (bottom-right) — 청와대 브리핑 스타일 */
     .lp-intel{position:relative;z-index:2;width:320px;flex-shrink:0;background:#fff;box-shadow:0 2px 16px rgba(0,0,0,.18);overflow:hidden}
     .lp-intel::after{content:'';position:absolute;right:-10px;bottom:-10px;width:260px;height:260px;background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect x='86' y='86' width='28' height='28' rx='4' fill='%23001030'/><rect x='96' y='78' width='8' height='44' rx='2' fill='%23001030'/><rect x='78' y='96' width='44' height='8' rx='2' fill='%23001030'/><line x1='93' y1='93' x2='36' y2='36' stroke='%23001030' stroke-width='6' stroke-linecap='round'/><line x1='107' y1='93' x2='164' y2='36' stroke='%23001030' stroke-width='6' stroke-linecap='round'/><line x1='93' y1='107' x2='36' y2='164' stroke='%23001030' stroke-width='6' stroke-linecap='round'/><line x1='107' y1='107' x2='164' y2='164' stroke='%23001030' stroke-width='6' stroke-linecap='round'/><circle cx='26' cy='26' r='20' fill='none' stroke='%23001030' stroke-width='5'/><circle cx='174' cy='26' r='20' fill='none' stroke='%23001030' stroke-width='5'/><circle cx='26' cy='174' r='20' fill='none' stroke='%23001030' stroke-width='5'/><circle cx='174' cy='174' r='20' fill='none' stroke='%23001030' stroke-width='5'/><line x1='14' y1='26' x2='38' y2='26' stroke='%23001030' stroke-width='3'/><line x1='26' y1='14' x2='26' y2='38' stroke='%23001030' stroke-width='3'/><line x1='162' y1='26' x2='186' y2='26' stroke='%23001030' stroke-width='3'/><line x1='174' y1='14' x2='174' y2='38' stroke='%23001030' stroke-width='3'/><line x1='14' y1='174' x2='38' y2='174' stroke='%23001030' stroke-width='3'/><line x1='26' y1='162' x2='26' y2='186' stroke='%23001030' stroke-width='3'/><line x1='162' y1='174' x2='186' y2='174' stroke='%23001030' stroke-width='3'/><line x1='174' y1='162' x2='174' y2='186' stroke='%23001030' stroke-width='3'/><circle cx='100' cy='100' r='7' fill='none' stroke='%23001030' stroke-width='3'/></svg>") center/contain no-repeat;opacity:.07;pointer-events:none;z-index:0}
-    .lp-intel-hd{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 16px;background:transparent;position:relative;z-index:1}
+    .lp-intel-hd{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 16px;background:transparent;position:relative;z-index:1;cursor:pointer;user-select:none}
     .lp-intel-label{font-size:22px;font-weight:700;color:#111;letter-spacing:0;font-family:var(--font)}
+    .lp-intel-hd-right{display:flex;align-items:center;gap:12px}
+    .lp-intel-chevron{font-size:13px;color:#999;transition:transform .3s;display:inline-block;line-height:1}
+    .lp-intel.open .lp-intel-chevron{transform:rotate(180deg)}
     .lp-intel-plus{font-size:18px;color:#666;cursor:pointer;font-weight:400;transition:.12s;line-height:1}
     .lp-intel-plus:hover{color:#111}
-    .lp-intel-item{padding:14px 22px;border-top:1px solid #e5e5e5;cursor:pointer;transition:.1s;background:transparent;position:relative;z-index:1}
+    .lp-intel-body{overflow:hidden;max-height:0;transition:max-height .35s ease;position:relative;z-index:1}
+    .lp-intel.open .lp-intel-body{max-height:500px}
+    .lp-intel-item{padding:14px 22px;border-top:1px solid #e5e5e5;cursor:pointer;transition:.1s;background:transparent}
     .lp-intel-item:hover{background:rgba(0,0,0,.03)}
     .lp-intel-ttl{font-size:13.5px;font-weight:600;color:#111;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .lp-intel-date{margin-top:5px;font-size:12px;color:#999;font-family:var(--font)}
@@ -547,12 +552,17 @@
       <h1 class="lp-main-title">Drone <span class="lp-amp">&amp;</span> <span class="lp-cd">C-drone</span></h1>
       <p class="lp-tagline">드론 &amp; 대드론 전문 정보 플랫폼</p>
     </div>
-    <div class="lp-intel">
-      <div class="lp-intel-hd">
+    <div class="lp-intel" id="lp-intel-box">
+      <div class="lp-intel-hd" onclick="toggleIntel()">
         <span class="lp-intel-label">최신 정보</span>
-        <span class="lp-intel-plus" onclick="showScreen('login')">+</span>
+        <div class="lp-intel-hd-right">
+          <span class="lp-intel-chevron">▼</span>
+          <span class="lp-intel-plus" onclick="event.stopPropagation();showScreen('login')" title="로그인">+</span>
+        </div>
       </div>
-      <div id="lp-intel-list"></div>
+      <div class="lp-intel-body">
+        <div id="lp-intel-list"></div>
+      </div>
     </div>
   </main>
 
@@ -660,6 +670,7 @@
     let currentRole='guest';
     let isAdmin=false;
     let pendingAttachments=[];
+    let pinnedIntelIds=[];
 
     let members=[
       {id:1,name:'김민준',email:'minjun@kaist.ac.kr',password:'',phone:'+82 010-1234-5678',date:'2026-04-28',status:'approved',role:'expert'},
@@ -1128,16 +1139,19 @@
             </div>`).join('')}
           </div>`:''}
         </div>
-        <div class="section-title">// 등록된 콘텐츠 (${articles.length}건)</div>
-        ${articles.map(a=>`
-          <div class="content-row">
+        <div class="section-title">// 등록된 콘텐츠 (${articles.length}건) <span style="font-size:11px;color:#6b7280;font-weight:400;letter-spacing:0">📌 고정 버튼으로 최신 정보 5개 지정</span></div>
+        ${articles.map(a=>{
+          const pinned=pinnedIntelIds.includes(a.id);
+          const pinDisabled=!pinned&&pinnedIntelIds.length>=5;
+          return`<div class="content-row" style="${pinned?'border-left:3px solid #4fa3ff;padding-left:10px':''}">
             <span class="badge ${a.cat}">${a.cat.toUpperCase()}</span>
             <span style="flex:1;font-size:13px;font-weight:800;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.title}</span>
             <span style="color:#6b7280;font-size:12px;white-space:nowrap;margin-right:4px">${a.source}</span>
             <span style="color:#94a3b8;font-size:12px;white-space:nowrap;margin-right:8px">${a.date}</span>
+            <button class="mini-btn${pinned?' ok':''}" onclick="togglePin(${a.id})" title="${pinned?'고정 해제':'최신 정보에 고정'}" ${pinDisabled?'disabled style="opacity:.4"':''}>📌${pinned?' 고정됨':''}</button>
             <button class="mini-btn" onclick="editArticle(${a.id})">수정</button>
             <button class="mini-btn no" onclick="deleteArticle(${a.id})">삭제</button>
-          </div>`).join('')}`;
+          </div>`;}).join('')}`;
     }
     function renderCollectionTab(){
       const pending=collectedItems.filter(i=>i.status==='pending');
@@ -1614,15 +1628,35 @@
       return`<div class="article-attachments"><div class="attach-section-label">// 첨부 자료</div>${imgHtml}${docHtml}${linkHtml}</div>`;
     }
     function setLang(lang,btn){btn.closest('.translate-bar').querySelectorAll('.translate-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(lang==='en')showNotif('영문 버전은 AI 번역 연동 단계에서 제공됩니다.')}
+    function toggleIntel(){
+      document.getElementById('lp-intel-box').classList.toggle('open');
+    }
+    function togglePin(id){
+      if(pinnedIntelIds.includes(id)){
+        pinnedIntelIds=pinnedIntelIds.filter(x=>x!==id);
+        showNotif('최신 정보 고정 해제');
+      } else {
+        if(pinnedIntelIds.length>=5){showNotif('최대 5개까지 고정할 수 있습니다.',true);return}
+        pinnedIntelIds.push(id);
+        showNotif('최신 정보에 고정되었습니다.');
+      }
+      renderIntelPanel();
+      renderAdmin();
+    }
     function renderIntelPanel(){
       const list=document.getElementById('lp-intel-list');
       if(!list)return;
-      const recent=[...articles].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
-      list.innerHTML=recent.map(a=>`
+      let items;
+      if(pinnedIntelIds.length){
+        items=pinnedIntelIds.map(id=>articles.find(a=>a.id===id)).filter(Boolean);
+      } else {
+        items=[...articles].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+      }
+      list.innerHTML=items.length?items.map(a=>`
         <div class="lp-intel-item" onclick="showScreen('login')">
           <div class="lp-intel-ttl">${a.title}</div>
           <div class="lp-intel-date">${a.date.replace(/-/g,'.')}.</div>
-        </div>`).join('');
+        </div>`).join(''):'<div style="padding:20px 22px;font-size:12px;color:#aaa">등록된 정보가 없습니다.</div>';
     }
     function updateMemberCount(){
       const a=document.getElementById('member-count');if(a)a.textContent=members.length;
