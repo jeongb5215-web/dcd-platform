@@ -299,6 +299,7 @@
     .collect-type{font-size:9px;font-weight:900;letter-spacing:1.5px;padding:3px 7px;border:1px solid currentColor;white-space:nowrap;flex-shrink:0;margin-top:2px}
     .collect-type.news{color:var(--blue)}
     .collect-type.academic{color:var(--gold)}
+    .collect-type.email{color:var(--green)}
     .collect-title-wrap{flex:1;min-width:0}
     .collect-title{font-weight:800;font-size:13.5px;line-height:1.4}
     .collect-meta{color:var(--dim);font-size:11px;font-family:var(--mono);margin-top:3px}
@@ -1050,21 +1051,39 @@
       const approved=collectedItems.filter(i=>i.status==='approved');
       const news=pending.filter(i=>i.type==='news');
       const academic=pending.filter(i=>i.type==='academic');
+      const emailItems=pending.filter(i=>i.type==='email');
+      const savedUrl=localStorage.getItem('dcd_gmail_url')||'';
+      const lastSync=localStorage.getItem('dcd_gmail_last')||'미연동';
       return `
+        <!-- Gmail 연동 설정 -->
+        <div class="gmail-connect-box" style="background:#fff;border:1px solid #e2e8f0;border-left:4px solid #4fa3ff;padding:18px 20px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span style="font-size:18px">✉️</span>
+            <strong style="color:#0f172a;font-size:14px">Gmail 자동 수집 연동</strong>
+            <span id="gmail-status-badge" style="font-size:10px;font-weight:900;letter-spacing:1px;padding:2px 8px;border-radius:2px;background:${savedUrl?'#dcfce7':'#f1f5f9'};color:${savedUrl?'#16a34a':'#6b7280'};border:1px solid ${savedUrl?'#86efac':'#e2e8f0'}">${savedUrl?'연동됨':'미연동'}</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:stretch;flex-wrap:wrap">
+            <input id="gmail-url-input" placeholder="Apps Script 웹 앱 URL 입력 (https://script.google.com/macros/s/...)" value="${savedUrl}" style="flex:1;min-width:240px;font-size:12px;padding:9px 12px;background:#f8fafc;border:1px solid #e2e8f0;color:#0f172a">
+            <button class="btn-primary" style="padding:9px 16px;font-size:12px;white-space:nowrap" onclick="saveGmailUrl()">URL 저장</button>
+            <button class="btn-secondary" style="padding:9px 16px;font-size:12px;white-space:nowrap" onclick="fetchGmailItems(true)">📥 지금 수집</button>
+          </div>
+          <div style="margin-top:8px;font-size:11px;color:#6b7280">마지막 동기화: <span id="gmail-last-sync">${lastSync}</span>${savedUrl?'':' — URL을 설정하면 자동으로 이메일에서 드론 관련 정보를 수집합니다.'}</div>
+        </div>
         <!-- 상단 안내 -->
         <div class="form-note" style="margin-bottom:20px;display:flex;align-items:center;gap:12px">
           <div style="flex:1">
-            <strong style="color:#4fa3ff">📡 정보 수집 대기함</strong> — 지정 소스에서 수집된 드론·대드론 관련 뉴스 및 학술자료입니다.<br>
-            <span style="color:#6b7280;font-size:11px">검토 후 즉시 게시하거나, 내용을 수정한 뒤 게시할 수 있습니다. 실시간 수집은 API 연동 후 자동화됩니다.</span>
+            <strong style="color:#4fa3ff">📡 정보 수집 대기함</strong> — 이메일 및 지정 소스에서 수집된 드론·대드론 관련 정보입니다.<br>
+            <span style="color:#6b7280;font-size:11px">검토 후 즉시 게시하거나, 내용을 수정한 뒤 게시할 수 있습니다.</span>
           </div>
-          <button class="btn-secondary" style="white-space:nowrap;padding:8px 16px" onclick="simulateCollect()">⟳ 수집 시뮬레이션</button>
+          <button class="btn-secondary" style="white-space:nowrap;padding:8px 16px" onclick="simulateCollect()">⟳ 시뮬레이션</button>
         </div>
         <!-- 통계 -->
-        <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
+        <div class="stats-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:20px">
           <div class="stat-card"><div class="stat-num">${collectedItems.length}</div><div class="stat-label">총 수집</div></div>
           <div class="stat-card gold"><div class="stat-num">${pending.length}</div><div class="stat-label">검토 대기</div></div>
           <div class="stat-card"><div class="stat-num" style="color:#4fa3ff">${news.length}</div><div class="stat-label">뉴스</div></div>
           <div class="stat-card"><div class="stat-num" style="color:#d97706">${academic.length}</div><div class="stat-label">학술자료</div></div>
+          <div class="stat-card green"><div class="stat-num">${emailItems.length}</div><div class="stat-label">이메일</div></div>
         </div>
 
         <!-- 수집 대기함 -->
@@ -1073,7 +1092,7 @@
           ${pending.length?pending.map(item=>`
             <div class="collect-item ${item.type}-type" id="ci-${item.id}">
               <div class="collect-hd">
-                <span class="collect-type ${item.type}">${item.type==='news'?'뉴스':'학술'}</span>
+                <span class="collect-type ${item.type}">${item.type==='news'?'뉴스':item.type==='email'?'이메일':'학술'}</span>
                 <div class="collect-title-wrap">
                   <div class="collect-title">${item.title}</div>
                   <div class="collect-meta">${item.source} · ${item.date}</div>
@@ -1099,7 +1118,7 @@
           ${approved.map(item=>`
             <div class="collect-item approved">
               <div class="collect-hd">
-                <span class="collect-type ${item.type}">${item.type==='news'?'뉴스':'학술'}</span>
+                <span class="collect-type ${item.type}">${item.type==='news'?'뉴스':item.type==='email'?'이메일':'학술'}</span>
                 <div class="collect-title-wrap">
                   <div class="collect-title" style="color:var(--muted)">${item.title}</div>
                   <div class="collect-meta">${item.source} · 게시 완료</div>
@@ -1181,6 +1200,55 @@
     function searchKeyword(kw){
       const encoded=encodeURIComponent(kw);
       ACADEMIC_DBS.forEach(db=>window.open(db.base+encoded,'_blank'));
+    }
+    function saveGmailUrl(){
+      const url=document.getElementById('gmail-url-input').value.trim();
+      if(url&&!url.startsWith('https://script.google.com/macros/')){showNotif('올바른 Apps Script URL을 입력하세요.',true);return}
+      localStorage.setItem('dcd_gmail_url',url);
+      showNotif(url?'Gmail 연동 URL이 저장되었습니다.':'연동이 해제되었습니다.');
+      renderAdmin();
+    }
+    async function fetchGmailItems(triggerCollect=false){
+      const url=localStorage.getItem('dcd_gmail_url');
+      if(!url){showNotif('Gmail 연동 URL을 먼저 설정하세요.',true);return}
+      const badge=document.getElementById('gmail-status-badge');
+      const syncEl=document.getElementById('gmail-last-sync');
+      if(badge)badge.textContent='수집 중...';
+      try{
+        if(triggerCollect){
+          await fetch(url+'?action=collect',{method:'GET',mode:'no-cors'}).catch(()=>{});
+          await new Promise(r=>setTimeout(r,3000));
+        }
+        const res=await fetch(url,{cache:'no-store'});
+        const data=await res.json();
+        const items=Array.isArray(data)?data:(data.items||[]);
+        const existingIds=new Set(collectedItems.map(i=>i.id));
+        let added=0;
+        items.forEach(item=>{
+          if(existingIds.has(item.id))return;
+          collectedItems.unshift({
+            id:item.id,type:'email',
+            source:item.source||'이메일',
+            title:item.title||'(제목 없음)',
+            summary:item.summary||'',
+            keywords:(item.keywords||'').split(',').map(k=>k.trim()).filter(Boolean),
+            date:item.date||new Date().toISOString().slice(0,10),
+            status:'pending',
+            cat:item.cat||'other',
+            url:item.url||''
+          });
+          added++;
+        });
+        const now=new Date().toLocaleString('ko-KR');
+        localStorage.setItem('dcd_gmail_last',now);
+        if(syncEl)syncEl.textContent=now;
+        if(badge)badge.textContent='연동됨';
+        if(added>0){renderAdmin();showNotif(`이메일에서 ${added}건의 새 항목을 수집했습니다.`);}
+        else{showNotif('새 항목이 없습니다.');}
+      }catch(e){
+        if(badge)badge.textContent='오류';
+        showNotif('수집 실패: '+e.message,true);
+      }
     }
     function simulateCollect(){
       const newItem={
