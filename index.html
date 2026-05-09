@@ -91,8 +91,9 @@
     .logout-btn{background:none;border:1px solid #dde3ec;color:#6b7280;padding:6px 16px;font-size:12px;font-weight:600}
     .logout-btn:hover{border-color:var(--red);color:var(--red)}
     .app-content{flex:1;overflow:auto}
-    .panel{display:none;padding:28px 24px;min-height:calc(100vh - 56px);flex-direction:column}
+    .panel{display:none;padding:0;min-height:calc(100vh - 64px);flex-direction:column;background:#f8f9fb}
     .panel.active{display:flex}
+    #panel-admin{background:#fff;padding:28px 24px}
     .panel-header{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:18px}
     .panel-title{margin-top:7px;font-size:27px}
     .translate-bar{display:flex;align-items:center;gap:8px;margin-bottom:18px}
@@ -298,6 +299,56 @@
     .comment-submit:hover{background:#79bbff}
     .comment-empty{color:var(--dim);font-size:12px;text-align:center;padding:10px 0 14px}
 
+    /* ── Chatham House Magazine Layout ── */
+    .ch-wrap{max-width:1200px;margin:0 auto;padding:48px 40px 60px}
+    .ch-cat-hd{display:flex;align-items:center;gap:0;margin-bottom:36px;padding-bottom:20px;border-bottom:2px solid #1a1a2e}
+    .ch-cat-label{font-size:10px;font-weight:900;letter-spacing:4px;text-transform:uppercase;padding:7px 16px;margin-right:20px;color:#fff}
+    .ch-cat-title{font-size:22px;font-weight:700;color:#1a1a2e;letter-spacing:.5px}
+    .ch-featured{display:grid;grid-template-columns:1fr 400px;background:#fff;border:1px solid #e2e8f0;margin-bottom:40px;overflow:hidden;cursor:pointer;transition:.2s}
+    .ch-featured:hover{box-shadow:0 8px 32px rgba(0,0,0,.12);transform:translateY(-1px)}
+    .ch-feat-body{padding:44px 48px;display:flex;flex-direction:column;justify-content:space-between;min-height:320px}
+    .ch-feat-kicker{font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px}
+    .ch-feat-title{font-size:26px;font-weight:700;color:#1a1a2e;line-height:1.3;margin-bottom:16px}
+    .ch-feat-summary{color:#4b5563;font-size:15px;line-height:1.8;flex:1;margin-bottom:24px}
+    .ch-feat-meta{display:flex;align-items:center;gap:16px;font-size:12px;color:#9ca3af;border-top:1px solid #e5e7eb;padding-top:16px;flex-wrap:wrap}
+    .ch-feat-source{font-weight:700;color:#6b7280}
+    .ch-feat-img{background:linear-gradient(135deg,#1a2744 0%,#0d1b2e 100%);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+    .ch-feat-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+    .ch-feat-img-placeholder{font-size:80px;opacity:.15;user-select:none}
+    .ch-feat-attach-hint{position:absolute;bottom:16px;left:16px;display:flex;gap:6px;z-index:2}
+    .ch-feat-attach-tag{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.8);padding:3px 8px;font-size:10px;font-weight:800;letter-spacing:1px}
+    .ch-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#e2e8f0;border:1px solid #e2e8f0;margin-bottom:40px}
+    .ch-card{background:#fff;padding:28px 32px;cursor:pointer;transition:.12s}
+    .ch-card:hover{background:#f0f7ff}
+    .ch-card-kicker{font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:#9ca3af;margin-bottom:10px}
+    .ch-card-title{font-size:17px;font-weight:700;color:#1a1a2e;line-height:1.4;margin-bottom:10px;transition:color .12s}
+    .ch-card:hover .ch-card-title{color:#4fa3ff}
+    .ch-card-summary{color:#6b7280;font-size:13px;line-height:1.7;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:3;line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .ch-card-meta{display:flex;align-items:center;gap:10px;font-size:11px;color:#9ca3af;border-top:1px solid #f1f5f9;padding-top:12px;flex-wrap:wrap}
+    .ch-card-source{font-weight:700;color:#6b7280}
+    .ch-empty{text-align:center;padding:80px 0;color:#9ca3af;font-size:14px}
+    /* Detail */
+    .ch-detail-wrap{max-width:800px;margin:0 auto;padding:48px 40px 80px}
+    .ch-back-btn{display:inline-flex;align-items:center;gap:8px;background:none;border:1px solid #e5e7eb;color:#6b7280;font-size:12px;font-weight:700;cursor:pointer;padding:7px 16px;margin-bottom:36px;transition:.12s;letter-spacing:.3px}
+    .ch-back-btn:hover{border-color:#1a1a2e;color:#1a1a2e}
+    .ch-back-btn:before{content:"← ";font-size:14px}
+    .ch-detail-kicker{font-size:10px;font-weight:900;letter-spacing:4px;text-transform:uppercase;margin-bottom:14px}
+    .ch-detail-title{font-size:32px;font-weight:700;color:#1a1a2e;line-height:1.25;margin-bottom:20px}
+    .ch-detail-meta{display:flex;align-items:center;gap:20px;font-size:13px;color:#9ca3af;padding:16px 0;border-top:2px solid #e5e7eb;border-bottom:1px solid #e5e7eb;margin-bottom:36px;flex-wrap:wrap}
+    .ch-detail-source{font-weight:700;color:#374151}
+    .ch-detail-body{color:#374151;font-size:16px;line-height:1.9;margin-bottom:36px}
+    .ch-detail-actions{display:flex;align-items:center;gap:12px;padding:20px 0;border-top:1px solid #e5e7eb;margin-bottom:32px;flex-wrap:wrap}
+    .ch-source-footer{background:#f8f9fb;border:1px solid #e5e7eb;padding:20px 28px}
+    @media(max-width:760px){
+      .ch-wrap{padding:24px 16px 40px}
+      .ch-featured{grid-template-columns:1fr}
+      .ch-feat-img{min-height:160px}
+      .ch-feat-body{padding:24px;min-height:auto}
+      .ch-grid{grid-template-columns:1fr}
+      .ch-detail-wrap{padding:24px 16px 60px}
+      .ch-detail-title{font-size:24px}
+    }
+
     /* ── Site Header ── */
     #site-header{background:#fff;border-bottom:1px solid #dde3ec;height:64px;display:flex;align-items:center;padding:0 40px;position:sticky;top:0;z-index:200}
     .sh-inner{display:flex;align-items:center;width:100%;max-width:1360px;margin:0 auto}
@@ -431,11 +482,11 @@
           <span><span class="role-badge superadmin" style="margin-right:6px">SUPER</span>super2024</span>
         </div>
       </div>
-      <div class="form-group"><label for="login-email">이메일</label><input id="login-email" type="email" placeholder="name@example.com"></div>
-      <div class="form-group"><label for="login-code">접속 코드</label><input id="login-code" type="password" placeholder="접속 코드" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div class="form-group"><label for="login-email">Email</label><input id="login-email" type="email" placeholder="name@example.com"></div>
+      <div class="form-group"><label for="login-code">Access Code</label><input id="login-code" type="password" placeholder="Access Code" onkeydown="if(event.key==='Enter')doLogin()"></div>
       <div class="member-meter"><div class="meter-track"><div class="meter-fill"></div></div><div class="meter-text">현재 <span id="login-member-count">15</span>명 가입</div></div>
-      <div class="actions"><button class="btn-primary" onclick="doLogin()">로그인</button><button class="btn-secondary" onclick="showScreen('landing')">취소</button></div>
-      <div class="auth-link" style="margin-top:14px">계정이 없으신가요? <a onclick="showScreen('register')">회원가입 신청</a></div>
+      <div class="actions"><button class="btn-primary" onclick="doLogin()">Sign In</button><button class="btn-secondary" onclick="showScreen('landing')">Cancel</button></div>
+      <div class="auth-link" style="margin-top:14px">Don't have an account? <a onclick="showScreen('register')">Request Access</a></div>
     </div>
   </section>
 
@@ -601,45 +652,106 @@
       document.querySelectorAll('.article-item.expanded').forEach(x=>x.classList.remove('expanded'));
       if(!open)el.classList.add('expanded');
     }
-    function renderCategory(cat){
-      const meta=panelMeta[cat];
-      const filtered=articles.filter(a=>a.cat===cat);
-      const rows=filtered.length?filtered.map(a=>`
-        <article class="article-item" id="art-${a.id}">
-          <div class="article-header" onclick="toggleArticle(${a.id})">
-            <span class="badge ${a.cat}">${a.cat.toUpperCase()}</span>
-            <span class="article-title">${a.title}</span>
-            <span class="article-source">${a.source}</span>
-            ${(a.attachments&&a.attachments.length)?`<span style="color:var(--dim);font-size:11px;white-space:nowrap">${[...new Set(a.attachments.map(x=>x.type))].map(t=>t==='document'?'📄':t==='image'?'🖼️':'🔗').join('')}</span>`:''}
-            ${(a.likes||0)>0?`<span class="like-count-inline"><span style="color:#ff6b8a">♥</span>${a.likes}</span>`:''}
-            ${(a.comments&&a.comments.length)?`<span style="color:var(--dim);font-size:11px;white-space:nowrap">💬${a.comments.length}</span>`:''}
-            <span class="article-date">${a.date}</span>
-            <span class="arrow">⌄</span>
-          </div>
-          <div class="article-body">
-            <p class="article-text">${a.summary}</p>
-            ${renderAttachments(a.attachments)}
-            <div class="article-actions" style="margin-top:12px">
-              <button class="like-btn ${(a.likedBy||[]).includes(currentUser)?'liked':''}" onclick="event.stopPropagation();toggleLike(${a.id})">
-                <span class="like-heart">♥</span>
-                <span>좋아요</span>
-                ${(a.likes||0)>0?`<span class="like-num">${a.likes}</span>`:''}
-              </button>
-              <button class="ghost-btn" onclick="showNotif('영문 번역 기능은 AI 연동 단계에서 제공됩니다.')">영문 번역</button>
-              ${isAdmin?`<button class="ghost-btn" onclick="editArticle(${a.id})">수정</button><button class="ghost-btn danger" onclick="deleteArticle(${a.id})">삭제</button>`:''}
-            </div>
-            ${renderComments(a)}
-          </div>
-        </article>`).join(''):`<div class="empty" style="padding:48px 0;text-align:center">// 등록된 정보 없음</div>`;
-      document.getElementById('panel-'+cat).innerHTML=`
-        <div class="translate-bar"><span class="translate-label">언어 :</span><button class="translate-btn active" onclick="setLang('ko',this)">한국어</button><button class="translate-btn" onclick="setLang('en',this)">English</button></div>
-        <header class="panel-header"><div class="panel-kicker" style="color:${meta.color}">${meta.tag}</div><h2 class="panel-title">${meta.title}</h2></header>
-        <div class="article-list">${rows}</div>
-        <footer class="source-footer"><div class="source-title">// 출처 기준</div><div class="chips">${meta.sources.map((s,i)=>`<span class="chip ${i<2?'kci':''}">${s}</span>`).join('')}</div></footer>`;
-    }
+    function renderCategory(cat){renderCategoryList(cat)}
     function renderAll(){
       Object.keys(panelMeta).forEach(renderCategory);
       if(isAdmin)renderAdmin();
+    }
+
+    const CAT_COLORS={drone:'#4fa3ff',cdrone:'#ef4444',tactics:'#10b981',other:'#d97706'};
+
+    function renderCategoryList(cat){
+      const meta=panelMeta[cat];
+      const color=CAT_COLORS[cat]||'#4fa3ff';
+      const filtered=articles.filter(a=>a.cat===cat);
+      const panel=document.getElementById('panel-'+cat);
+      if(!filtered.length){
+        panel.innerHTML=`<div class="ch-wrap"><div class="ch-cat-hd"><span class="ch-cat-label" style="background:${color}">${cat.toUpperCase()}</span><span class="ch-cat-title">${meta.title}</span></div><div class="ch-empty">// 등록된 정보 없음</div></div>`;
+        return;
+      }
+      const featured=filtered[0];
+      const cards=filtered.slice(1);
+      const featImages=(featured.attachments||[]).filter(a=>a.type==='image');
+      const featImgContent=featImages.length
+        ?`<img src="${featImages[0].dataUrl}" alt="">`
+        :`<div class="ch-feat-img-placeholder">🛸</div>`;
+      const featAttachHints=[...new Set((featured.attachments||[]).map(x=>x.type))].map(t=>`<span class="ch-feat-attach-tag">${t==='document'?'📄 DOC':t==='image'?'🖼️ IMG':'🔗 LINK'}</span>`).join('');
+      const cardHtml=cards.map(a=>{
+        const attachIcons=[...new Set((a.attachments||[]).map(x=>x.type))].map(t=>t==='document'?'📄':t==='image'?'🖼️':'🔗').join('');
+        return`<div class="ch-card" onclick="renderCategoryDetail('${cat}',${a.id})">
+          <div class="ch-card-kicker">${a.source}</div>
+          <div class="ch-card-title">${a.title}</div>
+          <div class="ch-card-summary">${a.summary}</div>
+          <div class="ch-card-meta">
+            <span class="ch-card-source">${a.source}</span>
+            <span>${a.date}</span>
+            ${(a.likes||0)>0?`<span style="color:#ff6b8a">♥ ${a.likes}</span>`:''}
+            ${(a.comments&&a.comments.length)?`<span>💬 ${a.comments.length}</span>`:''}
+            ${attachIcons?`<span style="margin-left:auto">${attachIcons}</span>`:''}
+          </div>
+        </div>`;
+      }).join('');
+      panel.innerHTML=`
+        <div class="ch-wrap">
+          <div class="ch-cat-hd">
+            <span class="ch-cat-label" style="background:${color}">${cat.toUpperCase()}</span>
+            <span class="ch-cat-title">${meta.title}</span>
+          </div>
+          <div class="ch-featured" onclick="renderCategoryDetail('${cat}',${featured.id})">
+            <div class="ch-feat-body">
+              <div>
+                <div class="ch-feat-kicker" style="color:${color}">${featured.source}</div>
+                <div class="ch-feat-title">${featured.title}</div>
+                <div class="ch-feat-summary">${featured.summary.length>220?featured.summary.slice(0,220)+'…':featured.summary}</div>
+              </div>
+              <div class="ch-feat-meta">
+                <span class="ch-feat-source">${featured.source}</span>
+                <span>${featured.date}</span>
+                ${(featured.likes||0)>0?`<span style="color:#ff6b8a">♥ ${featured.likes}</span>`:''}
+                ${(featured.comments&&featured.comments.length)?`<span>💬 ${featured.comments.length}</span>`:''}
+              </div>
+            </div>
+            <div class="ch-feat-img">
+              ${featImgContent}
+              ${featAttachHints?`<div class="ch-feat-attach-hint">${featAttachHints}</div>`:''}
+            </div>
+          </div>
+          ${cards.length?`<div class="ch-grid">${cardHtml}</div>`:''}
+          <div class="ch-source-footer">
+            <div style="color:#9ca3af;font-size:10px;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">// 출처 기준</div>
+            <div class="chips">${meta.sources.map((s,i)=>`<span class="chip ${i<2?'kci':''}">${s}</span>`).join('')}</div>
+          </div>
+        </div>`;
+    }
+
+    function renderCategoryDetail(cat,id){
+      const a=articles.find(x=>x.id===id);
+      if(!a)return;
+      const color=CAT_COLORS[cat]||'#4fa3ff';
+      document.getElementById('panel-'+cat).innerHTML=`
+        <div class="ch-detail-wrap" id="ch-detail-${id}">
+          <button class="ch-back-btn" onclick="renderCategoryList('${cat}')">목록으로</button>
+          <div class="ch-detail-kicker" style="color:${color}">${a.source}</div>
+          <h1 class="ch-detail-title">${a.title}</h1>
+          <div class="ch-detail-meta">
+            <span class="ch-detail-source">${a.source}</span>
+            <span>${a.date}</span>
+            ${(a.likes||0)>0?`<span style="color:#ff6b8a">♥ ${a.likes}</span>`:''}
+            ${(a.comments&&a.comments.length)?`<span>💬 ${a.comments.length}개</span>`:''}
+          </div>
+          <div class="ch-detail-body">${a.summary}</div>
+          ${renderAttachments(a.attachments)}
+          <div class="ch-detail-actions">
+            <button class="like-btn ${(a.likedBy||[]).includes(currentUser)?'liked':''}" onclick="toggleLike(${id})">
+              <span class="like-heart">♥</span>
+              <span>좋아요</span>
+              ${(a.likes||0)>0?`<span class="like-num">${a.likes}</span>`:''}
+            </button>
+            <button class="ghost-btn" onclick="showNotif('영문 번역 기능은 AI 연동 단계에서 제공됩니다.')">영문 번역</button>
+            ${isAdmin?`<button class="ghost-btn" onclick="editArticle(${id})">수정</button><button class="ghost-btn danger" onclick="deleteArticle(${id})">삭제</button>`:''}
+          </div>
+          ${renderComments(a)}
+        </div>`;
     }
     function renderAdmin(){
       const isSuperAdmin=currentRole==='superadmin';
@@ -1205,38 +1317,9 @@
       showNotif('댓글이 삭제되었습니다.');
     }
     function reRenderArticle(id){
-      const el=document.getElementById('art-'+id);
-      const wasExpanded=el&&el.classList.contains('expanded');
       const a=articles.find(x=>x.id===id);
-      if(!a||!el)return;
-      const meta=panelMeta[a.cat];
-      el.outerHTML=`
-        <article class="article-item${wasExpanded?' expanded':''}" id="art-${id}">
-          <div class="article-header" onclick="toggleArticle(${id})">
-            <span class="badge ${a.cat}">${a.cat.toUpperCase()}</span>
-            <span class="article-title">${a.title}</span>
-            <span class="article-source">${a.source}</span>
-            ${(a.attachments&&a.attachments.length)?`<span style="color:var(--dim);font-size:11px;white-space:nowrap">${[...new Set(a.attachments.map(x=>x.type))].map(t=>t==='document'?'📄':t==='image'?'🖼️':'🔗').join('')}</span>`:''}
-            ${(a.likes||0)>0?`<span class="like-count-inline"><span style="color:#ff6b8a">♥</span>${a.likes}</span>`:''}
-            ${(a.comments&&a.comments.length)?`<span style="color:var(--dim);font-size:11px;white-space:nowrap">💬${a.comments.length}</span>`:''}
-            <span class="article-date">${a.date}</span>
-            <span class="arrow">⌄</span>
-          </div>
-          <div class="article-body">
-            <p class="article-text">${a.summary}</p>
-            ${renderAttachments(a.attachments)}
-            <div class="article-actions" style="margin-top:12px">
-              <button class="like-btn ${(a.likedBy||[]).includes(currentUser)?'liked':''}" onclick="event.stopPropagation();toggleLike(${id})">
-                <span class="like-heart">♥</span>
-                <span>좋아요</span>
-                ${(a.likes||0)>0?`<span class="like-num">${a.likes}</span>`:''}
-              </button>
-              <button class="ghost-btn" onclick="showNotif('영문 번역 기능은 AI 연동 단계에서 제공됩니다.')">영문 번역</button>
-              ${isAdmin?`<button class="ghost-btn" onclick="editArticle(${id})">수정</button><button class="ghost-btn danger" onclick="deleteArticle(${id})">삭제</button>`:''}
-            </div>
-            ${renderComments(a)}
-          </div>
-        </article>`;
+      if(!a)return;
+      renderCategoryDetail(a.cat,id);
     }
     function renderAttachments(attachments){
       if(!attachments||!attachments.length)return'';
