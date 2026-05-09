@@ -111,6 +111,8 @@
     .nav-tab.active{color:#1a1a2e;border-bottom-color:#4fa3ff}
     .nav-tab.admin-tab{color:rgba(220,38,38,.75);font-weight:800}
     .nav-tab.admin-tab.active{color:#dc2626;border-bottom-color:#dc2626}
+    .nav-tab.lab-locked{color:#bbb!important;cursor:not-allowed!important}
+    .nav-tab.lab-locked::after{content:' 🔒';font-size:10px}
     .top-right{margin-left:auto;display:flex;align-items:center;gap:14px}
     .ver-badge{background:#4fa3ff;color:#fff;font-size:10px;font-weight:900;padding:3px 8px;letter-spacing:1px;border-radius:2px}
     .user-badge{color:#1a1a2e;font-size:12px;font-weight:700;letter-spacing:.3px}
@@ -640,7 +642,7 @@
       <button class="nav-tab" onclick="switchPanel('cdrone',this)">C-DRONE</button>
       <button class="nav-tab" onclick="switchPanel('tactics',this)">TACTICS</button>
       <button class="nav-tab" onclick="switchPanel('other',this)">OTHER</button>
-      <button class="nav-tab" onclick="switchPanel('lab',this)">LAB</button>
+      <button class="nav-tab" id="lab-tab" onclick="switchLabPanel(this)">LAB</button>
       <button id="admin-tab" class="nav-tab admin-tab" onclick="switchPanel('admin',this)" style="display:none">ADMIN</button>
       <div class="top-right"><span class="ver-badge">v5</span><span id="user-badge" class="user-badge">GUEST</span><button class="logout-btn" onclick="doLogout()">로그아웃</button></div>
     </nav>
@@ -754,7 +756,7 @@
       const roleName={superadmin:'SUPER ADMIN',admin:'ADMIN',expert:'EXPERT',member:'MEMBER'}[role];
       document.getElementById('user-badge').textContent=email.split('@')[0].toUpperCase()+' · '+roleName;
       document.getElementById('admin-tab').style.display=isAdmin?'':'none';
-      showScreen('app');renderAll();
+      showScreen('app');renderAll();updateLabTab();
       if(isAdmin)renderAdmin();
     }
     function doAdminLogin(){doLogin()}
@@ -804,9 +806,22 @@
     /* background tones per category for image placeholders */
     const CAT_BG={drone:'linear-gradient(135deg,#0f2a4a 0%,#1a3d6b 100%)',cdrone:'linear-gradient(135deg,#3b0a0a 0%,#5c1010 100%)',tactics:'linear-gradient(135deg,#0a2a1a 0%,#0e3d26 100%)',other:'linear-gradient(135deg,#2a1e00 0%,#3d2c00 100%)',lab:'linear-gradient(135deg,#1e1040 0%,#2e1a6b 100%)'};
 
+    function switchLabPanel(btn){
+      if(currentRole==='member'){
+        showNotif('일반회원은 LAB에 접근할 수 없습니다.',true);return;
+      }
+      switchPanel('lab',btn);
+    }
+    function updateLabTab(){
+      const tab=document.getElementById('lab-tab');
+      if(!tab)return;
+      if(currentRole==='member') tab.classList.add('lab-locked');
+      else tab.classList.remove('lab-locked');
+    }
     function renderLabPanel(){
       const el=document.getElementById('panel-lab');
       if(!el)return;
+      const canOpen=currentRole==='admin'||currentRole==='superadmin';
       const artCards=articles.filter(a=>a.cat==='lab').map(a=>{
         const imgAtt=(a.attachments||[]).find(x=>x.type==='image');
         const linkAtt=(a.attachments||[]).find(x=>x.type==='link');
@@ -815,13 +830,17 @@
         return{id:'a'+a.id,title:a.title,desc:a.summary,thumb,url,date:a.date};
       });
       const allCards=[...labItems.map(i=>({...i,id:'l'+i.id})),...artCards];
+      const accessBadge=canOpen
+        ?''
+        :`<div style="display:inline-flex;align-items:center;gap:6px;background:#fef9ff;border:1px solid #e9d5ff;padding:6px 14px;margin-bottom:20px;font-size:12px;color:#7c3aed">👁 전문가 열람 전용 — 시뮬레이션 링크는 관리자 이상만 사용 가능합니다.</div>`;
       el.innerHTML=`<div class="lab-wrap">
         <div class="lab-eyebrow">// LAB</div>
         <div class="lab-main-title">연구·실험실</div>
         <div class="lab-subtitle">드론·대드론 관련 시뮬레이션 및 연구 도구 모음</div>
+        ${accessBadge}
         ${allCards.length?`<div class="lab-grid">
           ${allCards.map(item=>`
-            <div class="lab-card">
+            <div class="lab-card" style="${!canOpen?'cursor:default':''}">
               <div class="lab-thumb">
                 ${item.thumb?`<img src="${item.thumb}" alt="${item.title}">`:'<div class="lab-thumb-icon">⚗️</div>'}
               </div>
@@ -830,7 +849,7 @@
                 <div class="lab-card-desc">${item.desc}</div>
                 <div class="lab-card-footer">
                   <span class="lab-card-date">${item.date}</span>
-                  ${item.url?`<a href="${item.url}" target="_blank" rel="noopener" class="lab-link-btn">시뮬레이션 열기 →</a>`:'<span style="font-size:11px;color:#aaa">링크 없음</span>'}
+                  ${canOpen&&item.url?`<a href="${item.url}" target="_blank" rel="noopener" class="lab-link-btn">시뮬레이션 열기 →</a>`:canOpen?'<span style="font-size:11px;color:#aaa">링크 없음</span>':'<span style="font-size:11px;color:#c4b5fd">🔒 관리자 전용</span>'}
                 </div>
               </div>
             </div>`).join('')}
