@@ -130,6 +130,7 @@
     .badge.cdrone{color:var(--red);background:rgba(255,92,92,.1)}
     .badge.tactics{color:var(--green);background:rgba(56,230,155,.1)}
     .badge.other{color:var(--gold);background:rgba(244,185,66,.1)}
+    .badge.lab{color:#8b5cf6;background:rgba(139,92,246,.1)}
     .article-title{font-weight:800;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .article-source,.article-date{color:var(--muted);font-size:12px;white-space:nowrap}
     .arrow{color:var(--dim);transition:.2s}
@@ -507,7 +508,7 @@
         <span class="sh-nav-link">C-DRONE</span>
         <span class="sh-nav-link">TACTICS</span>
         <span class="sh-nav-link">OTHERS</span>
-        <span class="sh-nav-link" style="color:#4fa3ff;border:1px solid rgba(79,163,255,.4);padding:2px 10px;font-size:11px;letter-spacing:2px">Lab</span>
+        <span class="sh-nav-link">LAB</span>
       </nav>
       <div class="sh-auth">
         <button class="sh-auth-btn" onclick="showScreen('login')">로그인</button>
@@ -608,6 +609,7 @@
       <button class="nav-tab" onclick="switchPanel('cdrone',this)">C-DRONE</button>
       <button class="nav-tab" onclick="switchPanel('tactics',this)">TACTICS</button>
       <button class="nav-tab" onclick="switchPanel('other',this)">OTHER</button>
+      <button class="nav-tab" onclick="switchPanel('lab',this)">LAB</button>
       <button id="admin-tab" class="nav-tab admin-tab" onclick="switchPanel('admin',this)" style="display:none">ADMIN</button>
       <div class="top-right"><span class="ver-badge">v5</span><span id="user-badge" class="user-badge">GUEST</span><button class="logout-btn" onclick="doLogout()">로그아웃</button></div>
     </nav>
@@ -616,6 +618,7 @@
       <section id="panel-cdrone" class="panel"></section>
       <section id="panel-tactics" class="panel"></section>
       <section id="panel-other" class="panel"></section>
+      <section id="panel-lab" class="panel"></section>
       <section id="panel-admin" class="panel"></section>
     </div>
   </section>
@@ -689,7 +692,8 @@
       drone:{tag:'// DRONE INTELLIGENCE',title:'드론 정보',color:'var(--blue)',sources:['KCI 등재 학술지','SCI 등재 학술지','Defense News','CSIS','C4ISRNET','DroneLife.com']},
       cdrone:{tag:'// COUNTER-DRONE',title:'대드론 정보',color:'var(--red)',sources:['KCI 등재 학술지','SCI 등재 학술지','C4ISRNET','CSIS','The War Zone','IEEE Transactions']},
       tactics:{tag:'// TACTICAL ANALYSIS',title:'전술 분석',color:'var(--green)',sources:['KCI 등재 학술지','SCI 등재 학술지','C4ISRNET','The War Zone','The Aviationist','CSIS']},
-      other:{tag:'// OTHER',title:'기타 정보',color:'var(--gold)',sources:['Defense News','CSIS','C4ISRNET','DroneLife.com','The Aviationist','The War Zone']}
+      other:{tag:'// OTHER',title:'기타 정보',color:'var(--gold)',sources:['Defense News','CSIS','C4ISRNET','DroneLife.com','The Aviationist','The War Zone']},
+      lab:{tag:'// LAB',title:'연구·실험실',color:'#8b5cf6',sources:['IEEE Xplore','ScienceDirect','MDPI Journals','arXiv','SpringerLink']}
     };
 
     function showScreen(id){
@@ -760,10 +764,10 @@
       if(isAdmin)renderAdmin();
     }
 
-    const CAT_COLORS={drone:'#4fa3ff',cdrone:'#ef4444',tactics:'#10b981',other:'#d97706'};
+    const CAT_COLORS={drone:'#4fa3ff',cdrone:'#ef4444',tactics:'#10b981',other:'#d97706',lab:'#8b5cf6'};
 
     /* background tones per category for image placeholders */
-    const CAT_BG={drone:'linear-gradient(135deg,#0f2a4a 0%,#1a3d6b 100%)',cdrone:'linear-gradient(135deg,#3b0a0a 0%,#5c1010 100%)',tactics:'linear-gradient(135deg,#0a2a1a 0%,#0e3d26 100%)',other:'linear-gradient(135deg,#2a1e00 0%,#3d2c00 100%)'};
+    const CAT_BG={drone:'linear-gradient(135deg,#0f2a4a 0%,#1a3d6b 100%)',cdrone:'linear-gradient(135deg,#3b0a0a 0%,#5c1010 100%)',tactics:'linear-gradient(135deg,#0a2a1a 0%,#0e3d26 100%)',other:'linear-gradient(135deg,#2a1e00 0%,#3d2c00 100%)',lab:'linear-gradient(135deg,#1e1040 0%,#2e1a6b 100%)'};
 
     function renderCategoryList(cat){
       const meta=panelMeta[cat];
@@ -972,7 +976,7 @@
         <div class="post-form">
           <div class="section-title" style="margin-top:0">// 정보 등록</div>
           <label for="post-cat">카테고리</label>
-          <select id="post-cat"><option value="drone">DRONE</option><option value="cdrone">C-DRONE</option><option value="tactics">TACTICS</option><option value="other">OTHER</option></select>
+          <select id="post-cat"><option value="drone">DRONE</option><option value="cdrone">C-DRONE</option><option value="tactics">TACTICS</option><option value="other">OTHER</option><option value="lab">LAB</option></select>
           <label for="post-source" style="margin-top:12px">출처</label>
           <input id="post-source" placeholder="예: Defense News, KCI 학술지명">
           <label for="post-title" style="margin-top:12px">제목</label>
