@@ -440,8 +440,8 @@
     /* Lab Panel */
     .lab-wrap{padding:40px 48px 80px;max-width:1100px;margin:0 auto}
     .lab-eyebrow{font-size:11px;font-weight:900;letter-spacing:4px;color:#8b5cf6;text-transform:uppercase;margin-bottom:10px}
-    .lab-main-title{font-size:26px;font-weight:700;color:#fff;margin-bottom:6px}
-    .lab-subtitle{color:var(--muted);font-size:13px;margin-bottom:32px}
+    .lab-main-title{font-size:26px;font-weight:700;color:#8b5cf6;margin-bottom:6px}
+    .lab-subtitle{color:#555;font-size:13px;margin-bottom:32px}
     .lab-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
     @media(max-width:900px){.lab-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:560px){.lab-grid{grid-template-columns:1fr}}
@@ -796,12 +796,20 @@
     function renderLabPanel(){
       const el=document.getElementById('panel-lab');
       if(!el)return;
+      const artCards=articles.filter(a=>a.cat==='lab').map(a=>{
+        const imgAtt=(a.attachments||[]).find(x=>x.type==='image');
+        const linkAtt=(a.attachments||[]).find(x=>x.type==='link');
+        const thumb=imgAtt?imgAtt.dataUrl:'';
+        const url=linkAtt?linkAtt.url:'';
+        return{id:'a'+a.id,title:a.title,desc:a.summary,thumb,url,date:a.date};
+      });
+      const allCards=[...labItems.map(i=>({...i,id:'l'+i.id})),...artCards];
       el.innerHTML=`<div class="lab-wrap">
         <div class="lab-eyebrow">// LAB</div>
         <div class="lab-main-title">연구·실험실</div>
         <div class="lab-subtitle">드론·대드론 관련 시뮬레이션 및 연구 도구 모음</div>
-        ${labItems.length?`<div class="lab-grid">
-          ${labItems.map(item=>`
+        ${allCards.length?`<div class="lab-grid">
+          ${allCards.map(item=>`
             <div class="lab-card">
               <div class="lab-thumb">
                 ${item.thumb?`<img src="${item.thumb}" alt="${item.title}">`:'<div class="lab-thumb-icon">⚗️</div>'}
@@ -811,7 +819,7 @@
                 <div class="lab-card-desc">${item.desc}</div>
                 <div class="lab-card-footer">
                   <span class="lab-card-date">${item.date}</span>
-                  <a href="${item.url}" target="_blank" rel="noopener" class="lab-link-btn">시뮬레이션 열기 →</a>
+                  ${item.url?`<a href="${item.url}" target="_blank" rel="noopener" class="lab-link-btn">시뮬레이션 열기 →</a>`:'<span style="font-size:11px;color:#aaa">링크 없음</span>'}
                 </div>
               </div>
             </div>`).join('')}
