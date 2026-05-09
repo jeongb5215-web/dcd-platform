@@ -1137,7 +1137,7 @@
           </div>
           <div style="color:#1e3a5f;font-size:12px;font-weight:700;margin-bottom:6px">학술 데이터베이스</div>
           <div style="display:flex;flex-direction:column;gap:4px">
-            ${ACADEMIC_DBS.map(db=>`<a onclick="window.open('${db.base}Counter-UAS','_blank')" style="font-size:12px;color:#1e3a5f;cursor:pointer;text-decoration:underline">▸ ${db.name} <span style="color:#4a6a8f;font-weight:400">— ${db.desc}</span></a>`).join('')}
+            ${ACADEMIC_DBS.map(db=>`<a onclick="window.open('${db.base}Counter-UAS','_blank')" style="font-size:12px;color:#0f172a;cursor:pointer;text-decoration:none">▸ ${db.name} <span style="color:#374151;font-weight:400">— ${db.desc}</span></a>`).join('')}
           </div>
         </div>
 
@@ -1145,7 +1145,7 @@
         <div class="section-title navy">// 뉴스 소스 바로가기</div>
         <div style="background:#f8fafc;border:1px solid #d1d9e6;padding:12px 16px;margin-bottom:16px">
           <div style="display:flex;flex-direction:column;gap:5px">
-            ${NEWS_SOURCES.map(s=>`<a href="${s.url}" target="_blank" style="font-size:12px;color:#1e3a5f;text-decoration:none">▸ <strong>${s.name}</strong> <span style="color:#4a6a8f;font-weight:400">— ${s.tag}</span></a>`).join('')}
+            ${NEWS_SOURCES.map(s=>`<a href="${s.url}" target="_blank" style="font-size:12px;color:#0f172a;text-decoration:none">▸ <strong>${s.name}</strong> <span style="color:#374151;font-weight:400">— ${s.tag}</span></a>`).join('')}
           </div>
         </div>
       `;
