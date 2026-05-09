@@ -183,6 +183,7 @@
     #panel-admin .admin-tab-btn.active{color:#0f172a!important;border-bottom-color:#ef4444!important}
     #panel-admin .atab.active{padding:36px 48px}
     #panel-admin .section-title{color:#ef4444!important;border-bottom:1px solid #fecaca!important;margin:28px 0 16px}
+    #panel-admin .section-title.navy{color:#1e3a5f!important;border-bottom:1px solid #7a9abf!important}
     #panel-admin .admin-bar{background:#fff!important;border:1px solid #e2e8f0!important;box-shadow:0 1px 3px rgba(0,0,0,.05)}
     #panel-admin .admin-metric-label{color:#0f172a!important;font-weight:700}
     #panel-admin .admin-metric-num{color:#0f172a!important}
@@ -1128,33 +1129,24 @@
         </div>`:''}
 
         <!-- 학술 DB 빠른 검색 -->
-        <div class="section-title">// 학술 데이터베이스 키워드 검색</div>
-        <div style="color:var(--muted);font-size:12px;margin-bottom:12px">키워드를 선택하면 해당 DB에서 검색합니다.</div>
-        <div style="margin-bottom:14px">
-          <span style="color:var(--dim);font-size:11px;font-weight:800;letter-spacing:1px">검색 키워드 선택</span>
-          <div class="keyword-grid" style="margin-top:8px">
-            ${COLLECT_KEYWORDS.map(k=>`<button class="keyword-chip" onclick="searchKeyword('${k}')">${k}</button>`).join('')}
+        <div class="section-title navy">// 학술 데이터베이스 키워드 검색</div>
+        <div style="background:#f8fafc;border:1px solid #d1d9e6;padding:12px 16px;margin-bottom:16px">
+          <div style="color:#1e3a5f;font-size:12px;font-weight:700;margin-bottom:8px">검색 키워드</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+            ${COLLECT_KEYWORDS.map(k=>`<button onclick="searchKeyword('${k}')" style="font-size:11px;padding:3px 10px;background:#fff;border:1px solid #7a9abf;color:#1e3a5f;cursor:pointer">${k}</button>`).join('')}
           </div>
-        </div>
-        <div class="db-grid">
-          ${ACADEMIC_DBS.map(db=>`
-            <div class="db-card" onclick="window.open('${db.base}Counter-UAS','_blank')">
-              <div class="db-name">${db.name}</div>
-              <div class="db-desc">${db.desc}</div>
-            </div>`).join('')}
+          <div style="color:#1e3a5f;font-size:12px;font-weight:700;margin-bottom:6px">학술 데이터베이스</div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            ${ACADEMIC_DBS.map(db=>`<a onclick="window.open('${db.base}Counter-UAS','_blank')" style="font-size:12px;color:#1e3a5f;cursor:pointer;text-decoration:underline">▸ ${db.name} <span style="color:#4a6a8f;font-weight:400">— ${db.desc}</span></a>`).join('')}
+          </div>
         </div>
 
         <!-- 뉴스 소스 목록 -->
-        <div class="section-title">// 뉴스 소스 바로가기</div>
-        <div class="src-grid">
-          ${NEWS_SOURCES.map(s=>`
-            <a href="${s.url}" target="_blank" class="src-card">
-              <span class="src-dot"></span>
-              <div>
-                <div class="src-name">${s.name}</div>
-                <div class="src-tag">${s.tag}</div>
-              </div>
-            </a>`).join('')}
+        <div class="section-title navy">// 뉴스 소스 바로가기</div>
+        <div style="background:#f8fafc;border:1px solid #d1d9e6;padding:12px 16px;margin-bottom:16px">
+          <div style="display:flex;flex-direction:column;gap:5px">
+            ${NEWS_SOURCES.map(s=>`<a href="${s.url}" target="_blank" style="font-size:12px;color:#1e3a5f;text-decoration:none">▸ <strong>${s.name}</strong> <span style="color:#4a6a8f;font-weight:400">— ${s.tag}</span></a>`).join('')}
+          </div>
         </div>
       `;
     }
