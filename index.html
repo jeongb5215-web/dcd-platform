@@ -1269,7 +1269,7 @@
     function memberRow(m){
       const label=m.status==='pending'?'대기':m.status==='approved'?'승인':'거절';
       const roleEdit=(currentRole==='superadmin'||currentRole==='admin')?`
-        <select class="role-select" style="margin-left:6px;vertical-align:middle" onchange="setMemberRole(${m.id},this.value)">
+        <select class="role-select" onchange="setMemberRole(${m.id},this.value)">
           <option value="member" ${m.role==='member'?'selected':''}>일반회원</option>
           <option value="expert" ${m.role==='expert'?'selected':''}>전문가</option>
           <option value="admin" ${m.role==='admin'?'selected':''}>관리자</option>
@@ -1280,7 +1280,7 @@
         <td>${m.email}</td>
         <td>${m.phone}</td>
         <td>${m.date}</td>
-        <td><span class="role-badge ${m.role||'member'}">${(m.role||'member').toUpperCase()}</span>${roleEdit}</td>
+        <td><div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap"><span class="role-badge ${m.role||'member'}" style="white-space:nowrap">${(m.role||'member').toUpperCase()}</span>${roleEdit}</div></td>
         <td><span class="status ${m.status}">${label}</span></td>
         <td>
           ${m.status==='pending'?`<button class="mini-btn ok" onclick="approveMember(${m.id})">승인</button><button class="mini-btn no" onclick="denyMember(${m.id})">거절</button>`:''}
