@@ -839,10 +839,6 @@
             </div>
           </div>
           ${cards.length?`<div class="ch-grid">${cardHtml}</div>`:''}
-          <div class="ch-source-footer">
-            <div style="color:#aaa;font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px">// 출처 기준</div>
-            <div class="chips">${meta.sources.map((s,i)=>`<span class="chip ${i<2?'kci':''}">${s}</span>`).join('')}</div>
-          </div>
         </div>`;
     }
 
