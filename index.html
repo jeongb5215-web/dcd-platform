@@ -923,7 +923,7 @@
         </div>
         <div class="section-title">// 역할별 현황</div>
         <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
-          ${['expert','member','admin','superadmin'].map(r=>{
+          ${['superadmin','admin','expert','member'].map(r=>{
             const cnt=members.filter(m=>m.role===r).length;
             return `<div class="stat-card"><span class="role-badge ${r}" style="margin-bottom:10px;display:inline-flex">${r.toUpperCase()}</span><div class="stat-num">${cnt}</div><div class="stat-label">${roleNames[r]}</div></div>`;
           }).join('')}
