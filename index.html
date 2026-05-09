@@ -434,6 +434,7 @@
         <button class="btn-primary" onclick="showScreen('login')">▶ 접속하기</button>
         <button class="btn-secondary" onclick="showScreen('register')">신규 등록 신청</button>
       </div>
+      <div style="margin-top:16px;font-size:11px;color:rgba(79,163,255,.5);font-family:monospace;letter-spacing:2px">BUILD v3 · CHATHAM LAYOUT</div>
     </div>
     <div class="lp-intel">
       <div class="lp-intel-hd">
@@ -1385,9 +1386,20 @@
     function showNotif(msg,isErr=false){const el=document.getElementById('notif');el.textContent=msg;el.className='notif'+(isErr?' error':'');el.style.display='block';setTimeout(()=>el.style.display='none',3000)}
 
     updateMemberCount();
-    renderAll();
+    try{
+      renderAll();
+    }catch(e){
+      document.body.insertAdjacentHTML('afterbegin','<div style="position:fixed;top:0;left:0;right:0;background:#dc2626;color:#fff;padding:14px 20px;z-index:99999;font-size:13px;font-weight:700;font-family:monospace">⚠ JS ERROR in renderAll(): '+e.message+'</div>');
+      console.error('renderAll error:',e);
+    }
     renderIntelPanel();
     document.getElementById('site-footer').style.display='';
+
+    /* Version check — remove after confirming layout */
+    document.addEventListener('DOMContentLoaded',function(){
+      var t=document.querySelector('.top-logo');
+      if(t&&!document.querySelector('.ver-badge'))t.insertAdjacentHTML('afterend','<span class="ver-badge">v3</span>');
+    });
   </script>
 </body>
 </html>
