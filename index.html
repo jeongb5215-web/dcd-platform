@@ -101,7 +101,7 @@
     .article-list{display:flex;flex-direction:column;gap:4px}
     .article-item{background:var(--panel);border:1px solid var(--line);overflow:hidden}
     .article-item:hover,.article-item.expanded{border-color:var(--line-strong)}
-    .article-header{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto auto;gap:14px;align-items:center;padding:16px 18px;user-select:none;cursor:pointer}
+    .article-header{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto auto auto auto auto;gap:12px;align-items:center;padding:16px 18px;user-select:none;cursor:pointer}
     .badge{display:inline-flex;align-items:center;border:1px solid currentColor;padding:4px 9px;font-size:10px;font-weight:900;letter-spacing:1.5px}
     .badge.drone{color:var(--blue);background:rgba(79,163,255,.1)}
     .badge.cdrone{color:var(--red);background:rgba(255,92,92,.1)}
@@ -151,6 +151,143 @@
     .notif{position:fixed;right:20px;bottom:20px;z-index:20;display:none;background:var(--panel);border:1px solid var(--blue);color:var(--blue);padding:12px 18px;font-size:13px;font-weight:800}
     .notif.error{border-color:var(--red);color:var(--red)}
 
+    /* ── Admin Panel Tabs ── */
+    .admin-tabs-bar{display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid var(--line)}
+    .admin-tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);padding:10px 20px;font-size:13px;font-weight:800;letter-spacing:.5px;margin-bottom:-1px;transition:.15s;cursor:pointer}
+    .admin-tab-btn:hover{color:var(--sub)}
+    .admin-tab-btn.active{border-bottom-color:var(--red);color:#fff}
+    .atab{display:none}.atab.active{display:block}
+    /* Role Badges */
+    .role-badge{display:inline-flex;align-items:center;border:1px solid currentColor;padding:3px 8px;font-size:10px;font-weight:900;letter-spacing:1px;white-space:nowrap}
+    .role-badge.superadmin{color:#fff;border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.1)}
+    .role-badge.admin{color:var(--red);border-color:rgba(255,92,92,.4);background:rgba(255,92,92,.08)}
+    .role-badge.expert{color:var(--gold);border-color:rgba(244,185,66,.4);background:rgba(244,185,66,.08)}
+    .role-badge.member{color:var(--blue);border-color:rgba(79,163,255,.4);background:rgba(79,163,255,.08)}
+    .role-badge.guest{color:var(--muted);border-color:var(--line)}
+    .role-select{background:var(--panel2);border:1px solid var(--line);color:var(--sub);padding:4px 6px;font-size:11px;font-weight:800;cursor:pointer}
+    /* Phone Verification */
+    .phone-row{display:flex;gap:8px;align-items:stretch}
+    .phone-row input{flex:1;min-width:0}
+    .verify-btn{background:none;border:1px solid var(--blue);color:var(--blue);padding:0 14px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;transition:.15s}
+    .verify-btn:hover{background:rgba(79,163,255,.1)}
+    .verify-btn.verified{border-color:var(--green);color:var(--green)}
+    /* Auth extras */
+    .auth-link{color:var(--muted);font-size:12px;text-align:center;margin-top:14px}
+    .auth-link a{color:var(--blue);cursor:pointer}
+    .auth-link a:hover{text-decoration:underline}
+    .terms-note{color:var(--dim);font-size:11px;text-align:center;margin-top:8px;line-height:1.6}
+    .terms-note a{color:var(--muted);cursor:pointer}
+    .terms-note a:hover{color:var(--blue)}
+    /* Content table in admin */
+    .content-row{background:var(--panel);border:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:3px}
+    .content-row:hover{border-color:var(--line-strong)}
+    /* ── 정보 수집 탭 ── */
+    .collect-item{background:var(--panel);border:1px solid var(--line);padding:16px 18px;margin-bottom:6px;transition:.12s;border-left:3px solid transparent}
+    .collect-item:hover{border-color:var(--line-strong);border-left-color:var(--blue)}
+    .collect-item.news-type{border-left-color:rgba(79,163,255,.5)}
+    .collect-item.academic-type{border-left-color:rgba(244,185,66,.5)}
+    .collect-item.approved{border-left-color:var(--green);opacity:.6}
+    .collect-item.dismissed{opacity:.3;pointer-events:none}
+    .collect-hd{display:flex;align-items:flex-start;gap:10px;margin-bottom:6px}
+    .collect-type{font-size:9px;font-weight:900;letter-spacing:1.5px;padding:3px 7px;border:1px solid currentColor;white-space:nowrap;flex-shrink:0;margin-top:2px}
+    .collect-type.news{color:var(--blue)}
+    .collect-type.academic{color:var(--gold)}
+    .collect-title-wrap{flex:1;min-width:0}
+    .collect-title{font-weight:800;font-size:13.5px;line-height:1.4}
+    .collect-meta{color:var(--dim);font-size:11px;font-family:var(--mono);margin-top:3px}
+    .collect-summary{color:var(--sub);font-size:13px;line-height:1.75;margin:8px 0 10px}
+    .collect-keywords{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+    .collect-kw{font-size:10px;font-weight:800;padding:2px 7px;border:1px solid rgba(79,163,255,.3);color:var(--blue);background:rgba(79,163,255,.06)}
+    .collect-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+    .collect-src-link{color:var(--muted);font-size:11px;font-family:var(--mono);cursor:pointer;margin-left:auto;text-decoration:none;border-bottom:1px solid transparent}
+    .collect-src-link:hover{color:var(--blue);border-bottom-color:var(--blue)}
+    /* 학술 검색 */
+    .keyword-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px}
+    .keyword-chip{background:none;border:1px solid var(--line);color:var(--sub);padding:6px 12px;font-size:12px;font-weight:800;cursor:pointer;transition:.12s;font-family:inherit}
+    .keyword-chip:hover{border-color:var(--blue);color:var(--blue);background:rgba(79,163,255,.06)}
+    .db-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px}
+    .db-card{background:var(--panel2);border:1px solid var(--line);padding:14px 16px;cursor:pointer;transition:.12s;text-decoration:none;display:block}
+    .db-card:hover{border-color:var(--gold);background:rgba(244,185,66,.04)}
+    .db-name{font-size:12px;font-weight:900;color:var(--gold);letter-spacing:.5px;margin-bottom:4px}
+    .db-desc{color:var(--muted);font-size:11px;line-height:1.4}
+    /* 뉴스 소스 카드 */
+    .src-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
+    .src-card{background:var(--panel2);border:1px solid var(--line);padding:12px 14px;text-decoration:none;display:flex;align-items:center;gap:10px;transition:.12s}
+    .src-card:hover{border-color:var(--blue)}
+    .src-dot{width:7px;height:7px;background:var(--blue);border-radius:50%;flex-shrink:0}
+    .src-name{font-size:12px;font-weight:800;color:var(--sub)}
+    .src-tag{font-size:10px;color:var(--dim);margin-top:2px}
+    .collect-count-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .collect-filter{display:flex;gap:6px}
+    .filter-tab-sm{background:none;border:1px solid var(--line);color:var(--muted);padding:5px 12px;font-size:11px;font-weight:800;cursor:pointer;transition:.12s}
+    .filter-tab-sm.active,.filter-tab-sm:hover{border-color:var(--blue);color:var(--blue)}
+    /* ── 첨부 UI ── */
+    .attach-type-tabs{display:flex;gap:0;border:1px solid var(--line);margin:12px 0 0}
+    .attach-type-btn{flex:1;background:none;border:none;border-right:1px solid var(--line);color:var(--muted);padding:9px 6px;font-size:12px;font-weight:800;cursor:pointer;transition:.12s;letter-spacing:.3px}
+    .attach-type-btn:last-child{border-right:none}
+    .attach-type-btn:hover{background:rgba(79,163,255,.05);color:var(--sub)}
+    .attach-type-btn.active{background:rgba(79,163,255,.1);color:var(--blue)}
+    .attach-pane{display:none;margin-top:10px}.attach-pane.active{display:block}
+    .attach-preview-list{display:flex;flex-direction:column;gap:5px;margin-top:8px}
+    .attach-preview-item{display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line);padding:8px 10px}
+    .att-icon{font-size:14px;flex-shrink:0}.att-name{flex:1;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--sub)}
+    .att-size{color:var(--dim);font-size:11px;white-space:nowrap;font-family:var(--mono)}.att-del{background:none;border:none;color:var(--dim);font-size:16px;cursor:pointer;line-height:1;padding:0 2px}
+    .att-del:hover{color:var(--red)}
+    .img-preview-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .img-thumb{position:relative;width:76px;height:76px;border:1px solid var(--line);overflow:hidden;flex-shrink:0}
+    .img-thumb img{width:100%;height:100%;object-fit:cover}
+    .img-thumb .att-del{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.72);color:#fff;width:18px;height:18px;font-size:12px;border-radius:2px;display:flex;align-items:center;justify-content:center}
+    .link-input-row{display:flex;gap:6px}
+    .link-input-row input{flex:1;padding:10px 12px}
+    .link-list{display:flex;flex-direction:column;gap:5px;margin-top:8px}
+    .link-item{display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line);padding:8px 10px;font-size:12px}
+    .lk-label{color:var(--sub);font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+    .lk-url{color:var(--blue);font-size:11px;font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+    .lk-del{background:none;border:none;color:var(--dim);font-size:16px;cursor:pointer;line-height:1;flex-shrink:0}
+    .lk-del:hover{color:var(--red)}
+    .attach-count-badge{display:inline-flex;align-items:center;justify-content:center;background:var(--blue);color:#06101e;width:16px;height:16px;font-size:9px;font-weight:900;border-radius:50%;margin-left:4px;vertical-align:middle}
+    /* 아티클 본문 첨부물 */
+    .article-attachments{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+    .attach-section-label{color:var(--dim);font-size:10px;font-weight:900;letter-spacing:2px;margin-bottom:10px}
+    .article-img-wrap{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+    .article-img-thumb{max-height:180px;max-width:100%;border:1px solid var(--line);cursor:pointer;transition:.12s}
+    .article-img-thumb:hover{border-color:var(--blue)}
+    .article-docs{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+    .article-doc-item{display:flex;align-items:center;gap:10px;background:var(--panel2);border:1px solid var(--line);padding:10px 14px;text-decoration:none;color:var(--sub);transition:.12s}
+    .article-doc-item:hover{border-color:var(--blue);color:#fff}
+    .article-doc-locked{display:flex;align-items:center;gap:10px;background:var(--panel2);border:1px dashed var(--line);padding:10px 14px;color:var(--dim)}
+    .article-links{display:flex;flex-wrap:wrap;gap:8px}
+    .article-link-item{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);color:var(--blue);padding:6px 12px;font-size:12px;text-decoration:none;transition:.12s}
+    .article-link-item:hover{background:rgba(79,163,255,.08);border-color:var(--blue)}
+    .access-lbl{font-size:10px;font-weight:900;padding:2px 6px;border:1px solid currentColor;margin-left:8px;white-space:nowrap}
+    .access-lbl.open{color:var(--green);border-color:rgba(56,230,155,.4)}
+    .access-lbl.expert{color:var(--gold);border-color:rgba(244,185,66,.4)}
+    .access-lbl.admin{color:var(--red);border-color:rgba(255,92,92,.4)}
+    /* ── 좋아요 & 댓글 ── */
+    .like-btn{background:none;border:1px solid var(--line);color:var(--muted);padding:7px 14px;font-size:12px;font-weight:800;display:inline-flex;align-items:center;gap:6px;cursor:pointer;transition:.15s}
+    .like-btn:hover{border-color:#ff6b8a;color:#ff6b8a}
+    .like-btn.liked{border-color:#ff6b8a;color:#ff6b8a;background:rgba(255,107,138,.08)}
+    .like-heart{font-size:15px;line-height:1;transition:transform .15s}
+    .like-btn.liked .like-heart{transform:scale(1.25)}
+    .like-num{font-size:11px;font-weight:900}
+    .like-count-inline{color:var(--dim);font-size:11px;white-space:nowrap;display:inline-flex;align-items:center;gap:3px}
+    /* 댓글 섹션 */
+    .comments-section{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+    .comments-label{color:var(--dim);font-size:10px;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+    .comment-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+    .comment-item{background:var(--panel2);border:1px solid var(--line);padding:10px 14px}
+    .comment-hd{display:flex;align-items:center;gap:7px;margin-bottom:5px;flex-wrap:wrap}
+    .comment-author{font-size:12px;font-weight:800;color:#fff}
+    .comment-date{color:var(--dim);font-size:11px;margin-left:auto;white-space:nowrap}
+    .comment-text{color:var(--sub);font-size:13px;line-height:1.65}
+    .comment-del{background:none;border:none;color:var(--dim);font-size:11px;font-weight:800;cursor:pointer;padding:0;margin-left:4px;transition:.12s}
+    .comment-del:hover{color:var(--red)}
+    .comment-input-row{display:flex;gap:8px;align-items:stretch}
+    .comment-input-row textarea{flex:1;resize:none;min-height:48px;max-height:100px;font-size:13px;padding:10px 12px}
+    .comment-submit{background:var(--blue);color:#06101e;border:none;padding:0 18px;font-size:12px;font-weight:900;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:.12s}
+    .comment-submit:hover{background:#79bbff}
+    .comment-empty{color:var(--dim);font-size:12px;text-align:center;padding:10px 0 14px}
+
     /* ── Site Header ── */
     #site-header{background:#fff;border-bottom:1px solid #dde3ec;height:64px;display:flex;align-items:center;padding:0 40px;position:sticky;top:0;z-index:200}
     .sh-inner{display:flex;align-items:center;width:100%;max-width:1360px;margin:0 auto}
@@ -186,7 +323,7 @@
       .lp-intel{width:100%}
       .form-row,.stats-grid{grid-template-columns:1fr}
       .topbar{height:auto;min-height:56px;flex-wrap:wrap;padding:10px}.top-right{width:100%;margin-left:0}
-      .panel{padding:20px 14px}.article-header{grid-template-columns:auto 1fr auto}.article-source,.article-date{display:none}
+      .panel{padding:20px 14px}.article-header{grid-template-columns:auto 1fr auto auto auto}.article-source,.article-date{display:none}.like-count-inline{display:none}
       .admin-bar{align-items:flex-start;flex-direction:column}.admin-track{width:100%}
       .member-table{display:block;overflow-x:auto;white-space:nowrap}
     }
@@ -233,18 +370,41 @@
 
   <section id="screen-register" class="screen">
     <div class="auth-card">
-      <div class="auth-kicker">Access Request</div>
-      <h2 class="auth-title">회원가입 신청</h2>
-      <p class="auth-desc">운영자 승인 후 플랫폼 이용 권한이 부여됩니다. 최대 회원 수는 1,000명입니다.</p>
+      <div style="text-align:center;margin-bottom:4px">
+        <div style="font-size:40px;margin-bottom:10px">🛡️</div>
+        <div class="auth-kicker">Access Request</div>
+        <h2 class="auth-title">회원가입</h2>
+        <p class="auth-desc">운영자 승인 후 플랫폼 이용 권한이 부여됩니다.</p>
+      </div>
       <div class="member-meter"><div class="meter-track"><div class="meter-fill"></div></div><div class="meter-text"><span id="member-count">15</span> / 1,000</div></div>
       <div class="form-group"><label for="reg-name">이름</label><input id="reg-name" autocomplete="name" placeholder="홍길동"></div>
       <div class="form-group"><label for="reg-email">이메일</label><input id="reg-email" type="email" autocomplete="email" placeholder="name@example.com"></div>
-      <div class="form-row">
-        <div class="form-group"><label for="reg-country">국가번호</label><select id="reg-country"><option value="+82">대한민국 +82</option><option value="+1">미국 +1</option><option value="+44">영국 +44</option><option value="+81">일본 +81</option></select></div>
-        <div class="form-group"><label for="reg-phone">연락처</label><input id="reg-phone" autocomplete="tel" placeholder="010-0000-0000"></div>
+      <div class="form-group"><label for="reg-password">비밀번호</label><input id="reg-password" type="password" autocomplete="new-password" placeholder="비밀번호 (8자 이상)"></div>
+      <div class="form-group">
+        <label>연락처</label>
+        <div class="phone-row">
+          <select id="reg-country" style="width:auto;flex-shrink:0;padding:12px 8px;font-size:12px"><option value="+82">🇰🇷 +82</option><option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+81">🇯🇵 +81</option></select>
+          <input id="reg-phone" autocomplete="tel" placeholder="010-0000-0000">
+          <button class="verify-btn" id="verify-btn" onclick="sendVerification()">인증</button>
+        </div>
+        <div id="verify-code-row" style="display:none;margin-top:8px">
+          <input id="reg-verify-code" placeholder="인증번호 6자리" maxlength="6">
+          <div style="color:var(--dim);font-size:11px;margin-top:4px">* 데모용 인증번호: <strong style="color:var(--blue)">123456</strong></div>
+        </div>
       </div>
-      <div class="form-note">신청 정보는 관리자 화면에서 승인, 거절, 삭제할 수 있습니다.</div>
-      <div class="actions"><button class="btn-primary" onclick="doRegister()">신청 제출</button><button class="btn-secondary" onclick="showScreen('landing')">돌아가기</button></div>
+      <div class="form-group">
+        <label for="reg-role-req">가입 유형 신청</label>
+        <select id="reg-role-req">
+          <option value="member">일반회원 (Member) — 기본 자료 열람 및 검색</option>
+          <option value="expert">전문가 회원 (Expert) — 전문 자료 열람 및 다운로드</option>
+        </select>
+      </div>
+      <div class="form-note" style="margin-top:14px">신청 후 운영자 검토를 거쳐 승인됩니다. 역할은 관리자가 최종 결정합니다.</div>
+      <div class="actions" style="margin-top:18px">
+        <button class="btn-primary" style="flex:1;justify-content:center" onclick="doRegister()">확인가입</button>
+      </div>
+      <div class="auth-link">이미 계정이 있으신가요? <a onclick="showScreen('login')">로그인</a></div>
+      <div class="terms-note">가입 시 <a>이용약관</a> 및 <a>개인정보처리방침</a>에 동의하게 됩니다.</div>
     </div>
   </section>
 
@@ -252,11 +412,20 @@
     <div class="auth-card">
       <div class="auth-kicker">Secure Login</div>
       <h2 class="auth-title">회원 로그인</h2>
-      <p class="auth-desc">회원 접속 코드는 <strong>1234</strong>, 관리자 코드는 <strong>admin2024</strong>입니다.</p>
+      <p class="auth-desc">접속 코드를 입력하면 역할이 자동으로 적용됩니다.</p>
+      <div class="form-note" style="margin-bottom:16px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:12px">
+          <span><span class="role-badge member" style="margin-right:6px">MEMBER</span>1234</span>
+          <span><span class="role-badge expert" style="margin-right:6px">EXPERT</span>expert1234</span>
+          <span><span class="role-badge admin" style="margin-right:6px">ADMIN</span>admin2024</span>
+          <span><span class="role-badge superadmin" style="margin-right:6px">SUPER</span>super2024</span>
+        </div>
+      </div>
       <div class="form-group"><label for="login-email">이메일</label><input id="login-email" type="email" placeholder="name@example.com"></div>
-      <div class="form-group"><label for="login-code">접속 코드</label><input id="login-code" type="password" placeholder="접속 코드"></div>
-      <div class="member-meter"><div class="meter-track"><div class="meter-fill"></div></div><div class="meter-text">현재 15명 가입</div></div>
-      <div class="actions"><button class="btn-primary" onclick="doLogin()">로그인</button><button class="btn-secondary" onclick="doAdminLogin()">관리자 로그인</button><button class="btn-secondary" onclick="showScreen('landing')">취소</button></div>
+      <div class="form-group"><label for="login-code">접속 코드</label><input id="login-code" type="password" placeholder="접속 코드" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div class="member-meter"><div class="meter-track"><div class="meter-fill"></div></div><div class="meter-text">현재 <span id="login-member-count">15</span>명 가입</div></div>
+      <div class="actions"><button class="btn-primary" onclick="doLogin()">로그인</button><button class="btn-secondary" onclick="showScreen('landing')">취소</button></div>
+      <div class="auth-link" style="margin-top:14px">계정이 없으신가요? <a onclick="showScreen('register')">회원가입 신청</a></div>
     </div>
   </section>
 
@@ -298,28 +467,59 @@
   <div class="notif" id="notif"></div>
 
   <script>
-    const ADMIN_CODE='admin2024';
-    const USER_CODE='1234';
+    const ROLE_CODES={'super2024':'superadmin','admin2024':'admin','expert1234':'expert','1234':'member'};
     const MAX_MEMBERS=1000;
     let currentUser=null;
+    let currentRole='guest';
     let isAdmin=false;
+    let pendingAttachments=[];
 
     let members=[
-      {id:1,name:'김민준',email:'minjun@kaist.ac.kr',phone:'+82 010-1234-5678',date:'2026-04-28',status:'approved'},
-      {id:2,name:'이서연',email:'seoyeon@add.re.kr',phone:'+82 010-9876-5432',date:'2026-04-29',status:'approved'},
-      {id:3,name:'박도훈',email:'dohoon@uav-lab.com',phone:'+82 010-5555-0001',date:'2026-04-30',status:'pending'},
-      {id:4,name:'John Smith',email:'j.smith@csis.org',phone:'+1 202-555-0199',date:'2026-05-01',status:'pending'},
-      {id:5,name:'최지안',email:'jian@kookmin.ac.kr',phone:'+82 010-7777-2222',date:'2026-05-01',status:'pending'}
+      {id:1,name:'김민준',email:'minjun@kaist.ac.kr',password:'',phone:'+82 010-1234-5678',date:'2026-04-28',status:'approved',role:'expert'},
+      {id:2,name:'이서연',email:'seoyeon@add.re.kr',password:'',phone:'+82 010-9876-5432',date:'2026-04-29',status:'approved',role:'member'},
+      {id:3,name:'박도훈',email:'dohoon@uav-lab.com',password:'',phone:'+82 010-5555-0001',date:'2026-04-30',status:'pending',role:'member'},
+      {id:4,name:'John Smith',email:'j.smith@csis.org',password:'',phone:'+1 202-555-0199',date:'2026-05-01',status:'pending',role:'expert'},
+      {id:5,name:'최지안',email:'jian@kookmin.ac.kr',password:'',phone:'+82 010-7777-2222',date:'2026-05-01',status:'pending',role:'member'}
     ];
 
     let articles=[
-      {id:1,cat:'drone',title:'우크라이나 전장 FPV 드론 운용 손실률 분석',summary:'FPV 드론의 정찰 및 타격 운용이 증가하면서 전자전 환경, 배터리 지속시간, 조종자 숙련도가 작전 성공률을 좌우하는 핵심 변수로 확인되고 있습니다. 소형 플랫폼은 저비용 대량 운용에 강점이 있지만, RF 탐지와 재밍 대응 능력이 제한적이어서 임무별 생존성 평가가 필요합니다.',source:'Defense News',date:'2026-05-01'},
-      {id:2,cat:'drone',title:'상용 드론의 군사 개조 동향과 제한 사항',summary:'상용 멀티콥터는 조달 속도와 운용 편의성에서 장점이 있으나, GPS 스푸핑 방어, 암호화 통신, 탑재 중량 확대에는 별도 개조가 필요합니다. 최근 사례는 모듈형 탑재체와 현장 정비성을 중심으로 진화하고 있습니다.',source:'DroneLife.com',date:'2026-04-29'},
-      {id:3,cat:'cdrone',title:'RF 재밍 기반 대드론 체계 성능 비교 연구',summary:'다중 대역을 동시에 방해하는 재밍 방식은 단일 대역 대응보다 높은 무력화율을 보입니다. 다만 자군 통신과 민간 주파수에 미치는 영향을 줄이기 위해 방향성 안테나, 위협 식별, 출력 제어를 결합한 운용 절차가 중요합니다.',source:'KCI 등재 학술지',date:'2026-04-30'},
-      {id:4,cat:'cdrone',title:'고에너지 레이저 C-UAS의 교전 비용 분석',summary:'고에너지 레이저는 반복 교전 비용이 낮고 탄약 보급 부담이 작다는 장점이 있습니다. 반면 기상 조건, 표적 체공 시간, 조준 안정성에 크게 영향을 받으므로 RF 탐지와 광학 추적을 결합한 복합 방어망에 적합합니다.',source:'IEEE Transactions',date:'2026-04-27'},
-      {id:5,cat:'tactics',title:'드론 군집 전술의 진화와 방공망 회피 패턴',summary:'군집 전술은 고도 변화, 다축 접근, 가상 표적 운용을 통해 방공망의 탐지 및 교전 의사결정을 분산시킵니다. 대응 측은 탐지 센서 융합과 우선순위 기반 교전 규칙을 마련해야 합니다.',source:'C4ISRNET / The War Zone',date:'2026-04-29'},
-      {id:6,cat:'tactics',title:'드론 대 드론 직접 교전 전술 사례',summary:'드론 간 직접 교전은 충돌, 그물 투하, 근접 방해 등으로 나타나고 있습니다. 저가 플랫폼을 활용한 근거리 요격은 비용 효율성이 높지만 조종 난도와 식별 정확도가 운용 성패를 좌우합니다.',source:'The Aviationist',date:'2026-04-26'},
-      {id:7,cat:'other',title:'한국 드론작전사령부 운용 계획 업데이트',summary:'드론 및 대드론 전력을 통합 운용하기 위한 교리, 교육, 정비 체계 정립이 병행되고 있습니다. 초기 운용은 정찰, 감시, 전자전 대응, 다중 센서 융합 능력 확보에 초점이 맞춰져 있습니다.',source:'Defense News Korea',date:'2026-04-25'}
+      {id:1,cat:'drone',title:'우크라이나 전장 FPV 드론 운용 손실률 분석',summary:'FPV 드론의 정찰 및 타격 운용이 증가하면서 전자전 환경, 배터리 지속시간, 조종자 숙련도가 작전 성공률을 좌우하는 핵심 변수로 확인되고 있습니다. 소형 플랫폼은 저비용 대량 운용에 강점이 있지만, RF 탐지와 재밍 대응 능력이 제한적이어서 임무별 생존성 평가가 필요합니다.',source:'Defense News',date:'2026-05-01',attachments:[{type:'link',label:'Defense News 원문 보기',url:'https://www.defensenews.com'}],likes:4,likedBy:['minjun@kaist.ac.kr','seoyeon@add.re.kr'],comments:[{id:101,user:'minjun@kaist.ac.kr',name:'김민준',role:'expert',text:'FPV 드론 소모전의 실태를 정확히 짚은 분석입니다. 전자전 환경에서의 생존성 데이터가 특히 유용했습니다.',date:'2026-05-02'},{id:102,user:'seoyeon@add.re.kr',name:'이서연',role:'member',text:'RF 재밍 대응 관련 추가 자료가 있으면 공유 부탁드립니다.',date:'2026-05-03'}]},
+      {id:2,cat:'drone',title:'상용 드론의 군사 개조 동향과 제한 사항',summary:'상용 멀티콥터는 조달 속도와 운용 편의성에서 장점이 있으나, GPS 스푸핑 방어, 암호화 통신, 탑재 중량 확대에는 별도 개조가 필요합니다. 최근 사례는 모듈형 탑재체와 현장 정비성을 중심으로 진화하고 있습니다.',source:'DroneLife.com',date:'2026-04-29',attachments:[{type:'link',label:'DroneLife.com 원문',url:'https://dronelife.com'}],likes:2,likedBy:['minjun@kaist.ac.kr'],comments:[]},
+      {id:3,cat:'cdrone',title:'RF 재밍 기반 대드론 체계 성능 비교 연구',summary:'다중 대역을 동시에 방해하는 재밍 방식은 단일 대역 대응보다 높은 무력화율을 보입니다. 다만 자군 통신과 민간 주파수에 미치는 영향을 줄이기 위해 방향성 안테나, 위협 식별, 출력 제어를 결합한 운용 절차가 중요합니다.',source:'KCI 등재 학술지',date:'2026-04-30',attachments:[{type:'document',name:'RF_Jamming_CUAV_Analysis.pdf',size:'1.2MB',dataUrl:'#',access:'expert'},{type:'link',label:'KCI 논문 검색',url:'https://www.kci.go.kr'}],likes:7,likedBy:['minjun@kaist.ac.kr','seoyeon@add.re.kr'],comments:[{id:301,user:'minjun@kaist.ac.kr',name:'김민준',role:'expert',text:'다중 대역 재밍 운용 절차 관련 추가 자료 요청드립니다. 방향성 안테나 섹션이 특히 유익했습니다.',date:'2026-05-01'}]},
+      {id:4,cat:'cdrone',title:'고에너지 레이저 C-UAS의 교전 비용 분석',summary:'고에너지 레이저는 반복 교전 비용이 낮고 탄약 보급 부담이 작다는 장점이 있습니다. 반면 기상 조건, 표적 체공 시간, 조준 안정성에 크게 영향을 받으므로 RF 탐지와 광학 추적을 결합한 복합 방어망에 적합합니다.',source:'IEEE Transactions',date:'2026-04-27',attachments:[{type:'document',name:'HEL_CUAS_Cost_Analysis_IEEE.pdf',size:'2.4MB',dataUrl:'#',access:'expert'},{type:'link',label:'IEEE Xplore 원문',url:'https://ieeexplore.ieee.org'}],likes:5,likedBy:[],comments:[]},
+      {id:5,cat:'tactics',title:'드론 군집 전술의 진화와 방공망 회피 패턴',summary:'군집 전술은 고도 변화, 다축 접근, 가상 표적 운용을 통해 방공망의 탐지 및 교전 의사결정을 분산시킵니다. 대응 측은 탐지 센서 융합과 우선순위 기반 교전 규칙을 마련해야 합니다.',source:'C4ISRNET / The War Zone',date:'2026-04-29',attachments:[{type:'link',label:'C4ISRNET 원문',url:'https://www.c4isrnet.com'},{type:'link',label:'The War Zone 분석',url:'https://www.twz.com'}],likes:3,likedBy:[],comments:[{id:501,user:'seoyeon@add.re.kr',name:'이서연',role:'member',text:'군집 대응 센서 융합 부분이 흥미롭습니다. 관련 연구 자료도 함께 올려주시면 감사하겠습니다.',date:'2026-04-30'}]},
+      {id:6,cat:'tactics',title:'드론 대 드론 직접 교전 전술 사례',summary:'드론 간 직접 교전은 충돌, 그물 투하, 근접 방해 등으로 나타나고 있습니다. 저가 플랫폼을 활용한 근거리 요격은 비용 효율성이 높지만 조종 난도와 식별 정확도가 운용 성패를 좌우합니다.',source:'The Aviationist',date:'2026-04-26',attachments:[{type:'link',label:'The Aviationist 원문',url:'https://theaviationist.com'}],likes:1,likedBy:[],comments:[]},
+      {id:7,cat:'other',title:'한국 드론작전사령부 운용 계획 업데이트',summary:'드론 및 대드론 전력을 통합 운용하기 위한 교리, 교육, 정비 체계 정립이 병행되고 있습니다. 초기 운용은 정찰, 감시, 전자전 대응, 다중 센서 융합 능력 확보에 초점이 맞춰져 있습니다.',source:'Defense News Korea',date:'2026-04-25',attachments:[{type:'document',name:'드론작전사령부_운용계획.pdf',size:'3.1MB',dataUrl:'#',access:'admin'},{type:'link',label:'Defense News Korea',url:'https://www.defensenews.com'}],likes:9,likedBy:['minjun@kaist.ac.kr','seoyeon@add.re.kr'],comments:[]}
+    ];
+
+    const COLLECT_KEYWORDS=['Counter-UAS','Counter-UAV','C-UAS','Anti-Drone','Drone Detection','UAV Detection','Drone Mitigation','Drone Neutralization','RF Drone Detection','GNSS Spoofing','Drone Swarm Defense','Drone Tracking','Drone Identification'];
+    const NEWS_SOURCES=[
+      {name:'Defense News',tag:'방산·군사 전문',url:'https://www.defensenews.com'},
+      {name:'The War Zone',tag:'군사 분석·탐사',url:'https://www.twz.com'},
+      {name:'C4ISRNET',tag:'지휘통제·전자전',url:'https://www.c4isrnet.com'},
+      {name:'DroneLife.com',tag:'드론 산업·정책',url:'https://dronelife.com'},
+      {name:'CSIS Korea Chair',tag:'한반도 안보전략',url:'https://www.csis.org/programs/korea-chair'},
+      {name:'The Aviationist',tag:'항공·드론 분석',url:'https://theaviationist.com'},
+      {name:'Chatham House',tag:'국제안보·정책',url:'https://www.chathamhouse.org'},
+      {name:'ISS / ISIS',tag:'국제안보과학',url:'https://isis-online.org'}
+    ];
+    const ACADEMIC_DBS=[
+      {name:'IEEE Xplore',desc:'전기전자공학 + 방산기술 저널/컨퍼런스',base:'https://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText='},
+      {name:'ScienceDirect (Elsevier)',desc:'물리·공학·컴퓨터 분야 학술지',base:'https://www.sciencedirect.com/search?qs='},
+      {name:'SpringerLink',desc:'로봇·자동화·신호처리 학술지',base:'https://link.springer.com/search?query='},
+      {name:'MDPI Journals',desc:'오픈액세스 드론·센서 전문 저널',base:'https://www.mdpi.com/search?q='}
+    ];
+    let collectedItems=[
+      {id:1001,type:'news',source:'Defense News',url:'https://www.defensenews.com',title:'US Marine Corps Expands Counter-UAS Training at Camp Lejeune',summary:'미 해병대가 캠프 르죈에서 대드론 훈련 프로그램을 확대하고 있습니다. RF 탐지, 광학 추적, 소형 무장 드론 대응을 포함한 통합 C-UAS 운용 능력 향상에 초점을 맞추고 있으며, 2026년 말까지 전 전투여단에 적용할 예정입니다.',date:'2026-05-09',keywords:['Counter-UAS','Drone Detection'],status:'pending',cat:'cdrone'},
+      {id:1002,type:'news',source:'C4ISRNET',url:'https://www.c4isrnet.com',title:'NATO Publishes Updated Counter-UAS Standards for Alliance Members',summary:'NATO가 회원국 대상 업데이트된 대드론 표준을 발표했습니다. 상호운용성 강화와 공통 위협 분류 체계 적용이 핵심이며, RF 재밍·레이저 요격·그물포획을 포함한 다중 레이어 방어 아키텍처를 권고하고 있습니다.',date:'2026-05-09',keywords:['Counter-UAS','C-UAS'],status:'pending',cat:'cdrone'},
+      {id:1003,type:'news',source:'The War Zone',url:'https://www.twz.com',title:'Ukraine Deploys AI-Powered Drone Swarm Detection System at Frontlines',summary:'우크라이나군이 전선에 AI 기반 드론 군집 탐지 시스템을 배치했습니다. 다중 레이더 센서와 광학 카메라를 융합하여 소형 FPV 드론 군집을 조기 식별하고 전자전 대응을 자동화하는 체계입니다.',date:'2026-05-08',keywords:['Drone Swarm Defense','Drone Detection'],status:'pending',cat:'cdrone'},
+      {id:1004,type:'news',source:'DroneLife.com',url:'https://dronelife.com',title:'Commercial Drone Manufacturers Face New Anti-Drone Compliance Rules',summary:'미국 FAA와 국방부가 공동으로 상용 드론 제조업체에 대한 새 규정을 발표했습니다. 전자적 식별(Remote ID), 지오펜싱, 탈취 방지 기능이 의무화될 예정입니다.',date:'2026-05-08',keywords:['Anti-Drone','Drone Identification'],status:'pending',cat:'drone'},
+      {id:1005,type:'news',source:'CSIS Korea Chair',url:'https://www.csis.org/programs/korea-chair',title:'North Korea Drone Threat Assessment: 2026 Update',summary:'CSIS 한국 의장 프로그램이 2026년 북한 드론 위협 평가를 발표했습니다. 소형 자폭드론 개발과 GPS 재밍 능력 향상이 한국 방공망에 미치는 전략적 함의를 분석하고 있습니다.',date:'2026-05-07',keywords:['Counter-UAV','GNSS Spoofing'],status:'pending',cat:'cdrone'},
+      {id:1006,type:'news',source:'The Aviationist',url:'https://theaviationist.com',title:'Israeli Rafael Introduces New Drone Guard System with Multi-Spectrum Detection',summary:'이스라엘 라파엘사가 신형 드론 가드 시스템을 공개했습니다. RF·레이더·EO-IR·음향 센서를 통합한 다중 스펙트럼 탐지 체계로, 마이크로 드론부터 MALE급까지 위협 분류가 가능합니다.',date:'2026-05-07',keywords:['Drone Detection','RF Drone Detection'],status:'pending',cat:'cdrone'},
+      {id:1007,type:'news',source:'Chatham House',url:'https://www.chathamhouse.org',title:'Drone Warfare Regulation: International Law Gaps in Counter-UAS Operations',summary:'채텀하우스가 대드론 작전에서의 국제법 공백 보고서를 발표했습니다. 민간 공역과 교전 구역이 중첩되는 상황에서 C-UAS 시스템 운용 시 발생하는 법적 모호성과 국제인도법(IHL) 적용 방안을 다루고 있습니다.',date:'2026-05-06',keywords:['Counter-UAS','Anti-Drone'],status:'pending',cat:'other'},
+      {id:1008,type:'academic',source:'IEEE Xplore',url:'https://ieeexplore.ieee.org',title:'Deep Learning-Based UAV Detection and Classification Using RF Signal Fingerprinting',summary:'RF 신호 핑거프린팅을 활용한 딥러닝 기반 UAV 탐지 및 분류 연구입니다. CNN-LSTM 하이브리드 모델을 적용하여 상용 드론 12종에 대해 97.3%의 분류 정확도를 달성, 저전력 임베디드 환경에서의 실시간 추론을 검증하였습니다.',date:'2026-05-05',keywords:['RF Drone Detection','Drone Identification','UAV Detection'],status:'pending',cat:'cdrone'},
+      {id:1009,type:'academic',source:'ScienceDirect',url:'https://www.sciencedirect.com',title:'Cooperative Multi-Sensor Fusion for Counter-Drone Swarm Operations',summary:'다중 센서 협력 융합 기반 대드론 군집 대응 연구입니다. 이종 센서(레이더/EO-IR/RF) 데이터 융합과 분산 추적 알고리즘을 결합하여 20개 이상의 동시 위협 표적을 0.8초 이내에 분류하는 성능을 시연하였습니다.',date:'2026-05-04',keywords:['Drone Swarm Defense','Drone Tracking','Counter-UAV'],status:'pending',cat:'cdrone'},
+      {id:1010,type:'academic',source:'MDPI Journals',url:'https://www.mdpi.com',title:'GNSS Spoofing Detection in UAV Navigation Using Machine Learning Approaches',summary:'기계학습 기반 UAV 항법 GNSS 스푸핑 탐지 연구입니다. 다중 안테나 수신 패턴과 관성측정장치(IMU) 교차 검증을 통해 98.1%의 스푸핑 탐지율과 1.2%의 오탐률을 기록하였습니다.',date:'2026-05-03',keywords:['GNSS Spoofing','UAV Detection','Drone Mitigation'],status:'pending',cat:'cdrone'}
     ];
 
     const panelMeta={
@@ -346,33 +546,43 @@
       const email=document.getElementById('login-email').value.trim();
       const code=document.getElementById('login-code').value.trim();
       if(!email||!code){showNotif('이메일과 접속 코드를 입력하세요.',true);return}
-      if(code===USER_CODE){
-        currentUser=email;isAdmin=false;
-        document.getElementById('user-badge').textContent=email.split('@')[0].toUpperCase();
-        document.getElementById('admin-tab').style.display='none';
-        showScreen('app');renderAll();
-      }else showNotif('접속 코드가 올바르지 않습니다.',true);
+      const role=ROLE_CODES[code];
+      if(!role){showNotif('접속 코드가 올바르지 않습니다.',true);return}
+      currentUser=email;currentRole=role;
+      isAdmin=(role==='admin'||role==='superadmin');
+      const roleName={superadmin:'SUPER ADMIN',admin:'ADMIN',expert:'EXPERT',member:'MEMBER'}[role];
+      document.getElementById('user-badge').textContent=email.split('@')[0].toUpperCase()+' · '+roleName;
+      document.getElementById('admin-tab').style.display=isAdmin?'':'none';
+      showScreen('app');renderAll();
+      if(isAdmin)renderAdmin();
     }
-    function doAdminLogin(){
-      const code=document.getElementById('login-code').value.trim();
-      if(code===ADMIN_CODE){
-        currentUser='ADMIN';isAdmin=true;
-        document.getElementById('user-badge').textContent='ADMIN';
-        document.getElementById('admin-tab').style.display='';
-        showScreen('app');renderAll();renderAdmin();
-      }else showNotif('관리자 코드가 올바르지 않습니다.',true);
-    }
+    function doAdminLogin(){doLogin()}
     function doLogout(){
       if(confirm('로그아웃하시겠습니까?')){currentUser=null;isAdmin=false;showScreen('landing')}
     }
     function doRegister(){
       const name=document.getElementById('reg-name').value.trim();
       const email=document.getElementById('reg-email').value.trim();
+      const password=document.getElementById('reg-password').value.trim();
       const phone=document.getElementById('reg-phone').value.trim();
-      if(!name||!email||!phone){showNotif('모든 항목을 입력하세요.',true);return}
+      const reqRole=document.getElementById('reg-role-req').value;
+      if(!name||!email||!password||!phone){showNotif('모든 항목을 입력하세요.',true);return}
+      if(password.length<8){showNotif('비밀번호는 8자 이상이어야 합니다.',true);return}
+      const verifyRow=document.getElementById('verify-code-row');
+      if(verifyRow&&verifyRow.style.display!=='none'){
+        const vc=document.getElementById('reg-verify-code').value.trim();
+        if(vc!=='123456'){showNotif('인증번호가 올바르지 않습니다.',true);return}
+      }
       if(members.length>=MAX_MEMBERS){showNotif('회원 정원 1,000명을 초과했습니다.',true);return}
-      members.push({id:Date.now(),name,email,phone:document.getElementById('reg-country').value+' '+phone,date:new Date().toISOString().slice(0,10),status:'pending'});
+      members.push({id:Date.now(),name,email,password,phone:document.getElementById('reg-country').value+' '+phone,date:new Date().toISOString().slice(0,10),status:'pending',role:reqRole});
       updateMemberCount();showScreen('pending');
+    }
+    function sendVerification(){
+      const phone=document.getElementById('reg-phone').value.trim();
+      if(!phone){showNotif('연락처를 입력하세요.',true);return}
+      document.getElementById('verify-code-row').style.display='';
+      document.getElementById('verify-btn').textContent='재전송';
+      showNotif('인증번호가 전송되었습니다. (데모: 123456)');
     }
     function toggleArticle(id){
       const el=document.getElementById('art-'+id);
@@ -390,15 +600,25 @@
             <span class="badge ${a.cat}">${a.cat.toUpperCase()}</span>
             <span class="article-title">${a.title}</span>
             <span class="article-source">${a.source}</span>
+            ${(a.attachments&&a.attachments.length)?`<span style="color:var(--dim);font-size:11px;white-space:nowrap">${[...new Set(a.attachments.map(x=>x.type))].map(t=>t==='document'?'📄':t==='image'?'🖼️':'🔗').join('')}</span>`:''}
+            ${(a.likes||0)>0?`<span class="like-count-inline"><span style="color:#ff6b8a">♥</span>${a.likes}</span>`:''}
+            ${(a.comments&&a.comments.length)?`<span style="color:var(--dim);font-size:11px;white-space:nowrap">💬${a.comments.length}</span>`:''}
             <span class="article-date">${a.date}</span>
             <span class="arrow">⌄</span>
           </div>
           <div class="article-body">
             <p class="article-text">${a.summary}</p>
-            <div class="article-actions">
+            ${renderAttachments(a.attachments)}
+            <div class="article-actions" style="margin-top:12px">
+              <button class="like-btn ${(a.likedBy||[]).includes(currentUser)?'liked':''}" onclick="event.stopPropagation();toggleLike(${a.id})">
+                <span class="like-heart">♥</span>
+                <span>좋아요</span>
+                ${(a.likes||0)>0?`<span class="like-num">${a.likes}</span>`:''}
+              </button>
               <button class="ghost-btn" onclick="showNotif('영문 번역 기능은 AI 연동 단계에서 제공됩니다.')">영문 번역</button>
               ${isAdmin?`<button class="ghost-btn" onclick="editArticle(${a.id})">수정</button><button class="ghost-btn danger" onclick="deleteArticle(${a.id})">삭제</button>`:''}
             </div>
+            ${renderComments(a)}
           </div>
         </article>`).join(''):`<div class="empty" style="padding:48px 0;text-align:center">// 등록된 정보 없음</div>`;
       document.getElementById('panel-'+cat).innerHTML=`
@@ -412,42 +632,375 @@
       if(isAdmin)renderAdmin();
     }
     function renderAdmin(){
+      const isSuperAdmin=currentRole==='superadmin';
+      const roleLabel=isSuperAdmin?'최고관리자':'관리자';
+      document.getElementById('panel-admin').innerHTML=`
+        <header class="panel-header">
+          <div class="panel-kicker" style="color:var(--red)">// ADMIN CONTROL</div>
+          <h2 class="panel-title">관리자 패널 <span style="font-size:13px;font-weight:500;color:var(--muted);margin-left:8px">${roleLabel}</span></h2>
+        </header>
+        <div class="admin-tabs-bar">
+          <button class="admin-tab-btn active" onclick="switchAdminTab('dashboard',this)">대시보드</button>
+          <button class="admin-tab-btn" onclick="switchAdminTab('members',this)">회원 관리</button>
+          <button class="admin-tab-btn" onclick="switchAdminTab('content',this)">콘텐츠 관리</button>
+          <button class="admin-tab-btn" onclick="switchAdminTab('collect',this)">정보 수집 <span style="background:var(--red);color:#fff;font-size:9px;padding:1px 5px;margin-left:4px;vertical-align:middle">${collectedItems.filter(i=>i.status==='pending').length}</span></button>
+          ${isSuperAdmin?'<button class="admin-tab-btn" onclick="switchAdminTab(\'system\',this)">시스템 설정</button>':''}
+        </div>
+        <div id="atab-dashboard" class="atab active">${renderDashboardTab()}</div>
+        <div id="atab-members" class="atab">${renderMembersTab()}</div>
+        <div id="atab-content" class="atab">${renderContentTab()}</div>
+        <div id="atab-collect" class="atab">${renderCollectionTab()}</div>
+        ${isSuperAdmin?`<div id="atab-system" class="atab">${renderSystemTab()}</div>`:''}
+      `;
+    }
+    function switchAdminTab(id,btn){
+      document.querySelectorAll('#panel-admin .atab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.admin-tab-btn').forEach(b=>b.classList.remove('active'));
+      const tab=document.getElementById('atab-'+id);
+      if(tab)tab.classList.add('active');
+      btn.classList.add('active');
+    }
+    function renderDashboardTab(){
       const total=members.length;
       const pending=members.filter(m=>m.status==='pending').length;
       const approved=members.filter(m=>m.status==='approved').length;
       const remain=MAX_MEMBERS-total;
       const pct=Math.min(total/MAX_MEMBERS*100,100).toFixed(2);
-      document.getElementById('panel-admin').innerHTML=`
-        <header class="panel-header"><div class="panel-kicker" style="color:var(--red)">// ADMIN CONTROL</div><h2 class="panel-title">관리자 패널</h2></header>
+      const roleNames={superadmin:'최고관리자',admin:'관리자',expert:'전문가',member:'일반회원'};
+      return `
         <div class="admin-bar">
           <div><div class="admin-metric-label">회원 현황</div><div class="admin-metric-num">${total} <span style="font-size:14px;color:var(--muted);font-weight:500">/ 1,000</span></div></div>
           <div class="admin-track"><div class="admin-fill" style="width:${pct}%"></div></div>
-          <div><div class="admin-metric-label">남은 좌석</div><div class="admin-metric-num" style="color:var(--blue)">${remain.toLocaleString()}</div></div>
+          <div><div class="admin-metric-label">잔여 좌석</div><div class="admin-metric-num" style="color:var(--blue)">${remain.toLocaleString()}</div></div>
         </div>
         <div class="stats-grid">
           <div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">총 회원</div></div>
           <div class="stat-card gold"><div class="stat-num">${pending}</div><div class="stat-label">승인 대기</div></div>
-          <div class="stat-card green"><div class="stat-num">${articles.length}</div><div class="stat-label">등록 콘텐츠</div></div>
-          <div class="stat-card red"><div class="stat-num">${approved}</div><div class="stat-label">승인 완료</div></div>
+          <div class="stat-card green"><div class="stat-num">${approved}</div><div class="stat-label">승인 완료</div></div>
+          <div class="stat-card red"><div class="stat-num">${articles.length}</div><div class="stat-label">등록 콘텐츠</div></div>
         </div>
-        <div class="section-title">// 정보 등록</div>
-        <div class="post-form">
-          <label for="post-cat">카테고리</label><select id="post-cat"><option value="drone">DRONE</option><option value="cdrone">C-DRONE</option><option value="tactics">TACTICS</option><option value="other">OTHER</option></select>
-          <label for="post-source">출처</label><input id="post-source" placeholder="예: Defense News, KCI 학술지명">
-          <label for="post-title">제목</label><input id="post-title" placeholder="정보 제목">
-          <label for="post-body">내용</label><textarea id="post-body" rows="5" placeholder="관계자에게 제공할 정보 요약"></textarea>
-          <label>파일 첨부 (PDF/TXT)</label><div class="upload-zone" onclick="document.getElementById('file-input').click()"><input type="file" id="file-input" accept=".pdf,.txt" style="display:none" onchange="handleFile(this)"><div class="upload-title">클릭하여 파일 선택</div><div class="upload-sub" id="file-name">PDF 또는 TXT 파일</div></div>
-          <div class="actions"><button class="btn-primary" onclick="publishPost()">게시</button><button class="btn-secondary" onclick="clearForm()">초기화</button></div>
+        <div class="section-title">// 역할별 현황</div>
+        <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+          ${['expert','member','admin','superadmin'].map(r=>{
+            const cnt=members.filter(m=>m.role===r).length;
+            return `<div class="stat-card"><span class="role-badge ${r}" style="margin-bottom:10px;display:inline-flex">${r.toUpperCase()}</span><div class="stat-num">${cnt}</div><div class="stat-label">${roleNames[r]}</div></div>`;
+          }).join('')}
         </div>
-        <div class="section-title">// 회원 관리</div>
+        <div class="section-title">// 승인 대기 신청</div>
         <table class="member-table">
-          <thead><tr><th>이름</th><th>이메일</th><th>연락처</th><th>신청일</th><th>상태</th><th>조치</th></tr></thead>
-          <tbody>${members.map(memberRow).join('')}</tbody>
+          <thead><tr><th>이름</th><th>이메일</th><th>신청 역할</th><th>신청일</th><th>상태</th><th>조치</th></tr></thead>
+          <tbody>${members.filter(m=>m.status==='pending').map(m=>`
+            <tr>
+              <td style="color:#fff;font-weight:800">${m.name}</td>
+              <td>${m.email}</td>
+              <td><span class="role-badge ${m.role||'member'}">${(m.role||'member').toUpperCase()}</span></td>
+              <td>${m.date}</td>
+              <td><span class="status pending">대기</span></td>
+              <td><button class="mini-btn ok" onclick="approveMember(${m.id})">승인</button><button class="mini-btn no" onclick="denyMember(${m.id})">거절</button></td>
+            </tr>`).join('')||'<tr><td colspan="6" class="empty" style="text-align:center;padding:20px">대기 중인 신청이 없습니다.</td></tr>'}
+          </tbody>
         </table>`;
+    }
+    function renderMembersTab(){
+      return `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:10px;flex-wrap:wrap">
+          <div style="color:var(--muted);font-size:12px;font-weight:800">전체 ${members.length}명</div>
+          <div style="display:flex;gap:8px">
+            <select id="filter-status" class="role-select" onchange="filterMembers()">
+              <option value="">전체 상태</option>
+              <option value="pending">대기</option>
+              <option value="approved">승인</option>
+              <option value="denied">거절</option>
+            </select>
+            <select id="filter-role" class="role-select" onchange="filterMembers()">
+              <option value="">전체 역할</option>
+              <option value="superadmin">최고관리자</option>
+              <option value="admin">관리자</option>
+              <option value="expert">전문가</option>
+              <option value="member">일반회원</option>
+            </select>
+          </div>
+        </div>
+        <div id="member-table-wrap">${buildMemberTable(members)}</div>`;
+    }
+    function buildMemberTable(list){
+      return `<table class="member-table">
+        <thead><tr><th>이름</th><th>이메일</th><th>연락처</th><th>신청일</th><th>역할</th><th>상태</th><th>조치</th></tr></thead>
+        <tbody>${list.map(memberRow).join('')||'<tr><td colspan="7" class="empty" style="text-align:center;padding:20px">회원 없음</td></tr>'}</tbody>
+      </table>`;
+    }
+    function filterMembers(){
+      const s=document.getElementById('filter-status').value;
+      const r=document.getElementById('filter-role').value;
+      const filtered=members.filter(m=>(!s||m.status===s)&&(!r||m.role===r));
+      document.getElementById('member-table-wrap').innerHTML=buildMemberTable(filtered);
+    }
+    function renderContentTab(){
+      return `
+        <div class="post-form">
+          <div class="section-title" style="margin-top:0">// 정보 등록</div>
+          <label for="post-cat">카테고리</label>
+          <select id="post-cat"><option value="drone">DRONE</option><option value="cdrone">C-DRONE</option><option value="tactics">TACTICS</option><option value="other">OTHER</option></select>
+          <label for="post-source" style="margin-top:12px">출처</label>
+          <input id="post-source" placeholder="예: Defense News, KCI 학술지명">
+          <label for="post-title" style="margin-top:12px">제목</label>
+          <input id="post-title" placeholder="정보 제목">
+          <label for="post-body" style="margin-top:12px">내용</label>
+          <textarea id="post-body" rows="5" placeholder="관계자에게 제공할 정보 요약"></textarea>
+          <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between">
+            <label style="margin:0">첨부 자료 <span id="attach-count-badge" style="display:none" class="attach-count-badge">0</span></label>
+            <select id="post-access" style="background:var(--panel2);border:1px solid var(--line);color:var(--sub);padding:5px 8px;font-size:11px;font-weight:800">
+              <option value="member">전체 회원 열람 가능</option>
+              <option value="expert" selected>전문가 이상 다운로드</option>
+              <option value="admin">관리자 전용</option>
+            </select>
+          </div>
+          <div class="attach-type-tabs">
+            <button class="attach-type-btn active" onclick="switchAttachType('doc',this)">📄 문서</button>
+            <button class="attach-type-btn" onclick="switchAttachType('img',this)">🖼️ 이미지</button>
+            <button class="attach-type-btn" onclick="switchAttachType('link',this)">🔗 링크</button>
+          </div>
+          <!-- 문서 탭 -->
+          <div id="attach-pane-doc" class="attach-pane active">
+            <div class="upload-zone" onclick="document.getElementById('doc-input').click()" style="padding:14px">
+              <input type="file" id="doc-input" accept=".pdf,.doc,.docx,.hwp,.txt,.xlsx,.pptx" multiple style="display:none" onchange="handleDocFiles(this)">
+              <div class="upload-title">클릭하여 문서 선택 (복수 가능)</div>
+              <div class="upload-sub">PDF · DOC · DOCX · HWP · TXT · XLSX · PPTX</div>
+            </div>
+            <div id="doc-preview-list" class="attach-preview-list"></div>
+          </div>
+          <!-- 이미지 탭 -->
+          <div id="attach-pane-img" class="attach-pane">
+            <div class="upload-zone" onclick="document.getElementById('img-input').click()" style="padding:14px">
+              <input type="file" id="img-input" accept=".jpg,.jpeg,.png,.gif,.webp,.svg" multiple style="display:none" onchange="handleImageFiles(this)">
+              <div class="upload-title">클릭하여 이미지 선택 (복수 가능)</div>
+              <div class="upload-sub">JPG · PNG · GIF · WEBP · SVG</div>
+            </div>
+            <div id="img-preview-grid" class="img-preview-grid"></div>
+          </div>
+          <!-- 링크 탭 -->
+          <div id="attach-pane-link" class="attach-pane">
+            <div class="link-input-row">
+              <input id="link-url-input" placeholder="https://..." style="flex:1">
+              <input id="link-label-input" placeholder="링크 설명 (선택)" style="width:160px;flex:none">
+              <button class="mini-btn ok" style="white-space:nowrap" onclick="addLink()">+ 추가</button>
+            </div>
+            <div id="link-list" class="link-list"></div>
+          </div>
+          <div class="actions" style="margin-top:16px">
+            <button class="btn-primary" onclick="publishPost()">게시</button>
+            <button class="btn-secondary" onclick="clearForm()">초기화</button>
+          </div>
+        </div>
+        <div class="section-title">// 등록된 콘텐츠 (${articles.length}건)</div>
+        ${articles.map(a=>`
+          <div class="content-row">
+            <span class="badge ${a.cat}">${a.cat.toUpperCase()}</span>
+            <span style="flex:1;font-size:13px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.title}</span>
+            <span style="color:var(--muted);font-size:12px;white-space:nowrap;margin-right:4px">${a.source}</span>
+            <span style="color:var(--dim);font-size:12px;white-space:nowrap;margin-right:8px">${a.date}</span>
+            <button class="mini-btn" onclick="editArticle(${a.id})">수정</button>
+            <button class="mini-btn no" onclick="deleteArticle(${a.id})">삭제</button>
+          </div>`).join('')}`;
+    }
+    function renderCollectionTab(){
+      const pending=collectedItems.filter(i=>i.status==='pending');
+      const approved=collectedItems.filter(i=>i.status==='approved');
+      const news=pending.filter(i=>i.type==='news');
+      const academic=pending.filter(i=>i.type==='academic');
+      return `
+        <!-- 상단 안내 -->
+        <div class="form-note" style="margin-bottom:20px;display:flex;align-items:center;gap:12px">
+          <div style="flex:1">
+            <strong style="color:var(--blue)">📡 정보 수집 대기함</strong> — 지정 소스에서 수집된 드론·대드론 관련 뉴스 및 학술자료입니다.<br>
+            <span style="color:var(--dim);font-size:11px">검토 후 즉시 게시하거나, 내용을 수정한 뒤 게시할 수 있습니다. 실시간 수집은 API 연동 후 자동화됩니다.</span>
+          </div>
+          <button class="btn-secondary" style="white-space:nowrap;padding:8px 16px" onclick="simulateCollect()">⟳ 수집 시뮬레이션</button>
+        </div>
+        <!-- 통계 -->
+        <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
+          <div class="stat-card"><div class="stat-num">${collectedItems.length}</div><div class="stat-label">총 수집</div></div>
+          <div class="stat-card gold"><div class="stat-num">${pending.length}</div><div class="stat-label">검토 대기</div></div>
+          <div class="stat-card"><div class="stat-num" style="color:var(--blue)">${news.length}</div><div class="stat-label">뉴스</div></div>
+          <div class="stat-card"><div class="stat-num" style="color:var(--gold)">${academic.length}</div><div class="stat-label">학술자료</div></div>
+        </div>
+
+        <!-- 수집 대기함 -->
+        <div class="section-title">// 검토 대기 (${pending.length}건)</div>
+        <div style="margin-bottom:20px">
+          ${pending.length?pending.map(item=>`
+            <div class="collect-item ${item.type}-type" id="ci-${item.id}">
+              <div class="collect-hd">
+                <span class="collect-type ${item.type}">${item.type==='news'?'뉴스':'학술'}</span>
+                <div class="collect-title-wrap">
+                  <div class="collect-title">${item.title}</div>
+                  <div class="collect-meta">${item.source} · ${item.date}</div>
+                </div>
+              </div>
+              <div class="collect-keywords">
+                ${item.keywords.map(k=>`<span class="collect-kw">${k}</span>`).join('')}
+              </div>
+              <div class="collect-summary">${item.summary}</div>
+              <div class="collect-actions">
+                <button class="mini-btn ok" onclick="approveCollected(${item.id})">즉시 게시</button>
+                <button class="mini-btn" style="border-color:rgba(79,163,255,.4);color:var(--blue)" onclick="editCollected(${item.id})">수정 후 게시</button>
+                <button class="mini-btn no" onclick="dismissCollected(${item.id})">제외</button>
+                <a href="${item.url}" target="_blank" class="collect-src-link">↗ 원문 확인</a>
+              </div>
+            </div>`).join('')
+          :`<div class="empty" style="text-align:center;padding:32px">수집된 대기 항목이 없습니다.</div>`}
+        </div>
+
+        ${approved.length?`
+        <div class="section-title">// 게시 완료 (${approved.length}건)</div>
+        <div style="margin-bottom:24px">
+          ${approved.map(item=>`
+            <div class="collect-item approved">
+              <div class="collect-hd">
+                <span class="collect-type ${item.type}">${item.type==='news'?'뉴스':'학술'}</span>
+                <div class="collect-title-wrap">
+                  <div class="collect-title" style="color:var(--muted)">${item.title}</div>
+                  <div class="collect-meta">${item.source} · 게시 완료</div>
+                </div>
+              </div>
+            </div>`).join('')}
+        </div>`:''}
+
+        <!-- 학술 DB 빠른 검색 -->
+        <div class="section-title">// 학술 데이터베이스 키워드 검색</div>
+        <div style="color:var(--muted);font-size:12px;margin-bottom:12px">키워드를 선택하면 해당 DB에서 검색합니다.</div>
+        <div style="margin-bottom:14px">
+          <span style="color:var(--dim);font-size:11px;font-weight:800;letter-spacing:1px">검색 키워드 선택</span>
+          <div class="keyword-grid" style="margin-top:8px">
+            ${COLLECT_KEYWORDS.map(k=>`<button class="keyword-chip" onclick="searchKeyword('${k}')">${k}</button>`).join('')}
+          </div>
+        </div>
+        <div class="db-grid">
+          ${ACADEMIC_DBS.map(db=>`
+            <div class="db-card" onclick="window.open('${db.base}Counter-UAS','_blank')">
+              <div class="db-name">${db.name}</div>
+              <div class="db-desc">${db.desc}</div>
+            </div>`).join('')}
+        </div>
+
+        <!-- 뉴스 소스 목록 -->
+        <div class="section-title">// 뉴스 소스 바로가기</div>
+        <div class="src-grid">
+          ${NEWS_SOURCES.map(s=>`
+            <a href="${s.url}" target="_blank" class="src-card">
+              <span class="src-dot"></span>
+              <div>
+                <div class="src-name">${s.name}</div>
+                <div class="src-tag">${s.tag}</div>
+              </div>
+            </a>`).join('')}
+        </div>
+      `;
+    }
+    function approveCollected(id){
+      const item=collectedItems.find(x=>x.id===id);
+      if(!item)return;
+      articles.unshift({id:Date.now(),cat:item.cat,title:item.title,summary:item.summary,source:item.source,date:item.date,attachments:[{type:'link',label:item.source+' 원문',url:item.url}],likes:0,likedBy:[],comments:[]});
+      item.status='approved';
+      renderAll();
+      showNotif('게시 완료: '+item.title.slice(0,30)+'...');
+    }
+    function editCollected(id){
+      const item=collectedItems.find(x=>x.id===id);
+      if(!item)return;
+      switchPanel('admin',document.getElementById('admin-tab'));
+      renderAdmin();
+      setTimeout(()=>{
+        const contentBtn=document.querySelector('.admin-tab-btn:nth-child(3)');
+        if(contentBtn)switchAdminTab('content',contentBtn);
+        setTimeout(()=>{
+          const cat=document.getElementById('post-cat');
+          const src=document.getElementById('post-source');
+          const ttl=document.getElementById('post-title');
+          const bod=document.getElementById('post-body');
+          if(cat)cat.value=item.cat;
+          if(src)src.value=item.source;
+          if(ttl)ttl.value=item.title;
+          if(bod)bod.value=item.summary;
+          item.status='approved';
+        },30);
+      },50);
+      showNotif('수정 모드: 내용을 검토한 뒤 게시를 누르세요.');
+    }
+    function dismissCollected(id){
+      const item=collectedItems.find(x=>x.id===id);
+      if(!item)return;
+      item.status='dismissed';
+      const el=document.getElementById('ci-'+id);
+      if(el)el.classList.add('dismissed');
+      setTimeout(()=>{if(el)el.remove();renderAdmin();},500);
+      showNotif('항목을 제외했습니다.');
+    }
+    function searchKeyword(kw){
+      const encoded=encodeURIComponent(kw);
+      ACADEMIC_DBS.forEach(db=>window.open(db.base+encoded,'_blank'));
+    }
+    function simulateCollect(){
+      const newItem={
+        id:Date.now(),type:'news',source:'Defense News',url:'https://www.defensenews.com',
+        title:'['+new Date().toLocaleDateString('ko-KR')+'] New C-UAS Technology Demonstrated at AUSA Annual Meeting',
+        summary:'방산전시회 AUSA에서 복수의 신형 C-UAS 기술이 시연되었습니다. AI 기반 위협 분류, 무인 요격체 연동, 복합센서 탐지 체계가 주목을 받았습니다. 수집 시뮬레이션 데모 항목입니다.',
+        date:new Date().toISOString().slice(0,10),
+        keywords:['Counter-UAS','Drone Detection'],status:'pending',cat:'cdrone'
+      };
+      collectedItems.unshift(newItem);
+      renderAdmin();
+      const collectBtn=document.querySelector('.admin-tab-btn:nth-child(4)');
+      if(collectBtn)switchAdminTab('collect',collectBtn);
+      showNotif('새 수집 항목 1건이 추가되었습니다.');
+    }
+    function renderSystemTab(){
+      return `
+        <div class="form-note" style="margin-bottom:20px;border-color:rgba(255,92,92,.3)">
+          <strong style="color:var(--red)">⚠ 최고관리자 전용 영역</strong> — 시스템 설정 변경은 전체 플랫폼에 영향을 미칩니다.
+        </div>
+        <div class="section-title">// 역할별 접속 코드 현황</div>
+        <table class="member-table">
+          <thead><tr><th>역할</th><th>코드</th><th>권한 범위</th></tr></thead>
+          <tbody>
+            <tr><td><span class="role-badge superadmin">SUPER ADMIN</span></td><td style="font-family:var(--mono);color:var(--gold)">super2024</td><td style="color:var(--muted)">전체 시스템 관리, 역할 변경, 코드 발급</td></tr>
+            <tr><td><span class="role-badge admin">ADMIN</span></td><td style="font-family:var(--mono);color:var(--gold)">admin2024</td><td style="color:var(--muted)">회원 승인/거절, 콘텐츠 등록/수정/삭제</td></tr>
+            <tr><td><span class="role-badge expert">EXPERT</span></td><td style="font-family:var(--mono);color:var(--gold)">expert1234</td><td style="color:var(--muted)">전문 자료 열람 및 파일 다운로드</td></tr>
+            <tr><td><span class="role-badge member">MEMBER</span></td><td style="font-family:var(--mono);color:var(--gold)">1234</td><td style="color:var(--muted)">기본 자료 열람 및 검색</td></tr>
+          </tbody>
+        </table>
+        <div class="section-title" style="margin-top:24px">// 시스템 현황</div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-num">${members.length}</div><div class="stat-label">전체 회원</div></div>
+          <div class="stat-card green"><div class="stat-num">${articles.length}</div><div class="stat-label">전체 콘텐츠</div></div>
+          <div class="stat-card gold"><div class="stat-num">${MAX_MEMBERS-members.length}</div><div class="stat-label">잔여 정원</div></div>
+          <div class="stat-card red"><div class="stat-num">v1.0</div><div class="stat-label">플랫폼 버전</div></div>
+        </div>`;
     }
     function memberRow(m){
       const label=m.status==='pending'?'대기':m.status==='approved'?'승인':'거절';
-      return `<tr><td style="color:#fff;font-weight:800">${m.name}</td><td>${m.email}</td><td>${m.phone}</td><td>${m.date}</td><td><span class="status ${m.status}">${label}</span></td><td>${m.status==='pending'?`<button class="mini-btn ok" onclick="approveMember(${m.id})">승인</button><button class="mini-btn no" onclick="denyMember(${m.id})">거절</button>`:''}<button class="mini-btn" onclick="deleteMember(${m.id})">삭제</button></td></tr>`;
+      const roleEdit=currentRole==='superadmin'?`
+        <select class="role-select" style="margin-left:6px;vertical-align:middle" onchange="setMemberRole(${m.id},this.value)">
+          <option value="member" ${m.role==='member'?'selected':''}>Member</option>
+          <option value="expert" ${m.role==='expert'?'selected':''}>Expert</option>
+          <option value="admin" ${m.role==='admin'?'selected':''}>Admin</option>
+        </select>`:''
+      return `<tr>
+        <td style="color:#fff;font-weight:800">${m.name}</td>
+        <td>${m.email}</td>
+        <td>${m.phone}</td>
+        <td>${m.date}</td>
+        <td><span class="role-badge ${m.role||'member'}">${(m.role||'member').toUpperCase()}</span>${roleEdit}</td>
+        <td><span class="status ${m.status}">${label}</span></td>
+        <td>
+          ${m.status==='pending'?`<button class="mini-btn ok" onclick="approveMember(${m.id})">승인</button><button class="mini-btn no" onclick="denyMember(${m.id})">거절</button>`:''}
+          <button class="mini-btn" onclick="deleteMember(${m.id})">삭제</button>
+        </td>
+      </tr>`;
+    }
+    function setMemberRole(id,role){
+      const m=members.find(x=>x.id===id);
+      if(m){m.role=role;renderAdmin();showNotif(m.name+' 역할 변경: '+role.toUpperCase())}
     }
     function publishPost(){
       const cat=document.getElementById('post-cat').value;
@@ -455,19 +1008,33 @@
       const title=document.getElementById('post-title').value.trim();
       const summary=document.getElementById('post-body').value.trim();
       if(!source||!title||!summary){showNotif('출처, 제목, 내용을 모두 입력하세요.',true);return}
-      articles.unshift({id:Date.now(),cat,title,summary,source,date:new Date().toISOString().slice(0,10)});
+      articles.unshift({id:Date.now(),cat,title,summary,source,date:new Date().toISOString().slice(0,10),attachments:[...pendingAttachments],likes:0,likedBy:[],comments:[]});
+      pendingAttachments=[];
       renderAll();clearForm();showNotif('정보 게시가 완료되었습니다.');
     }
     function editArticle(id){
       const a=articles.find(x=>x.id===id);
       if(!a)return;
       articles=articles.filter(x=>x.id!==id);
+      pendingAttachments=a.attachments?[...a.attachments]:[];
       renderAll();
       switchPanel('admin',document.getElementById('admin-tab'));
-      document.getElementById('post-cat').value=a.cat;
-      document.getElementById('post-source').value=a.source;
-      document.getElementById('post-title').value=a.title;
-      document.getElementById('post-body').value=a.summary;
+      renderAdmin();
+      setTimeout(()=>{
+        const contentBtn=document.querySelector('.admin-tab-btn:nth-child(3)');
+        if(contentBtn)switchAdminTab('content',contentBtn);
+        setTimeout(()=>{
+          const cat=document.getElementById('post-cat');
+          const src=document.getElementById('post-source');
+          const ttl=document.getElementById('post-title');
+          const bod=document.getElementById('post-body');
+          if(cat)cat.value=a.cat;
+          if(src)src.value=a.source;
+          if(ttl)ttl.value=a.title;
+          if(bod)bod.value=a.summary;
+          renderDocPreview();renderImgPreview();renderLinkList();updateAttachBadge();
+        },30);
+      },50);
       showNotif('수정 모드입니다. 내용을 고친 뒤 게시를 누르세요.');
     }
     function deleteArticle(id){
@@ -478,8 +1045,208 @@
     function approveMember(id){const m=members.find(x=>x.id===id);if(m){m.status='approved';renderAdmin();updateMemberCount();showNotif(m.name+' 승인 완료')}}
     function denyMember(id){const m=members.find(x=>x.id===id);if(m){m.status='denied';renderAdmin();showNotif(m.name+' 거절 처리')}}
     function deleteMember(id){if(!confirm('회원을 삭제하시겠습니까?'))return;members=members.filter(x=>x.id!==id);renderAdmin();updateMemberCount();showNotif('회원이 삭제되었습니다.')}
-    function clearForm(){['post-source','post-title','post-body'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});const file=document.getElementById('file-name');if(file)file.textContent='PDF 또는 TXT 파일'}
+    function clearForm(){
+      ['post-source','post-title','post-body'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+      pendingAttachments=[];
+      ['doc-preview-list','img-preview-grid','link-list'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=''});
+      updateAttachBadge();
+    }
     function handleFile(input){if(input.files[0])document.getElementById('file-name').textContent=input.files[0].name}
+    function switchAttachType(type,btn){
+      document.querySelectorAll('.attach-pane').forEach(p=>p.classList.remove('active'));
+      document.querySelectorAll('.attach-type-btn').forEach(b=>b.classList.remove('active'));
+      const pane=document.getElementById('attach-pane-'+type);
+      if(pane)pane.classList.add('active');
+      btn.classList.add('active');
+    }
+    function formatFileSize(bytes){
+      if(bytes<1024)return bytes+'B';
+      if(bytes<1048576)return(bytes/1024).toFixed(1)+'KB';
+      return(bytes/1048576).toFixed(1)+'MB';
+    }
+    function updateAttachBadge(){
+      const badge=document.getElementById('attach-count-badge');
+      if(!badge)return;
+      const n=pendingAttachments.length;
+      badge.textContent=n;
+      badge.style.display=n?'inline-flex':'none';
+    }
+    function handleDocFiles(input){
+      const access=document.getElementById('post-access')?document.getElementById('post-access').value:'expert';
+      Array.from(input.files).forEach(file=>{
+        const reader=new FileReader();
+        reader.onload=e=>{
+          pendingAttachments.push({type:'document',name:file.name,size:formatFileSize(file.size),dataUrl:e.target.result,access});
+          renderDocPreview();updateAttachBadge();
+        };
+        reader.readAsDataURL(file);
+      });
+      input.value='';
+    }
+    function handleImageFiles(input){
+      Array.from(input.files).forEach(file=>{
+        const reader=new FileReader();
+        reader.onload=e=>{
+          pendingAttachments.push({type:'image',name:file.name,dataUrl:e.target.result});
+          renderImgPreview();updateAttachBadge();
+        };
+        reader.readAsDataURL(file);
+      });
+      input.value='';
+    }
+    function addLink(){
+      const url=document.getElementById('link-url-input').value.trim();
+      const label=document.getElementById('link-label-input').value.trim();
+      if(!url){showNotif('URL을 입력하세요.',true);return}
+      if(!url.startsWith('http')){showNotif('http:// 또는 https://로 시작하는 URL을 입력하세요.',true);return}
+      pendingAttachments.push({type:'link',url,label:label||url});
+      document.getElementById('link-url-input').value='';
+      document.getElementById('link-label-input').value='';
+      renderLinkList();updateAttachBadge();
+    }
+    function removeAttachment(idx){
+      pendingAttachments.splice(idx,1);
+      renderDocPreview();renderImgPreview();renderLinkList();updateAttachBadge();
+    }
+    function renderDocPreview(){
+      const el=document.getElementById('doc-preview-list');if(!el)return;
+      const docs=pendingAttachments.map((a,i)=>({...a,_i:i})).filter(a=>a.type==='document');
+      el.innerHTML=docs.map(a=>`
+        <div class="attach-preview-item">
+          <span class="att-icon">📄</span>
+          <span class="att-name">${a.name}</span>
+          <span class="att-size">${a.size}</span>
+          <span class="att-size" style="color:var(--blue);margin-left:4px">${a.access==='member'?'전체':'expert'==='expert'?'Expert+':'Admin'}</span>
+          <button class="att-del" onclick="removeAttachment(${a._i})" title="삭제">×</button>
+        </div>`).join('')||'';
+    }
+    function renderImgPreview(){
+      const el=document.getElementById('img-preview-grid');if(!el)return;
+      const imgs=pendingAttachments.map((a,i)=>({...a,_i:i})).filter(a=>a.type==='image');
+      el.innerHTML=imgs.map(a=>`
+        <div class="img-thumb">
+          <img src="${a.dataUrl}" alt="${a.name}" title="${a.name}">
+          <button class="att-del" onclick="removeAttachment(${a._i})" title="삭제">×</button>
+        </div>`).join('')||'';
+    }
+    function renderLinkList(){
+      const el=document.getElementById('link-list');if(!el)return;
+      const links=pendingAttachments.map((a,i)=>({...a,_i:i})).filter(a=>a.type==='link');
+      el.innerHTML=links.map(a=>`
+        <div class="link-item">
+          <span style="font-size:13px">🔗</span>
+          <span class="lk-label">${a.label!==a.url?a.label:''}</span>
+          <span class="lk-url">${a.url}</span>
+          <button class="lk-del" onclick="removeAttachment(${a._i})" title="삭제">×</button>
+        </div>`).join('')||'';
+    }
+    function renderComments(a){
+      const comments=a.comments||[];
+      const commentItems=comments.map(c=>`
+        <div class="comment-item">
+          <div class="comment-hd">
+            <span class="comment-author">${c.name}</span>
+            <span class="role-badge ${c.role||'member'}" style="font-size:9px;padding:2px 5px">${(c.role||'member').toUpperCase()}</span>
+            <span class="comment-date">${c.date}</span>
+            ${(isAdmin||c.user===currentUser)?`<button class="comment-del" onclick="event.stopPropagation();deleteComment(${a.id},${c.id})">삭제</button>`:''}
+          </div>
+          <div class="comment-text">${c.text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+        </div>`).join('');
+      return `
+        <div class="comments-section">
+          <div class="comments-label">// 댓글 ${comments.length}개</div>
+          ${comments.length?`<div class="comment-list">${commentItems}</div>`:`<div class="comment-empty">첫 번째 댓글을 작성해보세요.</div>`}
+          <div class="comment-input-row">
+            <textarea id="cmt-${a.id}" placeholder="댓글을 입력하세요..." onkeydown="if(event.ctrlKey&&event.key==='Enter')submitComment(${a.id})"></textarea>
+            <button class="comment-submit" onclick="event.stopPropagation();submitComment(${a.id})">등록</button>
+          </div>
+          <div style="color:var(--dim);font-size:10px;margin-top:4px">Ctrl+Enter로 빠르게 등록</div>
+        </div>`;
+    }
+    function toggleLike(id){
+      const a=articles.find(x=>x.id===id);
+      if(!a)return;
+      if(!a.likedBy)a.likedBy=[];
+      if(!a.likes)a.likes=0;
+      const idx=a.likedBy.indexOf(currentUser);
+      if(idx>=0){a.likedBy.splice(idx,1);a.likes=Math.max(0,a.likes-1);}
+      else{a.likedBy.push(currentUser);a.likes++;}
+      reRenderArticle(id);
+    }
+    function submitComment(id){
+      const input=document.getElementById('cmt-'+id);
+      if(!input)return;
+      const text=input.value.trim();
+      if(!text){showNotif('댓글 내용을 입력하세요.',true);return}
+      const a=articles.find(x=>x.id===id);
+      if(!a)return;
+      if(!a.comments)a.comments=[];
+      const m=members.find(m=>m.email===currentUser);
+      const name=m?m.name:currentUser.split('@')[0];
+      a.comments.push({id:Date.now(),user:currentUser,name,role:currentRole,text,date:new Date().toISOString().slice(0,10)});
+      reRenderArticle(id);
+      showNotif('댓글이 등록되었습니다.');
+    }
+    function deleteComment(articleId,commentId){
+      const a=articles.find(x=>x.id===articleId);
+      if(!a||!a.comments)return;
+      a.comments=a.comments.filter(c=>c.id!==commentId);
+      reRenderArticle(articleId);
+      showNotif('댓글이 삭제되었습니다.');
+    }
+    function reRenderArticle(id){
+      const el=document.getElementById('art-'+id);
+      const wasExpanded=el&&el.classList.contains('expanded');
+      const a=articles.find(x=>x.id===id);
+      if(!a||!el)return;
+      const meta=panelMeta[a.cat];
+      el.outerHTML=`
+        <article class="article-item${wasExpanded?' expanded':''}" id="art-${id}">
+          <div class="article-header" onclick="toggleArticle(${id})">
+            <span class="badge ${a.cat}">${a.cat.toUpperCase()}</span>
+            <span class="article-title">${a.title}</span>
+            <span class="article-source">${a.source}</span>
+            ${(a.attachments&&a.attachments.length)?`<span style="color:var(--dim);font-size:11px;white-space:nowrap">${[...new Set(a.attachments.map(x=>x.type))].map(t=>t==='document'?'📄':t==='image'?'🖼️':'🔗').join('')}</span>`:''}
+            ${(a.likes||0)>0?`<span class="like-count-inline"><span style="color:#ff6b8a">♥</span>${a.likes}</span>`:''}
+            ${(a.comments&&a.comments.length)?`<span style="color:var(--dim);font-size:11px;white-space:nowrap">💬${a.comments.length}</span>`:''}
+            <span class="article-date">${a.date}</span>
+            <span class="arrow">⌄</span>
+          </div>
+          <div class="article-body">
+            <p class="article-text">${a.summary}</p>
+            ${renderAttachments(a.attachments)}
+            <div class="article-actions" style="margin-top:12px">
+              <button class="like-btn ${(a.likedBy||[]).includes(currentUser)?'liked':''}" onclick="event.stopPropagation();toggleLike(${id})">
+                <span class="like-heart">♥</span>
+                <span>좋아요</span>
+                ${(a.likes||0)>0?`<span class="like-num">${a.likes}</span>`:''}
+              </button>
+              <button class="ghost-btn" onclick="showNotif('영문 번역 기능은 AI 연동 단계에서 제공됩니다.')">영문 번역</button>
+              ${isAdmin?`<button class="ghost-btn" onclick="editArticle(${id})">수정</button><button class="ghost-btn danger" onclick="deleteArticle(${id})">삭제</button>`:''}
+            </div>
+            ${renderComments(a)}
+          </div>
+        </article>`;
+    }
+    function renderAttachments(attachments){
+      if(!attachments||!attachments.length)return'';
+      const images=attachments.filter(a=>a.type==='image');
+      const docs=attachments.filter(a=>a.type==='document');
+      const links=attachments.filter(a=>a.type==='link');
+      const roleRank={guest:0,member:1,expert:2,admin:3,superadmin:4};
+      const myRank=roleRank[currentRole]||0;
+      function canAccess(acc){const need={member:1,expert:2,admin:3}[acc]||1;return myRank>=need;}
+      const imgHtml=images.length?`<div class="article-img-wrap">${images.map(img=>`<img class="article-img-thumb" src="${img.dataUrl}" alt="${img.name}" title="클릭하면 원본 보기" onclick="window.open(this.src,'_blank')">`).join('')}</div>`:'';
+      const docHtml=docs.length?`<div class="article-docs">${docs.map(doc=>{
+        const ok=canAccess(doc.access||'expert');
+        const label={member:'전체',expert:'Expert+',admin:'Admin+'}[doc.access||'expert'];
+        return ok
+          ?`<a class="article-doc-item" href="${doc.dataUrl}" download="${doc.name}"><span>📄</span><span style="flex:1">${doc.name}</span><span style="color:var(--dim);font-size:11px;font-family:var(--mono)">${doc.size||''}</span><span class="access-lbl open">다운로드</span></a>`
+          :`<div class="article-doc-locked"><span>🔒</span><span style="flex:1">${doc.name}</span><span class="access-lbl expert">${label} 전용</span></div>`;
+      }).join('')}</div>`:'';
+      const linkHtml=links.length?`<div class="article-links">${links.map(lnk=>`<a class="article-link-item" href="${lnk.url}" target="_blank" rel="noopener">🔗 ${lnk.label||lnk.url}</a>`).join('')}</div>`:'';
+      return`<div class="article-attachments"><div class="attach-section-label">// 첨부 자료</div>${imgHtml}${docHtml}${linkHtml}</div>`;
+    }
     function setLang(lang,btn){btn.closest('.translate-bar').querySelectorAll('.translate-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(lang==='en')showNotif('영문 버전은 AI 번역 연동 단계에서 제공됩니다.')}
     function renderIntelPanel(){
       const list=document.getElementById('lp-intel-list');
@@ -491,7 +1258,10 @@
           <div class="lp-intel-date">${a.date.replace(/-/g,'.')}.</div>
         </div>`).join('');
     }
-    function updateMemberCount(){const el=document.getElementById('member-count');if(el)el.textContent=members.length}
+    function updateMemberCount(){
+      const a=document.getElementById('member-count');if(a)a.textContent=members.length;
+      const b=document.getElementById('login-member-count');if(b)b.textContent=members.length;
+    }
     function showNotif(msg,isErr=false){const el=document.getElementById('notif');el.textContent=msg;el.className='notif'+(isErr?' error':'');el.style.display='block';setTimeout(()=>el.style.display='none',3000)}
 
     updateMemberCount();
