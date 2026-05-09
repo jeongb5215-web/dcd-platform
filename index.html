@@ -558,13 +558,10 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="reg-role-req">가입 유형 신청</label>
-        <select id="reg-role-req">
-          <option value="member">일반회원 (Member) — 기본 자료 열람 및 검색</option>
-          <option value="expert">전문가 회원 (Expert) — 전문 자료 열람 및 다운로드</option>
-        </select>
+        <label>가입 유형</label>
+        <div style="padding:9px 12px;background:#f8fafc;border:1px solid #e2e8f0;color:#374151;font-size:13px">일반회원 (Member) — 기본 자료 열람 및 검색</div>
       </div>
-      <div class="form-note" style="margin-top:14px">신청 후 운영자 검토를 거쳐 승인됩니다. 역할은 관리자가 최종 결정합니다.</div>
+      <div class="form-note" style="margin-top:14px">가입 후 관리자 승인이 필요합니다. 역할(전문가·관리자 등)은 승인 후 관리자가 부여합니다.</div>
       <div class="actions" style="margin-top:18px">
         <button class="btn-primary" style="flex:1;justify-content:center" onclick="doRegister()">확인가입</button>
       </div>
@@ -730,7 +727,7 @@
       const email=document.getElementById('reg-email').value.trim();
       const password=document.getElementById('reg-password').value.trim();
       const phone=document.getElementById('reg-phone').value.trim();
-      const reqRole=document.getElementById('reg-role-req').value;
+      const reqRole='member';
       if(!name||!email||!password||!phone){showNotif('모든 항목을 입력하세요.',true);return}
       if(password.length<8){showNotif('비밀번호는 8자 이상이어야 합니다.',true);return}
       const verifyRow=document.getElementById('verify-code-row');
@@ -1271,11 +1268,12 @@
     }
     function memberRow(m){
       const label=m.status==='pending'?'대기':m.status==='approved'?'승인':'거절';
-      const roleEdit=currentRole==='superadmin'?`
+      const roleEdit=(currentRole==='superadmin'||currentRole==='admin')?`
         <select class="role-select" style="margin-left:6px;vertical-align:middle" onchange="setMemberRole(${m.id},this.value)">
-          <option value="member" ${m.role==='member'?'selected':''}>Member</option>
-          <option value="expert" ${m.role==='expert'?'selected':''}>Expert</option>
-          <option value="admin" ${m.role==='admin'?'selected':''}>Admin</option>
+          <option value="member" ${m.role==='member'?'selected':''}>일반회원</option>
+          <option value="expert" ${m.role==='expert'?'selected':''}>전문가</option>
+          <option value="admin" ${m.role==='admin'?'selected':''}>관리자</option>
+          ${currentRole==='superadmin'?`<option value="superadmin" ${m.role==='superadmin'?'selected':''}>최고관리자</option>`:''}
         </select>`:''
       return `<tr>
         <td style="color:#fff;font-weight:800">${m.name}</td>
