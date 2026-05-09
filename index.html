@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DcD | Drone & Counter-Drone Intelligence Platform</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>DcD | Drone & Counter-Drone Intelligence Platform v3</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   <style>
@@ -87,6 +90,7 @@
     .nav-tab.admin-tab{color:rgba(220,38,38,.75);font-weight:800}
     .nav-tab.admin-tab.active{color:#dc2626;border-bottom-color:#dc2626}
     .top-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+    .ver-badge{background:#4fa3ff;color:#fff;font-size:10px;font-weight:900;padding:3px 8px;letter-spacing:1px;border-radius:2px}
     .user-badge{color:#1a1a2e;font-size:12px;font-weight:700;letter-spacing:.3px}
     .logout-btn{background:none;border:1px solid #dde3ec;color:#6b7280;padding:6px 16px;font-size:12px;font-weight:600}
     .logout-btn:hover{border-color:var(--red);color:var(--red)}
@@ -518,7 +522,7 @@
       <button class="nav-tab" onclick="switchPanel('tactics',this)">TACTICS</button>
       <button class="nav-tab" onclick="switchPanel('other',this)">OTHER</button>
       <button id="admin-tab" class="nav-tab admin-tab" onclick="switchPanel('admin',this)" style="display:none">ADMIN</button>
-      <div class="top-right"><span id="user-badge" class="user-badge">GUEST</span><button class="logout-btn" onclick="doLogout()">로그아웃</button></div>
+      <div class="top-right"><span class="ver-badge">v3</span><span id="user-badge" class="user-badge">GUEST</span><button class="logout-btn" onclick="doLogout()">로그아웃</button></div>
     </nav>
     <div class="app-content">
       <section id="panel-drone" class="panel active"></section>
