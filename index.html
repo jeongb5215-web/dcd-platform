@@ -113,7 +113,7 @@
     .app-content{flex:1;overflow:auto}
     .panel{display:none;padding:0;min-height:calc(100vh - 64px);flex-direction:column;background:#f8f9fb}
     .panel.active{display:flex}
-    #panel-admin{background:#fff;padding:28px 24px}
+    #panel-admin{background:#f5f6f8;padding:0}
     .panel-header{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:18px}
     .panel-title{margin-top:7px;font-size:27px}
     .translate-bar{display:flex;align-items:center;gap:8px;margin-bottom:18px}
@@ -173,15 +173,60 @@
     .notif{position:fixed;right:20px;bottom:20px;z-index:20;display:none;background:var(--panel);border:1px solid var(--blue);color:var(--blue);padding:12px 18px;font-size:13px;font-weight:800}
     .notif.error{border-color:var(--red);color:var(--red)}
 
-    /* ── Admin Panel 흰색 배경 ── */
-    #panel-admin{background:#fff}
-    #panel-admin .panel-title{color:#1a1a2e}
-    #panel-admin .panel-header{border-bottom-color:#dde3ec}
-    #panel-admin .admin-tabs-bar{border-bottom-color:#dde3ec}
+    /* ── Admin Panel Light Theme ── */
+    #panel-admin .panel-header{background:#fff;border-bottom:2px solid #e2e8f0;padding:32px 48px 20px;margin-bottom:0}
+    #panel-admin .panel-kicker{color:#ef4444}
+    #panel-admin .panel-title{color:#0f172a;font-size:26px;font-weight:900;margin-top:6px}
+    #panel-admin .admin-tabs-bar{background:#fff;border-bottom:2px solid #e2e8f0;padding:0 48px;margin-bottom:0}
     #panel-admin .admin-tab-btn{color:#6b7280}
-    #panel-admin .admin-tab-btn:hover{color:#1a1a2e}
-    #panel-admin .admin-tab-btn.active{color:#1a1a2e;border-bottom-color:var(--red)}
-    #panel-admin .section-title{border-bottom-color:rgba(255,92,92,.2)}
+    #panel-admin .admin-tab-btn:hover{color:#0f172a}
+    #panel-admin .admin-tab-btn.active{color:#0f172a;border-bottom-color:#ef4444}
+    #panel-admin .atab.active{padding:36px 48px}
+    #panel-admin .section-title{color:#ef4444;border-bottom:1px solid #fecaca;margin:28px 0 16px}
+    #panel-admin .admin-bar{background:#fff;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+    #panel-admin .admin-metric-label{color:#6b7280}
+    #panel-admin .admin-metric-num{color:#0f172a}
+    #panel-admin .admin-track{background:#f1f5f9;border:none;height:6px}
+    #panel-admin .stats-grid{gap:16px}
+    #panel-admin .stat-card{background:#fff;border:1px solid #e2e8f0;border-top:3px solid #4fa3ff;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+    #panel-admin .stat-card::before{display:none}
+    #panel-admin .stat-card.gold{border-top-color:#d97706}
+    #panel-admin .stat-card.green{border-top-color:#10b981}
+    #panel-admin .stat-card.red{border-top-color:#ef4444}
+    #panel-admin .stat-num{color:#0f172a}
+    #panel-admin .stat-label{color:#6b7280}
+    #panel-admin .member-table{background:#fff;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+    #panel-admin .member-table th{background:#f8fafc;color:#6b7280;border-bottom:2px solid #e2e8f0;padding:12px 16px}
+    #panel-admin .member-table td{color:#1e293b;border-bottom:1px solid #f1f5f9;padding:14px 16px}
+    #panel-admin .member-table tr:last-child td{border-bottom:none}
+    #panel-admin .member-table tr:hover td{background:#f8fafc}
+    #panel-admin .mini-btn{background:#fff;border:1px solid #e2e8f0;color:#6b7280}
+    #panel-admin .mini-btn.ok{background:#f0fdf4;border-color:#86efac;color:#16a34a}
+    #panel-admin .mini-btn.no{background:#fef2f2;border-color:#fca5a5;color:#dc2626}
+    #panel-admin .role-select{background:#fff;border:1px solid #e2e8f0;color:#374151}
+    #panel-admin .role-badge.superadmin{color:#475569;border-color:#94a3b8;background:#f1f5f9}
+    #panel-admin .post-form{background:#fff;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+    #panel-admin .post-form label{color:#374151}
+    #panel-admin .post-form input,#panel-admin .post-form select,#panel-admin .post-form textarea{background:#f8fafc;border:1px solid #e2e8f0;color:#0f172a}
+    #panel-admin input::placeholder,#panel-admin textarea::placeholder{color:#9ca3af}
+    #panel-admin .upload-zone{background:#f8fafc;border-color:#cbd5e1}
+    #panel-admin .upload-zone:hover{background:#f1f5f9;border-color:#94a3b8}
+    #panel-admin .upload-title{color:#374151}
+    #panel-admin .upload-sub{color:#6b7280}
+    #panel-admin .content-row{background:#fff;border:1px solid #e2e8f0;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+    #panel-admin .content-row:hover{border-color:#cbd5e1;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+    #panel-admin .collect-item{background:#fff;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+    #panel-admin .collect-item:hover{border-color:#cbd5e1;border-left-color:var(--blue)}
+    #panel-admin .collect-title{color:#0f172a}
+    #panel-admin .collect-meta{color:#6b7280}
+    #panel-admin .collect-summary{color:#374151}
+    #panel-admin .collect-src-link{color:#4fa3ff}
+    #panel-admin .form-note{background:#fff;border:1px solid #e2e8f0;color:#374151}
+    #panel-admin .attach-type-tabs{border-color:#e2e8f0}
+    #panel-admin .attach-type-btn{color:#6b7280;border-right-color:#e2e8f0}
+    #panel-admin .attach-type-btn:hover{background:#f8fafc;color:#374151}
+    #panel-admin .attach-type-btn.active{background:#eff6ff;color:#4fa3ff}
+    #panel-admin .empty{color:#6b7280}
     /* ── Admin Panel Tabs ── */
     .admin-tabs-bar{display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid var(--line)}
     .admin-tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);padding:10px 20px;font-size:13px;font-weight:800;letter-spacing:.5px;margin-bottom:-1px;transition:.15s;cursor:pointer}
@@ -857,7 +902,7 @@
           <thead><tr><th>이름</th><th>이메일</th><th>신청 역할</th><th>신청일</th><th>상태</th><th>조치</th></tr></thead>
           <tbody>${members.filter(m=>m.status==='pending').map(m=>`
             <tr>
-              <td style="color:#fff;font-weight:800">${m.name}</td>
+              <td style="font-weight:800">${m.name}</td>
               <td>${m.email}</td>
               <td><span class="role-badge ${m.role||'member'}">${(m.role||'member').toUpperCase()}</span></td>
               <td>${m.date}</td>
@@ -915,7 +960,7 @@
           <textarea id="post-body" rows="5" placeholder="관계자에게 제공할 정보 요약"></textarea>
           <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between">
             <label style="margin:0">첨부 자료 <span id="attach-count-badge" style="display:none" class="attach-count-badge">0</span></label>
-            <select id="post-access" style="background:var(--panel2);border:1px solid var(--line);color:var(--sub);padding:5px 8px;font-size:11px;font-weight:800">
+            <select id="post-access" style="background:#f8fafc;border:1px solid #e2e8f0;color:#374151;padding:5px 8px;font-size:11px;font-weight:800">
               <option value="member">전체 회원 열람 가능</option>
               <option value="expert" selected>전문가 이상 다운로드</option>
               <option value="admin">관리자 전용</option>
@@ -962,9 +1007,9 @@
         ${articles.map(a=>`
           <div class="content-row">
             <span class="badge ${a.cat}">${a.cat.toUpperCase()}</span>
-            <span style="flex:1;font-size:13px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.title}</span>
-            <span style="color:var(--muted);font-size:12px;white-space:nowrap;margin-right:4px">${a.source}</span>
-            <span style="color:var(--dim);font-size:12px;white-space:nowrap;margin-right:8px">${a.date}</span>
+            <span style="flex:1;font-size:13px;font-weight:800;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.title}</span>
+            <span style="color:#6b7280;font-size:12px;white-space:nowrap;margin-right:4px">${a.source}</span>
+            <span style="color:#94a3b8;font-size:12px;white-space:nowrap;margin-right:8px">${a.date}</span>
             <button class="mini-btn" onclick="editArticle(${a.id})">수정</button>
             <button class="mini-btn no" onclick="deleteArticle(${a.id})">삭제</button>
           </div>`).join('')}`;
@@ -978,8 +1023,8 @@
         <!-- 상단 안내 -->
         <div class="form-note" style="margin-bottom:20px;display:flex;align-items:center;gap:12px">
           <div style="flex:1">
-            <strong style="color:var(--blue)">📡 정보 수집 대기함</strong> — 지정 소스에서 수집된 드론·대드론 관련 뉴스 및 학술자료입니다.<br>
-            <span style="color:var(--dim);font-size:11px">검토 후 즉시 게시하거나, 내용을 수정한 뒤 게시할 수 있습니다. 실시간 수집은 API 연동 후 자동화됩니다.</span>
+            <strong style="color:#4fa3ff">📡 정보 수집 대기함</strong> — 지정 소스에서 수집된 드론·대드론 관련 뉴스 및 학술자료입니다.<br>
+            <span style="color:#6b7280;font-size:11px">검토 후 즉시 게시하거나, 내용을 수정한 뒤 게시할 수 있습니다. 실시간 수집은 API 연동 후 자동화됩니다.</span>
           </div>
           <button class="btn-secondary" style="white-space:nowrap;padding:8px 16px" onclick="simulateCollect()">⟳ 수집 시뮬레이션</button>
         </div>
@@ -987,8 +1032,8 @@
         <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
           <div class="stat-card"><div class="stat-num">${collectedItems.length}</div><div class="stat-label">총 수집</div></div>
           <div class="stat-card gold"><div class="stat-num">${pending.length}</div><div class="stat-label">검토 대기</div></div>
-          <div class="stat-card"><div class="stat-num" style="color:var(--blue)">${news.length}</div><div class="stat-label">뉴스</div></div>
-          <div class="stat-card"><div class="stat-num" style="color:var(--gold)">${academic.length}</div><div class="stat-label">학술자료</div></div>
+          <div class="stat-card"><div class="stat-num" style="color:#4fa3ff">${news.length}</div><div class="stat-label">뉴스</div></div>
+          <div class="stat-card"><div class="stat-num" style="color:#d97706">${academic.length}</div><div class="stat-label">학술자료</div></div>
         </div>
 
         <!-- 수집 대기함 -->
