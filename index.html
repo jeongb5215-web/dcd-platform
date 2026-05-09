@@ -77,17 +77,18 @@
     .pending .auth-kicker{color:var(--gold)}
 
     #screen-app{flex-direction:column;background:var(--bg)}
-    .topbar{height:56px;background:var(--panel);border-bottom:1px solid var(--line-strong);display:flex;align-items:center;gap:6px;padding:0 20px;flex-shrink:0}
-    .top-logo{font-size:21px;font-weight:900;margin-right:12px}
-    .top-logo span{color:var(--blue)}
-    .top-divider{width:1px;height:28px;background:var(--line);margin-right:8px}
-    .nav-tab{background:none;border:1px solid transparent;color:var(--muted);padding:7px 14px;font-size:13px;font-weight:800;letter-spacing:.5px}
-    .nav-tab:hover{border-color:var(--line);color:var(--sub)}
-    .nav-tab.active{border-color:var(--blue);color:#fff;background:rgba(79,163,255,.1)}
-    .nav-tab.admin-tab{color:rgba(255,92,92,.8)}
-    .top-right{margin-left:auto;display:flex;align-items:center;gap:12px}
-    .user-badge{color:var(--muted);font-size:12px;font-weight:800}
-    .logout-btn{background:none;border:1px solid var(--line);color:var(--muted);padding:6px 12px;font-size:12px}
+    .topbar{height:64px;background:#fff;border-bottom:1px solid #dde3ec;display:flex;align-items:center;gap:0;padding:0 40px;flex-shrink:0;position:sticky;top:0;z-index:200}
+    .top-logo{font-family:'Dancing Script',cursive;font-size:26px;font-weight:700;color:#1a1a2e;margin-right:28px;line-height:1;cursor:pointer;background:none;border:none;padding:0;flex-shrink:0}
+    .top-logo span{color:#4fa3ff}
+    .top-divider{display:none}
+    .nav-tab{background:none;border:none;border-bottom:2px solid transparent;color:#6b7280;padding:0 16px;font-size:13px;font-weight:700;letter-spacing:1px;height:64px;cursor:pointer;transition:.15s;margin-bottom:-1px}
+    .nav-tab:hover{color:#1a1a2e}
+    .nav-tab.active{color:#1a1a2e;border-bottom-color:#4fa3ff}
+    .nav-tab.admin-tab{color:rgba(220,38,38,.75);font-weight:800}
+    .nav-tab.admin-tab.active{color:#dc2626;border-bottom-color:#dc2626}
+    .top-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+    .user-badge{color:#1a1a2e;font-size:12px;font-weight:700;letter-spacing:.3px}
+    .logout-btn{background:none;border:1px solid #dde3ec;color:#6b7280;padding:6px 16px;font-size:12px;font-weight:600}
     .logout-btn:hover{border-color:var(--red);color:var(--red)}
     .app-content{flex:1;overflow:auto}
     .panel{display:none;padding:28px 24px;min-height:calc(100vh - 56px);flex-direction:column}
@@ -331,7 +332,7 @@
       .lp-main-title{font-size:64px}
       .lp-intel{width:100%}
       .form-row,.stats-grid{grid-template-columns:1fr}
-      .topbar{height:auto;min-height:56px;flex-wrap:wrap;padding:10px}.top-right{width:100%;margin-left:0}
+      .topbar{height:auto;min-height:56px;flex-wrap:wrap;padding:10px 20px;gap:4px}.top-right{width:100%;margin-left:0;padding-top:4px;border-top:1px solid #dde3ec}.nav-tab{height:40px;padding:0 10px;font-size:12px}
       .panel{padding:20px 14px}.article-header{grid-template-columns:auto 1fr auto auto auto}.article-source,.article-date{display:none}.like-count-inline{display:none}
       .admin-bar{align-items:flex-start;flex-direction:column}.admin-track{width:100%}
       .member-table{display:block;overflow-x:auto;white-space:nowrap}
