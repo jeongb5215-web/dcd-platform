@@ -45,16 +45,16 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .sect-bd{padding:11px;display:flex;flex-direction:column;gap:9px}
 .sl-item{display:flex;flex-direction:column;gap:5px}
 .sl-hdr{display:flex;justify-content:space-between;align-items:baseline}
-.sl-lbl{font-size:11px}
+.sl-lbl{font-size:11px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sl-lbl sub{font-size:9px;color:var(--muted)}
 .sl-val{font-family:'Cascadia Mono',monospace;font-size:11px;color:var(--blue);background:rgba(79,163,255,.1);border:1px solid rgba(79,163,255,.2);padding:1px 6px;border-radius:4px;min-width:55px;text-align:center}
 input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:var(--border);border-radius:2px;outline:none;cursor:pointer}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--blue);box-shadow:0 0 4px rgba(79,163,255,.5);cursor:pointer}
 
-.stat-r{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
+.stat-r{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
 .stat-r:last-child{border-bottom:none}
-.sk{color:var(--muted);font-size:10px}
-.sv{font-family:'Cascadia Mono',monospace;font-size:11px}
+.sk{color:var(--muted);font-size:10px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sv{font-family:'Cascadia Mono',monospace;font-size:11px;flex-shrink:0;text-align:right}
 
 /* 영향 분석 테이블 */
 .impact-table{width:100%;border-collapse:collapse;font-size:10px}
@@ -934,13 +934,20 @@ function updateJammerCfgPanel() {
   let html = '';
   for (const jmr of currentScenario.jammers) {
     const azDir = ['N','NE','E','SE','S','SW','W','NW'][Math.round(jmr.azim_compass/45)%8];
-    html += `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:10px">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
-        <div style="width:7px;height:7px;border-radius:50%;background:${jmr.color}"></div>
-        <span style="color:var(--text)">${jmr.label}</span>
+    const typeChip = jmr.type === 'omni'
+      ? `<span style="background:rgba(56,230,155,.15);color:var(--green);border:1px solid rgba(56,230,155,.3);border-radius:3px;padding:0 5px;font-size:8px;flex-shrink:0">Omni</span>`
+      : `<span style="background:rgba(79,163,255,.15);color:var(--blue);border:1px solid rgba(79,163,255,.3);border-radius:3px;padding:0 5px;font-size:8px;flex-shrink:0">Dir→${azDir}</span>`;
+    const posLine = jmr.type === 'omni'
+      ? `(${jmr.x}, ${jmr.y})  2.15 dBi`
+      : `(${jmr.x}, ${jmr.y})  G=${jmr.gMax}dBi  θ=${jmr.theta3dB}°`;
+    html += `<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+      <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px">
+        <div style="width:6px;height:6px;border-radius:50%;background:${jmr.color};flex-shrink:0"></div>
+        <span style="color:var(--text);font-size:10px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${jmr.label}</span>
+        ${typeChip}
       </div>
-      <div style="color:var(--muted);padding-left:13px">
-        위치 (${jmr.x}, ${jmr.y}) · ${jmr.type==='omni'?'전방향 (2.15 dBi)':`지향성 G=${jmr.gMax}dBi θ=${jmr.theta3dB}° → ${azDir}`}
+      <div style="color:var(--muted);padding-left:11px;font-size:9px;font-family:'Cascadia Mono',monospace;line-height:1.5;word-break:break-all">
+        ${posLine}
       </div>
     </div>`;
   }
