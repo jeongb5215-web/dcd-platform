@@ -335,14 +335,10 @@ const SCENARIOS = [
 let P = { Ptx: 10, eta: 2.1 };
 let currentScenario = SCENARIOS[0];
 
-// 시나리오별 뷰 영역 (외부 재머 시 확장)
-let VIEW = { xMin:0, xMax:1000, yMin:0, yMax:1000 };
+// 전체 시나리오 공통 뷰: 공항(0–1000m) 기준 ±500m 확장 → 2km × 2km
+let VIEW = { xMin:-500, xMax:1500, yMin:-500, yMax:1500 };
 function updateView() {
-  const outer = currentScenario.jammers.some(
-    j => j.x < 0 || j.x > 1000 || j.y < 0 || j.y > 1000);
-  VIEW = outer
-    ? { xMin:-700, xMax:1700, yMin:-700, yMax:1700 }
-    : { xMin:0,    xMax:1000, yMin:0,    yMax:1000  };
+  VIEW = { xMin:-500, xMax:1500, yMin:-500, yMax:1500 };
 }
 
 const GRID_M = 1000;
