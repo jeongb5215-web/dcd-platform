@@ -107,17 +107,17 @@ canvas.gcv{display:block;width:100%;height:100%}
 <!-- 시나리오 탭 바 -->
 <div class="sc-bar">
   <div class="sc-tab active" onclick="setScenario(0,this)">
-    <span class="sc-num">S1</span>활주로 → 외곽
+    <span class="sc-num">S1</span>활주로 → 외곽 4대
   </div>
   <div class="sc-tab" onclick="setScenario(1,this)">
-    <span class="sc-num">S2</span>외곽 → 활주로
+    <span class="sc-num">S2</span>외곽 500m → 활주로
   </div>
   <div class="sc-tab" onclick="setScenario(2,this)">
-    <span class="sc-num">S3</span>옴니 복합
+    <span class="sc-num">S3</span>옴니 4방향
   </div>
   <div class="sc-desc" id="scDescArea">
     <strong>S1</strong>
-    <span id="scDescTxt">활주로 중앙에서 북쪽(외곽)으로 재밍 발사 — 후방 사이드로브가 활주로 내 항공기에 미치는 역방향 영향 분석</span>
+    <span id="scDescTxt">평행 활주로 구역 동서남북 4방향 지향성 재머 — 각 방향 외부로 재밍 발사 시 활주로 내·외 항공기 GPS 영향 분석</span>
   </div>
 </div>
 
@@ -258,28 +258,33 @@ const BER_THR  = 1e-2;
 // 공항 레이아웃  (1000 × 1000 m, 남북 활주로, 북쪽 접근)
 // ══════════════════════════════════════════════════════════════
 const APT = {
-  rwy:  { x:475, y1:100, x2:525, y2:900 },   // 활주로 (50m 폭)
-  twy:  { x1:380, x2:400, y1:100, y2:870 },   // 유도로
-  apron:{ x1:150, x2:380, y1:260, y2:600 },   // 계류장
-  term: { x1:110, x2:360, y1:150, y2:250 },   // 터미널
-  tower:{ x:240, y:560, r:18 },               // 관제탑
-  ilsLoc:{ x:500, y:960 },                    // ILS 로컬라이저 (북측)
-  ilsGs: { x:535, y:890 },                    // ILS 활공각 안테나
-  fence: 25,                                   // 울타리 내측 여백 (m)
+  rwy1: { x1:375, x2:425, y1:100, y2:900 },   // 활주로 1 (서, RWY 36L/18R)
+  rwy2: { x1:575, x2:625, y1:100, y2:900 },   // 활주로 2 (동, RWY 36R/18L)
+  twy:  { x1:440, x2:460, y1:100, y2:870 },   // 중앙 유도로
+  twyL: { x1:320, x2:340, y1:100, y2:870 },   // 서측 유도로
+  twyR: { x1:660, x2:680, y1:100, y2:870 },   // 동측 유도로
+  apron:{ x1:100, x2:320, y1:200, y2:650 },   // 계류장
+  term: { x1:80,  x2:300, y1:100, y2:200 },   // 터미널
+  tower:{ x:190, y:480, r:18 },               // 관제탑
+  ilsLoc1:{ x:400, y:965 },                   // ILS LOC RWY1
+  ilsLoc2:{ x:600, y:965 },                   // ILS LOC RWY2
+  ilsGs1: { x:425, y:895 },                   // ILS G/S RWY1
+  ilsGs2: { x:625, y:895 },                   // ILS G/S RWY2
+  fence: 25,
 };
 
 // ══════════════════════════════════════════════════════════════
 // 항공기 분석 위치
 // ══════════════════════════════════════════════════════════════
 const AIRCRAFT = [
-  { id:'AC1', label:'북측 접지대', x:500, y:900, phase:'ILS 최종 접근' },
-  { id:'AC2', label:'활주로 75%', x:500, y:700, phase:'착륙 활주' },
-  { id:'AC3', label:'활주로 중앙', x:500, y:500, phase:'착륙/이륙' },
-  { id:'AC4', label:'활주로 25%', x:500, y:300, phase:'이륙 활주' },
-  { id:'AC5', label:'남측 이륙단', x:500, y:100, phase:'이륙 대기' },
-  { id:'AC6', label:'ILS 로컬라이저', x:500, y:960, phase:'ILS 임계 구역' },
-  { id:'AC7', label:'유도로 대기', x:390, y:850, phase:'유도로 이동' },
-  { id:'AC8', label:'계류장 (게이트)', x:260, y:430, phase:'주기 중' },
+  { id:'AC1', label:'RWY1 북측 접지대', x:400, y:900, phase:'ILS 최종 접근' },
+  { id:'AC2', label:'RWY2 북측 접지대', x:600, y:900, phase:'ILS 최종 접근' },
+  { id:'AC3', label:'RWY1 중앙',        x:400, y:500, phase:'착륙/이륙' },
+  { id:'AC4', label:'RWY2 중앙',        x:600, y:500, phase:'착륙/이륙' },
+  { id:'AC5', label:'RWY1 남측 이륙단', x:400, y:100, phase:'이륙 대기' },
+  { id:'AC6', label:'RWY2 남측 이륙단', x:600, y:100, phase:'이륙 대기' },
+  { id:'AC7', label:'유도로 대기',       x:470, y:700, phase:'유도로 이동' },
+  { id:'AC8', label:'계류장(게이트)',    x:200, y:400, phase:'주기 중' },
 ];
 
 // ══════════════════════════════════════════════════════════════
@@ -289,33 +294,37 @@ const SCENARIOS = [
   {
     id: 0,
     name: 'S1',
-    title: '활주로 → 외곽',
-    desc: '활주로 중앙(500,500)에서 북쪽 외부를 향해 지향성 재밍 발사. 드론 위협 대응 중 후방 사이드로브가 활주로 내 항공기에 미치는 역방향 영향 분석.',
+    title: '활주로 → 외곽 (4대)',
+    desc: '평행 활주로 구역 동서남북 4방향 지향성 재머. 각 방향 외부로 재밍 발사 — 공항 외곽 항공기 GPS 두절 및 후방 사이드로브가 활주로 내 항공기에 미치는 역방향 영향 분석.',
     jammers: [
-      { x:500, y:500, type:'dir', gMax:17, theta3dB:22,
-        azim_compass:0, label:'재머 (활주로 중앙)', color:'#38e69b' }
+      { x:500, y:880, type:'dir', gMax:17, theta3dB:22, azim_compass:0,   label:'재머N (활주로 북)', color:'#38e69b' },
+      { x:500, y:120, type:'dir', gMax:17, theta3dB:22, azim_compass:180, label:'재머S (활주로 남)', color:'#4fa3ff' },
+      { x:660, y:500, type:'dir', gMax:17, theta3dB:22, azim_compass:90,  label:'재머E (활주로 동)', color:'#f4b942' },
+      { x:340, y:500, type:'dir', gMax:17, theta3dB:22, azim_compass:270, label:'재머W (활주로 서)', color:'#f97316' },
     ],
   },
   {
     id: 1,
     name: 'S2',
-    title: '외곽 울타리 → 활주로',
-    desc: '북측 울타리(500,970)에서 활주로를 향해 남향 지향성 재밍 타격. 접근 중 항공기 및 활주로 내 항공기에 대한 GPS 재밍 영향 분석.',
+    title: '외곽 500m → 활주로 (4방향)',
+    desc: '공항 울타리 500m 외곽 동서남북 4방향 지향성 재밍. GPS 신호(−130 dBm) 특성상 먼 거리에서도 강력한 재밍 효과. 활주로 전 구역 및 접근 항공기 GPS 완전 두절 분석.',
     jammers: [
-      { x:500, y:970, type:'dir', gMax:17, theta3dB:22,
-        azim_compass:180, label:'재머 (북측 울타리)', color:'#ff5c5c' }
+      { x:500,  y:1500, type:'dir', gMax:17, theta3dB:22, azim_compass:180, label:'재머N (북 500m)', color:'#ff5c5c' },
+      { x:500,  y:-500, type:'dir', gMax:17, theta3dB:22, azim_compass:0,   label:'재머S (남 500m)', color:'#f97316' },
+      { x:1500, y:500,  type:'dir', gMax:17, theta3dB:22, azim_compass:270, label:'재머E (동 500m)', color:'#8b5cf6' },
+      { x:-500, y:500,  type:'dir', gMax:17, theta3dB:22, azim_compass:90,  label:'재머W (서 500m)', color:'#4fa3ff' },
     ],
   },
   {
     id: 2,
     name: 'S3',
-    title: '옴니 복합',
-    desc: '활주로 중앙(500,500) + 북측 울타리(500,970) 옴니 안테나 동시 방사. 두 재머의 합산 전력이 공항 전역 항공기 GPS에 미치는 복합 영향 분석.',
+    title: '옴니 4방향 (500m 외곽)',
+    desc: '공항 울타리 500m 외곽 동서남북 옴니 안테나 4대 동시 방사. 방향 제약 없이 4대 합산 전력으로 공항 전역 GPS 두절. 지향성 재머 대비 단일 이득 낮으나 사각지대 없음.',
     jammers: [
-      { x:500, y:500, type:'omni', gMax:2.15, theta3dB:360,
-        azim_compass:0, label:'재머1 (활주로 중앙)', color:'#38e69b' },
-      { x:500, y:970, type:'omni', gMax:2.15, theta3dB:360,
-        azim_compass:0, label:'재머2 (북측 울타리)', color:'#ff5c5c' },
+      { x:500,  y:1500, type:'omni', gMax:2.15, theta3dB:360, azim_compass:0, label:'재머N (북 500m)', color:'#38e69b' },
+      { x:500,  y:-500, type:'omni', gMax:2.15, theta3dB:360, azim_compass:0, label:'재머S (남 500m)', color:'#ff5c5c' },
+      { x:1500, y:500,  type:'omni', gMax:2.15, theta3dB:360, azim_compass:0, label:'재머E (동 500m)', color:'#f4b942' },
+      { x:-500, y:500,  type:'omni', gMax:2.15, theta3dB:360, azim_compass:0, label:'재머W (서 500m)', color:'#8b5cf6' },
     ],
   },
 ];
@@ -546,29 +555,41 @@ function drawAirport() {
   ctx.strokeRect(p0.cx, p1.cy, p1.cx - p0.cx, p0.cy - p1.cy);
   ctx.setLineDash([]); ctx.restore();
 
-  // 계류장/에이프런
+  // 계류장
   drawRect(APT.apron.x1, APT.apron.y1, APT.apron.x2, APT.apron.y2, 'rgba(40,50,70,0.7)', 'rgba(60,80,110,0.5)', 1);
-
   // 터미널
   drawRect(APT.term.x1, APT.term.y1, APT.term.x2, APT.term.y2, 'rgba(50,60,80,0.7)', 'rgba(80,110,150,0.6)', 1);
 
-  // 유도로
-  drawRwyRect(APT.twy.x1, APT.twy.y1, APT.twy.x2, APT.twy.y2, 'rgba(50,60,75,0.8)', 'rgba(70,90,110,0.5)');
+  // 유도로 3개
+  drawRwyRect(APT.twy.x1,  APT.twy.y1,  APT.twy.x2,  APT.twy.y2,  'rgba(50,60,75,0.8)', 'rgba(70,90,110,0.5)');
+  drawRwyRect(APT.twyL.x1, APT.twyL.y1, APT.twyL.x2, APT.twyL.y2, 'rgba(50,60,75,0.8)', 'rgba(70,90,110,0.5)');
+  drawRwyRect(APT.twyR.x1, APT.twyR.y1, APT.twyR.x2, APT.twyR.y2, 'rgba(50,60,75,0.8)', 'rgba(70,90,110,0.5)');
 
-  // 활주로
-  const rwy = APT.rwy;
-  drawRwyRect(rwy.x, rwy.y1, rwy.x2, rwy.y2, 'rgba(55,60,70,0.85)', 'rgba(120,130,150,0.7)');
-
-  // 활주로 중심선 (점선)
-  const rt = w2c(500, rwy.y1), rb = w2c(500, rwy.y2);
+  // 활주로 1 (서측)
+  const r1 = APT.rwy1;
+  const r1cx = (r1.x1+r1.x2)/2;
+  drawRwyRect(r1.x1, r1.y1, r1.x2, r1.y2, 'rgba(55,60,70,0.85)', 'rgba(120,130,150,0.7)');
+  const r1t = w2c(r1cx, r1.y1), r1b = w2c(r1cx, r1.y2);
   ctx.save();
   ctx.strokeStyle = 'rgba(200,210,220,0.35)'; ctx.lineWidth = 1; ctx.setLineDash([12,10]);
-  ctx.beginPath(); ctx.moveTo(rt.cx, rt.cy); ctx.lineTo(rb.cx, rb.cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(r1t.cx, r1t.cy); ctx.lineTo(r1b.cx, r1b.cy); ctx.stroke();
   ctx.setLineDash([]); ctx.restore();
 
-  // 접지 구간 (touchdown zone) 북측
-  drawRect(480, 840, 520, 900, 'rgba(255,255,255,0.06)', 'rgba(255,255,255,0.15)', 1);
-  drawRect(480, 100, 520, 160, 'rgba(255,255,255,0.04)', 'rgba(255,255,255,0.1)', 1);
+  // 활주로 2 (동측)
+  const r2 = APT.rwy2;
+  const r2cx = (r2.x1+r2.x2)/2;
+  drawRwyRect(r2.x1, r2.y1, r2.x2, r2.y2, 'rgba(55,60,70,0.85)', 'rgba(120,130,150,0.7)');
+  const r2t = w2c(r2cx, r2.y1), r2b = w2c(r2cx, r2.y2);
+  ctx.save();
+  ctx.strokeStyle = 'rgba(200,210,220,0.35)'; ctx.lineWidth = 1; ctx.setLineDash([12,10]);
+  ctx.beginPath(); ctx.moveTo(r2t.cx, r2t.cy); ctx.lineTo(r2b.cx, r2b.cy); ctx.stroke();
+  ctx.setLineDash([]); ctx.restore();
+
+  // 접지 구간 (두 활주로)
+  drawRect(r1.x1, 840, r1.x2, 900, 'rgba(255,255,255,0.06)', 'rgba(255,255,255,0.15)', 1);
+  drawRect(r1.x1, 100, r1.x2, 160, 'rgba(255,255,255,0.04)', 'rgba(255,255,255,0.1)', 1);
+  drawRect(r2.x1, 840, r2.x2, 900, 'rgba(255,255,255,0.06)', 'rgba(255,255,255,0.15)', 1);
+  drawRect(r2.x1, 100, r2.x2, 160, 'rgba(255,255,255,0.04)', 'rgba(255,255,255,0.1)', 1);
 
   // 관제탑
   const {cx:tx, cy:ty} = w2c(APT.tower.x, APT.tower.y);
@@ -576,28 +597,33 @@ function drawAirport() {
   ctx.save();
   ctx.fillStyle = 'rgba(80,100,130,0.8)';
   ctx.beginPath(); ctx.arc(tx, ty, tr, 0, Math.PI*2); ctx.fill();
-  ctx.strokeStyle = 'rgba(130,160,200,0.7)'; ctx.lineWidth = 1.5;
-  ctx.stroke();
+  ctx.strokeStyle = 'rgba(130,160,200,0.7)'; ctx.lineWidth = 1.5; ctx.stroke();
   ctx.fillStyle = 'rgba(200,210,220,0.7)'; ctx.font = 'bold 9px monospace'; ctx.textAlign = 'center';
   ctx.fillText('TWR', tx, ty+3);
   ctx.restore();
 
-  // ILS 로컬라이저 마커
-  drawILSMarker(APT.ilsLoc.x, APT.ilsLoc.y, 'ILS LOC');
-  drawILSMarker(APT.ilsGs.x, APT.ilsGs.y, 'G/S');
+  // ILS 마커 (두 활주로)
+  drawILSMarker(APT.ilsLoc1.x, APT.ilsLoc1.y, 'LOC1');
+  drawILSMarker(APT.ilsLoc2.x, APT.ilsLoc2.y, 'LOC2');
+  drawILSMarker(APT.ilsGs1.x,  APT.ilsGs1.y,  'G/S1');
+  drawILSMarker(APT.ilsGs2.x,  APT.ilsGs2.y,  'G/S2');
 
   // 활주로 라벨
-  const rn = w2c(500, 930), rs = w2c(500, 60);
   ctx.save();
-  ctx.fillStyle = 'rgba(200,210,220,0.6)'; ctx.font = 'bold 10px monospace'; ctx.textAlign = 'center';
-  ctx.fillText('RWY 36', rn.cx, rn.cy); ctx.fillText('RWY 18', rs.cx, rs.cy);
+  ctx.fillStyle = 'rgba(200,210,220,0.6)'; ctx.font = 'bold 9px monospace'; ctx.textAlign = 'center';
+  const r1n=w2c(r1cx,930), r1s=w2c(r1cx,60);
+  ctx.fillText('36L', r1n.cx, r1n.cy); ctx.fillText('18R', r1s.cx, r1s.cy);
+  const r2n=w2c(r2cx,930), r2s=w2c(r2cx,60);
+  ctx.fillText('36R', r2n.cx, r2n.cy); ctx.fillText('18L', r2s.cx, r2s.cy);
   ctx.restore();
 
-  // ILS 접근 경로 (북측 연장선)
-  const ra = w2c(500, 900), rb2 = w2c(500, 990);
+  // ILS 접근 경로 (두 활주로 북측 연장선)
   ctx.save();
   ctx.strokeStyle = 'rgba(79,163,255,0.35)'; ctx.lineWidth = 1.5; ctx.setLineDash([5,5]);
-  ctx.beginPath(); ctx.moveTo(ra.cx, ra.cy); ctx.lineTo(rb2.cx, rb2.cy); ctx.stroke();
+  const ap1a=w2c(r1cx,900), ap1b=w2c(r1cx,990);
+  ctx.beginPath(); ctx.moveTo(ap1a.cx, ap1a.cy); ctx.lineTo(ap1b.cx, ap1b.cy); ctx.stroke();
+  const ap2a=w2c(r2cx,900), ap2b=w2c(r2cx,990);
+  ctx.beginPath(); ctx.moveTo(ap2a.cx, ap2a.cy); ctx.lineTo(ap2b.cx, ap2b.cy); ctx.stroke();
   ctx.setLineDash([]); ctx.restore();
 }
 
@@ -694,7 +720,7 @@ function buildApproachProfile() {
   for (let i = 0; i <= PATH_STEPS; i++) {
     const t = i / PATH_STEPS;
     const wy = PATH_FROM - t * (PATH_FROM - PATH_TO);
-    const wx = 500; // 중심선
+    const wx = 400; // RWY1 중심선 기준
     const { JS, BER } = computeAll(wx, wy, currentScenario);
     // 접지대(900)로부터 거리 (북쪽 = 양수)
     const distFromThr = wy - 900;
@@ -745,7 +771,7 @@ function drawJSGraph(profile) {
 
   // 항공기 위치 수직선
   for (const ac of AIRCRAFT) {
-    if (ac.x !== 500) continue;
+    if (ac.x !== 400) continue; // RWY1 기준
     const t = (PATH_FROM - ac.y) / (PATH_FROM - PATH_TO);
     if (t < 0 || t > 1) continue;
     const ax = toX(t);
@@ -869,9 +895,9 @@ function updateStats(stats) {
   document.getElementById('rDeg').textContent   = `${dPct}%`;
   document.getElementById('rRnav').textContent  = `${Math.max(0,parseFloat(sPct)).toFixed(1)}%`;
 
-  // 접근 경로에서 GPS 두절 진입 거리 (북쪽 기준)
+  // 접근 경로에서 GPS 두절 진입 거리 (RWY1/RWY2 중 더 위험한 쪽)
   for (let wy = PATH_FROM; wy >= 900; wy -= 10) {
-    const { JS } = computeAll(500, wy, currentScenario);
+    const JS = Math.max(computeAll(400, wy, currentScenario).JS, computeAll(600, wy, currentScenario).JS);
     if (JS >= JS_CRIT) {
       const dist = wy - 900;
       // 고도 계산: 3° 글라이드패스
