@@ -262,33 +262,46 @@ const BER_THR  = 1e-2;
 // 공항 레이아웃  (1000 × 1000 m, 남북 활주로, 북쪽 접근)
 // ══════════════════════════════════════════════════════════════
 const APT = {
-  rwy1: { x1:375, x2:425, y1:100, y2:900 },   // 활주로 1 (서, RWY 36L/18R)
-  rwy2: { x1:575, x2:625, y1:100, y2:900 },   // 활주로 2 (동, RWY 36R/18L)
-  twy:  { x1:440, x2:460, y1:100, y2:870 },   // 중앙 유도로
-  twyL: { x1:320, x2:340, y1:100, y2:870 },   // 서측 유도로
-  twyR: { x1:660, x2:680, y1:100, y2:870 },   // 동측 유도로
-  apron:{ x1:100, x2:320, y1:200, y2:650 },   // 계류장
-  term: { x1:80,  x2:300, y1:100, y2:200 },   // 터미널
-  tower:{ x:190, y:480, r:18 },               // 관제탑
-  ilsLoc1:{ x:400, y:965 },                   // ILS LOC RWY1
-  ilsLoc2:{ x:600, y:965 },                   // ILS LOC RWY2
-  ilsGs1: { x:425, y:895 },                   // ILS G/S RWY1
-  ilsGs2: { x:625, y:895 },                   // ILS G/S RWY2
-  fence: 25,
+  // 서측 활주로 쌍 (15L/33R, 15R/33L)
+  rwy1: { x1:55,  x2:82,  y1:60, y2:940 },
+  rwy2: { x1:120, x2:147, y1:60, y2:940 },
+  // 동측 활주로 쌍 (16L/34R, 16R/34L)
+  rwy3: { x1:853, x2:880, y1:60, y2:940 },
+  rwy4: { x1:918, x2:945, y1:60, y2:940 },
+  // 제1여객터미널 (T1) — 중앙 남쪽
+  t1:   { x1:290, x2:710, y1:160, y2:390 },
+  t1pier:{ x1:355, x2:645, y1:390, y2:470 }, // T1 탑승동
+  // 제2여객터미널 (T2) — 중앙 북쪽
+  t2:   { x1:330, x2:670, y1:650, y2:820 },
+  t2pier:{ x1:370, x2:630, y1:470, y2:650 }, // T2 탑승동/연결
+  // 계류장
+  apronW:{ x1:148, x2:285, y1:180, y2:860 },
+  apronE:{ x1:715, x2:852, y1:180, y2:860 },
+  // 동서 유도로 (횡단)
+  twyN: { x1:148, x2:852, y1:870, y2:884 },
+  twyM: { x1:148, x2:852, y1:490, y2:504 },
+  twyS: { x1:148, x2:852, y1:136, y2:150 },
+  tower:{ x:500, y:310, r:14 },
+  // ILS (4개 활주로 북측)
+  ilsLoc1:{ x:68,  y:960 }, ilsLoc2:{ x:133, y:960 },
+  ilsLoc3:{ x:866, y:960 }, ilsLoc4:{ x:931, y:960 },
+  ilsGs1: { x:82,  y:888 }, ilsGs2:  { x:147, y:888 },
+  ilsGs3: { x:853, y:888 }, ilsGs4:  { x:918, y:888 },
+  fence: 20,
 };
 
 // ══════════════════════════════════════════════════════════════
 // 항공기 분석 위치
 // ══════════════════════════════════════════════════════════════
 const AIRCRAFT = [
-  { id:'AC1', label:'RWY1 북측 접지대', x:400, y:900, phase:'ILS 최종 접근' },
-  { id:'AC2', label:'RWY2 북측 접지대', x:600, y:900, phase:'ILS 최종 접근' },
-  { id:'AC3', label:'RWY1 중앙',        x:400, y:500, phase:'착륙/이륙' },
-  { id:'AC4', label:'RWY2 중앙',        x:600, y:500, phase:'착륙/이륙' },
-  { id:'AC5', label:'RWY1 남측 이륙단', x:400, y:100, phase:'이륙 대기' },
-  { id:'AC6', label:'RWY2 남측 이륙단', x:600, y:100, phase:'이륙 대기' },
-  { id:'AC7', label:'유도로 대기',       x:470, y:700, phase:'유도로 이동' },
-  { id:'AC8', label:'계류장(게이트)',    x:200, y:400, phase:'주기 중' },
+  { id:'AC1', label:'15L 북측 접지대', x:68,  y:890, phase:'ILS 최종 접근' },
+  { id:'AC2', label:'15R 북측 접지대', x:133, y:890, phase:'ILS 최종 접근' },
+  { id:'AC3', label:'16L 북측 접지대', x:866, y:890, phase:'ILS 최종 접근' },
+  { id:'AC4', label:'16R 북측 접지대', x:931, y:890, phase:'ILS 최종 접근' },
+  { id:'AC5', label:'15L 중앙',        x:68,  y:500, phase:'착륙/이륙' },
+  { id:'AC6', label:'16R 중앙',        x:931, y:500, phase:'착륙/이륙' },
+  { id:'AC7', label:'T1 게이트',       x:450, y:320, phase:'주기 중' },
+  { id:'AC8', label:'T2 게이트',       x:450, y:730, phase:'주기 중' },
 ];
 
 // ══════════════════════════════════════════════════════════════
@@ -598,76 +611,85 @@ function drawAirport() {
   ctx.strokeRect(p0.cx, p1.cy, p1.cx - p0.cx, p0.cy - p1.cy);
   ctx.setLineDash([]); ctx.restore();
 
-  // 계류장
-  drawRect(APT.apron.x1, APT.apron.y1, APT.apron.x2, APT.apron.y2, 'rgba(40,50,70,0.7)', 'rgba(60,80,110,0.5)', 1);
-  // 터미널
-  drawRect(APT.term.x1, APT.term.y1, APT.term.x2, APT.term.y2, 'rgba(50,60,80,0.7)', 'rgba(80,110,150,0.6)', 1);
+  // ── 계류장 (서·동)
+  drawRect(APT.apronW.x1, APT.apronW.y1, APT.apronW.x2, APT.apronW.y2, 'rgba(35,45,65,0.6)', 'rgba(55,75,105,0.4)', 1);
+  drawRect(APT.apronE.x1, APT.apronE.y1, APT.apronE.x2, APT.apronE.y2, 'rgba(35,45,65,0.6)', 'rgba(55,75,105,0.4)', 1);
 
-  // 유도로 3개
-  drawRwyRect(APT.twy.x1,  APT.twy.y1,  APT.twy.x2,  APT.twy.y2,  'rgba(50,60,75,0.8)', 'rgba(70,90,110,0.5)');
-  drawRwyRect(APT.twyL.x1, APT.twyL.y1, APT.twyL.x2, APT.twyL.y2, 'rgba(50,60,75,0.8)', 'rgba(70,90,110,0.5)');
-  drawRwyRect(APT.twyR.x1, APT.twyR.y1, APT.twyR.x2, APT.twyR.y2, 'rgba(50,60,75,0.8)', 'rgba(70,90,110,0.5)');
+  // ── 동서 유도로 3개
+  drawRwyRect(APT.twyN.x1, APT.twyN.y1, APT.twyN.x2, APT.twyN.y2, 'rgba(48,58,72,0.8)', 'rgba(65,85,108,0.45)');
+  drawRwyRect(APT.twyM.x1, APT.twyM.y1, APT.twyM.x2, APT.twyM.y2, 'rgba(48,58,72,0.8)', 'rgba(65,85,108,0.45)');
+  drawRwyRect(APT.twyS.x1, APT.twyS.y1, APT.twyS.x2, APT.twyS.y2, 'rgba(48,58,72,0.8)', 'rgba(65,85,108,0.45)');
 
-  // 활주로 1 (서측)
-  const r1 = APT.rwy1;
-  const r1cx = (r1.x1+r1.x2)/2;
-  drawRwyRect(r1.x1, r1.y1, r1.x2, r1.y2, 'rgba(55,60,70,0.85)', 'rgba(120,130,150,0.7)');
-  const r1t = w2c(r1cx, r1.y1), r1b = w2c(r1cx, r1.y2);
-  ctx.save();
-  ctx.strokeStyle = 'rgba(200,210,220,0.35)'; ctx.lineWidth = 1; ctx.setLineDash([12,10]);
-  ctx.beginPath(); ctx.moveTo(r1t.cx, r1t.cy); ctx.lineTo(r1b.cx, r1b.cy); ctx.stroke();
+  // ── T1 탑승동 / T2 연결동
+  drawRect(APT.t1pier.x1, APT.t1pier.y1, APT.t1pier.x2, APT.t1pier.y2, 'rgba(45,55,75,0.75)', 'rgba(75,105,145,0.5)', 1);
+  drawRect(APT.t2pier.x1, APT.t2pier.y1, APT.t2pier.x2, APT.t2pier.y2, 'rgba(45,55,75,0.75)', 'rgba(75,105,145,0.5)', 1);
+
+  // ── T1 본관
+  drawRect(APT.t1.x1, APT.t1.y1, APT.t1.x2, APT.t1.y2, 'rgba(50,62,85,0.82)', 'rgba(85,118,165,0.65)', 1.5);
+  { const c=w2c((APT.t1.x1+APT.t1.x2)/2,(APT.t1.y1+APT.t1.y2)/2);
+    ctx.save(); ctx.fillStyle='rgba(160,185,220,0.75)'; ctx.font='bold 10px monospace'; ctx.textAlign='center';
+    ctx.fillText('T1', c.cx, c.cy+3); ctx.restore(); }
+
+  // ── T2 본관
+  drawRect(APT.t2.x1, APT.t2.y1, APT.t2.x2, APT.t2.y2, 'rgba(50,62,85,0.82)', 'rgba(85,118,165,0.65)', 1.5);
+  { const c=w2c((APT.t2.x1+APT.t2.x2)/2,(APT.t2.y1+APT.t2.y2)/2);
+    ctx.save(); ctx.fillStyle='rgba(160,185,220,0.75)'; ctx.font='bold 10px monospace'; ctx.textAlign='center';
+    ctx.fillText('T2', c.cx, c.cy+3); ctx.restore(); }
+
+  // ── 활주로 4본 + 중심선
+  const rwys=[APT.rwy1,APT.rwy2,APT.rwy3,APT.rwy4];
+  const rwyLabels=[['33R','15L'],['33L','15R'],['34R','16L'],['34L','16R']];
+  for(let i=0;i<4;i++){
+    const r=rwys[i], rcx=(r.x1+r.x2)/2;
+    drawRwyRect(r.x1, r.y1, r.x2, r.y2, 'rgba(55,60,72,0.88)', 'rgba(118,130,152,0.72)');
+    const rt=w2c(rcx,r.y1), rb=w2c(rcx,r.y2);
+    ctx.save(); ctx.strokeStyle='rgba(200,210,225,0.32)'; ctx.lineWidth=1; ctx.setLineDash([10,9]);
+    ctx.beginPath(); ctx.moveTo(rt.cx,rt.cy); ctx.lineTo(rb.cx,rb.cy); ctx.stroke();
+    ctx.setLineDash([]); ctx.restore();
+    // 접지대
+    drawRect(r.x1,850,r.x2,910,'rgba(255,255,255,0.05)','rgba(255,255,255,0.13)',1);
+    drawRect(r.x1,90, r.x2,150,'rgba(255,255,255,0.04)','rgba(255,255,255,0.10)',1);
+    // 활주로 라벨
+    const rn=w2c(rcx,935), rs=w2c(rcx,55);
+    ctx.save(); ctx.fillStyle='rgba(200,210,220,0.58)'; ctx.font='bold 8px monospace'; ctx.textAlign='center';
+    ctx.fillText(rwyLabels[i][0], rn.cx, rn.cy);
+    ctx.fillText(rwyLabels[i][1], rs.cx, rs.cy);
+    ctx.restore();
+  }
+
+  // ── 관제탑
+  { const {cx:tx,cy:ty}=w2c(APT.tower.x,APT.tower.y);
+    const tr=(APT.tower.r/GRID_M)*canvas.height;
+    ctx.save();
+    ctx.fillStyle='rgba(80,100,132,0.85)';
+    ctx.beginPath(); ctx.arc(tx,ty,tr,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='rgba(130,162,205,0.75)'; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.fillStyle='rgba(200,212,225,0.75)'; ctx.font='bold 8px monospace'; ctx.textAlign='center';
+    ctx.fillText('TWR',tx,ty+3); ctx.restore(); }
+
+  // ── ILS 마커 (4개 활주로)
+  drawILSMarker(APT.ilsLoc1.x,APT.ilsLoc1.y,'LOC1');
+  drawILSMarker(APT.ilsLoc2.x,APT.ilsLoc2.y,'LOC2');
+  drawILSMarker(APT.ilsLoc3.x,APT.ilsLoc3.y,'LOC3');
+  drawILSMarker(APT.ilsLoc4.x,APT.ilsLoc4.y,'LOC4');
+  drawILSMarker(APT.ilsGs1.x,APT.ilsGs1.y,'G/S1');
+  drawILSMarker(APT.ilsGs2.x,APT.ilsGs2.y,'G/S2');
+  drawILSMarker(APT.ilsGs3.x,APT.ilsGs3.y,'G/S3');
+  drawILSMarker(APT.ilsGs4.x,APT.ilsGs4.y,'G/S4');
+
+  // ── ILS 접근 경로 (4개 활주로 북측)
+  ctx.save(); ctx.strokeStyle='rgba(79,163,255,0.32)'; ctx.lineWidth=1.5; ctx.setLineDash([5,5]);
+  for(const r of rwys){
+    const rcx=(r.x1+r.x2)/2;
+    const pa=w2c(rcx,910), pb=w2c(rcx,990);
+    ctx.beginPath(); ctx.moveTo(pa.cx,pa.cy); ctx.lineTo(pb.cx,pb.cy); ctx.stroke();
+  }
   ctx.setLineDash([]); ctx.restore();
 
-  // 활주로 2 (동측)
-  const r2 = APT.rwy2;
-  const r2cx = (r2.x1+r2.x2)/2;
-  drawRwyRect(r2.x1, r2.y1, r2.x2, r2.y2, 'rgba(55,60,70,0.85)', 'rgba(120,130,150,0.7)');
-  const r2t = w2c(r2cx, r2.y1), r2b = w2c(r2cx, r2.y2);
-  ctx.save();
-  ctx.strokeStyle = 'rgba(200,210,220,0.35)'; ctx.lineWidth = 1; ctx.setLineDash([12,10]);
-  ctx.beginPath(); ctx.moveTo(r2t.cx, r2t.cy); ctx.lineTo(r2b.cx, r2b.cy); ctx.stroke();
-  ctx.setLineDash([]); ctx.restore();
-
-  // 접지 구간 (두 활주로)
-  drawRect(r1.x1, 840, r1.x2, 900, 'rgba(255,255,255,0.06)', 'rgba(255,255,255,0.15)', 1);
-  drawRect(r1.x1, 100, r1.x2, 160, 'rgba(255,255,255,0.04)', 'rgba(255,255,255,0.1)', 1);
-  drawRect(r2.x1, 840, r2.x2, 900, 'rgba(255,255,255,0.06)', 'rgba(255,255,255,0.15)', 1);
-  drawRect(r2.x1, 100, r2.x2, 160, 'rgba(255,255,255,0.04)', 'rgba(255,255,255,0.1)', 1);
-
-  // 관제탑
-  const {cx:tx, cy:ty} = w2c(APT.tower.x, APT.tower.y);
-  const tr = (APT.tower.r / GRID_M) * canvas.height;
-  ctx.save();
-  ctx.fillStyle = 'rgba(80,100,130,0.8)';
-  ctx.beginPath(); ctx.arc(tx, ty, tr, 0, Math.PI*2); ctx.fill();
-  ctx.strokeStyle = 'rgba(130,160,200,0.7)'; ctx.lineWidth = 1.5; ctx.stroke();
-  ctx.fillStyle = 'rgba(200,210,220,0.7)'; ctx.font = 'bold 9px monospace'; ctx.textAlign = 'center';
-  ctx.fillText('TWR', tx, ty+3);
-  ctx.restore();
-
-  // ILS 마커 (두 활주로)
-  drawILSMarker(APT.ilsLoc1.x, APT.ilsLoc1.y, 'LOC1');
-  drawILSMarker(APT.ilsLoc2.x, APT.ilsLoc2.y, 'LOC2');
-  drawILSMarker(APT.ilsGs1.x,  APT.ilsGs1.y,  'G/S1');
-  drawILSMarker(APT.ilsGs2.x,  APT.ilsGs2.y,  'G/S2');
-
-  // 활주로 라벨
-  ctx.save();
-  ctx.fillStyle = 'rgba(200,210,220,0.6)'; ctx.font = 'bold 9px monospace'; ctx.textAlign = 'center';
-  const r1n=w2c(r1cx,930), r1s=w2c(r1cx,60);
-  ctx.fillText('36L', r1n.cx, r1n.cy); ctx.fillText('18R', r1s.cx, r1s.cy);
-  const r2n=w2c(r2cx,930), r2s=w2c(r2cx,60);
-  ctx.fillText('36R', r2n.cx, r2n.cy); ctx.fillText('18L', r2s.cx, r2s.cy);
-  ctx.restore();
-
-  // ILS 접근 경로 (두 활주로 북측 연장선)
-  ctx.save();
-  ctx.strokeStyle = 'rgba(79,163,255,0.35)'; ctx.lineWidth = 1.5; ctx.setLineDash([5,5]);
-  const ap1a=w2c(r1cx,900), ap1b=w2c(r1cx,990);
-  ctx.beginPath(); ctx.moveTo(ap1a.cx, ap1a.cy); ctx.lineTo(ap1b.cx, ap1b.cy); ctx.stroke();
-  const ap2a=w2c(r2cx,900), ap2b=w2c(r2cx,990);
-  ctx.beginPath(); ctx.moveTo(ap2a.cx, ap2a.cy); ctx.lineTo(ap2b.cx, ap2b.cy); ctx.stroke();
-  ctx.setLineDash([]); ctx.restore();
+  // ── 인천공항 레이블
+  { const lp=w2c(500,500);
+    ctx.save(); ctx.fillStyle='rgba(160,185,220,0.18)'; ctx.font='bold 11px monospace'; ctx.textAlign='center';
+    ctx.fillText('RKSI  인천국제공항', lp.cx, lp.cy); ctx.restore(); }
 }
 
 function drawRect(x1, y1, x2, y2, fill, stroke, lw) {
