@@ -960,8 +960,8 @@
       const cards=filtered.slice(1);
       /* featured image panel */
       const featImages=(featured.attachments||[]).filter(a=>a.type==='image');
-      const featImgInner=featImages.length
-        ?`<img src="${featImages[0].dataUrl}" alt="">`
+      const featImgInner=featImages.length&&(featImages[0].dataUrl||featImages[0].url)
+        ?`<img src="${featImages[0].dataUrl||featImages[0].url}" alt="">`
         :featured.thumb
         ?`<img src="${featured.thumb}" alt="">`
         :`<div class="ch-feat-placeholder"><div class="ch-feat-placeholder-icon">🛸</div><div class="ch-feat-placeholder-line"></div></div>`;
@@ -969,8 +969,8 @@
       /* cards */
       const cardHtml=cards.map(a=>{
         const cardImages=(a.attachments||[]).filter(x=>x.type==='image');
-        const cardImgInner=cardImages.length
-          ?`<img src="${cardImages[0].dataUrl}" alt="">`
+        const cardImgInner=cardImages.length&&(cardImages[0].dataUrl||cardImages[0].url)
+          ?`<img src="${cardImages[0].dataUrl||cardImages[0].url}" alt="">`
           :a.thumb
           ?`<img src="${a.thumb}" alt="">`
           :`<div class="ch-card-img-placeholder"><div class="ch-card-img-placeholder-icon">🛸</div></div>`;
