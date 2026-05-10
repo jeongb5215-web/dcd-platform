@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>재밍건 시뮬레이터 v3 | DcD Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0c10; --surface:#111520; --border:#1e2535;
+  --blue:#4fa3ff; --red:#ff5c5c; --green:#38e69b;
+  --gold:#f4b942; --purple:#8b5cf6;
+  --text:#c8d0e0; --muted:#5a6478;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:14px;flex-shrink:0}
+.logo{font-family:'Dancing Script',cursive;font-size:21px;color:#fff;letter-spacing:1px}
+.logo span{color:var(--blue)}
+.hdr-title{font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.hdr-badge{margin-left:auto;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.4);color:var(--purple);font-size:10px;padding:3px 9px;border-radius:20px;letter-spacing:1px}
+.back-btn{color:var(--muted);font-size:12px;text-decoration:none;display:flex;align-items:center;gap:5px;transition:color .2s}
+.back-btn:hover{color:var(--text)}
+
+.wrap{flex:1;display:flex;overflow:hidden}
+
+/* ── Control Panel ── */
+.ctrl{width:290px;min-width:290px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:12px}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.sect{border:1px solid var(--border);border-radius:7px;overflow:hidden}
+.sect-hd{background:rgba(255,255,255,.03);border-bottom:1px solid var(--border);padding:9px 12px;font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:flex;align-items:center;gap:7px}
+.sect-hd .dot{width:5px;height:5px;border-radius:50%;background:var(--purple)}
+.sect-bd{padding:12px;display:flex;flex-direction:column;gap:10px}
+
+.tab-row{display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.tab-btn{flex:1;padding:8px 4px;font-size:11px;text-align:center;cursor:pointer;color:var(--muted);transition:all .2s;user-select:none;border:none;background:none;line-height:1.3}
+.tab-btn:not(:last-child){border-right:1px solid var(--border)}
+.tab-btn.active-blue{background:rgba(79,163,255,.12);color:var(--blue)}
+.tab-btn.active-purple{background:rgba(139,92,246,.12);color:var(--purple)}
+.tab-btn:hover:not(.active-blue):not(.active-purple){background:rgba(255,255,255,.04)}
+
+.sl-item{display:flex;flex-direction:column;gap:6px}
+.sl-hdr{display:flex;justify-content:space-between;align-items:baseline}
+.sl-label{font-size:12px}
+.sl-label sub{font-size:9px;color:var(--muted)}
+.sl-val{font-family:'Cascadia Mono',monospace;font-size:11px;color:var(--blue);background:rgba(79,163,255,.1);border:1px solid rgba(79,163,255,.2);padding:2px 7px;border-radius:4px;min-width:58px;text-align:center}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:var(--border);border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--blue);box-shadow:0 0 5px rgba(79,163,255,.5);cursor:pointer;transition:transform .15s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
+
+.dir-params{display:flex;flex-direction:column;gap:10px;padding-top:8px;border-top:1px solid var(--border)}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
+.stat-row:last-child{border-bottom:none}
+.stat-k{color:var(--muted)}
+.stat-v{font-family:'Cascadia Mono',monospace;font-size:11px}
+.info-box{background:rgba(79,163,255,.05);border:1px solid rgba(79,163,255,.15);border-radius:6px;padding:8px 11px;font-size:11px;color:var(--muted);line-height:1.6}
+.info-box strong{color:var(--text)}
+
+/* ── Viz Area ── */
+.viz{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.viz-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:6px 14px;display:flex;align-items:center;gap:10px;font-size:11px;color:var(--muted);flex-shrink:0;flex-wrap:wrap}
+.viz-bar .sep{color:var(--border)}
+.cinfo{font-family:'Cascadia Mono',monospace;font-size:10px;color:var(--blue)}
+.jam-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pdot 1.4s ease infinite;flex-shrink:0}
+@keyframes pdot{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* Compare mode toggle */
+.cmp-btn{margin-left:auto;padding:4px 10px;font-size:10px;border:1px solid var(--border);border-radius:4px;background:transparent;color:var(--muted);cursor:pointer;letter-spacing:1px;transition:all .2s}
+.cmp-btn:hover{border-color:var(--blue);color:var(--blue)}
+.cmp-btn.on{border-color:rgba(139,92,246,.5);color:var(--purple);background:rgba(139,92,246,.08)}
+
+.canvas-wrap{flex:1;position:relative;overflow:hidden;min-height:0}
+canvas#simCanvas{display:block;width:100%;height:100%;cursor:crosshair}
+
+/* Colorbar */
+.colorbar{position:absolute;right:14px;top:8px}
+#cbCanvas{display:block;border-radius:3px;box-shadow:0 0 0 1px var(--border)}
+.cb-labels{position:absolute;right:36px;top:8px;display:flex;flex-direction:column;justify-content:space-between;font-size:9px;font-family:'Cascadia Mono',monospace;color:var(--muted);text-align:right}
+
+/* Legend */
+.legend{position:absolute;left:10px;bottom:8px;background:rgba(10,12,16,.88);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:10px;display:flex;flex-direction:column;gap:4px;backdrop-filter:blur(8px)}
+.leg-row{display:flex;align-items:center;gap:6px}
+.leg-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.leg-txt{color:var(--muted)}
+
+/* Tooltip */
+.tip{position:absolute;background:rgba(10,12,16,.93);border:1px solid var(--border);border-radius:6px;padding:9px 12px;font-size:11px;pointer-events:none;display:none;z-index:20;min-width:195px;backdrop-filter:blur(6px)}
+.tip.jam{border-color:rgba(255,92,92,.5)}
+.tip.safe{border-color:rgba(56,230,155,.5)}
+.tip.warn{border-color:rgba(249,115,22,.5)}
+
+/* ── Graph Strip ── */
+.graph-strip{height:170px;min-height:170px;border-top:1px solid var(--border);display:flex;flex-shrink:0;background:var(--bg)}
+.graph-box{flex:1;position:relative;overflow:hidden}
+.graph-box:not(:last-child){border-right:1px solid var(--border)}
+.graph-title{position:absolute;top:6px;left:10px;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);pointer-events:none;z-index:5}
+canvas.graph-cv{display:block;width:100%;height:100%}
+
+/* Status chip */
+.status-chip{display:flex;align-items:center;gap:5px;font-size:11px}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back-btn" href="../index.html">
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M8.5 1.5L3.5 6.5l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    돌아가기
+  </a>
+  <div style="width:1px;height:18px;background:var(--border)"></div>
+  <span class="logo">D<span>c</span>D</span>
+  <span class="hdr-title">재밍건 시뮬레이터 · Physics v3</span>
+  <span class="hdr-badge">LAB BETA</span>
+</header>
+
+<div class="wrap">
+
+<!-- ── 제어 패널 ── -->
+<div class="ctrl">
+
+  <div class="info-box">
+    <strong>공항 방어 시나리오</strong><br>
+    재머 <strong>(0,0)</strong> · 조종자 <strong>(1,000m, 1,000m)</strong><br>
+    ILS 보호시설 <strong>(300, 500)</strong> · 그리드 5 m
+  </div>
+
+  <!-- 주파수 -->
+  <div class="sect">
+    <div class="sect-hd"><span class="dot" style="background:var(--blue)"></span>주파수 시나리오</div>
+    <div class="sect-bd">
+      <div class="tab-row">
+        <div class="tab-btn active-blue" onclick="setFreq(2.4e9,this)">2.4 GHz<br><small style="color:var(--muted)">RC 제어</small></div>
+        <div class="tab-btn" onclick="setFreq(1.575e9,this)">1.575 GHz<br><small style="color:var(--muted)">GPS L1</small></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 안테나 -->
+  <div class="sect">
+    <div class="sect-hd"><span class="dot" style="background:var(--gold)"></span>안테나 유형</div>
+    <div class="sect-bd">
+      <div class="tab-row">
+        <div class="tab-btn active-purple" onclick="setAntenna('omni',this)">전방향 Omni<br><small style="color:var(--muted)">2.15 dBi</small></div>
+        <div class="tab-btn" onclick="setAntenna('dir',this)">지향성 Dir<br><small style="color:var(--muted)">Gaussian 빔</small></div>
+      </div>
+      <div class="dir-params" id="dirParams" style="display:none">
+        <div class="sl-item">
+          <div class="sl-hdr"><span class="sl-label">G<sub>max</sub></span><span class="sl-val" id="gmaxVal">17 dBi</span></div>
+          <input type="range" id="gmax" min="15" max="20" step="0.5" value="17">
+        </div>
+        <div class="sl-item">
+          <div class="sl-hdr"><span class="sl-label">θ<sub>3dB</sub> 반전력 빔폭</span><span class="sl-val" id="theta3Val">22°</span></div>
+          <input type="range" id="theta3" min="15" max="30" step="1" value="22">
+        </div>
+        <div class="sl-item">
+          <div class="sl-hdr"><span class="sl-label">재머 방위각</span><span class="sl-val" id="azimVal">45°</span></div>
+          <input type="range" id="azim" min="0" max="360" step="1" value="45">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 송신 파라미터 -->
+  <div class="sect">
+    <div class="sect-hd"><span class="dot" style="background:var(--blue)"></span>송신부 파라미터</div>
+    <div class="sect-bd">
+      <div class="sl-item">
+        <div class="sl-hdr"><span class="sl-label">재머 출력 P<sub>tx</sub></span><span class="sl-val" id="ptxVal">30 dBm</span></div>
+        <input type="range" id="ptx" min="20" max="53" step="1" value="30">
+        <div style="font-size:9px;color:var(--muted)" id="ptxW">≈ 1 W</div>
+      </div>
+      <div class="sl-item">
+        <div class="sl-hdr"><span class="sl-label">경로 손실 지수 η</span><span class="sl-val" id="etaVal">2.10</span></div>
+        <input type="range" id="eta" min="2.0" max="2.2" step="0.05" value="2.1">
+        <div style="font-size:9px;color:var(--muted)">자유공간 2.0 · 공항 평지 2.2</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 고정 상수 -->
+  <div class="sect">
+    <div class="sect-hd"><span class="dot" style="background:var(--green)"></span>고정 상수</div>
+    <div class="sect-bd">
+      <div class="stat-row"><span class="stat-k">드론 조종기 출력 S</span><span class="stat-v" style="color:var(--green)">20 dBm</span></div>
+      <div class="stat-row"><span class="stat-k">잡음 지수 N₀</span><span class="stat-v" style="color:var(--green)">−164 dBm/Hz</span></div>
+      <div class="stat-row"><span class="stat-k">변조 방식</span><span class="stat-v" style="color:var(--green)">QPSK</span></div>
+      <div class="stat-row"><span class="stat-k">시스템 손실 L</span><span class="stat-v" style="color:var(--green)">1 dB</span></div>
+      <div class="stat-row"><span class="stat-k">재밍 임계 J/S</span><span class="stat-v" style="color:var(--red)">≥ 10 dB</span></div>
+      <div class="stat-row"><span class="stat-k">BER 임계</span><span class="stat-v" style="color:var(--red)">≥ 10⁻²</span></div>
+    </div>
+  </div>
+
+  <!-- 계산 결과 -->
+  <div class="sect">
+    <div class="sect-hd"><span class="dot" style="background:var(--red)"></span>실시간 분석</div>
+    <div class="sect-bd">
+      <div class="stat-row"><span class="stat-k">FSPL @ 1m</span><span class="stat-v" id="rFspl">—</span></div>
+      <div class="stat-row"><span class="stat-k">잡음 바닥 N (대역)</span><span class="stat-v" id="rNoise">—</span></div>
+      <div class="stat-row"><span class="stat-k">재밍 면적 비율</span><span class="stat-v" id="rArea">—</span></div>
+      <div class="stat-row"><span class="stat-k">ILS 지점 J/S</span><span class="stat-v" id="rIls">—</span></div>
+      <div class="stat-row"><span class="stat-k">ILS 지점 BER</span><span class="stat-v" id="rIlsBer">—</span></div>
+      <div class="stat-row"><span class="stat-k">경로 재밍 진입</span><span class="stat-v" id="rPath">—</span></div>
+      <div class="stat-row"><span class="stat-k">경로 BER 초과 진입</span><span class="stat-v" id="rBerPath">—</span></div>
+    </div>
+  </div>
+
+</div><!-- .ctrl -->
+
+<!-- ── Viz Area ── -->
+<div class="viz">
+  <div class="viz-bar">
+    <span>J/S 히트맵</span>
+    <span class="sep">|</span>
+    <span id="coordTxt" class="cinfo">x: — , y: —</span>
+    <span class="sep">|</span>
+    <span id="jsTxt" class="cinfo">J/S: —</span>
+    <span class="sep">|</span>
+    <div class="status-chip">
+      <div class="jam-dot" id="statusDot"></div>
+      <span id="statusTxt" style="color:var(--green)">계산 중</span>
+    </div>
+    <button class="cmp-btn" id="cmpBtn" onclick="toggleCompare()">⊞ 주파수 비교</button>
+  </div>
+
+  <!-- 히트맵 캔버스 -->
+  <div class="canvas-wrap">
+    <canvas id="simCanvas"></canvas>
+
+    <!-- 컬러바 -->
+    <div class="colorbar">
+      <canvas id="cbCanvas" width="16" height="170"></canvas>
+      <div class="cb-labels" id="cbLabels" style="height:170px">
+        <span>+40</span><span>+20</span><span>+10</span><span>0</span><span>−20</span><span>−40</span>
+      </div>
+    </div>
+
+    <!-- 범례 -->
+    <div class="legend">
+      <div class="leg-row"><div class="leg-dot" style="background:#dc2626"></div><span class="leg-txt">J/S ≥ 10 dB — DoS 재밍</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#f97316"></div><span class="leg-txt">0 ~ 10 dB — 경계 구간</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#1d4ed8"></div><span class="leg-txt">J/S &lt; 0 dB — 안전</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#38e69b;border-radius:50%"></div><span class="leg-txt">재머 (0,0)</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#f4b942;border-radius:50%"></div><span class="leg-txt">ILS (300,500)</span></div>
+    </div>
+
+    <div class="tip" id="tipEl"></div>
+  </div>
+
+  <!-- 그래프 스트립 -->
+  <div class="graph-strip">
+    <div class="graph-box">
+      <div class="graph-title">J/S 경로 프로필 — 드론 (1000,1000) → (0,0)</div>
+      <canvas class="graph-cv" id="jsGraphCanvas"></canvas>
+    </div>
+    <div class="graph-box">
+      <div class="graph-title">QPSK BER 경로 프로필</div>
+      <canvas class="graph-cv" id="berGraphCanvas"></canvas>
+    </div>
+  </div>
+</div>
+
+</div><!-- .wrap -->
+
+<script>
+// ══════════════════════════════════════════════
+// 상수
+// ══════════════════════════════════════════════
+const C       = 3e8;
+const GRID_M  = 1000;
+const GRID_RES = 5;
+const GRID_N  = GRID_M / GRID_RES; // 200
+const JS_THR  = 10;    // dB
+const BER_THR = 1e-2;  // QPSK 통신 두절 임계
+
+const JAMMER   = { x:0,    y:0    };
+const OPERATOR = { x:1000, y:1000 };
+const ILS      = { x:300,  y:500  };
+
+// ══════════════════════════════════════════════
+// 파라미터 상태
+// ══════════════════════════════════════════════
+const P = {
+  freq:        2.4e9,
+  antennaType: 'omni',
+  Ptx:         30,    // dBm
+  gMax:        17,    // dBi
+  theta3dB:    22,    // deg
+  azim:        45,    // deg (0=east, CCW)
+  eta:         2.1,
+  Pdrone:      20,    // dBm  (조종기 송신 전력)
+  Lsys:        1,     // dB
+  N0:          -164,  // dBm/Hz  (-174 + 10 dB 공항 잡음)
+};
+
+let compareMode = false;
+
+// ══════════════════════════════════════════════
+// 물리 함수
+// ══════════════════════════════════════════════
+
+// FSPL at d=1m
+function fspl1m(f) {
+  return 20 * Math.log10(4 * Math.PI * f / C);
+}
+
+// Log-distance 경로 손실 (dB)
+function pathLoss(d, f, eta, Lsys) {
+  if (d < 1) d = 1;
+  return fspl1m(f) + 10 * eta * Math.log10(d) + Lsys;
+}
+
+// Gaussian 빔 패턴: G(θ) = G_max - 12*(θ/θ_3dB)²  [dB]
+// 백엽(Back lobe): G_max - 25 dB 하한 유지
+function gaussianGain(theta_deg, gMax, theta3dB) {
+  return Math.max(gMax - 12 * (theta_deg / theta3dB) ** 2, gMax - 25);
+}
+
+// 재머 안테나 이득 (world 좌표)
+function jammerGain(wx, wy, f_override) {
+  if (P.antennaType === 'omni') return 2.15;
+  const dx = wx - JAMMER.x, dy = wy - JAMMER.y;
+  const angle = Math.atan2(dy, dx);
+  const azRad = (P.azim - 90) * Math.PI / 180;
+  let theta = angle - azRad;
+  while (theta >  Math.PI) theta -= 2 * Math.PI;
+  while (theta < -Math.PI) theta += 2 * Math.PI;
+  return gaussianGain(Math.abs(theta * 180 / Math.PI), P.gMax, P.theta3dB);
+}
+
+// 잡음 바닥 (dBm) — 대역폭 주파수별
+function noisePower(f) {
+  const B = f >= 2e9 ? 10e6 : 2e6; // 2.4GHz → 10MHz, GPS → 2MHz
+  return P.N0 + 10 * Math.log10(B);
+}
+
+// J_rx, S_rx, J/S, SNR_eff, BER 일괄 계산
+function computeAll(wx, wy, f_override) {
+  const freq = f_override || P.freq;
+  const dx_j = wx - JAMMER.x,   dy_j = wy - JAMMER.y;
+  const dx_o = wx - OPERATOR.x, dy_o = wy - OPERATOR.y;
+  const d_j = Math.max(Math.hypot(dx_j, dy_j), 1);
+  const d_o = Math.max(Math.hypot(dx_o, dy_o), 1);
+
+  const G    = jammerGain(wx, wy, freq);
+  const Lp_j = pathLoss(d_j, freq, P.eta, P.Lsys);
+  const Lp_o = pathLoss(d_o, freq, P.eta, P.Lsys);
+  const J_rx = P.Ptx + G - Lp_j;   // dBm
+  const S_rx = P.Pdrone - Lp_o;    // dBm
+  const N_db = noisePower(freq);    // dBm
+
+  const J_mW = Math.pow(10, J_rx / 10);
+  const S_mW = Math.pow(10, S_rx / 10);
+  const N_mW = Math.pow(10, N_db / 10);
+
+  // 유효 SNR: S / (J + N)
+  const SNR_eff = S_mW / (J_mW + N_mW);
+  const BER = qpskBer(SNR_eff);
+  const JS  = J_rx - S_rx;
+
+  return { JS, J_rx, S_rx, N_db, SNR_eff, BER, G, Lp_j, d_j, d_o };
+}
+
+// ── QPSK BER = 0.5 · erfc(√SNR) ──
+function erfc(x) {
+  if (x < 0) return 2 - erfc(-x);
+  const t = 1 / (1 + 0.3275911 * x);
+  const poly = t * (0.254829592 + t * (-0.284496736 +
+               t * (1.421413741 + t * (-1.453152027 + t * 1.061405429))));
+  return poly * Math.exp(-x * x);
+}
+
+function qpskBer(snr) {
+  // QPSK: BER = 0.5·erfc(√(Eb/N0)), Eb/N0 = SNR for BPSK component
+  return Math.min(0.5 * erfc(Math.sqrt(Math.max(snr, 0))), 0.5);
+}
+
+// ══════════════════════════════════════════════
+// 컬러맵
+// ══════════════════════════════════════════════
+function jsToRGBA(js) {
+  if (js >= JS_THR) {
+    const t = Math.min((js - JS_THR) / 30, 1);
+    return [lerp(249,210,t), lerp(115,30,t), lerp(22,30,t), 220];
+  } else if (js >= 0) {
+    const t = js / JS_THR;
+    return [lerp(37,249,t), lerp(99,115,t), lerp(235,22,t), 200];
+  } else if (js >= -30) {
+    const t = (js + 30) / 30;
+    return [lerp(10,37,t), lerp(18,99,t), lerp(40,235,t), 195];
+  } else {
+    const t = Math.max((js + 60) / 30, 0);
+    return [lerp(5,10,t), lerp(8,18,t), lerp(16,40,t), 195];
+  }
+}
+function lerp(a, b, t) { return Math.round(a + (b-a)*t); }
+
+// ══════════════════════════════════════════════
+// 오프스크린 히트맵 빌드
+// ══════════════════════════════════════════════
+const offA = document.createElement('canvas'); offA.width = GRID_N; offA.height = GRID_N;
+const offB = document.createElement('canvas'); offB.width = GRID_N; offB.height = GRID_N;
+const octxA = offA.getContext('2d');
+const octxB = offB.getContext('2d');
+
+let jsGrid = new Float32Array(GRID_N * GRID_N);
+let jsGridB = new Float32Array(GRID_N * GRID_N); // 1.575 GHz cache
+
+function buildHeatmapFor(octx, grid, f_override) {
+  const img = octx.createImageData(GRID_N, GRID_N);
+  let jammCount = 0;
+  for (let row = 0; row < GRID_N; row++) {
+    for (let col = 0; col < GRID_N; col++) {
+      const wx = col * GRID_RES;
+      const wy = (GRID_N - 1 - row) * GRID_RES;
+      const { JS } = computeAll(wx, wy, f_override);
+      grid[row * GRID_N + col] = JS;
+      if (JS >= JS_THR) jammCount++;
+      const [r,g,b,a] = jsToRGBA(JS);
+      const i = (row * GRID_N + col) * 4;
+      img.data[i]=r; img.data[i+1]=g; img.data[i+2]=b; img.data[i+3]=a;
+    }
+  }
+  octx.putImageData(img, 0, 0);
+  return jammCount;
+}
+
+function buildHeatmaps() {
+  const cntA = buildHeatmapFor(octxA, jsGrid,  P.freq);
+  const cntB = compareMode ? buildHeatmapFor(octxB, jsGridB, P.freq === 2.4e9 ? 1.575e9 : 2.4e9) : 0;
+  return { cntA, cntB };
+}
+
+// ══════════════════════════════════════════════
+// 메인 캔버스 렌더링
+// ══════════════════════════════════════════════
+const canvas = document.getElementById('simCanvas');
+const ctx    = canvas.getContext('2d');
+
+function w2c(wx, wy) {
+  return { cx: (wx / GRID_M) * canvas.width, cy: canvas.height - (wy / GRID_M) * canvas.height };
+}
+function c2w(cx, cy) {
+  return { wx: (cx / canvas.width) * GRID_M, wy: (1 - cy / canvas.height) * GRID_M };
+}
+
+function drawMain(stats) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.imageSmoothingEnabled = false;
+
+  if (compareMode) {
+    const half = canvas.width / 2;
+    // 왼쪽: 현재 주파수
+    ctx.save();
+    ctx.beginPath(); ctx.rect(0, 0, half, canvas.height); ctx.clip();
+    ctx.drawImage(offA, 0, 0, canvas.width, canvas.height);
+    ctx.restore();
+    // 오른쪽: 다른 주파수
+    ctx.save();
+    ctx.beginPath(); ctx.rect(half, 0, half, canvas.height); ctx.clip();
+    ctx.drawImage(offB, 0, 0, canvas.width, canvas.height);
+    ctx.restore();
+    // 분리선
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6,4]);
+    ctx.beginPath(); ctx.moveTo(half, 0); ctx.lineTo(half, canvas.height); ctx.stroke();
+    ctx.setLineDash([]);
+    // 라벨
+    const fA = P.freq === 2.4e9 ? '2.4 GHz (RC)' : '1.575 GHz (GPS)';
+    const fB = P.freq === 2.4e9 ? '1.575 GHz (GPS)' : '2.4 GHz (RC)';
+    ctx.fillStyle='rgba(10,12,16,.7)'; ctx.fillRect(4,4,120,22);
+    ctx.fillStyle='rgba(10,12,16,.7)'; ctx.fillRect(half+4,4,135,22);
+    ctx.fillStyle='rgba(79,163,255,0.9)'; ctx.font='bold 11px monospace';
+    ctx.fillText(fA, 10, 19);
+    ctx.fillStyle='rgba(139,92,246,0.9)';
+    ctx.fillText(fB, half+10, 19);
+    ctx.restore();
+  } else {
+    ctx.drawImage(offA, 0, 0, canvas.width, canvas.height);
+  }
+
+  drawGrid();
+  drawContour(jsGrid);
+  drawDronePath();
+  drawJammerMarker();
+  drawILSMarker();
+  updateStats(stats);
+}
+
+function drawGrid() {
+  ctx.save();
+  ctx.strokeStyle='rgba(30,37,53,0.5)'; ctx.lineWidth=1;
+  for (let m = 0; m <= GRID_M; m += 100) {
+    const {cx} = w2c(m,0), {cy} = w2c(0,m);
+    ctx.beginPath(); ctx.moveTo(cx,0); ctx.lineTo(cx,canvas.height); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0,cy); ctx.lineTo(canvas.width,cy); ctx.stroke();
+    if (m > 0 && m < GRID_M) {
+      ctx.fillStyle='rgba(90,100,120,0.6)'; ctx.font='9px monospace';
+      ctx.fillText(`${m}`, cx+2, canvas.height-3);
+      ctx.fillText(`${m}`, 3, cy-3);
+    }
+  }
+  ctx.restore();
+}
+
+function drawContour(grid) {
+  const W = canvas.width, H = canvas.height;
+  const sx = W / GRID_N, sy = H / GRID_N;
+  ctx.save();
+  ctx.strokeStyle='rgba(250,204,21,0.85)'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+  for (let row = 0; row < GRID_N - 1; row++) {
+    for (let col = 0; col < GRID_N - 1; col++) {
+      const v  = grid[row * GRID_N + col];
+      const vr = grid[row * GRID_N + col + 1];
+      const vb = grid[(row+1) * GRID_N + col];
+      if ((v-JS_THR)*(vr-JS_THR) < 0) {
+        const px=(col+0.5)*sx, py=(row+0.5)*sy;
+        ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px+sx,py); ctx.stroke();
+      }
+      if ((v-JS_THR)*(vb-JS_THR) < 0) {
+        const px=(col+0.5)*sx, py=(row+0.5)*sy;
+        ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px,py+sy); ctx.stroke();
+      }
+    }
+  }
+  ctx.setLineDash([]); ctx.restore();
+}
+
+function drawDronePath() {
+  const s = w2c(1000,1000), e = w2c(0,0);
+  ctx.save();
+  ctx.strokeStyle='rgba(0,0,0,0.35)'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(s.cx+1,s.cy+1); ctx.lineTo(e.cx+1,e.cy+1); ctx.stroke();
+  ctx.strokeStyle='rgba(255,255,255,0.7)'; ctx.lineWidth=1.5; ctx.setLineDash([6,4]);
+  ctx.beginPath(); ctx.moveTo(s.cx,s.cy); ctx.lineTo(e.cx,e.cy); ctx.stroke();
+  ctx.setLineDash([]);
+  for (let t = 0.15; t < 0.95; t += 0.2) {
+    const ax = s.cx+(e.cx-s.cx)*t, ay = s.cy+(e.cy-s.cy)*t;
+    const angle = Math.atan2(e.cy-s.cy, e.cx-s.cx);
+    drawArrow(ax, ay, angle, 6, 'rgba(255,255,255,0.6)');
+  }
+  ctx.fillStyle='rgba(200,208,224,0.9)'; ctx.strokeStyle='rgba(255,255,255,0.4)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.arc(s.cx,s.cy,5,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,0.65)'; ctx.font='10px monospace'; ctx.textAlign='left';
+  ctx.fillText('조종자', s.cx+8, s.cy-4);
+  ctx.restore();
+}
+
+function drawArrow(x, y, angle, sz, color) {
+  ctx.save(); ctx.translate(x,y); ctx.rotate(angle);
+  ctx.fillStyle=color;
+  ctx.beginPath(); ctx.moveTo(sz,0); ctx.lineTo(-sz,-sz*0.6); ctx.lineTo(-sz,sz*0.6); ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+
+function drawJammerMarker() {
+  const {cx,cy} = w2c(JAMMER.x, JAMMER.y);
+  const color='#38e69b';
+  ctx.save();
+  ctx.strokeStyle=hexA(color,0.25); ctx.lineWidth=1;
+  ctx.beginPath(); ctx.arc(cx,cy,20,0,Math.PI*2); ctx.stroke();
+  ctx.fillStyle=hexA(color,0.15); ctx.beginPath(); ctx.arc(cx,cy,11,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle=color; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(cx,cy,11,0,Math.PI*2); ctx.stroke();
+  [[-8,0],[8,0],[0,-8],[0,8]].forEach(([dx,dy])=>{
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+dx,cy+dy); ctx.stroke();
+  });
+  ctx.fillStyle=color; ctx.font='bold 10px monospace'; ctx.textAlign='center';
+  ctx.fillText('재머', cx, cy-18);
+  ctx.restore();
+}
+
+function drawILSMarker() {
+  const {cx,cy} = w2c(ILS.x, ILS.y);
+  ctx.save();
+  ctx.fillStyle='rgba(244,185,66,.1)'; ctx.strokeStyle='#f4b942';
+  ctx.lineWidth=1.5; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.arc(cx,cy,22,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(cx,cy-9); ctx.lineTo(cx+7,cy); ctx.lineTo(cx,cy+9); ctx.lineTo(cx-7,cy); ctx.closePath();
+  ctx.fillStyle='rgba(244,185,66,.3)'; ctx.fill();
+  ctx.strokeStyle='#f4b942'; ctx.lineWidth=2; ctx.stroke();
+  ctx.fillStyle='#f4b942'; ctx.font='bold 10px monospace'; ctx.textAlign='center';
+  ctx.fillText('ILS', cx, cy-18);
+  ctx.restore();
+}
+
+// 지향성 빔 방향 표시
+function drawBeamIfDir() {
+  if (P.antennaType !== 'dir') return;
+  const {cx:ox, cy:oy} = w2c(JAMMER.x, JAMMER.y);
+  const azRad = (P.azim - 90) * Math.PI / 180;
+  const halfB = (P.theta3dB/2) * Math.PI / 180;
+  const len = Math.min(canvas.width, canvas.height) * 0.45;
+  ctx.save();
+  ctx.strokeStyle='rgba(139,92,246,0.45)'; ctx.lineWidth=1; ctx.setLineDash([5,4]);
+  ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ox+Math.cos(azRad)*len, oy+Math.sin(azRad)*len); ctx.stroke();
+  [azRad-halfB, azRad+halfB].forEach(a=>{
+    ctx.strokeStyle='rgba(139,92,246,0.2)';
+    ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ox+Math.cos(a)*len, oy+Math.sin(a)*len); ctx.stroke();
+  });
+  ctx.setLineDash([]); ctx.restore();
+}
+
+// ══════════════════════════════════════════════
+// 경로 프로필 계산
+// ══════════════════════════════════════════════
+const PATH_STEPS = 300;
+
+function buildPathProfile(f_override) {
+  const freq = f_override || P.freq;
+  const profile = [];
+  for (let i = 0; i <= PATH_STEPS; i++) {
+    const t = i / PATH_STEPS;
+    const wx = OPERATOR.x * (1 - t);
+    const wy = OPERATOR.y * (1 - t);
+    const dist = Math.hypot(wx - OPERATOR.x, wy - OPERATOR.y); // 조종자로부터
+    const all = computeAll(wx, wy, freq);
+    profile.push({ t, dist, wx, wy, ...all });
+  }
+  return profile;
+}
+
+// ══════════════════════════════════════════════
+// J/S 그래프 (하단 좌측)
+// ══════════════════════════════════════════════
+const jsGC   = document.getElementById('jsGraphCanvas');
+const jsgCtx = jsGC.getContext('2d');
+
+function drawJSGraph(profile, profile2) {
+  const W = jsGC.width, H = jsGC.height;
+  jsgCtx.clearRect(0, 0, W, H);
+
+  const PAD = { t:28, b:28, l:44, r:12 };
+  const gW = W - PAD.l - PAD.r;
+  const gH = H - PAD.t - PAD.b;
+  const JS_MIN = -50, JS_MAX = 50;
+
+  // 배경
+  jsgCtx.fillStyle = '#0a0c10';
+  jsgCtx.fillRect(0, 0, W, H);
+  jsgCtx.fillStyle = 'rgba(17,21,32,0.8)';
+  jsgCtx.fillRect(PAD.l, PAD.t, gW, gH);
+
+  function toX(t) { return PAD.l + t * gW; }
+  function toY(js) { return PAD.t + gH * (1 - (js - JS_MIN) / (JS_MAX - JS_MIN)); }
+
+  // 수평 그리드 + 축 라벨
+  [-40,-20,0,10,20,40].forEach(v => {
+    const y = toY(v);
+    if (y < PAD.t || y > PAD.t+gH) return;
+    jsgCtx.strokeStyle = v === JS_THR ? 'rgba(250,204,21,0.4)' : 'rgba(30,37,53,0.8)';
+    jsgCtx.lineWidth = v === JS_THR ? 1.5 : 1;
+    jsgCtx.setLineDash(v === JS_THR ? [4,3] : []);
+    jsgCtx.beginPath(); jsgCtx.moveTo(PAD.l, y); jsgCtx.lineTo(PAD.l+gW, y); jsgCtx.stroke();
+    jsgCtx.setLineDash([]);
+    jsgCtx.fillStyle = v === JS_THR ? 'rgba(250,204,21,0.9)' : 'rgba(90,100,120,0.8)';
+    jsgCtx.font = '9px monospace'; jsgCtx.textAlign = 'right';
+    jsgCtx.fillText(`${v>0?'+':''}${v}`, PAD.l-4, y+3);
+  });
+
+  // 재밍 임계선 라벨
+  jsgCtx.fillStyle='rgba(250,204,21,0.7)'; jsgCtx.font='8px monospace'; jsgCtx.textAlign='left';
+  jsgCtx.fillText('J/S=10dB', PAD.l+4, toY(JS_THR)-3);
+
+  // 재밍 구간 채우기 (J/S > 10 영역)
+  jsgCtx.save();
+  jsgCtx.beginPath(); jsgCtx.rect(PAD.l, PAD.t, gW, gH); jsgCtx.clip();
+  const fillGrad = jsgCtx.createLinearGradient(0, toY(50), 0, toY(JS_THR));
+  fillGrad.addColorStop(0, 'rgba(220,38,38,0.18)');
+  fillGrad.addColorStop(1, 'rgba(220,38,38,0.04)');
+  jsgCtx.fillStyle = fillGrad;
+  jsgCtx.fillRect(PAD.l, PAD.t, gW, Math.max(toY(JS_THR)-PAD.t,0));
+  jsgCtx.restore();
+
+  // 두 번째 주파수 라인 (비교 모드)
+  if (compareMode && profile2) {
+    jsgCtx.save();
+    jsgCtx.beginPath(); jsgCtx.rect(PAD.l, PAD.t, gW, gH); jsgCtx.clip();
+    jsgCtx.strokeStyle='rgba(139,92,246,0.5)'; jsgCtx.lineWidth=1.5;
+    jsgCtx.setLineDash([5,3]);
+    jsgCtx.beginPath();
+    profile2.forEach((pt, i) => {
+      const x = toX(pt.t), y = toY(Math.max(Math.min(pt.JS, JS_MAX), JS_MIN));
+      i===0 ? jsgCtx.moveTo(x,y) : jsgCtx.lineTo(x,y);
+    });
+    jsgCtx.stroke(); jsgCtx.setLineDash([]);
+    jsgCtx.restore();
+  }
+
+  // 주 라인
+  jsgCtx.save();
+  jsgCtx.beginPath(); jsgCtx.rect(PAD.l, PAD.t, gW, gH); jsgCtx.clip();
+  jsgCtx.strokeStyle='rgba(79,163,255,0.9)'; jsgCtx.lineWidth=2;
+  jsgCtx.beginPath();
+  profile.forEach((pt, i) => {
+    const x = toX(pt.t), y = toY(Math.max(Math.min(pt.JS, JS_MAX), JS_MIN));
+    i===0 ? jsgCtx.moveTo(x,y) : jsgCtx.lineTo(x,y);
+  });
+  jsgCtx.stroke();
+  jsgCtx.restore();
+
+  // 축 테두리
+  jsgCtx.strokeStyle='rgba(30,37,53,0.9)'; jsgCtx.lineWidth=1;
+  jsgCtx.strokeRect(PAD.l, PAD.t, gW, gH);
+
+  // X축 라벨
+  [0, 250, 500, 750, 1000].forEach(d => {
+    const t = d / (Math.hypot(OPERATOR.x, OPERATOR.y));
+    const x = toX(1 - t);
+    jsgCtx.fillStyle='rgba(90,100,120,0.7)'; jsgCtx.font='9px monospace'; jsgCtx.textAlign='center';
+    jsgCtx.fillText(`${Math.round(Math.hypot(OPERATOR.x*(1-(1-t)), OPERATOR.y*(1-(1-t))))}m`, x, PAD.t+gH+11);
+  });
+
+  // 범례
+  if (compareMode) {
+    jsgCtx.fillStyle='rgba(79,163,255,0.8)'; jsgCtx.font='9px monospace'; jsgCtx.textAlign='left';
+    jsgCtx.fillText(P.freq===2.4e9?'2.4 GHz':'1.575 GHz', PAD.l+4, PAD.t+10);
+    jsgCtx.fillStyle='rgba(139,92,246,0.7)';
+    jsgCtx.fillText(P.freq===2.4e9?'1.575 GHz':'2.4 GHz', PAD.l+70, PAD.t+10);
+  }
+}
+
+// ══════════════════════════════════════════════
+// BER 그래프 (하단 우측)
+// ══════════════════════════════════════════════
+const berGC   = document.getElementById('berGraphCanvas');
+const bergCtx = berGC.getContext('2d');
+
+function drawBERGraph(profile, profile2) {
+  const W = berGC.width, H = berGC.height;
+  bergCtx.clearRect(0, 0, W, H);
+
+  const PAD = { t:28, b:28, l:52, r:12 };
+  const gW = W - PAD.l - PAD.r;
+  const gH = H - PAD.t - PAD.b;
+  const LOG_MIN = -6, LOG_MAX = 0;  // log10(BER)
+
+  bergCtx.fillStyle='#0a0c10'; bergCtx.fillRect(0,0,W,H);
+  bergCtx.fillStyle='rgba(17,21,32,0.8)'; bergCtx.fillRect(PAD.l,PAD.t,gW,gH);
+
+  function toX(t) { return PAD.l + t * gW; }
+  function toY(ber) {
+    const lv = Math.max(Math.min(Math.log10(Math.max(ber, 1e-7)), LOG_MAX), LOG_MIN);
+    return PAD.t + gH * (1 - (lv - LOG_MIN) / (LOG_MAX - LOG_MIN));
+  }
+
+  // 수평 그리드
+  for (let e = LOG_MIN; e <= LOG_MAX; e++) {
+    const y = toY(Math.pow(10, e));
+    const isThr = Math.abs(e - Math.log10(BER_THR)) < 0.01;
+    bergCtx.strokeStyle = isThr ? 'rgba(250,204,21,0.4)' : 'rgba(30,37,53,0.8)';
+    bergCtx.lineWidth = isThr ? 1.5 : 1;
+    bergCtx.setLineDash(isThr ? [4,3] : []);
+    bergCtx.beginPath(); bergCtx.moveTo(PAD.l, y); bergCtx.lineTo(PAD.l+gW, y); bergCtx.stroke();
+    bergCtx.setLineDash([]);
+    bergCtx.fillStyle = isThr ? 'rgba(250,204,21,0.9)' : 'rgba(90,100,120,0.8)';
+    bergCtx.font='9px monospace'; bergCtx.textAlign='right';
+    bergCtx.fillText(`10⁻${Math.abs(e)}`, PAD.l-4, y+3);
+  }
+
+  bergCtx.fillStyle='rgba(250,204,21,0.7)'; bergCtx.font='8px monospace'; bergCtx.textAlign='left';
+  bergCtx.fillText('BER=10⁻²', PAD.l+4, toY(BER_THR)-3);
+
+  // 불량 BER 구간 채우기
+  bergCtx.save();
+  bergCtx.beginPath(); bergCtx.rect(PAD.l, PAD.t, gW, gH); bergCtx.clip();
+  const fg = bergCtx.createLinearGradient(0, toY(0.5), 0, toY(BER_THR));
+  fg.addColorStop(0, 'rgba(220,38,38,0.18)');
+  fg.addColorStop(1, 'rgba(220,38,38,0.04)');
+  bergCtx.fillStyle=fg;
+  bergCtx.fillRect(PAD.l, PAD.t, gW, Math.max(toY(BER_THR)-PAD.t,0));
+  bergCtx.restore();
+
+  // 비교 모드 2번째 라인
+  if (compareMode && profile2) {
+    bergCtx.save();
+    bergCtx.beginPath(); bergCtx.rect(PAD.l, PAD.t, gW, gH); bergCtx.clip();
+    bergCtx.strokeStyle='rgba(139,92,246,0.5)'; bergCtx.lineWidth=1.5; bergCtx.setLineDash([5,3]);
+    bergCtx.beginPath();
+    profile2.forEach((pt,i) => {
+      const x=toX(pt.t), y=toY(pt.BER);
+      i===0 ? bergCtx.moveTo(x,y) : bergCtx.lineTo(x,y);
+    });
+    bergCtx.stroke(); bergCtx.setLineDash([]);
+    bergCtx.restore();
+  }
+
+  // 주 BER 라인 (색상 그라데이션)
+  bergCtx.save();
+  bergCtx.beginPath(); bergCtx.rect(PAD.l, PAD.t, gW, gH); bergCtx.clip();
+  for (let i = 1; i < profile.length; i++) {
+    const p0=profile[i-1], p1=profile[i];
+    const x0=toX(p0.t), y0=toY(p0.BER);
+    const x1=toX(p1.t), y1=toY(p1.BER);
+    const mid = (p0.BER + p1.BER) / 2;
+    bergCtx.strokeStyle = mid >= BER_THR
+      ? `rgba(239,68,68,${0.7 + Math.min(mid,0.5)})`
+      : 'rgba(56,230,155,0.85)';
+    bergCtx.lineWidth = 2;
+    bergCtx.beginPath(); bergCtx.moveTo(x0,y0); bergCtx.lineTo(x1,y1); bergCtx.stroke();
+  }
+  bergCtx.restore();
+
+  bergCtx.strokeStyle='rgba(30,37,53,0.9)'; bergCtx.lineWidth=1;
+  bergCtx.strokeRect(PAD.l, PAD.t, gW, gH);
+
+  // X축 라벨
+  [0,250,500,750,1000].forEach(d => {
+    const t = d / 1414;
+    const x = toX(1-t);
+    bergCtx.fillStyle='rgba(90,100,120,0.7)'; bergCtx.font='9px monospace'; bergCtx.textAlign='center';
+    bergCtx.fillText(`${d}m`, x, PAD.t+gH+11);
+  });
+
+  if (compareMode) {
+    bergCtx.fillStyle='rgba(56,230,155,0.8)'; bergCtx.font='9px monospace'; bergCtx.textAlign='left';
+    bergCtx.fillText(P.freq===2.4e9?'2.4 GHz':'1.575 GHz', PAD.l+4, PAD.t+10);
+    bergCtx.fillStyle='rgba(139,92,246,0.7)';
+    bergCtx.fillText(P.freq===2.4e9?'1.575 GHz':'2.4 GHz', PAD.l+70, PAD.t+10);
+  }
+}
+
+// ══════════════════════════════════════════════
+// 통계 업데이트
+// ══════════════════════════════════════════════
+function updateStats(stats) {
+  const fspl = fspl1m(P.freq).toFixed(1);
+  const bw   = P.freq >= 2e9 ? '10 MHz' : '2 MHz';
+  const nFloor = noisePower(P.freq).toFixed(1);
+
+  document.getElementById('rFspl').textContent  = `${fspl} dB`;
+  document.getElementById('rNoise').textContent = `${nFloor} dBm (${bw})`;
+
+  const pct = ((stats.cntA / (GRID_N*GRID_N)) * 100).toFixed(1);
+  document.getElementById('rArea').textContent  = `${pct}%`;
+
+  const ils = computeAll(ILS.x, ILS.y);
+  const ilsEl = document.getElementById('rIls');
+  ilsEl.textContent = `${ils.JS.toFixed(1)} dB`;
+  ilsEl.style.color = ils.JS >= JS_THR ? 'var(--red)' : 'var(--green)';
+
+  const ilsBerEl = document.getElementById('rIlsBer');
+  ilsBerEl.textContent = ils.BER < 1e-6 ? '< 10⁻⁶' : ils.BER.toExponential(1);
+  ilsBerEl.style.color = ils.BER >= BER_THR ? 'var(--red)' : 'var(--green)';
+
+  // 경로 상 재밍·BER 진입 거리
+  let jsEntry = null, berEntry = null;
+  const STEPS = 300;
+  for (let i = 0; i <= STEPS; i++) {
+    const t = i / STEPS;
+    const wx = OPERATOR.x*(1-t), wy = OPERATOR.y*(1-t);
+    const all = computeAll(wx, wy);
+    if (jsEntry  === null && all.JS  >= JS_THR)  jsEntry  = Math.round(Math.hypot(wx-OPERATOR.x, wy-OPERATOR.y));
+    if (berEntry === null && all.BER >= BER_THR) berEntry = Math.round(Math.hypot(wx-OPERATOR.x, wy-OPERATOR.y));
+    if (jsEntry !== null && berEntry !== null) break;
+  }
+  document.getElementById('rPath').textContent    = jsEntry  !== null ? `조종자로부터 ${jsEntry}m` : '미진입';
+  document.getElementById('rBerPath').textContent = berEntry !== null ? `조종자로부터 ${berEntry}m` : '미진입';
+
+  // 상태 표시
+  const dot=document.getElementById('statusDot'), txt=document.getElementById('statusTxt');
+  const jPct=parseFloat(pct);
+  if (jPct>50)     { dot.style.background='var(--red)';  txt.style.color='var(--red)';  txt.textContent=`재밍 ${pct}% 커버`; }
+  else if (jPct>15){ dot.style.background='var(--gold)'; txt.style.color='var(--gold)'; txt.textContent=`부분 재밍 ${pct}%`; }
+  else             { dot.style.background='var(--green)'; txt.style.color='var(--green)'; txt.textContent=`재밍 제한 ${pct}%`; }
+}
+
+// ══════════════════════════════════════════════
+// 컬러바
+// ══════════════════════════════════════════════
+function buildColorbar() {
+  const cb=document.getElementById('cbCanvas'), cc=cb.getContext('2d');
+  const H=170; cb.height=H;
+  for (let i=0; i<H; i++) {
+    const js = (1 - i/H)*80 - 40;
+    const [r,g,b]=jsToRGBA(js);
+    cc.fillStyle=`rgb(${r},${g},${b})`; cc.fillRect(0,i,16,1);
+  }
+  const thY = Math.round((1-(JS_THR+40)/80)*H);
+  cc.strokeStyle='#facc15'; cc.lineWidth=2;
+  cc.beginPath(); cc.moveTo(0,thY); cc.lineTo(16,thY); cc.stroke();
+}
+
+// ══════════════════════════════════════════════
+// 마우스 인터랙션
+// ══════════════════════════════════════════════
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const cx = (e.clientX-rect.left)*(canvas.width/rect.width);
+  const cy = (e.clientY-rect.top)*(canvas.height/rect.height);
+  const {wx,wy} = c2w(cx, cy);
+  if (wx<0||wx>GRID_M||wy<0||wy>GRID_M) return;
+
+  const all = computeAll(wx, wy);
+  const {JS, J_rx, S_rx, N_db, BER, G, Lp_j, d_j} = all;
+  const jammed = JS >= JS_THR, near = JS >= 0;
+
+  document.getElementById('coordTxt').textContent = `x: ${Math.round(wx)}m, y: ${Math.round(wy)}m`;
+  document.getElementById('jsTxt').textContent    = `J/S: ${JS.toFixed(1)} dB ${jammed?'⚡ DoS':near?'⚠':''} | BER: ${BER<1e-6?'<10⁻⁶':BER.toExponential(1)}`;
+
+  const tip = document.getElementById('tipEl');
+  tip.className = 'tip ' + (jammed?'jam':near?'warn':'safe');
+  tip.innerHTML = `
+    <div style="font-weight:bold;color:${jammed?'var(--red)':near?'var(--gold)':'var(--green)'};margin-bottom:7px">
+      ${jammed?'⚡ 재밍 (DoS)':near?'⚠ 경계 구간':'✓ 안전'}
+    </div>
+    <div class="stat-row"><span class="stat-k">J/S 비율</span><span class="stat-v" style="color:${jammed?'var(--red)':'var(--green)'}">${JS.toFixed(2)} dB</span></div>
+    <div class="stat-row"><span class="stat-k">QPSK BER</span><span class="stat-v" style="color:${BER>=BER_THR?'var(--red)':'var(--green)'}">${BER<1e-6?'< 10⁻⁶':BER.toExponential(2)}</span></div>
+    <div class="stat-row"><span class="stat-k">J_rx</span><span class="stat-v">${J_rx.toFixed(1)} dBm</span></div>
+    <div class="stat-row"><span class="stat-k">S_rx</span><span class="stat-v">${S_rx.toFixed(1)} dBm</span></div>
+    <div class="stat-row"><span class="stat-k">잡음 바닥 N</span><span class="stat-v">${N_db.toFixed(1)} dBm</span></div>
+    <div class="stat-row"><span class="stat-k">G(θ) 안테나</span><span class="stat-v">${G.toFixed(1)} dBi</span></div>
+    <div class="stat-row"><span class="stat-k">경로 손실 L_j</span><span class="stat-v">${Lp_j.toFixed(1)} dB</span></div>
+    <div class="stat-row"><span class="stat-k">재머까지</span><span class="stat-v">${Math.round(d_j)} m</span></div>
+  `;
+  const vizRect = document.querySelector('.viz').getBoundingClientRect();
+  let tx=e.clientX-vizRect.left+14, ty=e.clientY-vizRect.top-14;
+  if (tx+220>vizRect.width-10) tx-=235;
+  if (ty+310>vizRect.height-10) ty-=310;
+  tip.style.left=tx+'px'; tip.style.top=ty+'px'; tip.style.display='block';
+});
+canvas.addEventListener('mouseleave', () => { document.getElementById('tipEl').style.display='none'; });
+
+// ══════════════════════════════════════════════
+// UI 바인딩
+// ══════════════════════════════════════════════
+function setFreq(f, el) {
+  P.freq = f;
+  document.querySelectorAll('.tab-row .tab-btn').forEach(t => {
+    if (t.parentElement.previousElementSibling?.textContent.includes('주파수'))
+      t.classList.remove('active-blue');
+  });
+  el.classList.add('active-blue');
+  rebuild();
+}
+
+function setAntenna(type, el) {
+  P.antennaType = type;
+  document.querySelectorAll('.ant-tab, .tab-btn').forEach(t => {
+    if (t.closest('.sect-bd') && t.closest('.sect-bd').contains(document.getElementById('dirParams')))
+      t.classList.remove('active-purple');
+  });
+  el.classList.add('active-purple');
+  document.getElementById('dirParams').style.display = type === 'dir' ? 'flex' : 'none';
+  rebuild();
+}
+
+function toggleCompare() {
+  compareMode = !compareMode;
+  const btn = document.getElementById('cmpBtn');
+  btn.classList.toggle('on', compareMode);
+  btn.textContent = compareMode ? '✕ 단일 주파수' : '⊞ 주파수 비교';
+  rebuild();
+}
+
+function bindSl(id, key, fmt, valId, extra) {
+  const el=document.getElementById(id), vEl=document.getElementById(valId);
+  el.value = P[key]; vEl.textContent = fmt(P[key]);
+  if (extra) extra(P[key]);
+  el.addEventListener('input', () => {
+    P[key] = +el.value;
+    vEl.textContent = fmt(+el.value);
+    if (extra) extra(+el.value);
+    rebuild();
+  });
+}
+
+bindSl('ptx',   'Ptx',     v=>`${v} dBm`, 'ptxVal',   v=>{ document.getElementById('ptxW').textContent = dBmToW(v); });
+bindSl('gmax',  'gMax',    v=>`${v} dBi`, 'gmaxVal');
+bindSl('theta3','theta3dB',v=>`${v}°`,    'theta3Val');
+bindSl('azim',  'azim',    v=>`${v}°`,    'azimVal');
+bindSl('eta',   'eta',     v=>`${parseFloat(v).toFixed(2)}`, 'etaVal');
+
+function dBmToW(dbm) {
+  const w = Math.pow(10,(dbm-30)/10);
+  return w>=1 ? `≈ ${w.toFixed(0)} W` : `≈ ${(w*1000).toFixed(0)} mW`;
+}
+document.getElementById('ptxW').textContent = dBmToW(P.Ptx);
+
+// ══════════════════════════════════════════════
+// 리사이즈 & 통합 재계산
+// ══════════════════════════════════════════════
+let rebuildTimer = null;
+
+function rebuild() {
+  clearTimeout(rebuildTimer);
+  rebuildTimer = setTimeout(() => {
+    const stats = buildHeatmaps();
+
+    // 그래프 캔버스 크기 동기화
+    const jsBox  = document.querySelector('.graph-box:first-child');
+    const berBox = document.querySelector('.graph-box:last-child');
+    jsGC.width   = jsBox.clientWidth;   jsGC.height  = jsBox.clientHeight;
+    berGC.width  = berBox.clientWidth;  berGC.height = berBox.clientHeight;
+
+    const profile  = buildPathProfile(P.freq);
+    const profile2 = compareMode ? buildPathProfile(P.freq === 2.4e9 ? 1.575e9 : 2.4e9) : null;
+
+    drawMain(stats);
+    drawBeamIfDir();
+    drawJSGraph(profile, profile2);
+    drawBERGraph(profile, profile2);
+  }, 40);
+}
+
+function resize() {
+  const cw = document.querySelector('.canvas-wrap');
+  canvas.width  = cw.clientWidth;
+  canvas.height = cw.clientHeight;
+  buildColorbar();
+  rebuild();
+}
+
+window.addEventListener('resize', resize);
+
+// ── 유틸 ──
+function hexA(hex, a) {
+  const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+// ── 초기 실행 ──
+buildColorbar();
+resize();
+</script>
+</body>
+</html>
