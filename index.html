@@ -792,7 +792,8 @@
       currentUser=email;currentRole=role;
       isAdmin=(role==='admin'||role==='superadmin');
       const roleName={superadmin:'SUPER ADMIN',admin:'ADMIN',expert:'EXPERT',member:'MEMBER'}[role];
-      document.getElementById('user-badge').textContent=email.split('@')[0].toUpperCase()+' · '+roleName;
+      const displayName=(role==='admin'||role==='superadmin')?'JBH2S':email.split('@')[0].toUpperCase();
+      document.getElementById('user-badge').textContent=displayName+' · '+roleName;
       const adminTab=document.getElementById('admin-tab');
       adminTab.style.display=isAdmin?'':'none';
       adminTab.style.visibility=isAdmin?'':'hidden';
