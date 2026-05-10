@@ -335,6 +335,16 @@ const SCENARIOS = [
 let P = { Ptx: 10, eta: 2.1 };
 let currentScenario = SCENARIOS[0];
 
+// 시나리오별 뷰 영역 (외부 재머 시 확장)
+let VIEW = { xMin:0, xMax:1000, yMin:0, yMax:1000 };
+function updateView() {
+  const outer = currentScenario.jammers.some(
+    j => j.x < 0 || j.x > 1000 || j.y < 0 || j.y > 1000);
+  VIEW = outer
+    ? { xMin:-700, xMax:1700, yMin:-700, yMax:1700 }
+    : { xMin:0,    xMax:1000, yMin:0,    yMax:1000  };
+}
+
 const GRID_M = 1000;
 const GRID_RES = 5;
 const GRID_N = GRID_M / GRID_RES; // 200
@@ -471,18 +481,33 @@ const canvas = document.getElementById('simCanvas');
 const ctx = canvas.getContext('2d');
 
 function w2c(wx, wy) {
-  return { cx: (wx / GRID_M) * canvas.width, cy: canvas.height - (wy / GRID_M) * canvas.height };
+  const vw = VIEW.xMax - VIEW.xMin, vh = VIEW.yMax - VIEW.yMin;
+  return {
+    cx: (wx - VIEW.xMin) / vw * canvas.width,
+    cy: canvas.height - (wy - VIEW.yMin) / vh * canvas.height,
+  };
 }
 function c2w(cx, cy) {
-  return { wx: (cx / canvas.width) * GRID_M, wy: (1 - cy / canvas.height) * GRID_M };
+  const vw = VIEW.xMax - VIEW.xMin, vh = VIEW.yMax - VIEW.yMin;
+  return {
+    wx: cx / canvas.width  * vw + VIEW.xMin,
+    wy: (1 - cy / canvas.height) * vh + VIEW.yMin,
+  };
 }
 
 function drawFrame(stats) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // 히트맵
+  // 확장 뷰: 외부 영역 어두운 배경
+  if (VIEW.xMin < 0) {
+    ctx.fillStyle = '#04060c';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  // 히트맵 (공항 0~1000m 구역만)
+  const hmTL = w2c(0, GRID_M), hmBR = w2c(GRID_M, 0);
   ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(offCvs, 0, 0, canvas.width, canvas.height);
+  ctx.drawImage(offCvs, hmTL.cx, hmTL.cy, hmBR.cx - hmTL.cx, hmBR.cy - hmTL.cy);
 
   // J/S 임계 등고선 (60 dB)
   drawContour(JS_CRIT, 'rgba(220,38,38,0.85)');
@@ -507,8 +532,8 @@ function drawFrame(stats) {
 }
 
 function drawContour(threshold, color) {
-  const W = canvas.width, H = canvas.height;
-  const sx = W / GRID_N, sy = H / GRID_N;
+  const tl = w2c(0, GRID_M), br = w2c(GRID_M, 0);
+  const sx = (br.cx - tl.cx) / GRID_N, sy = (br.cy - tl.cy) / GRID_N;
   ctx.save();
   ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.setLineDash([3,3]);
   for (let row = 0; row < GRID_N - 1; row++) {
@@ -517,11 +542,11 @@ function drawContour(threshold, color) {
       const vr = jsGrid[row * GRID_N + col + 1];
       const vb = jsGrid[(row + 1) * GRID_N + col];
       if ((v-threshold)*(vr-threshold) < 0) {
-        const px=(col+.5)*sx, py=(row+.5)*sy;
+        const px = tl.cx+(col+.5)*sx, py = tl.cy+(row+.5)*sy;
         ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px+sx,py); ctx.stroke();
       }
       if ((v-threshold)*(vb-threshold) < 0) {
-        const px=(col+.5)*sx, py=(row+.5)*sy;
+        const px = tl.cx+(col+.5)*sx, py = tl.cy+(row+.5)*sy;
         ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px,py+sy); ctx.stroke();
       }
     }
@@ -531,17 +556,38 @@ function drawContour(threshold, color) {
 
 function drawAirport() {
   const W = canvas.width, H = canvas.height;
+  const isExt = VIEW.xMin < 0;
 
-  // 그리드 라인 (100m 단위)
+  // 확장 뷰: 공항 경계 박스 표시
+  if (isExt) {
+    const tl = w2c(0, GRID_M), br = w2c(GRID_M, 0);
+    ctx.save();
+    ctx.strokeStyle = 'rgba(79,163,255,0.55)'; ctx.lineWidth = 2;
+    ctx.strokeRect(tl.cx, tl.cy, br.cx - tl.cx, br.cy - tl.cy);
+    ctx.fillStyle = 'rgba(79,163,255,0.45)'; ctx.font = 'bold 10px monospace'; ctx.textAlign = 'center';
+    ctx.fillText('공항 구역 (1,000 × 1,000 m)', (tl.cx+br.cx)/2, tl.cy - 7);
+    ctx.restore();
+  }
+
+  // 그리드 라인 (확장 뷰: 500m 단위 / 기본: 100m 단위)
   ctx.save();
   ctx.strokeStyle = 'rgba(30,37,53,0.4)'; ctx.lineWidth = 1;
-  for (let m = 0; m <= GRID_M; m += 100) {
-    const {cx} = w2c(m, 0); const {cy} = w2c(0, m);
+  const step = isExt ? 500 : 100;
+  const xs = Math.ceil(VIEW.xMin / step) * step;
+  const ys = Math.ceil(VIEW.yMin / step) * step;
+  for (let m = xs; m <= VIEW.xMax; m += step) {
+    const {cx} = w2c(m, 0);
     ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, H); ctx.stroke();
+    if (m !== 0) {
+      ctx.fillStyle = 'rgba(90,100,120,0.5)'; ctx.font = '8px monospace'; ctx.textAlign = 'left';
+      ctx.fillText(`${m}`, cx+2, H-3);
+    }
+  }
+  for (let m = ys; m <= VIEW.yMax; m += step) {
+    const {cy} = w2c(0, m);
     ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(W, cy); ctx.stroke();
-    if (m > 0 && m < GRID_M) {
+    if (m !== 0) {
       ctx.fillStyle = 'rgba(90,100,120,0.5)'; ctx.font = '8px monospace';
-      ctx.fillText(`${m}`, cx+2, H-2);
       ctx.fillText(`${m}`, 2, cy-2);
     }
   }
@@ -674,7 +720,8 @@ function drawBeam(jmr) {
   const {cx, cy} = w2c(jmr.x, jmr.y);
   const azMath = compassToMath(jmr.azim_compass);
   const halfB  = (jmr.theta3dB / 2) * Math.PI / 180;
-  const len = Math.min(canvas.width, canvas.height) * 0.42;
+  // 빔 길이를 세계 좌표 700m 고정으로 환산 (뷰 스케일 자동 대응)
+  const len = 700 / (VIEW.xMax - VIEW.xMin) * canvas.width;
   ctx.save();
   ctx.strokeStyle = 'rgba(139,92,246,0.4)'; ctx.lineWidth = 1; ctx.setLineDash([5,4]);
   ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+Math.cos(azMath)*len, cy-Math.sin(azMath)*len); ctx.stroke();
@@ -962,13 +1009,17 @@ canvas.addEventListener('mousemove', e => {
   const cx = (e.clientX-rect.left)*(canvas.width/rect.width);
   const cy = (e.clientY-rect.top)*(canvas.height/rect.height);
   const {wx, wy} = c2w(cx, cy);
-  if (wx<0||wx>GRID_M||wy<0||wy>GRID_M) return;
+  document.getElementById('coordTxt').textContent = `x: ${Math.round(wx)}m, y: ${Math.round(wy)}m`;
+  if (wx<0||wx>GRID_M||wy<0||wy>GRID_M) {
+    document.getElementById('tipEl').style.display='none';
+    document.getElementById('jsTxt').textContent = '공항 외부';
+    return;
+  }
 
   const { JS, J_dBm, BER } = computeAll(wx, wy, currentScenario);
   const { label } = gpsLevel(JS);
 
-  document.getElementById('coordTxt').textContent = `x: ${Math.round(wx)}m, y: ${Math.round(wy)}m`;
-  document.getElementById('jsTxt').textContent    = `J/S: ${JS.toFixed(1)} dB — ${label}`;
+  document.getElementById('jsTxt').textContent = `J/S: ${JS.toFixed(1)} dB — ${label}`;
 
   const tip = document.getElementById('tipEl');
   const lv = gpsLevel(JS).lv;
@@ -1002,6 +1053,7 @@ function setScenario(idx, el) {
   document.querySelectorAll('.sc-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('scDescTxt').textContent = currentScenario.desc;
+  updateView();
   updateJammerCfgPanel();
   rebuild();
 }
@@ -1090,6 +1142,7 @@ function compassToMath(azim_c) {
 }
 
 // ── 초기 실행 ──
+updateView();
 updateJammerCfgPanel();
 buildColorbar();
 window.addEventListener('resize', resize);
