@@ -44,17 +44,17 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .dot5{width:5px;height:5px;border-radius:50%}
 .sect-bd{padding:11px;display:flex;flex-direction:column;gap:9px}
 .sl-item{display:flex;flex-direction:column;gap:5px}
-.sl-hdr{display:flex;justify-content:space-between;align-items:baseline}
-.sl-lbl{font-size:11px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sl-hdr{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px}
+.sl-lbl{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sl-lbl sub{font-size:9px;color:var(--muted)}
-.sl-val{font-family:'Cascadia Mono',monospace;font-size:11px;color:var(--blue);background:rgba(79,163,255,.1);border:1px solid rgba(79,163,255,.2);padding:1px 6px;border-radius:4px;min-width:55px;text-align:center}
+.sl-val{font-family:'Cascadia Mono',monospace;font-size:11px;color:var(--blue);background:rgba(79,163,255,.1);border:1px solid rgba(79,163,255,.2);padding:1px 8px;border-radius:4px;white-space:nowrap;text-align:center}
 input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:var(--border);border-radius:2px;outline:none;cursor:pointer}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--blue);box-shadow:0 0 4px rgba(79,163,255,.5);cursor:pointer}
 
-.stat-r{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
+.stat-r{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)}
 .stat-r:last-child{border-bottom:none}
-.sk{color:var(--muted);font-size:10px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sv{font-family:'Cascadia Mono',monospace;font-size:11px;flex-shrink:0;text-align:right}
+.sk{color:var(--muted);font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sv{font-family:'Cascadia Mono',monospace;font-size:11px;white-space:nowrap;text-align:right}
 
 /* 영향 분석 테이블 */
 .impact-table{width:100%;border-collapse:collapse;font-size:10px}
