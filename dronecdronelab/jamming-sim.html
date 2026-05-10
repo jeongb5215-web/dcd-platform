@@ -30,8 +30,8 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .sc-tab.active{color:var(--text);background:rgba(79,163,255,.06);border-bottom:2px solid var(--blue)}
 .sc-num{background:var(--border);border-radius:4px;padding:2px 7px;font-size:10px;font-family:'Cascadia Mono',monospace}
 .sc-tab.active .sc-num{background:rgba(79,163,255,.25);color:var(--blue)}
-.sc-desc{flex:1;display:flex;align-items:center;padding:0 18px;font-size:11px;color:var(--muted);gap:6px}
-.sc-desc strong{color:var(--text)}
+.sc-desc{flex:1;display:flex;align-items:center;padding:0 18px;font-size:11px;color:#fff;gap:6px}
+.sc-desc strong{color:#fff;font-weight:700}
 
 /* ── 메인 레이아웃 ── */
 .wrap{flex:1;display:flex;overflow:hidden}
@@ -1045,6 +1045,7 @@ function setScenario(idx, el) {
   currentScenario = SCENARIOS[idx];
   document.querySelectorAll('.sc-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
+  document.querySelector('#scDescArea strong').textContent = currentScenario.name;
   document.getElementById('scDescTxt').textContent = currentScenario.desc;
   updateView();
   updateJammerCfgPanel();
