@@ -785,12 +785,7 @@
       document.getElementById('panel-'+id).classList.add('active');
       btn.classList.add('active');
     }
-    function doLogin(){
-      const email=document.getElementById('login-email').value.trim();
-      const code=document.getElementById('login-code').value.trim();
-      if(!email||!code){showNotif('이메일과 접속 코드를 입력하세요.',true);return}
-      const role=ROLE_CODES[code];
-      if(!role){showNotif('접속 코드가 올바르지 않습니다.',true);return}
+    function applyLogin(email,role){
       currentUser=email;currentRole=role;
       isAdmin=(role==='admin'||role==='superadmin');
       const roleName={superadmin:'SUPER ADMIN',admin:'ADMIN',expert:'EXPERT',member:'MEMBER'}[role];
@@ -802,9 +797,37 @@
       showScreen('app');renderAll();updateLabTab();
       if(isAdmin)renderAdmin();
     }
+    function doLogin(){
+      const email=document.getElementById('login-email').value.trim();
+      const code=document.getElementById('login-code').value.trim();
+      if(!email||!code){showNotif('이메일과 접속 코드를 입력하세요.',true);return}
+      const role=ROLE_CODES[code];
+      if(!role){showNotif('접속 코드가 올바르지 않습니다.',true);return}
+      if(role==='admin'||role==='superadmin'){
+        localStorage.setItem('dcd_admin_session',JSON.stringify({email,code}));
+      }
+      applyLogin(email,role);
+    }
     function doAdminLogin(){doLogin()}
     function doLogout(){
-      if(confirm('로그아웃하시겠습니까?')){currentUser=null;isAdmin=false;showScreen('landing')}
+      if(confirm('로그아웃하시겠습니까?')){
+        localStorage.removeItem('dcd_admin_session');
+        currentUser=null;currentRole='guest';isAdmin=false;
+        showScreen('landing');
+      }
+    }
+    function restoreAdminSession(){
+      try{
+        const saved=localStorage.getItem('dcd_admin_session');
+        if(!saved)return;
+        const {email,code}=JSON.parse(saved);
+        const role=ROLE_CODES[code];
+        if((role==='admin'||role==='superadmin')&&email){
+          applyLogin(email,role);
+        }else{
+          localStorage.removeItem('dcd_admin_session');
+        }
+      }catch(e){localStorage.removeItem('dcd_admin_session');}
     }
     function doRegister(){
       const name=document.getElementById('reg-name').value.trim();
@@ -1761,6 +1784,7 @@
     document.addEventListener('DOMContentLoaded',function(){
       var t=document.querySelector('.top-logo');
       if(t&&!document.querySelector('.ver-badge'))t.insertAdjacentHTML('afterend','<span class="ver-badge">v5</span>');
+      restoreAdminSession();
     });
   </script>
 </body>
