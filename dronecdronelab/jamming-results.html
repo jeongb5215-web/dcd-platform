@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPS 재밍 영향 분석 결과 | DcD Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0c10;--surface:#111520;--border:#1e2535;
+  --blue:#4fa3ff;--red:#ff5c5c;--green:#38e69b;
+  --gold:#f4b942;--purple:#8b5cf6;--orange:#f97316;
+  --text:#c8d0e0;--muted:#5a6478;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;min-height:100vh}
+
+/* ── 헤더 ── */
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;height:52px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100}
+.logo{font-family:'Dancing Script',cursive;font-size:21px;color:#fff}.logo span{color:var(--blue)}
+.hdr-t{font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.hdr-b{margin-left:auto;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.4);color:var(--purple);font-size:10px;padding:2px 9px;border-radius:20px}
+.back-btn{color:var(--muted);font-size:12px;text-decoration:none;display:flex;align-items:center;gap:5px;transition:color .2s}
+.back-btn:hover{color:var(--text)}
+.sim-btn{color:var(--blue);font-size:12px;text-decoration:none;display:flex;align-items:center;gap:5px;transition:color .2s;border:1px solid rgba(79,163,255,.3);padding:4px 10px;border-radius:5px}
+.sim-btn:hover{background:rgba(79,163,255,.08)}
+
+/* ── 페이지 본문 ── */
+.page{max-width:1100px;margin:0 auto;padding:36px 28px 60px}
+
+/* ── 보고서 제목 ── */
+.report-title{margin-bottom:32px}
+.report-title h1{font-size:22px;font-weight:700;letter-spacing:.5px;color:#fff;margin-bottom:8px}
+.report-title .meta{display:flex;gap:16px;font-size:12px;color:var(--muted)}
+.meta-chip{background:rgba(255,255,255,.05);border:1px solid var(--border);padding:3px 10px;border-radius:12px}
+
+/* ── 섹션 ── */
+.section{margin-bottom:40px}
+.section-title{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:14px;background:var(--purple);border-radius:2px}
+
+/* ── 카드 그리드 ── */
+.card-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px}
+.card.s1{border-top:3px solid var(--green)}
+.card.s2{border-top:3px solid var(--red)}
+.card.s3{border-top:3px solid var(--purple)}
+.card-title{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.card-sc{font-size:17px;font-weight:700;color:#fff;margin-bottom:4px}
+.card-desc{font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+
+/* ── 지표 행 ── */
+.metric-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px}
+.metric-row:last-child{border-bottom:none}
+.mk{color:var(--muted);font-size:11px}
+.mv{font-family:'Cascadia Mono',monospace;font-size:12px}
+
+/* ── 항공기 영향 테이블 ── */
+.aircraft-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.aircraft-table th{padding:7px 10px;text-align:left;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);font-weight:normal;background:rgba(255,255,255,.02)}
+.aircraft-table td{padding:6px 10px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+.aircraft-table tr:last-child td{border-bottom:none}
+.aircraft-table tr:hover td{background:rgba(255,255,255,.02)}
+.ac-id{font-family:'Cascadia Mono',monospace;font-size:11px;color:var(--blue)}
+
+/* ── 상태 뱃지 ── */
+.badge{border-radius:10px;padding:2px 8px;font-size:10px;font-weight:600;white-space:nowrap;display:inline-block}
+.b-crit{background:rgba(255,92,92,.2);color:var(--red);border:1px solid rgba(255,92,92,.3)}
+.b-deg{background:rgba(249,115,22,.2);color:var(--orange);border:1px solid rgba(249,115,22,.3)}
+.b-min{background:rgba(244,185,66,.2);color:var(--gold);border:1px solid rgba(244,185,66,.3)}
+.b-safe{background:rgba(56,230,155,.2);color:var(--green);border:1px solid rgba(56,230,155,.3)}
+
+/* ── 비교 테이블 ── */
+.compare-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px}
+.compare-table{width:100%;border-collapse:collapse;font-size:12px}
+.compare-table th{padding:10px 14px;text-align:left;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
+.compare-table td{padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table .sc-cell{font-weight:600;color:#fff}
+.bar-wrap{display:flex;align-items:center;gap:8px}
+.bar-bg{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width .3s}
+
+/* ── 결론 박스 ── */
+.finding-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 22px;margin-bottom:14px}
+.finding-box h3{font-size:13px;color:#fff;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.finding-box p{font-size:12px;color:var(--muted);line-height:1.7}
+.finding-box .highlight{color:var(--text)}
+.f-crit{border-left:3px solid var(--red)}
+.f-warn{border-left:3px solid var(--orange)}
+.f-info{border-left:3px solid var(--blue)}
+.f-ok{border-left:3px solid var(--green)}
+
+/* ── 파라미터 박스 ── */
+.params-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.param-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.param-label{font-size:10px;color:var(--muted);margin-bottom:4px;letter-spacing:1px;text-transform:uppercase}
+.param-value{font-family:'Cascadia Mono',monospace;font-size:14px;color:var(--blue)}
+.param-sub{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* 프린트 */
+@media print{header{position:relative} .sim-btn,.back-btn{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back-btn" href="../index.html">
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M8.5 1.5L3.5 6.5l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    돌아가기
+  </a>
+  <div style="width:1px;height:18px;background:var(--border)"></div>
+  <span class="logo">D<span>c</span>D</span>
+  <span class="hdr-t">GPS 재밍 영향 분석 결과</span>
+  <a class="sim-btn" href="jamming-sim.html">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    시뮬레이터 열기
+  </a>
+  <span class="hdr-b">LAB v4</span>
+</header>
+
+<div class="page">
+
+  <!-- 보고서 제목 -->
+  <div class="report-title">
+    <h1>공항 GPS 재밍 영향 분석 결과 보고서</h1>
+    <div class="meta">
+      <span class="meta-chip">주파수: GPS L1 1.575 GHz</span>
+      <span class="meta-chip">공간: 1,000 × 1,000 m</span>
+      <span class="meta-chip">그리드: 5 m 해상도 (200×200)</span>
+      <span class="meta-chip" id="dateChip">—</span>
+    </div>
+  </div>
+
+  <!-- 분석 조건 -->
+  <div class="section">
+    <div class="section-title">분석 조건 (고정 물리 상수)</div>
+    <div class="params-grid">
+      <div class="param-item">
+        <div class="param-label">GPS 위성 신호 S</div>
+        <div class="param-value">−130 dBm</div>
+        <div class="param-sub">GPS L1 최소 수신 전력</div>
+      </div>
+      <div class="param-item">
+        <div class="param-label">잡음 지수 N₀</div>
+        <div class="param-value">−164 dBm/Hz</div>
+        <div class="param-sub">열잡음 −174 + 공항 잡음 +10 dB</div>
+      </div>
+      <div class="param-item">
+        <div class="param-label">재머 출력 P<sub>tx</sub></div>
+        <div class="param-value">10 dBm</div>
+        <div class="param-sub">≈ 10 mW (소형 불법 재머 수준)</div>
+      </div>
+      <div class="param-item">
+        <div class="param-label">경로 손실 지수 η</div>
+        <div class="param-value">2.10</div>
+        <div class="param-sub">공항 활주로 주변 평지</div>
+      </div>
+      <div class="param-item">
+        <div class="param-label">GPS 완전 두절 임계</div>
+        <div class="param-value" style="color:var(--red)">J/S ≥ 60 dB</div>
+        <div class="param-sub">GPS 추적 완전 손실</div>
+      </div>
+      <div class="param-item">
+        <div class="param-label">GPS 심각 저하 임계</div>
+        <div class="param-value" style="color:var(--orange)">J/S ≥ 40 dB</div>
+        <div class="param-sub">RNAV/RNP 접근 불가</div>
+      </div>
+      <div class="param-item">
+        <div class="param-label">안테나 (지향성)</div>
+        <div class="param-value">17 dBi</div>
+        <div class="param-sub">G_max · θ_3dB = 22° · Gaussian 빔</div>
+      </div>
+      <div class="param-item">
+        <div class="param-label">ILS 보호</div>
+        <div class="param-value" style="color:var(--green)">보호됨</div>
+        <div class="param-sub">108–112 MHz · GPS 재머 영향 없음</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 시나리오별 결과 카드 -->
+  <div class="section">
+    <div class="section-title">시나리오별 핵심 결과</div>
+    <div class="card-row" id="scenarioCards"></div>
+  </div>
+
+  <!-- 항공기별 영향 상세 -->
+  <div class="section">
+    <div class="section-title">항공기 위치별 GPS 영향 상세 (8개 위치)</div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div id="acTable0"></div>
+      <div id="acTable1"></div>
+      <div id="acTable2"></div>
+    </div>
+  </div>
+
+  <!-- 시나리오 비교 -->
+  <div class="section">
+    <div class="section-title">시나리오 종합 비교</div>
+    <div class="compare-wrap">
+      <table class="compare-table" id="compareTable"></table>
+    </div>
+  </div>
+
+  <!-- 결론 및 권고 -->
+  <div class="section">
+    <div class="section-title">결론 및 권고사항</div>
+    <div id="findingsArea"></div>
+  </div>
+
+</div><!-- .page -->
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// 물리 상수
+// ══════════════════════════════════════════════════════════════
+const C     = 3e8;
+const FREQ  = 1.575e9;
+const S_GPS = -130;
+const N0    = -164;
+const BW    = 2e6;
+const L_SYS = 1;
+const ETA   = 2.1;
+const PTX   = 10;   // dBm
+const GMAX  = 17;   // dBi
+const T3DB  = 22;   // deg
+
+const JS_CRIT = 60;
+const JS_DEG  = 40;
+const JS_MIN  = 20;
+const GRID_M  = 1000;
+const GRID_RES = 5;
+const GRID_N  = GRID_M / GRID_RES;
+
+// ── 공항 항공기 위치 ──
+const AIRCRAFT = [
+  { id:'AC1', label:'북측 접지대',      x:500, y:900, phase:'ILS 최종 접근' },
+  { id:'AC2', label:'활주로 75%',        x:500, y:700, phase:'착륙 활주' },
+  { id:'AC3', label:'활주로 중앙',       x:500, y:500, phase:'착륙/이륙' },
+  { id:'AC4', label:'활주로 25%',        x:500, y:300, phase:'이륙 활주' },
+  { id:'AC5', label:'남측 이륙단',       x:500, y:100, phase:'이륙 대기' },
+  { id:'AC6', label:'ILS 로컬라이저',    x:500, y:960, phase:'ILS 임계 구역' },
+  { id:'AC7', label:'유도로 대기',       x:390, y:850, phase:'유도로 이동' },
+  { id:'AC8', label:'계류장(게이트)',    x:260, y:430, phase:'주기 중' },
+];
+
+// ── 시나리오 정의 ──
+const SCENARIOS = [
+  {
+    id:0, name:'S1', scClass:'s1', color:'#38e69b',
+    title:'활주로 → 외곽',
+    subtitle:'활주로 중앙 → 북측 외부 방향 지향성 재밍',
+    jammers:[{ x:500,y:500,type:'dir',azim_c:0 }],
+    finding:'활주로 중앙에서 외곽을 향해 재밍 발사 시, 주빔 방향(북쪽) 항공기는 GPS 완전 두절. 후방 사이드로브(−8 dBi)만으로도 남쪽 항공기 GPS 심각 저하 발생.',
+  },
+  {
+    id:1, name:'S2', scClass:'s2', color:'#ff5c5c',
+    title:'외곽 울타리 → 활주로',
+    subtitle:'북측 울타리 → 활주로 방향 지향성 재밍',
+    jammers:[{ x:500,y:970,type:'dir',azim_c:180 }],
+    finding:'울타리 지점에서 활주로를 향해 재밍 시, 접지대 직전 항공기가 가장 심각한 영향(J/S > 80 dB). 활주로 전체 GPS 완전 두절. ILS 접근 자체는 가능하나 RNAV/RNP 접근 완전 불가.',
+  },
+  {
+    id:2, name:'S3', scClass:'s3', color:'#8b5cf6',
+    title:'옴니 복합',
+    subtitle:'활주로 + 울타리 옴니 동시 방사',
+    jammers:[
+      { x:500,y:500,type:'omni',azim_c:0 },
+      { x:500,y:970,type:'omni',azim_c:0 },
+    ],
+    finding:'두 개의 옴니 재머 동시 운용 시 전력 합산 효과로 공항 전역 GPS 두절. 지향성 재머보다 절대 강도는 낮으나, 사각지대 없이 전방향 커버 가능.',
+  },
+];
+
+// ══════════════════════════════════════════════════════════════
+// 물리 함수
+// ══════════════════════════════════════════════════════════════
+function fspl1m(){ return 20*Math.log10(4*Math.PI*FREQ/C); }
+function pathLoss(d){ return fspl1m()+10*ETA*Math.log10(Math.max(d,1))+L_SYS; }
+function gaussGain(theta){ return Math.max(GMAX-12*(theta/T3DB)**2, GMAX-25); }
+
+function compassToMath(azim_c){ return (90-azim_c)*Math.PI/180; }
+
+function jamPwr(wx,wy,jmr){
+  const dx=wx-jmr.x, dy=wy-jmr.y;
+  const d=Math.max(Math.hypot(dx,dy),1);
+  let G;
+  if(jmr.type==='omni'){ G=2.15; }
+  else {
+    const azM=compassToMath(jmr.azim_c);
+    const ang=Math.atan2(dy,dx);
+    let th=ang-azM;
+    while(th>Math.PI) th-=2*Math.PI;
+    while(th<-Math.PI) th+=2*Math.PI;
+    G=gaussGain(Math.abs(th*180/Math.PI));
+  }
+  return PTX+G-pathLoss(d);
+}
+
+function computeJS(wx,wy,scenario){
+  let J_mW=0;
+  for(const jmr of scenario.jammers){
+    J_mW+=Math.pow(10,jamPwr(wx,wy,jmr)/10);
+  }
+  const J_dBm=10*Math.log10(Math.max(J_mW,1e-20));
+  const JS=J_dBm-S_GPS;
+  const N_mW=Math.pow(10,(N0+10*Math.log10(BW))/10);
+  const S_mW=Math.pow(10,S_GPS/10);
+  const SNR=S_mW/(J_mW+N_mW);
+  const BER=0.5*erfc(Math.sqrt(Math.max(SNR,0)));
+  return {JS,J_dBm,BER};
+}
+
+function erfc(x){
+  if(x<0) return 2-erfc(-x);
+  const t=1/(1+0.3275911*x);
+  const p=t*(0.254829592+t*(-0.284496736+t*(1.421413741+t*(-1.453152027+t*1.061405429))));
+  return p*Math.exp(-x*x);
+}
+
+function gpsLevel(js){
+  if(js>=JS_CRIT) return {lv:'crit',label:'GPS 완전 두절',cls:'b-crit'};
+  if(js>=JS_DEG)  return {lv:'deg', label:'GPS 심각 저하',cls:'b-deg'};
+  if(js>=JS_MIN)  return {lv:'min', label:'GPS 경미 저하',cls:'b-min'};
+  return               {lv:'safe',label:'영향 없음',    cls:'b-safe'};
+}
+
+// ── 그리드 통계 ──
+function gridStats(scenario){
+  let crit=0,deg=0,min=0;
+  const total=GRID_N*GRID_N;
+  for(let row=0;row<GRID_N;row++){
+    for(let col=0;col<GRID_N;col++){
+      const wx=col*GRID_RES, wy=(GRID_N-1-row)*GRID_RES;
+      const {JS}=computeJS(wx,wy,scenario);
+      if(JS>=JS_CRIT) crit++;
+      else if(JS>=JS_DEG) deg++;
+      else if(JS>=JS_MIN) min++;
+    }
+  }
+  return {
+    critPct:(crit/total*100).toFixed(1),
+    degPct:(deg/total*100).toFixed(1),
+    minPct:(min/total*100).toFixed(1),
+    safePct:((total-crit-deg-min)/total*100).toFixed(1),
+  };
+}
+
+// ── 접근 경로 재밍 진입 거리 ──
+function approachJamDist(scenario){
+  for(let wy=2900;wy>=900;wy-=10){
+    const {JS}=computeJS(500,wy,scenario);
+    if(JS>=JS_CRIT){
+      const dist=wy-900;
+      const alt=Math.round(dist*Math.tan(3*Math.PI/180));
+      return {dist,alt};
+    }
+  }
+  return null;
+}
+
+// ══════════════════════════════════════════════════════════════
+// UI 렌더링
+// ══════════════════════════════════════════════════════════════
+document.getElementById('dateChip').textContent =
+  new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'});
+
+function renderAll(){
+  const statsAll = SCENARIOS.map(s=>({ s, stats:gridStats(s), approach:approachJamDist(s) }));
+
+  // 시나리오 카드
+  const cardsEl=document.getElementById('scenarioCards');
+  cardsEl.innerHTML = statsAll.map(({s,stats,approach})=>`
+    <div class="card ${s.scClass}">
+      <div class="card-title">${s.name} · ${s.subtitle.split('→')[0].trim()} → ${s.subtitle.split('→')[1]?.trim()||''}</div>
+      <div class="card-sc" style="color:${s.color}">${s.title}</div>
+      <div class="card-desc">${s.jammers.map(j=>`재머 (${j.x},${j.y}) ${j.type==='omni'?'전방향':'지향성 '+['N','NE','E','SE','S','SW','W','NW'][Math.round(j.azim_c/45)%8]+'향'}`).join(' + ')}</div>
+      <div class="metric-row"><span class="mk">GPS 완전 두절 구역</span><span class="mv" style="color:var(--red)">${stats.critPct}%</span></div>
+      <div class="metric-row"><span class="mk">GPS 심각 저하 구역</span><span class="mv" style="color:var(--orange)">${stats.degPct}%</span></div>
+      <div class="metric-row"><span class="mk">RNAV 가능 구역</span><span class="mv" style="color:var(--green)">${stats.safePct}%</span></div>
+      <div class="metric-row"><span class="mk">ILS 접근 중 GPS 두절</span>
+        <span class="mv" style="color:var(--red)">
+          ${approach?`+${approach.dist}m / ~${approach.alt}m AGL`:'접지대 전 안전'}
+        </span>
+      </div>
+    </div>
+  `).join('');
+
+  // 항공기 테이블 (시나리오별)
+  SCENARIOS.forEach((s,idx)=>{
+    const rows = AIRCRAFT.map(ac=>{
+      const {JS,BER}=computeJS(ac.x,ac.y,s);
+      const {label,cls}=gpsLevel(JS);
+      const berStr=BER<1e-6?'< 10⁻⁶':BER.toExponential(1);
+      const jsColor=JS>=JS_CRIT?'var(--red)':JS>=JS_DEG?'var(--orange)':JS>=JS_MIN?'var(--gold)':'var(--green)';
+      return `<tr>
+        <td><span class="ac-id">${ac.id}</span><div style="font-size:10px;color:var(--muted)">${ac.label}</div></td>
+        <td style="font-size:10px;color:var(--muted)">${ac.phase}</td>
+        <td style="font-family:'Cascadia Mono',monospace;font-size:12px;color:${jsColor}">${JS.toFixed(1)}</td>
+        <td><span class="badge ${cls}">${label}</span></td>
+        <td style="font-family:'Cascadia Mono',monospace;font-size:10px;color:var(--muted)">${berStr}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById(`acTable${idx}`).innerHTML = `
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+          <span style="width:8px;height:8px;border-radius:50%;background:${s.color};display:block;flex-shrink:0"></span>
+          <span style="font-size:12px;font-weight:600;color:#fff">${s.name} — ${s.title}</span>
+        </div>
+        <table class="aircraft-table">
+          <thead><tr>
+            <th>항공기</th><th>운항 단계</th><th>J/S(dB)</th><th>GPS 상태</th><th>BER</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  });
+
+  // 종합 비교 테이블
+  const compareEl = document.getElementById('compareTable');
+  const headers = ['시나리오','재머 유형','GPS 두절','GPS 저하','RNAV 가능','ILS 접근 GPS 두절 고도'];
+  let html = `<thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
+  statsAll.forEach(({s,stats,approach})=>{
+    const typeStr = s.jammers.length>1?`옴니 ×${s.jammers.length}`:s.jammers[0].type==='omni'?'전방향(Omni)':'지향성(Dir)';
+    const altStr  = approach?`+${approach.dist}m (≈${approach.alt}m AGL)`:'접지대 전 안전';
+    const critW   = parseFloat(stats.critPct);
+    const degW    = parseFloat(stats.degPct);
+    const safeW   = parseFloat(stats.safePct);
+    html+=`<tr>
+      <td><span style="color:${s.color};font-weight:600">${s.name}</span> ${s.title}</td>
+      <td style="color:var(--muted);font-size:11px">${typeStr}</td>
+      <td>
+        <div class="bar-wrap">
+          <div class="bar-bg"><div class="bar-fill" style="width:${critW}%;background:var(--red)"></div></div>
+          <span style="font-family:'Cascadia Mono',monospace;font-size:11px;color:var(--red);min-width:38px">${stats.critPct}%</span>
+        </div>
+      </td>
+      <td>
+        <div class="bar-wrap">
+          <div class="bar-bg"><div class="bar-fill" style="width:${degW}%;background:var(--orange)"></div></div>
+          <span style="font-family:'Cascadia Mono',monospace;font-size:11px;color:var(--orange);min-width:38px">${stats.degPct}%</span>
+        </div>
+      </td>
+      <td>
+        <div class="bar-wrap">
+          <div class="bar-bg"><div class="bar-fill" style="width:${safeW}%;background:var(--green)"></div></div>
+          <span style="font-family:'Cascadia Mono',monospace;font-size:11px;color:var(--green);min-width:38px">${stats.safePct}%</span>
+        </div>
+      </td>
+      <td style="font-family:'Cascadia Mono',monospace;font-size:11px;color:var(--red)">${altStr}</td>
+    </tr>`;
+  });
+  html += '</tbody>';
+  compareEl.innerHTML = html;
+
+  // 결론 박스
+  const {s:s0,stats:st0,approach:ap0}=statsAll[0];
+  const {s:s1,stats:st1,approach:ap1}=statsAll[1];
+  const {s:s2,stats:st2}=statsAll[2];
+  const findings=[
+    {cls:'f-crit',icon:'⚠',title:'10 mW 소형 재머만으로 전체 활주로 GPS 완전 두절 가능',
+     text:`본 분석에서 사용한 재머 출력은 <span class="highlight">10 dBm (10 mW)</span>으로, 시중 불법 판매 소형 GPS 재머 수준입니다. 세 시나리오 모두 활주로 내 대부분 항공기에서 <span class="highlight">J/S ≥ 40 dB 이상</span>을 기록하며 RNAV/RNP 접근이 불가능합니다.`},
+    {cls:'f-crit',icon:'🛬',title:`S2(외곽→활주로)가 접근 중 항공기에 가장 위험`,
+     text:`울타리 재머는 ILS 글라이드패스 상 항공기가 접지대 <span class="highlight">+${ap1?ap1.dist:0}m (약 ${ap1?ap1.alt:0}m AGL)</span> 지점에서 GPS 완전 두절. 접지 직전 RNAV 지원 시스템이 손실되어 조종사는 ILS 계기 전환이 필요합니다.`},
+    {cls:'f-warn',icon:'↩',title:'S1(활주로→외곽) 후방 사이드로브의 역방향 영향 확인',
+     text:`지향성 재머의 후방 사이드로브(G = G_max − 25 dB = −8 dBi)는 이론상 미약하지만, GPS 신호(S = −130 dBm)가 매우 약하므로 재머 후방 <span class="highlight">400 m 이내 항공기도 J/S ≥ 40 dB</span> 심각 저하 구간에 진입합니다.`},
+    {cls:'f-info',icon:'📡',title:'ILS 착륙 시스템(로컬라이저·활공각)은 보호됨',
+     text:`ILS 로컬라이저(108–112 MHz)와 활공각(328–335 MHz)은 GPS 재머(1.575 GHz)의 주파수 대역과 완전히 다릅니다. GPS 재밍 상황에서도 <span class="highlight">ILS 정밀 접근 절차는 유지 가능</span>하며, RNAV/RNP 기반 접근만 불가합니다.`},
+    {cls:'f-ok',icon:'✓',title:'대응 방안: ILS 착륙 절차 우선 지정 및 GPS 모니터링 강화',
+     text:`공항 방어 시 (1) ILS 착륙 절차를 GPS 접근보다 우선 지정, (2) GPS 재밍 감지 시스템(CRPA 안테나, 스펙트럼 모니터링) 운용, (3) 지향성 재머 운용 시 활주로 후방 항공기에 대한 재밍 차단 고려.`},
+  ];
+  document.getElementById('findingsArea').innerHTML = findings.map(f=>`
+    <div class="finding-box ${f.cls}">
+      <h3>${f.icon} ${f.title}</h3>
+      <p>${f.text}</p>
+    </div>`).join('');
+}
+
+renderAll();
+</script>
+</body>
+</html>
