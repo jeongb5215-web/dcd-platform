@@ -44,17 +44,17 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .dot5{width:5px;height:5px;border-radius:50%}
 .sect-bd{padding:11px;display:flex;flex-direction:column;gap:9px}
 .sl-item{display:flex;flex-direction:column;gap:5px}
-.sl-hdr{display:flex;align-items:center;gap:6px;width:100%}
-.sl-lbl{font-size:11px;color:#fff;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1 1 0;min-width:0}
+.sl-hdr{display:flex;align-items:flex-start;gap:6px;width:100%}
+.sl-lbl{font-size:11px;color:#fff;font-weight:600;flex:1;min-width:0;line-height:1.45;word-break:keep-all}
 .sl-lbl sub{font-size:9px;color:var(--muted);font-weight:400}
-.sl-val{font-family:'Cascadia Mono',monospace;font-size:11px;color:var(--blue);background:rgba(79,163,255,.1);border:1px solid rgba(79,163,255,.2);padding:1px 6px;border-radius:4px;white-space:nowrap;text-align:center;flex:0 0 auto}
+.sl-val{font-family:'Cascadia Mono',monospace;font-size:11px;color:var(--blue);background:rgba(79,163,255,.1);border:1px solid rgba(79,163,255,.2);padding:1px 6px;border-radius:4px;white-space:nowrap;text-align:center;flex:0 0 auto;margin-top:1px}
 input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:var(--border);border-radius:2px;outline:none;cursor:pointer}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--blue);box-shadow:0 0 4px rgba(79,163,255,.5);cursor:pointer}
 
-.stat-r{display:flex;align-items:center;gap:6px;width:100%;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.stat-r{display:flex;align-items:flex-start;gap:6px;width:100%;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)}
 .stat-r:last-child{border-bottom:none}
-.sk{color:#fff;font-size:10px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1 1 0;min-width:0}
-.sv{font-family:'Cascadia Mono',monospace;font-size:11px;color:#fff;font-weight:600;white-space:nowrap;text-align:right;flex:0 0 auto}
+.sk{color:#fff;font-size:10px;font-weight:600;flex:1;min-width:0;line-height:1.45;word-break:keep-all}
+.sv{font-family:'Cascadia Mono',monospace;font-size:11px;color:#fff;font-weight:600;white-space:nowrap;text-align:right;flex:0 0 auto;margin-top:1px}
 
 /* 영향 분석 테이블 */
 .impact-table{width:100%;border-collapse:collapse;font-size:10px}
@@ -987,7 +987,7 @@ function updateJammerCfgPanel() {
     html += `<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05)">
       <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px">
         <div style="width:6px;height:6px;border-radius:50%;background:${jmr.color};flex-shrink:0"></div>
-        <span style="color:var(--text);font-size:10px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${jmr.label}</span>
+        <span style="color:var(--text);font-size:10px;flex:1;min-width:0;line-height:1.4;word-break:keep-all">${jmr.label}</span>
         ${typeChip}
       </div>
       <div style="color:var(--muted);padding-left:11px;font-size:9px;font-family:'Cascadia Mono',monospace;line-height:1.5;word-break:break-all">
@@ -1007,11 +1007,6 @@ canvas.addEventListener('mousemove', e => {
   const cy = (e.clientY-rect.top)*(canvas.height/rect.height);
   const {wx, wy} = c2w(cx, cy);
   document.getElementById('coordTxt').textContent = `x: ${Math.round(wx)}m, y: ${Math.round(wy)}m`;
-  if (wx<0||wx>GRID_M||wy<0||wy>GRID_M) {
-    document.getElementById('tipEl').style.display='none';
-    document.getElementById('jsTxt').textContent = '공항 외부';
-    return;
-  }
 
   const { JS, J_dBm, BER } = computeAll(wx, wy, currentScenario);
   const { label } = gpsLevel(JS);
