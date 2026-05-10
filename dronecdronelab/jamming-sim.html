@@ -456,22 +456,27 @@ let jsGrid = new Float32Array(GRID_N * GRID_N);
 
 function buildHeatmap() {
   const img = offCtx.createImageData(GRID_N, GRID_N);
-  let crit = 0, deg = 0;
+  let aptCrit = 0, aptDeg = 0, aptTotal = 0;
+  const vw = VIEW.xMax - VIEW.xMin, vh = VIEW.yMax - VIEW.yMin;
+  const cellW = vw / GRID_N, cellH = vh / GRID_N;
   for (let row = 0; row < GRID_N; row++) {
     for (let col = 0; col < GRID_N; col++) {
-      const wx = col * GRID_RES;
-      const wy = (GRID_N - 1 - row) * GRID_RES;
+      const wx = VIEW.xMin + (col + 0.5) * cellW;
+      const wy = VIEW.yMax - (row + 0.5) * cellH;
       const { JS } = computeAll(wx, wy, currentScenario);
       jsGrid[row * GRID_N + col] = JS;
-      if (JS >= JS_CRIT) crit++;
-      else if (JS >= JS_DEG) deg++;
+      if (wx >= 0 && wx <= GRID_M && wy >= 0 && wy <= GRID_M) {
+        aptTotal++;
+        if (JS >= JS_CRIT) aptCrit++;
+        else if (JS >= JS_DEG) aptDeg++;
+      }
       const [r,g,b,a] = jsToRGBA(JS);
       const i = (row * GRID_N + col) * 4;
       img.data[i]=r; img.data[i+1]=g; img.data[i+2]=b; img.data[i+3]=a;
     }
   }
   offCtx.putImageData(img, 0, 0);
-  return { crit, deg, total: GRID_N * GRID_N };
+  return { crit: aptCrit, deg: aptDeg, total: aptTotal || GRID_N * GRID_N };
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -498,16 +503,9 @@ function c2w(cx, cy) {
 function drawFrame(stats) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // 확장 뷰: 외부 영역 어두운 배경
-  if (VIEW.xMin < 0) {
-    ctx.fillStyle = '#04060c';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
-
-  // 히트맵 (공항 0~1000m 구역만)
-  const hmTL = w2c(0, GRID_M), hmBR = w2c(GRID_M, 0);
+  // 히트맵 (전체 뷰 영역)
   ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(offCvs, hmTL.cx, hmTL.cy, hmBR.cx - hmTL.cx, hmBR.cy - hmTL.cy);
+  ctx.drawImage(offCvs, 0, 0, canvas.width, canvas.height);
 
   // J/S 임계 등고선 (60 dB)
   drawContour(JS_CRIT, 'rgba(220,38,38,0.85)');
@@ -532,8 +530,7 @@ function drawFrame(stats) {
 }
 
 function drawContour(threshold, color) {
-  const tl = w2c(0, GRID_M), br = w2c(GRID_M, 0);
-  const sx = (br.cx - tl.cx) / GRID_N, sy = (br.cy - tl.cy) / GRID_N;
+  const sx = canvas.width / GRID_N, sy = canvas.height / GRID_N;
   ctx.save();
   ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.setLineDash([3,3]);
   for (let row = 0; row < GRID_N - 1; row++) {
@@ -542,11 +539,11 @@ function drawContour(threshold, color) {
       const vr = jsGrid[row * GRID_N + col + 1];
       const vb = jsGrid[(row + 1) * GRID_N + col];
       if ((v-threshold)*(vr-threshold) < 0) {
-        const px = tl.cx+(col+.5)*sx, py = tl.cy+(row+.5)*sy;
+        const px = (col+.5)*sx, py = (row+.5)*sy;
         ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px+sx,py); ctx.stroke();
       }
       if ((v-threshold)*(vb-threshold) < 0) {
-        const px = tl.cx+(col+.5)*sx, py = tl.cy+(row+.5)*sy;
+        const px = (col+.5)*sx, py = (row+.5)*sy;
         ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px,py+sy); ctx.stroke();
       }
     }
