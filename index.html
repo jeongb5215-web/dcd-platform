@@ -541,7 +541,7 @@
 <body>
   <header id="site-header">
     <div class="sh-inner">
-      <button class="sh-logo" onclick="showScreen('landing')">Drone <span class="sh-amp">&amp;</span> <span class="sh-cd">C-drone</span></button>
+      <button class="sh-logo" onclick="currentUser?enterApp():showScreen('landing')">Drone <span class="sh-amp">&amp;</span> <span class="sh-cd">C-drone</span></button>
       <nav class="sh-nav">
         <span class="sh-nav-link">DRONE</span>
         <span class="sh-nav-link">C-DRONE</span>
@@ -564,7 +564,6 @@
       <div class="lp-eyebrow">DRONE &amp; COUNTER-DRONE INTELLIGENCE</div>
       <h1 class="lp-main-title">Drone <span class="lp-amp">&amp;</span> <span class="lp-cd">C-drone</span></h1>
       <p class="lp-tagline">드론 &amp; 대드론 전문 정보 플랫폼</p>
-      <button id="lp-enter-btn" onclick="enterApp()" style="display:none;margin-top:28px;padding:14px 36px;background:#1e3a6e;color:#fff;border:none;font-size:15px;font-weight:800;letter-spacing:1px;cursor:pointer;transition:.15s" onmouseover="this.style.background='#26508f'" onmouseout="this.style.background='#1e3a6e'">게시판 입장 →</button>
     </div>
     <div class="lp-intel" id="lp-intel-box">
       <div class="lp-intel-tab" onclick="toggleIntel()">
@@ -791,7 +790,7 @@
       if(currentUser){
         const m=members.find(m=>m.email===currentUser);
         const name=m?m.name:currentUser.split('@')[0].toUpperCase();
-        authDiv.innerHTML=`<span style="font-size:12px;color:#374151;font-weight:700">${name}</span><span class="sh-sep">|</span><button class="sh-auth-btn" onclick="enterApp()" style="font-weight:800;color:#1e3a6e">게시판 입장</button><span class="sh-sep">|</span><button class="sh-auth-btn" onclick="doLogout()">로그아웃</button>`;
+        authDiv.innerHTML=`<span style="font-size:12px;color:#374151;font-weight:700">${name}</span><span class="sh-sep">|</span><button class="sh-auth-btn" onclick="doLogout()">로그아웃</button>`;
       }else{
         authDiv.innerHTML=`<button class="sh-auth-btn" onclick="showScreen('login')">로그인</button><span class="sh-sep">|</span><button class="sh-auth-btn" onclick="showScreen('register')">회원가입</button>`;
       }
