@@ -1799,7 +1799,7 @@
     document.addEventListener('DOMContentLoaded',function(){
       var t=document.querySelector('.top-logo');
       if(t&&!document.querySelector('.ver-badge'))t.insertAdjacentHTML('afterend','<span class="ver-badge">v5</span>');
-      restoreAdminSession();
+      localStorage.removeItem('dcd_admin_session');
       function animateLogo(el){
         var nodes=Array.from(el.childNodes),i=0;
         el.innerHTML='';
