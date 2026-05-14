@@ -518,9 +518,12 @@
     .sf-copy .sf-c{color:#fff}
 
     @media (max-width:760px){
-      #site-header{padding:0 20px;height:56px}
-      .sh-nav{display:none}
-      .sh-auth{gap:8px;margin-left:auto}
+      #site-header{padding:0;height:auto}
+      .sh-inner{flex-wrap:wrap;padding:0 16px;gap:0;align-items:center;min-height:50px}
+      .sh-logo{font-size:20px}
+      .sh-auth{gap:6px;margin-left:auto}
+      .sh-nav{display:flex;width:100%;gap:0;justify-content:space-around;border-top:1px solid #dde3ec;padding:8px 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+      .sh-nav-link{font-size:11px;letter-spacing:0.5px;white-space:nowrap;padding:4px 6px}
       #site-footer{height:auto;padding:14px 20px}
       .sf-inner{flex-direction:column;gap:6px;text-align:center}
       .sf-copy{font-size:12px}
