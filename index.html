@@ -766,6 +766,18 @@
     };
 
     function showScreen(id){
+      if(id==='landing'){
+        localStorage.removeItem('dcd_admin_session');
+        currentUser=null;currentRole='guest';isAdmin=false;
+        const ub=document.getElementById('user-badge');
+        if(ub)ub.textContent='GUEST';
+        const at=document.getElementById('admin-tab');
+        if(at){at.style.display='none';at.style.visibility='hidden';}
+      }
+      if(id==='app'&&!currentUser){
+        id='login';
+        showNotif('로그인이 필요합니다.',true);
+      }
       document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
       document.getElementById('screen-'+id).classList.add('active');
       const isApp=id==='app';
@@ -807,11 +819,7 @@
     }
     function doAdminLogin(){doLogin()}
     function doLogout(){
-      if(confirm('로그아웃하시겠습니까?')){
-        localStorage.removeItem('dcd_admin_session');
-        currentUser=null;currentRole='guest';isAdmin=false;
-        showScreen('landing');
-      }
+      showScreen('landing');
     }
     function restoreAdminSession(){
       try{
