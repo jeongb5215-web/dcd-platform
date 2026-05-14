@@ -56,8 +56,8 @@
     .lp-tagline{margin:12px 0 28px;color:#fff;font-size:13px;letter-spacing:3px;text-transform:uppercase}
     .actions{display:flex;flex-wrap:wrap;gap:10px}
     .btn-primary,.btn-secondary,.ghost-btn{border:1px solid transparent;padding:13px 26px;font-weight:800;letter-spacing:1px;transition:.16s}
-    .btn-primary{background:var(--blue);color:#06101e}
-    .btn-primary:hover{background:#79bbff}
+    .btn-primary{background:#1e3a6e;color:#fff}
+    .btn-primary:hover{background:#26508f}
     .btn-secondary{background:transparent;color:var(--sub);border-color:var(--muted)}
     .btn-secondary:hover{border-color:#fff;color:#fff}
     /* Intel panel (bottom-right) — 청와대 브리핑 스타일 */
@@ -621,14 +621,6 @@
       <div class="auth-kicker">Secure Login</div>
       <h2 class="auth-title">회원 로그인</h2>
       <p class="auth-desc">접속 코드를 입력하면 역할이 자동으로 적용됩니다.</p>
-      <div class="form-note" style="margin-bottom:16px">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:12px">
-          <span><span class="role-badge superadmin" style="margin-right:6px;min-width:64px;justify-content:center">SUPER</span>super2024</span>
-          <span><span class="role-badge admin" style="margin-right:6px;min-width:64px;justify-content:center">ADMIN</span>admin2024</span>
-          <span><span class="role-badge expert" style="margin-right:6px;min-width:64px;justify-content:center">EXPERT</span>expert1234</span>
-          <span><span class="role-badge member" style="margin-right:6px;min-width:64px;justify-content:center">MEMBER</span>1234</span>
-        </div>
-      </div>
       <div class="form-group"><label for="login-email">Email</label><input id="login-email" type="email" placeholder="name@example.com"></div>
       <div class="form-group"><label for="login-code">Access Code</label><input id="login-code" type="password" placeholder="Access Code" onkeydown="if(event.key==='Enter')doLogin()"></div>
       <div class="member-meter"><div class="meter-track"><div class="meter-fill"></div></div><div class="meter-text">현재 <span id="login-member-count">15</span>명 가입</div></div>
