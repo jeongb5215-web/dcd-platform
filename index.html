@@ -765,14 +765,6 @@
     };
 
     function showScreen(id){
-      if(id==='landing'){
-        localStorage.removeItem('dcd_admin_session');
-        currentUser=null;currentRole='guest';isAdmin=false;
-        const ub=document.getElementById('user-badge');
-        if(ub)ub.textContent='GUEST';
-        const at=document.getElementById('admin-tab');
-        if(at){at.style.display='none';at.style.visibility='hidden';}
-      }
       if(id==='app'&&!currentUser){
         id='login';
         showNotif('로그인이 필요합니다.',true);
@@ -818,6 +810,12 @@
     }
     function doAdminLogin(){doLogin()}
     function doLogout(){
+      localStorage.removeItem('dcd_admin_session');
+      currentUser=null;currentRole='guest';isAdmin=false;
+      const ub=document.getElementById('user-badge');
+      if(ub)ub.textContent='GUEST';
+      const at=document.getElementById('admin-tab');
+      if(at){at.style.display='none';at.style.visibility='hidden';}
       showScreen('landing');
     }
     function restoreAdminSession(){
@@ -1799,7 +1797,6 @@
     document.addEventListener('DOMContentLoaded',function(){
       var t=document.querySelector('.top-logo');
       if(t&&!document.querySelector('.ver-badge'))t.insertAdjacentHTML('afterend','<span class="ver-badge">v5</span>');
-      localStorage.removeItem('dcd_admin_session');
       function animateLogo(el){
         var nodes=Array.from(el.childNodes),i=0;
         el.innerHTML='';
