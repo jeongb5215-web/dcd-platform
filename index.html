@@ -503,7 +503,7 @@
     .sh-logo{font-family:'Dancing Script',cursive;font-size:26px;font-weight:700;color:#000;cursor:pointer;user-select:none;white-space:nowrap;line-height:1;border:none;background:none;padding:0}
     .sh-logo .sh-amp,.sh-logo .sh-cd{color:#000}
     .sh-nav{display:flex;gap:44px;margin:0 auto}
-    .sh-nav-link{color:#1a1a2e;font-size:13px;font-weight:700;letter-spacing:1.5px;cursor:pointer;transition:.15s;text-decoration:none}
+    .sh-nav-link{background:none;border:none;padding:0;color:#1a1a2e;font-size:13px;font-weight:700;letter-spacing:1.5px;cursor:pointer;transition:.15s;text-decoration:none;font-family:inherit}
     .sh-nav-link:hover{color:#4fa3ff}
     .sh-auth{display:flex;align-items:center;gap:12px;white-space:nowrap}
     .sh-auth-btn{background:none;border:none;color:#1a1a2e;font-size:13px;font-weight:600;cursor:pointer;padding:0;letter-spacing:.2px}
@@ -543,11 +543,11 @@
     <div class="sh-inner">
       <button class="sh-logo" onclick="currentUser?enterApp():showScreen('landing')">Drone <span class="sh-amp">&amp;</span> <span class="sh-cd">C-drone</span></button>
       <nav class="sh-nav">
-        <span class="sh-nav-link">DRONE</span>
-        <span class="sh-nav-link">C-DRONE</span>
-        <span class="sh-nav-link">TACTICS</span>
-        <span class="sh-nav-link">OTHERS</span>
-        <span class="sh-nav-link">LAB</span>
+        <button class="sh-nav-link" onclick="enterPanel('drone')">DRONE</button>
+        <button class="sh-nav-link" onclick="enterPanel('cdrone')">C-DRONE</button>
+        <button class="sh-nav-link" onclick="enterPanel('tactics')">TACTICS</button>
+        <button class="sh-nav-link" onclick="enterPanel('other')">OTHERS</button>
+        <button class="sh-nav-link" onclick="enterPanel('lab')">LAB</button>
       </nav>
       <div class="sh-auth">
         <button class="sh-auth-btn" onclick="showScreen('login')">로그인</button>
@@ -801,6 +801,14 @@
       if(!currentUser){showScreen('login');return;}
       showScreen('app');renderAll();updateLabTab();
       if(isAdmin)renderAdmin();
+    }
+    function enterPanel(id){
+      if(!currentUser){showScreen('login');return;}
+      enterApp();
+      const tabMap={drone:'DRONE',cdrone:'C-DRONE',tactics:'TACTICS',other:'OTHER',lab:'LAB'};
+      document.querySelectorAll('.nav-tab').forEach(function(t){
+        if(t.textContent.trim()===tabMap[id]){switchPanel(id,t);}
+      });
     }
     function applyLogin(email,role){
       currentUser=email;currentRole=role;
