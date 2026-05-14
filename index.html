@@ -814,7 +814,7 @@
       adminTab.style.visibility=isAdmin?'':'hidden';
       if(!isAdmin)document.getElementById('panel-admin').innerHTML='';
       updateSiteHeader();
-      showScreen('landing');
+      enterApp();
     }
     function doLogin(){
       const email=document.getElementById('login-email').value.trim();
