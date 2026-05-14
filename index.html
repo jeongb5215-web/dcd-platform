@@ -107,6 +107,8 @@
     .topbar{height:64px;background:#fff;border-bottom:1px solid #dde3ec;display:flex;align-items:center;gap:0;padding:0 40px;flex-shrink:0;position:sticky;top:0;z-index:200}
     .top-logo{font-family:'Dancing Script',cursive;font-size:26px;font-weight:700;color:#000;margin-right:28px;line-height:1;cursor:pointer;background:none;border:none;padding:0;flex-shrink:0;white-space:nowrap;user-select:none}
     .top-logo .sh-amp,.top-logo .sh-cd{color:#000}
+    @keyframes logoWave{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+    .logo-char{display:inline-block;animation:logoWave 2s ease-in-out infinite;text-shadow:1px 1px 0 #bbb,2px 2px 0 #999,3px 3px 6px rgba(0,0,0,.18)}
     .top-divider{display:none}
     .nav-tab{background:none;border:none;border-bottom:2px solid transparent;color:#111827;padding:0 16px;font-size:15px;font-weight:700;letter-spacing:1px;height:64px;cursor:pointer;transition:.15s;margin-bottom:-1px}
     .nav-tab:hover{color:#000}
@@ -1784,6 +1786,21 @@
       var t=document.querySelector('.top-logo');
       if(t&&!document.querySelector('.ver-badge'))t.insertAdjacentHTML('afterend','<span class="ver-badge">v5</span>');
       restoreAdminSession();
+      function animateLogo(el){
+        var nodes=Array.from(el.childNodes),i=0;
+        el.innerHTML='';
+        nodes.forEach(function(node){
+          Array.from(node.textContent).forEach(function(ch){
+            var s=document.createElement('span');
+            s.className='logo-char';
+            s.style.animationDelay=(i*0.07)+'s';
+            s.textContent=ch;
+            el.appendChild(s);
+            i++;
+          });
+        });
+      }
+      document.querySelectorAll('.top-logo,.sh-logo').forEach(animateLogo);
     });
   </script>
 </body>
