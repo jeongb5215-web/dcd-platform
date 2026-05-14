@@ -4,6 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>공항 GPS 재밍 영향 분석 | DcD Lab</title>
+<script>
+(function(){
+  var params=new URLSearchParams(location.search);
+  var urlToken=params.get('dcd_token');
+  var granted=false;
+  if(urlToken){
+    try{
+      var stored=JSON.parse(localStorage.getItem('dcd_lab_token')||'null');
+      if(stored&&stored.token===urlToken&&stored.expiry>Date.now()){
+        granted=true;
+        localStorage.removeItem('dcd_lab_token');
+      }
+    }catch(e){}
+  }
+  if(!granted){
+    document.addEventListener('DOMContentLoaded',function(){
+      document.body.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#0a0c10;color:#c8d0e0;font-family:sans-serif;gap:20px;text-align:center;padding:20px">'
+        +'<div style="font-size:48px">🔒</div>'
+        +'<div style="font-size:18px;font-weight:700;color:#ff5c5c">접근이 차단되었습니다</div>'
+        +'<div style="font-size:13px;color:#5a6478;max-width:360px">이 시뮬레이션은 DcD 플랫폼 LAB 게시판을 통해서만 접근할 수 있습니다.</div>'
+        +'<a href="https://jeongb5215-web.github.io/dcd-platform/" style="margin-top:10px;padding:10px 24px;background:#1e3a6e;color:#fff;text-decoration:none;font-size:13px;font-weight:700">DcD 플랫폼으로 이동</a>'
+        +'</div>';
+    });
+  }
+})();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{

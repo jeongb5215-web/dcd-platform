@@ -920,12 +920,19 @@
                 <div class="lab-card-desc">${item.desc}</div>
                 <div class="lab-card-footer">
                   <span class="lab-card-date">${item.date}</span>
-                  ${canOpen&&item.url?`<a href="${item.url}" target="_blank" rel="noopener" class="lab-link-btn">시뮬레이션 열기 →</a>`:canOpen?'<span style="font-size:11px;color:#aaa">링크 없음</span>':'<span style="font-size:11px;color:#c4b5fd">🔒 관리자 전용</span>'}
+                  ${canOpen&&item.url?`<button class="lab-link-btn" onclick="openLabSim('${item.url}')">시뮬레이션 열기 →</button>`:canOpen?'<span style="font-size:11px;color:#aaa">링크 없음</span>':'<span style="font-size:11px;color:#c4b5fd">🔒 관리자 전용</span>'}
                 </div>
               </div>
             </div>`).join('')}
         </div>`:'<div class="lab-empty">// 등록된 시뮬레이션이 없습니다.</div>'}
       </div>`;
+    }
+    function openLabSim(url){
+      if(!currentUser){showNotif('로그인이 필요합니다.',true);return;}
+      const token=Math.random().toString(36).slice(2)+Date.now().toString(36);
+      localStorage.setItem('dcd_lab_token',JSON.stringify({token,expiry:Date.now()+300000}));
+      const sep=url.includes('?')?'&':'?';
+      window.open(url+sep+'dcd_token='+token,'_blank','noopener');
     }
     function addLabItem(){
       const title=document.getElementById('lab-title').value.trim();
