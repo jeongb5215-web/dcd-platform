@@ -326,6 +326,44 @@
   .card-ko { font-size: 1.1rem; color: #333; display: none; margin-top: 12px; line-height: 1.5; }
   .flashcard.revealed .card-ko { display: block; }
 
+  .card-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 14px;
+    gap: 8px;
+  }
+  .btn-nav {
+    background: #fff;
+    border: 1.5px solid var(--purple-border);
+    color: var(--purple);
+    border-radius: 20px;
+    padding: 7px 18px;
+    font-size: .85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+    white-space: nowrap;
+  }
+  .btn-nav:hover:not(:disabled) { background: #f0eaf8; }
+  .btn-nav:disabled { opacity: .3; cursor: default; }
+
+  .card-nav-dots {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--gray-bar);
+    transition: background .2s;
+  }
+  .dot.active { background: var(--purple); transform: scale(1.3); }
+  .dot.done { background: var(--green); }
+
   .btn-speak {
     background: #f0eaf8;
     color: var(--purple);
@@ -693,7 +731,13 @@ function renderCard() {
   }
 
   const word = queue[idx];
+  const hasPrev = idx > 0;
   content.innerHTML = `
+    <div class="card-nav">
+      <button class="btn-nav" ${hasPrev ? '' : 'disabled'} onclick="goCard(-1)">← 이전</button>
+      <span class="card-nav-dots">${queue.map((_, i) => `<span class="dot ${i === idx ? 'active' : i < idx ? 'done' : ''}"></span>`).slice(Math.max(0, idx-3), idx+4).join('')}</span>
+      <button class="btn-nav" onclick="goCard(1)">다음 →</button>
+    </div>
     <div class="flashcard" id="flashcard" onclick="revealCard()">
       <div class="card-en">${escHtml(word.en)}</div>
       <button class="btn-speak" onclick="event.stopPropagation();speak('${escHtml(word.en).replace(/'/g,"\\'")}')">🔊 발음 듣기</button>
@@ -704,6 +748,14 @@ function renderCard() {
       <button class="btn-mastered" onclick="markWord(true)">✅ 암기!</button>
     </div>`;
   speak(word.en);
+}
+
+function goCard(dir) {
+  const { queue, idx } = practiceState;
+  const next = idx + dir;
+  if (next < 0 || next > queue.length) return;
+  practiceState.idx = next;
+  renderCard();
 }
 
 function revealCard() {
