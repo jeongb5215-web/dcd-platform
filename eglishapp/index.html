@@ -785,44 +785,45 @@ function closePractice() {
 }
 
 // ── Text-to-Speech ─────────────────────────────────────────
-let ttsReady = false;
+// 음성 목록을 페이지 로드 시점에 미리 캐시
+// → 버튼 탭 시 speak()가 완전히 동기적으로 실행되어 iOS 차단 우회
+let cachedVoices = [];
+function initVoices() {
+  cachedVoices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+}
+if (window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = initVoices;
+  initVoices();
+}
 
-// iOS는 첫 사용자 터치 후에만 TTS 허용 — 첫 인터랙션에서 잠금 해제
+// iOS: 첫 터치에서 빈 발화로 오디오 세션 잠금 해제
+let ttsUnlocked = false;
 function unlockTTS() {
-  if (ttsReady || !window.speechSynthesis) return;
-  ttsReady = true;
+  if (ttsUnlocked || !window.speechSynthesis) return;
+  ttsUnlocked = true;
   const u = new SpeechSynthesisUtterance('');
+  u.volume = 0;
   window.speechSynthesis.speak(u);
 }
 document.addEventListener('touchstart', unlockTTS, { once: true });
-document.addEventListener('click', unlockTTS, { once: true });
+document.addEventListener('click',      unlockTTS, { once: true });
 
 function speak(text) {
   if (!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
 
-  const doSpeak = () => {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'en-US';
-    utter.rate = 0.85;
-    // 영어 음성 명시적으로 지정 (모바일에서 한국어 음성으로 읽히는 문제 방지)
-    const voices = window.speechSynthesis.getVoices();
-    const enVoice = voices.find(v => v.lang === 'en-US')
-                 || voices.find(v => v.lang.startsWith('en'));
-    if (enVoice) utter.voice = enVoice;
-    window.speechSynthesis.speak(utter);
-  };
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US';
+  utter.rate = 0.85;
+  utter.volume = 1;
 
-  // 음성 목록이 아직 로드 중이면 로드 완료 후 실행
-  const voices = window.speechSynthesis.getVoices();
-  if (voices.length > 0) {
-    doSpeak();
-  } else {
-    window.speechSynthesis.onvoiceschanged = () => {
-      window.speechSynthesis.onvoiceschanged = null;
-      doSpeak();
-    };
-  }
+  // 캐시된 음성에서 영어 목소리 선택 (없으면 브라우저 기본값)
+  const voices = cachedVoices.length ? cachedVoices : window.speechSynthesis.getVoices();
+  const enVoice = voices.find(v => v.lang === 'en-US')
+               || voices.find(v => v.lang.startsWith('en'));
+  if (enVoice) utter.voice = enVoice;
+
+  window.speechSynthesis.speak(utter);
 }
 
 // ── Toast ──────────────────────────────────────────────────
