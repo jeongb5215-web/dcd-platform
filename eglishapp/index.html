@@ -1,0 +1,800 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>영어 단어장</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #5b2d8e;
+    --purple-light: #7c3fb5;
+    --purple-border: #6b3fa0;
+    --green: #4caf50;
+    --bg: #f5f5f5;
+    --card-bg: #ffffff;
+    --text: #1a1a1a;
+    --text-sub: #666;
+    --gray-bar: #e0e0e0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--purple);
+    color: #fff;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  }
+  header h1 { font-size: 1.2rem; font-weight: 700; }
+  .btn-icon {
+    background: rgba(255,255,255,.2);
+    border: none;
+    color: #fff;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s;
+  }
+  .btn-icon:hover { background: rgba(255,255,255,.35); }
+
+  main { max-width: 520px; margin: 0 auto; padding: 20px 16px 80px; }
+
+  .section-label {
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-sub);
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    padding-left: 2px;
+  }
+
+  .deck-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .deck-card {
+    background: var(--card-bg);
+    border-radius: 14px;
+    border: 2px solid var(--purple-border);
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(91,45,142,.08);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .deck-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(91,45,142,.15); }
+
+  .deck-body { padding: 16px 18px 6px; }
+  .deck-title { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .deck-meta { font-size: .82rem; color: var(--text-sub); margin-bottom: 10px; }
+
+  .progress-bar-wrap {
+    height: 8px;
+    background: var(--gray-bar);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 4px;
+    transition: width .4s ease;
+  }
+
+  .deck-footer {
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px;
+  }
+  .btn-practice {
+    background: none;
+    border: none;
+    color: var(--text-sub);
+    font-size: .9rem;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 4px;
+    transition: color .2s;
+    padding: 4px 0;
+  }
+  .btn-practice:hover { color: var(--purple); }
+
+  .deck-actions { display: flex; gap: 6px; }
+  .btn-small {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-sub);
+    font-size: .85rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background .2s, color .2s;
+  }
+  .btn-small:hover { background: #f0eaf8; color: var(--purple); }
+  .btn-small.danger:hover { background: #fdecea; color: #d32f2f; }
+
+  .fab {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--purple);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 56px; height: 56px;
+    font-size: 1.6rem;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(91,45,142,.4);
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s, transform .15s;
+    z-index: 200;
+  }
+  .fab:hover { background: var(--purple-light); transform: scale(1.08); }
+
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.5);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 300;
+    padding: 16px;
+    opacity: 0; pointer-events: none; transition: opacity .2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: #fff;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 24px;
+    transform: translateY(20px); transition: transform .2s;
+    box-shadow: 0 8px 40px rgba(0,0,0,.2);
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .modal-title { font-size: 1.1rem; font-weight: 700; }
+  .btn-close {
+    background: none; border: none;
+    font-size: 1.4rem; cursor: pointer;
+    color: var(--text-sub); line-height: 1;
+    padding: 2px 6px; border-radius: 6px;
+  }
+  .btn-close:hover { background: #f0f0f0; }
+
+  label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: 5px; color: #444; }
+
+  input[type="text"], textarea {
+    width: 100%;
+    border: 1.5px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: .95rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .2s;
+    color: var(--text);
+  }
+  input[type="text"]:focus, textarea:focus { border-color: var(--purple); }
+
+  .form-group { margin-bottom: 16px; }
+
+  .btn-primary {
+    background: var(--purple);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: .95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+    width: 100%;
+  }
+  .btn-primary:hover { background: var(--purple-light); }
+
+  .word-list { margin-bottom: 16px; max-height: 240px; overflow-y: auto; }
+  .word-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 10px 12px;
+    border: 1.5px solid #eee;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    background: #fafafa;
+  }
+  .word-item-text { flex: 1; min-width: 0; }
+  .word-en { font-weight: 600; font-size: .95rem; }
+  .word-ko { font-size: .85rem; color: var(--text-sub); margin-top: 2px; }
+  .word-mastered-badge {
+    font-size: .7rem;
+    background: var(--green);
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 10px;
+    white-space: nowrap;
+    align-self: center;
+  }
+
+  .add-word-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .translate-btn {
+    background: var(--purple);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0 10px;
+    font-size: .75rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .2s;
+    height: 40px;
+  }
+  .translate-btn:hover { background: var(--purple-light); }
+  .translate-btn.loading { opacity: .7; cursor: not-allowed; }
+  .add-word-row input { height: 40px; padding: 8px 12px; }
+  .btn-add-word {
+    height: 40px;
+    padding: 0 12px;
+    background: none;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: .85rem;
+    color: var(--text);
+    transition: background .2s;
+    white-space: nowrap;
+  }
+  .btn-add-word:hover { background: #f0eaf8; border-color: var(--purple); color: var(--purple); }
+
+  .divider { border: none; border-top: 1.5px solid #eee; margin: 16px 0; }
+
+  /* Practice Screen */
+  .practice-screen {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    z-index: 400;
+    display: flex; flex-direction: column;
+    opacity: 0; pointer-events: none; transition: opacity .2s;
+  }
+  .practice-screen.open { opacity: 1; pointer-events: all; }
+
+  .practice-header {
+    background: var(--purple);
+    color: #fff;
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .practice-header h2 { font-size: 1rem; font-weight: 700; flex: 1; }
+  .practice-progress { font-size: .85rem; opacity: .85; }
+
+  .practice-content {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+
+  .flashcard {
+    width: 100%;
+    max-width: 400px;
+    min-height: 200px;
+    background: #fff;
+    border-radius: 20px;
+    border: 2px solid var(--purple-border);
+    box-shadow: 0 6px 24px rgba(91,45,142,.12);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 32px 24px;
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+  }
+  .flashcard::after {
+    content: '탭하여 뜻 보기';
+    position: absolute;
+    bottom: 14px;
+    font-size: .75rem;
+    color: var(--text-sub);
+  }
+  .flashcard.revealed::after { display: none; }
+  .flashcard:hover { box-shadow: 0 8px 32px rgba(91,45,142,.18); }
+
+  .card-en { font-size: 1.6rem; font-weight: 700; color: var(--purple); margin-bottom: 8px; }
+  .card-ko { font-size: 1.1rem; color: #333; display: none; margin-top: 12px; line-height: 1.5; }
+  .flashcard.revealed .card-ko { display: block; }
+
+  .practice-actions {
+    display: flex; gap: 12px;
+    margin-top: 24px;
+    width: 100%;
+    max-width: 400px;
+  }
+  .btn-not-yet {
+    flex: 1; padding: 14px;
+    background: #fdecea; color: #c62828;
+    border: none; border-radius: 12px;
+    font-size: .95rem; font-weight: 700;
+    cursor: pointer; transition: background .2s;
+  }
+  .btn-not-yet:hover { background: #ffcdd2; }
+  .btn-mastered {
+    flex: 1; padding: 14px;
+    background: #e8f5e9; color: #2e7d32;
+    border: none; border-radius: 12px;
+    font-size: .95rem; font-weight: 700;
+    cursor: pointer; transition: background .2s;
+  }
+  .btn-mastered:hover { background: #c8e6c9; }
+
+  .practice-done {
+    text-align: center;
+    padding: 40px 24px;
+  }
+  .practice-done .big-emoji { font-size: 3.5rem; margin-bottom: 12px; }
+  .practice-done h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
+  .practice-done p { color: var(--text-sub); margin-bottom: 24px; }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-sub);
+  }
+  .empty-state .emoji { font-size: 3rem; margin-bottom: 12px; }
+  .empty-state p { font-size: .95rem; line-height: 1.6; }
+
+  .toast {
+    position: fixed;
+    bottom: 90px; left: 50%; transform: translateX(-50%) translateY(10px);
+    background: #333; color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: .85rem;
+    z-index: 500;
+    opacity: 0; transition: opacity .25s, transform .25s;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📚 영어 단어장</h1>
+  <button class="btn-icon" title="검색" onclick="toggleSearch()">🔍</button>
+</header>
+
+<main>
+  <div id="searchBox" style="display:none; margin-bottom:14px;">
+    <input type="text" id="searchInput" placeholder="단어 검색..." oninput="renderDecks()">
+  </div>
+  <div class="section-label">내 단어장</div>
+  <div class="deck-list" id="deckList"></div>
+</main>
+
+<button class="fab" onclick="openNewDeckModal()">+</button>
+
+<!-- Deck Editor Modal -->
+<div class="modal-overlay" id="deckModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="deckModalTitle">새 단어장</span>
+      <button class="btn-close" onclick="closeModal('deckModal')">×</button>
+    </div>
+
+    <div class="form-group">
+      <label>단어장 이름</label>
+      <input type="text" id="deckNameInput" placeholder="예: TOEIC 필수 단어, 일상 숙어">
+    </div>
+
+    <hr class="divider">
+
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+      <label style="margin-bottom:0;">단어 목록</label>
+      <span id="wordCount" style="font-size:.8rem; color:var(--text-sub);">0개</span>
+    </div>
+
+    <div class="word-list" id="wordListUI"></div>
+
+    <div class="add-word-row">
+      <input type="text" id="newWordEn" placeholder="영어 단어/숙어" onkeydown="if(event.key==='Enter')addWordToList()">
+      <button class="translate-btn" id="transBtn" onclick="autoTranslate()">🔄 번역</button>
+      <input type="text" id="newWordKo" placeholder="한국어 뜻" onkeydown="if(event.key==='Enter')addWordToList()">
+      <button class="btn-add-word" onclick="addWordToList()">추가</button>
+    </div>
+    <div style="font-size:.75rem; color:var(--text-sub); margin-bottom:16px; padding-left:2px;">
+      Enter 또는 추가 버튼으로 등록 · 🔄 버튼으로 자동 번역
+    </div>
+
+    <button class="btn-primary" onclick="saveDeck()">저장하기</button>
+  </div>
+</div>
+
+<!-- Practice Screen -->
+<div class="practice-screen" id="practiceScreen">
+  <div class="practice-header">
+    <button class="btn-icon" onclick="closePractice()">←</button>
+    <h2 id="practiceTitle"></h2>
+    <span class="practice-progress" id="practiceProgress"></span>
+  </div>
+  <div class="practice-content" id="practiceContent"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'vocabDecks_v1';
+
+function loadDecks() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+function saveDecks(decks) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(decks));
+}
+function genId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+let decks = loadDecks();
+
+// ── Deck List ──────────────────────────────────────────────
+function renderDecks() {
+  const list = document.getElementById('deckList');
+  const q = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
+
+  let filtered = decks;
+  if (q) {
+    filtered = decks.map(d => ({
+      ...d,
+      words: d.words.filter(w => w.en.toLowerCase().includes(q) || w.ko.toLowerCase().includes(q))
+    })).filter(d => d.words.length > 0 || d.name.toLowerCase().includes(q));
+  }
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty-state">
+      <div class="emoji">📖</div>
+      <p>${q ? '검색 결과가 없습니다.' : '단어장이 없습니다.<br>아래 + 버튼으로 첫 단어장을 만들어보세요!'}</p>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(deck => {
+    const total = deck.words.length;
+    const mastered = deck.words.filter(w => w.mastered).length;
+    const pct = total ? Math.round((mastered / total) * 100) : 0;
+    return `
+    <div class="deck-card">
+      <div class="deck-body">
+        <div class="deck-title">${escHtml(deck.name)}</div>
+        <div class="deck-meta">${mastered} of ${total} cards mastered</div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" style="width:${pct}%"></div>
+        </div>
+      </div>
+      <div class="deck-footer">
+        <button class="btn-practice" onclick="startPractice('${deck.id}')">
+          Practice this deck →
+        </button>
+        <div class="deck-actions">
+          <button class="btn-small" onclick="openEditDeckModal('${deck.id}')">✏️ 편집</button>
+          <button class="btn-small danger" onclick="deleteDeck('${deck.id}')">🗑️</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Search ─────────────────────────────────────────────────
+function toggleSearch() {
+  const box = document.getElementById('searchBox');
+  const open = box.style.display !== 'none';
+  box.style.display = open ? 'none' : 'block';
+  if (!open) document.getElementById('searchInput').focus();
+  else { document.getElementById('searchInput').value = ''; renderDecks(); }
+}
+
+// ── Modal ──────────────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.getElementById('deckModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal('deckModal');
+});
+
+// ── Deck Editor ────────────────────────────────────────────
+let editingDeckId = null;
+let pendingWords = [];
+
+function openNewDeckModal() {
+  editingDeckId = null;
+  pendingWords = [];
+  document.getElementById('deckNameInput').value = '';
+  document.getElementById('newWordEn').value = '';
+  document.getElementById('newWordKo').value = '';
+  document.getElementById('deckModalTitle').textContent = '새 단어장';
+  renderWordListUI();
+  openModal('deckModal');
+  setTimeout(() => document.getElementById('deckNameInput').focus(), 150);
+}
+
+function openEditDeckModal(deckId) {
+  const deck = decks.find(d => d.id === deckId);
+  if (!deck) return;
+  editingDeckId = deckId;
+  pendingWords = deck.words.map(w => ({ ...w }));
+  document.getElementById('deckNameInput').value = deck.name;
+  document.getElementById('newWordEn').value = '';
+  document.getElementById('newWordKo').value = '';
+  document.getElementById('deckModalTitle').textContent = '단어장 편집';
+  renderWordListUI();
+  openModal('deckModal');
+}
+
+function renderWordListUI() {
+  const ul = document.getElementById('wordListUI');
+  document.getElementById('wordCount').textContent = pendingWords.length + '개';
+  if (pendingWords.length === 0) {
+    ul.innerHTML = '<div style="text-align:center;color:#bbb;padding:12px;font-size:.85rem;">아직 단어가 없습니다</div>';
+    return;
+  }
+  ul.innerHTML = pendingWords.map((w, i) => `
+    <div class="word-item">
+      <div class="word-item-text">
+        <div class="word-en">${escHtml(w.en)}</div>
+        <div class="word-ko">${escHtml(w.ko)}</div>
+      </div>
+      ${w.mastered ? '<span class="word-mastered-badge">✓ 암기</span>' : ''}
+      <button class="btn-small danger" style="padding:2px 6px;flex-shrink:0;" onclick="removeWord(${i})">✕</button>
+    </div>`).join('');
+}
+
+function removeWord(idx) {
+  pendingWords.splice(idx, 1);
+  renderWordListUI();
+}
+
+function addWordToList() {
+  const en = document.getElementById('newWordEn').value.trim();
+  const ko = document.getElementById('newWordKo').value.trim();
+  if (!en) { showToast('영어 단어를 입력하세요'); document.getElementById('newWordEn').focus(); return; }
+  if (!ko) { showToast('한국어 뜻을 입력하세요'); document.getElementById('newWordKo').focus(); return; }
+  pendingWords.push({ id: genId(), en, ko, mastered: false });
+  document.getElementById('newWordEn').value = '';
+  document.getElementById('newWordKo').value = '';
+  renderWordListUI();
+  document.getElementById('newWordEn').focus();
+}
+
+// ── Auto Translate (MyMemory API) ──────────────────────────
+async function autoTranslate() {
+  const en = document.getElementById('newWordEn').value.trim();
+  if (!en) { showToast('번역할 영어를 먼저 입력하세요'); return; }
+  const btn = document.getElementById('transBtn');
+  btn.classList.add('loading');
+  btn.textContent = '번역 중...';
+  try {
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(en)}&langpair=en|ko`;
+    const resp = await fetch(url);
+    const data = await resp.json();
+    if (data.responseStatus === 200) {
+      document.getElementById('newWordKo').value = data.responseData.translatedText;
+      document.getElementById('newWordKo').focus();
+    } else {
+      showToast('번역 실패. 직접 입력해주세요.');
+    }
+  } catch {
+    showToast('번역 서버에 연결할 수 없습니다.');
+  } finally {
+    btn.classList.remove('loading');
+    btn.textContent = '🔄 번역';
+  }
+}
+
+// ── Save Deck ──────────────────────────────────────────────
+function saveDeck() {
+  const name = document.getElementById('deckNameInput').value.trim();
+  if (!name) { showToast('단어장 이름을 입력하세요'); return; }
+
+  // auto-add any filled word in input fields
+  const en = document.getElementById('newWordEn').value.trim();
+  const ko = document.getElementById('newWordKo').value.trim();
+  if (en && ko) pendingWords.push({ id: genId(), en, ko, mastered: false });
+
+  if (editingDeckId) {
+    const idx = decks.findIndex(d => d.id === editingDeckId);
+    if (idx !== -1) { decks[idx].name = name; decks[idx].words = pendingWords; }
+  } else {
+    decks.push({ id: genId(), name, words: pendingWords, createdAt: Date.now() });
+  }
+  saveDecks(decks);
+  renderDecks();
+  closeModal('deckModal');
+  showToast(editingDeckId ? '단어장이 수정되었습니다' : '단어장이 저장되었습니다 ✓');
+}
+
+// ── Delete Deck ────────────────────────────────────────────
+function deleteDeck(deckId) {
+  if (!confirm('이 단어장을 삭제하시겠습니까?')) return;
+  decks = decks.filter(d => d.id !== deckId);
+  saveDecks(decks);
+  renderDecks();
+  showToast('삭제되었습니다');
+}
+
+// ── Practice Mode ──────────────────────────────────────────
+let practiceState = {};
+
+function startPractice(deckId) {
+  const deck = decks.find(d => d.id === deckId);
+  if (!deck || deck.words.length === 0) { showToast('단어를 먼저 추가하세요'); return; }
+  const queue = [...deck.words].sort(() => Math.random() - .5);
+  practiceState = { deckId, queue, idx: 0 };
+  document.getElementById('practiceTitle').textContent = deck.name;
+  document.getElementById('practiceScreen').classList.add('open');
+  renderCard();
+}
+
+function renderCard() {
+  const { queue, idx } = practiceState;
+  const content = document.getElementById('practiceContent');
+  document.getElementById('practiceProgress').textContent = `${Math.min(idx + 1, queue.length)} / ${queue.length}`;
+
+  if (idx >= queue.length) {
+    const mastered = queue.filter(w => w.mastered).length;
+    content.innerHTML = `
+      <div class="practice-done">
+        <div class="big-emoji">🎉</div>
+        <h2>연습 완료!</h2>
+        <p>${queue.length}개 단어 중 <strong>${mastered}개</strong>를 암기했습니다</p>
+        <button class="btn-primary" style="max-width:200px;margin:0 auto;" onclick="closePractice()">완료</button>
+      </div>`;
+    return;
+  }
+
+  const word = queue[idx];
+  content.innerHTML = `
+    <div class="flashcard" id="flashcard" onclick="revealCard()">
+      <div class="card-en">${escHtml(word.en)}</div>
+      <div class="card-ko">${escHtml(word.ko)}</div>
+    </div>
+    <div class="practice-actions" id="practiceActions" style="display:none;">
+      <button class="btn-not-yet" onclick="markWord(false)">😅 아직</button>
+      <button class="btn-mastered" onclick="markWord(true)">✅ 암기!</button>
+    </div>`;
+}
+
+function revealCard() {
+  document.getElementById('flashcard')?.classList.add('revealed');
+  const actions = document.getElementById('practiceActions');
+  if (actions) actions.style.display = 'flex';
+}
+
+function markWord(mastered) {
+  const { queue, idx, deckId } = practiceState;
+  queue[idx].mastered = mastered;
+  const deck = decks.find(d => d.id === deckId);
+  if (deck) {
+    const word = deck.words.find(w => w.id === queue[idx].id);
+    if (word) word.mastered = mastered;
+    saveDecks(decks);
+  }
+  practiceState.idx = idx + 1;
+  renderCard();
+}
+
+function closePractice() {
+  document.getElementById('practiceScreen').classList.remove('open');
+  renderDecks();
+}
+
+// ── Toast ──────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// ── Seed Default Decks ─────────────────────────────────────
+function seedDefaultDecks() {
+  if (decks.length > 0) return; // 이미 데이터가 있으면 건너뜀
+
+  const w = (en, ko) => ({ id: genId(), en, ko, mastered: false });
+
+  const deck1 = {
+    id: genId(),
+    name: 'Counter-UAS 드론 전문 용어 (1)',
+    createdAt: Date.now(),
+    words: [
+      w('Interception Drone', '요격드론'),
+      w('Fiber-Optic Controlled Drone', '광섬유 조종 드론'),
+      w('Electronic Warfare', '전자전'),
+      w('Combined Strike', '복합타격'),
+      w('Multi-axis', '다축'),
+      w('Vision-based Navigation', '영상기반 자율항법'),
+      w('Human-in-the-Loop (HIL)', '인간의 개입'),
+      w('Human-out-of-the-Loop (HOTL)', '인간의 배제'),
+      w('Autonomous', '자동'),
+      w('Semi-autonomous', '반자동'),
+      w('Target Perception', '표적 인지'),
+      w('Target Tracking', '표적 추적'),
+      w('Decision-Making', '의사결정'),
+      w('Autonomous Flight', '자율 비행'),
+      w('Threat Assessment', '위협 평가'),
+      w('Engagement Condition Evaluation', '교전 조건 판단'),
+      w('Target Prioritization', '타격 우선순위 결정'),
+      w('Trajectory Adjustment', '궤적형 (최단 경로)'),
+      w('Terminal Engagement Decision', '타격결심'),
+      w('Closed-loop', '폐루프'),
+      w('Open-loop', '개루프'),
+      w('Re-perception Request', '재인지 요청'),
+      w('Catapult', '함공모함 발사-낙하식'),
+      w('Fire-and-Forget', '이후 망각'),
+      w('Perception - Reasoning - Action', '인지 → 추론 → 행동'),
+      w('Multi-object Tracking', '객체 추적'),
+      w('Slight Control', '자율비행'),
+      w('Reinforcement Learning', '강화학습기반 제어기법'),
+      w('Dynamic Path Replanning', '동적 경로재계획 인공지능'),
+      w('Guidance Algorithm', '유도 알고리즘'),
+      w('Terminal', '종말단계'),
+      w('Air-to-Ground', '공대지'),
+    ]
+  };
+
+  const deck2 = {
+    id: genId(),
+    name: 'Counter-UAS 드론 전문 용어 (2)',
+    createdAt: Date.now() + 1,
+    words: [
+      w('Optical Dazzling', '광각 센서 교란'),
+      w('Adaptation Loop', '자동적 적응 순환'),
+      w('Throughput', '처리량'),
+      w('Deep Reinforcement Learning', '강화학습'),
+      w('Autonomous Navigation', '완전자율수행'),
+      w('Repository (Repo)', '저장소'),
+      w('Strapdown Camera', '스트랩다운 카메라'),
+      w('Head-on Intercept', '전방차단'),
+      w('Tail-Chase', '후방추적'),
+      w('Large Language Model', '대규모 언어 모델'),
+    ]
+  };
+
+  decks = [deck1, deck2];
+  saveDecks(decks);
+}
+
+// ── Init ───────────────────────────────────────────────────
+seedDefaultDecks();
+renderDecks();
+</script>
+</body>
+</html>
