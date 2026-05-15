@@ -785,18 +785,17 @@ function closePractice() {
 }
 
 // ── Text-to-Speech ─────────────────────────────────────────
-// 음성 목록을 페이지 로드 시점에 미리 캐시
-// → 버튼 탭 시 speak()가 완전히 동기적으로 실행되어 iOS 차단 우회
+const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
+// 음성 목록 사전 캐시 (PC에서 voice 지정용)
 let cachedVoices = [];
-function initVoices() {
-  cachedVoices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-}
 if (window.speechSynthesis) {
-  window.speechSynthesis.onvoiceschanged = initVoices;
-  initVoices();
+  const loadV = () => { cachedVoices = window.speechSynthesis.getVoices(); };
+  window.speechSynthesis.addEventListener('voiceschanged', loadV);
+  loadV();
 }
 
-// iOS: 첫 터치에서 빈 발화로 오디오 세션 잠금 해제
+// iOS/Android: 첫 사용자 인터랙션에서 오디오 세션 잠금 해제
 let ttsUnlocked = false;
 function unlockTTS() {
   if (ttsUnlocked || !window.speechSynthesis) return;
@@ -809,21 +808,29 @@ document.addEventListener('touchstart', unlockTTS, { once: true });
 document.addEventListener('click',      unlockTTS, { once: true });
 
 function speak(text) {
-  if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
+  if (!window.speechSynthesis) { showToast('이 브라우저는 발음을 지원하지 않습니다'); return; }
 
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = 'en-US';
-  utter.rate = 0.85;
-  utter.volume = 1;
+  // Android: cancel() 후 즉시 speak() 하면 무음 — 60ms 대기 필요
+  // Mobile: voice 명시 지정 시 오히려 무음되는 경우 있어 lang만 설정
+  const fire = () => {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang  = 'en-US';
+    utter.rate  = 0.85;
+    utter.volume = 1;
+    if (!isMobile && cachedVoices.length) {
+      const v = cachedVoices.find(v => v.lang === 'en-US')
+             || cachedVoices.find(v => v.lang.startsWith('en'));
+      if (v) utter.voice = v;
+    }
+    window.speechSynthesis.speak(utter);
+  };
 
-  // 캐시된 음성에서 영어 목소리 선택 (없으면 브라우저 기본값)
-  const voices = cachedVoices.length ? cachedVoices : window.speechSynthesis.getVoices();
-  const enVoice = voices.find(v => v.lang === 'en-US')
-               || voices.find(v => v.lang.startsWith('en'));
-  if (enVoice) utter.voice = enVoice;
-
-  window.speechSynthesis.speak(utter);
+  if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+    window.speechSynthesis.cancel();
+    setTimeout(fire, 60);
+  } else {
+    fire();
+  }
 }
 
 // ── Toast ──────────────────────────────────────────────────
