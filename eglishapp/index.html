@@ -787,7 +787,7 @@ function closePractice() {
 // ── Text-to-Speech ─────────────────────────────────────────
 const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
-// 음성 목록 사전 캐시 (PC에서 voice 지정용)
+// Web Speech API 음성 목록 사전 캐시
 let cachedVoices = [];
 if (window.speechSynthesis) {
   const loadV = () => { cachedVoices = window.speechSynthesis.getVoices(); };
@@ -795,42 +795,55 @@ if (window.speechSynthesis) {
   loadV();
 }
 
-// iOS/Android: 첫 사용자 인터랙션에서 오디오 세션 잠금 해제
+// iOS: 첫 터치에서 오디오 세션 잠금 해제
 let ttsUnlocked = false;
 function unlockTTS() {
-  if (ttsUnlocked || !window.speechSynthesis) return;
+  if (ttsUnlocked) return;
   ttsUnlocked = true;
-  const u = new SpeechSynthesisUtterance('');
-  u.volume = 0;
-  window.speechSynthesis.speak(u);
+  if (window.speechSynthesis) {
+    const u = new SpeechSynthesisUtterance('');
+    u.volume = 0;
+    window.speechSynthesis.speak(u);
+  }
 }
 document.addEventListener('touchstart', unlockTTS, { once: true });
 document.addEventListener('click',      unlockTTS, { once: true });
 
+// Google TTS 오디오 폴백 (Web Speech API 미지원 브라우저용)
+let currentAudio = null;
+function speakAudio(text) {
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  const url = 'https://translate.google.com/translate_tts'
+    + '?ie=UTF-8&tl=en-US&client=tw-ob&q=' + encodeURIComponent(text);
+  currentAudio = new Audio(url);
+  currentAudio.play().catch(() => showToast('발음을 재생할 수 없습니다'));
+}
+
 function speak(text) {
-  if (!window.speechSynthesis) { showToast('이 브라우저는 발음을 지원하지 않습니다'); return; }
-
-  // Android: cancel() 후 즉시 speak() 하면 무음 — 60ms 대기 필요
-  // Mobile: voice 명시 지정 시 오히려 무음되는 경우 있어 lang만 설정
-  const fire = () => {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang  = 'en-US';
-    utter.rate  = 0.85;
-    utter.volume = 1;
-    if (!isMobile && cachedVoices.length) {
-      const v = cachedVoices.find(v => v.lang === 'en-US')
-             || cachedVoices.find(v => v.lang.startsWith('en'));
-      if (v) utter.voice = v;
+  // Web Speech API 사용 가능한 경우
+  if (window.speechSynthesis) {
+    const fire = () => {
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang   = 'en-US';
+      utter.rate   = 0.85;
+      utter.volume = 1;
+      if (!isMobile && cachedVoices.length) {
+        const v = cachedVoices.find(v => v.lang === 'en-US')
+               || cachedVoices.find(v => v.lang.startsWith('en'));
+        if (v) utter.voice = v;
+      }
+      window.speechSynthesis.speak(utter);
+    };
+    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+      window.speechSynthesis.cancel();
+      setTimeout(fire, 60);
+    } else {
+      fire();
     }
-    window.speechSynthesis.speak(utter);
-  };
-
-  if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-    window.speechSynthesis.cancel();
-    setTimeout(fire, 60);
-  } else {
-    fire();
+    return;
   }
+  // 폴백: Google TTS 오디오 스트림
+  speakAudio(text);
 }
 
 // ── Toast ──────────────────────────────────────────────────
