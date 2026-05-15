@@ -4,9 +4,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
 <title>영어 단어장</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* 다크모드 강제 비활성화 (삼성 브라우저 등) */
+  :root { color-scheme: light only; }
+  @media (prefers-color-scheme: dark) {
+    html, body, .deck-card, .modal, .flashcard, .practice-screen {
+      background-color: #ffffff !important;
+      color: #1a1a1a !important;
+    }
+  }
 
   :root {
     --purple: #5b2d8e;
@@ -832,6 +842,13 @@ function speak(text) {
                || cachedVoices.find(v => v.lang.startsWith('en'));
         if (v) utter.voice = v;
       }
+      // 300ms 안에 onstart 안 오면 Google TTS 오디오로 자동 폴백
+      let started = false;
+      const fallbackTimer = setTimeout(() => {
+        if (!started) speakAudio(text);
+      }, 300);
+      utter.onstart = () => { started = true; clearTimeout(fallbackTimer); };
+      utter.onerror = () => { clearTimeout(fallbackTimer); speakAudio(text); };
       window.speechSynthesis.speak(utter);
     };
     if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
@@ -842,7 +859,7 @@ function speak(text) {
     }
     return;
   }
-  // 폴백: Google TTS 오디오 스트림
+  // Web Speech API 없는 브라우저 — Google TTS 오디오
   speakAudio(text);
 }
 
