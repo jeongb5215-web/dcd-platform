@@ -322,9 +322,22 @@
   .flashcard.revealed::after { display: none; }
   .flashcard:hover { box-shadow: 0 8px 32px rgba(91,45,142,.18); }
 
-  .card-en { font-size: 1.6rem; font-weight: 700; color: var(--purple); margin-bottom: 8px; }
+  .card-en { font-size: 1.6rem; font-weight: 700; color: var(--purple); margin-bottom: 4px; }
   .card-ko { font-size: 1.1rem; color: #333; display: none; margin-top: 12px; line-height: 1.5; }
   .flashcard.revealed .card-ko { display: block; }
+
+  .btn-speak {
+    background: #f0eaf8;
+    color: var(--purple);
+    border: none;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: .8rem;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: background .2s;
+  }
+  .btn-speak:hover { background: #e0d0f5; }
 
   .practice-actions {
     display: flex; gap: 12px;
@@ -570,6 +583,7 @@ function renderWordListUI() {
         <div class="word-en">${escHtml(w.en)}</div>
         <div class="word-ko">${escHtml(w.ko)}</div>
       </div>
+      <button class="btn-small" style="padding:2px 6px;flex-shrink:0;" onclick="speak('${escHtml(w.en).replace(/'/g,"\\'")}')">🔊</button>
       ${w.mastered ? '<span class="word-mastered-badge">✓ 암기</span>' : ''}
       <button class="btn-small danger" style="padding:2px 6px;flex-shrink:0;" onclick="removeWord(${i})">✕</button>
     </div>`).join('');
@@ -682,12 +696,14 @@ function renderCard() {
   content.innerHTML = `
     <div class="flashcard" id="flashcard" onclick="revealCard()">
       <div class="card-en">${escHtml(word.en)}</div>
+      <button class="btn-speak" onclick="event.stopPropagation();speak('${escHtml(word.en).replace(/'/g,"\\'")}')">🔊 발음 듣기</button>
       <div class="card-ko">${escHtml(word.ko)}</div>
     </div>
     <div class="practice-actions" id="practiceActions" style="display:none;">
       <button class="btn-not-yet" onclick="markWord(false)">😅 아직</button>
       <button class="btn-mastered" onclick="markWord(true)">✅ 암기!</button>
     </div>`;
+  speak(word.en);
 }
 
 function revealCard() {
@@ -714,6 +730,16 @@ function closePractice() {
   renderDecks();
 }
 
+// ── Text-to-Speech ─────────────────────────────────────────
+function speak(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US';
+  utter.rate = 0.9;
+  window.speechSynthesis.speak(utter);
+}
+
 // ── Toast ──────────────────────────────────────────────────
 let toastTimer;
 function showToast(msg) {
@@ -724,71 +750,77 @@ function showToast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
 }
 
-// ── Seed Default Decks ─────────────────────────────────────
+// ── Seed / Migrate Default Decks ───────────────────────────
+const ALL_DEFAULT_WORDS = [
+  ['Interception Drone', '요격드론'],
+  ['Fiber-Optic Controlled Drone', '광섬유 조종 드론'],
+  ['Electronic Warfare', '전자전'],
+  ['Combined Strike', '복합타격'],
+  ['Multi-axis', '다축'],
+  ['Vision-based Navigation', '영상기반 자율항법'],
+  ['Human-in-the-Loop (HIL)', '인간의 개입'],
+  ['Human-out-of-the-Loop (HOTL)', '인간의 배제'],
+  ['Autonomous', '자동'],
+  ['Semi-autonomous', '반자동'],
+  ['Target Perception', '표적 인지'],
+  ['Target Tracking', '표적 추적'],
+  ['Decision-Making', '의사결정'],
+  ['Autonomous Flight', '자율 비행'],
+  ['Threat Assessment', '위협 평가'],
+  ['Engagement Condition Evaluation', '교전 조건 판단'],
+  ['Target Prioritization', '타격 우선순위 결정'],
+  ['Trajectory Adjustment', '궤적형 (최단 경로)'],
+  ['Terminal Engagement Decision', '타격결심'],
+  ['Closed-loop', '폐루프'],
+  ['Open-loop', '개루프'],
+  ['Re-perception Request', '재인지 요청'],
+  ['Catapult', '함공모함 발사-낙하식'],
+  ['Fire-and-Forget', '이후 망각'],
+  ['Perception - Reasoning - Action', '인지 → 추론 → 행동'],
+  ['Multi-object Tracking', '객체 추적'],
+  ['Slight Control', '자율비행'],
+  ['Reinforcement Learning', '강화학습기반 제어기법'],
+  ['Dynamic Path Replanning', '동적 경로재계획 인공지능'],
+  ['Guidance Algorithm', '유도 알고리즘'],
+  ['Terminal', '종말단계'],
+  ['Air-to-Ground', '공대지'],
+  ['Optical Dazzling', '광각 센서 교란'],
+  ['Adaptation Loop', '자동적 적응 순환'],
+  ['Throughput', '처리량'],
+  ['Deep Reinforcement Learning', '강화학습'],
+  ['Autonomous Navigation', '완전자율수행'],
+  ['Repository (Repo)', '저장소'],
+  ['Strapdown Camera', '스트랩다운 카메라'],
+  ['Head-on Intercept', '전방차단'],
+  ['Tail-Chase', '후방추적'],
+  ['Large Language Model', '대규모 언어 모델'],
+];
+
 function seedDefaultDecks() {
-  if (decks.length > 0) return; // 이미 데이터가 있으면 건너뜀
+  // 기존에 두 개로 분리된 구버전 단어장이 있으면 하나로 합침
+  const old1 = decks.findIndex(d => d.name === 'Counter-UAS 드론 전문 용어 (1)');
+  const old2 = decks.findIndex(d => d.name === 'Counter-UAS 드론 전문 용어 (2)');
+  if (old1 !== -1 && old2 !== -1) {
+    const merged = {
+      id: decks[old1].id,
+      name: 'Counter-UAS 드론 전문 용어',
+      createdAt: decks[old1].createdAt,
+      words: [...decks[old1].words, ...decks[old2].words],
+    };
+    decks.splice(Math.max(old1, old2), 1);
+    decks.splice(Math.min(old1, old2), 1, merged);
+    saveDecks(decks);
+    return;
+  }
 
-  const w = (en, ko) => ({ id: genId(), en, ko, mastered: false });
-
-  const deck1 = {
+  // 완전히 새로운 경우
+  if (decks.length > 0) return;
+  decks = [{
     id: genId(),
-    name: 'Counter-UAS 드론 전문 용어 (1)',
+    name: 'Counter-UAS 드론 전문 용어',
     createdAt: Date.now(),
-    words: [
-      w('Interception Drone', '요격드론'),
-      w('Fiber-Optic Controlled Drone', '광섬유 조종 드론'),
-      w('Electronic Warfare', '전자전'),
-      w('Combined Strike', '복합타격'),
-      w('Multi-axis', '다축'),
-      w('Vision-based Navigation', '영상기반 자율항법'),
-      w('Human-in-the-Loop (HIL)', '인간의 개입'),
-      w('Human-out-of-the-Loop (HOTL)', '인간의 배제'),
-      w('Autonomous', '자동'),
-      w('Semi-autonomous', '반자동'),
-      w('Target Perception', '표적 인지'),
-      w('Target Tracking', '표적 추적'),
-      w('Decision-Making', '의사결정'),
-      w('Autonomous Flight', '자율 비행'),
-      w('Threat Assessment', '위협 평가'),
-      w('Engagement Condition Evaluation', '교전 조건 판단'),
-      w('Target Prioritization', '타격 우선순위 결정'),
-      w('Trajectory Adjustment', '궤적형 (최단 경로)'),
-      w('Terminal Engagement Decision', '타격결심'),
-      w('Closed-loop', '폐루프'),
-      w('Open-loop', '개루프'),
-      w('Re-perception Request', '재인지 요청'),
-      w('Catapult', '함공모함 발사-낙하식'),
-      w('Fire-and-Forget', '이후 망각'),
-      w('Perception - Reasoning - Action', '인지 → 추론 → 행동'),
-      w('Multi-object Tracking', '객체 추적'),
-      w('Slight Control', '자율비행'),
-      w('Reinforcement Learning', '강화학습기반 제어기법'),
-      w('Dynamic Path Replanning', '동적 경로재계획 인공지능'),
-      w('Guidance Algorithm', '유도 알고리즘'),
-      w('Terminal', '종말단계'),
-      w('Air-to-Ground', '공대지'),
-    ]
-  };
-
-  const deck2 = {
-    id: genId(),
-    name: 'Counter-UAS 드론 전문 용어 (2)',
-    createdAt: Date.now() + 1,
-    words: [
-      w('Optical Dazzling', '광각 센서 교란'),
-      w('Adaptation Loop', '자동적 적응 순환'),
-      w('Throughput', '처리량'),
-      w('Deep Reinforcement Learning', '강화학습'),
-      w('Autonomous Navigation', '완전자율수행'),
-      w('Repository (Repo)', '저장소'),
-      w('Strapdown Camera', '스트랩다운 카메라'),
-      w('Head-on Intercept', '전방차단'),
-      w('Tail-Chase', '후방추적'),
-      w('Large Language Model', '대규모 언어 모델'),
-    ]
-  };
-
-  decks = [deck1, deck2];
+    words: ALL_DEFAULT_WORDS.map(([en, ko]) => ({ id: genId(), en, ko, mastered: false })),
+  }];
   saveDecks(decks);
 }
 
