@@ -5,17 +5,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light only">
+<meta name="theme-color" content="#ffffff">
 <title>영어 단어장</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* 다크모드 강제 비활성화 (삼성 브라우저 등) */
-  :root { color-scheme: light only; }
+  /* ── 다크모드 완전 차단 ── */
+  :root { color-scheme: light only !important; }
+  html, body {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #1a1a1a !important;
+    filter: none !important;
+    -webkit-filter: none !important;
+  }
   @media (prefers-color-scheme: dark) {
-    html, body, .deck-card, .modal, .flashcard, .practice-screen {
+    * { filter: none !important; -webkit-filter: none !important; }
+    html, body, main, header,
+    .deck-card, .deck-body, .deck-footer,
+    .modal, .modal-overlay, .flashcard,
+    .practice-screen, .practice-header, .practice-content,
+    .word-item, .add-word-row input, input, textarea {
+      background: #ffffff !important;
       background-color: #ffffff !important;
       color: #1a1a1a !important;
     }
+    header, .practice-header { background: #5b2d8e !important; color: #ffffff !important; }
+    .btn-primary { background: #5b2d8e !important; color: #ffffff !important; }
   }
 
   :root {
@@ -797,7 +813,7 @@ function closePractice() {
 // ── Text-to-Speech ─────────────────────────────────────────
 const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
-// Web Speech API 음성 목록 사전 캐시
+// PC용 Web Speech API 음성 캐시
 let cachedVoices = [];
 if (window.speechSynthesis) {
   const loadV = () => { cachedVoices = window.speechSynthesis.getVoices(); };
@@ -805,63 +821,60 @@ if (window.speechSynthesis) {
   loadV();
 }
 
-// iOS: 첫 터치에서 오디오 세션 잠금 해제
-let ttsUnlocked = false;
-function unlockTTS() {
-  if (ttsUnlocked) return;
-  ttsUnlocked = true;
-  if (window.speechSynthesis) {
-    const u = new SpeechSynthesisUtterance('');
-    u.volume = 0;
-    window.speechSynthesis.speak(u);
-  }
-}
-document.addEventListener('touchstart', unlockTTS, { once: true });
-document.addEventListener('click',      unlockTTS, { once: true });
-
-// Google TTS 오디오 폴백 (Web Speech API 미지원 브라우저용)
+// Google TTS Audio — 모바일 전용 (click 핸들러에서 직접 호출해야 autoplay 허용)
 let currentAudio = null;
 function speakAudio(text) {
   if (currentAudio) { currentAudio.pause(); currentAudio = null; }
   const url = 'https://translate.google.com/translate_tts'
     + '?ie=UTF-8&tl=en-US&client=tw-ob&q=' + encodeURIComponent(text);
   currentAudio = new Audio(url);
-  currentAudio.play().catch(() => showToast('발음을 재생할 수 없습니다'));
+  currentAudio.play().catch(() => {
+    // Google TTS 차단 시 Web Speech API 재시도
+    if (window.speechSynthesis) speakWebAPI(text);
+  });
+}
+
+// Web Speech API — PC 기본, 모바일 폴백
+function speakWebAPI(text) {
+  if (!window.speechSynthesis) return;
+  const fire = () => {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang   = 'en-US';
+    utter.rate   = 0.85;
+    utter.volume = 1;
+    if (!isMobile && cachedVoices.length) {
+      const v = cachedVoices.find(v => v.lang === 'en-US')
+             || cachedVoices.find(v => v.lang.startsWith('en'));
+      if (v) utter.voice = v;
+    }
+    window.speechSynthesis.speak(utter);
+  };
+  if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+    window.speechSynthesis.cancel();
+    setTimeout(fire, 60);
+  } else {
+    fire();
+  }
 }
 
 function speak(text) {
-  // Web Speech API 사용 가능한 경우
-  if (window.speechSynthesis) {
-    const fire = () => {
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang   = 'en-US';
-      utter.rate   = 0.85;
-      utter.volume = 1;
-      if (!isMobile && cachedVoices.length) {
-        const v = cachedVoices.find(v => v.lang === 'en-US')
-               || cachedVoices.find(v => v.lang.startsWith('en'));
-        if (v) utter.voice = v;
-      }
-      // 300ms 안에 onstart 안 오면 Google TTS 오디오로 자동 폴백
-      let started = false;
-      const fallbackTimer = setTimeout(() => {
-        if (!started) speakAudio(text);
-      }, 300);
-      utter.onstart = () => { started = true; clearTimeout(fallbackTimer); };
-      utter.onerror = () => { clearTimeout(fallbackTimer); speakAudio(text); };
-      window.speechSynthesis.speak(utter);
-    };
-    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-      window.speechSynthesis.cancel();
-      setTimeout(fire, 60);
-    } else {
-      fire();
-    }
-    return;
+  if (isMobile) {
+    // 모바일: Google TTS Audio 직접 호출 (click 핸들러 컨텍스트 유지)
+    speakAudio(text);
+  } else {
+    // PC: Web Speech API
+    speakWebAPI(text);
   }
-  // Web Speech API 없는 브라우저 — Google TTS 오디오
-  speakAudio(text);
 }
+
+// ── 강제 화이트 배경 (삼성 브라우저 다크모드 JS 차단) ──────
+function forceLight() {
+  document.documentElement.style.cssText += ';background:#fff!important;color:#1a1a1a!important;filter:none!important;';
+  document.body.style.cssText            += ';background:#fff!important;color:#1a1a1a!important;filter:none!important;';
+}
+forceLight();
+// MutationObserver: 삼성 브라우저가 나중에 다크 스타일 주입해도 재적용
+new MutationObserver(forceLight).observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'] });
 
 // ── Toast ──────────────────────────────────────────────────
 let toastTimer;
