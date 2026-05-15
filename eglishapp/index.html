@@ -747,7 +747,6 @@ function renderCard() {
       <button class="btn-not-yet" onclick="markWord(false)">😅 아직</button>
       <button class="btn-mastered" onclick="markWord(true)">✅ 암기!</button>
     </div>`;
-  speak(word.en);
 }
 
 function goCard(dir) {
@@ -756,6 +755,7 @@ function goCard(dir) {
   if (next < 0 || next > queue.length) return;
   practiceState.idx = next;
   renderCard();
+  if (next < queue.length) speak(queue[next].en);
 }
 
 function revealCard() {
@@ -775,6 +775,8 @@ function markWord(mastered) {
   }
   practiceState.idx = idx + 1;
   renderCard();
+  const next = practiceState.idx;
+  if (next < practiceState.queue.length) speak(practiceState.queue[next].en);
 }
 
 function closePractice() {
@@ -783,13 +785,44 @@ function closePractice() {
 }
 
 // ── Text-to-Speech ─────────────────────────────────────────
+let ttsReady = false;
+
+// iOS는 첫 사용자 터치 후에만 TTS 허용 — 첫 인터랙션에서 잠금 해제
+function unlockTTS() {
+  if (ttsReady || !window.speechSynthesis) return;
+  ttsReady = true;
+  const u = new SpeechSynthesisUtterance('');
+  window.speechSynthesis.speak(u);
+}
+document.addEventListener('touchstart', unlockTTS, { once: true });
+document.addEventListener('click', unlockTTS, { once: true });
+
 function speak(text) {
   if (!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = 'en-US';
-  utter.rate = 0.9;
-  window.speechSynthesis.speak(utter);
+
+  const doSpeak = () => {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    utter.rate = 0.85;
+    // 영어 음성 명시적으로 지정 (모바일에서 한국어 음성으로 읽히는 문제 방지)
+    const voices = window.speechSynthesis.getVoices();
+    const enVoice = voices.find(v => v.lang === 'en-US')
+                 || voices.find(v => v.lang.startsWith('en'));
+    if (enVoice) utter.voice = enVoice;
+    window.speechSynthesis.speak(utter);
+  };
+
+  // 음성 목록이 아직 로드 중이면 로드 완료 후 실행
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length > 0) {
+    doSpeak();
+  } else {
+    window.speechSynthesis.onvoiceschanged = () => {
+      window.speechSynthesis.onvoiceschanged = null;
+      doSpeak();
+    };
+  }
 }
 
 // ── Toast ──────────────────────────────────────────────────
