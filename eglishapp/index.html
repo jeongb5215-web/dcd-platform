@@ -887,76 +887,113 @@ function showToast(msg) {
 }
 
 // ── Seed / Migrate Default Decks ───────────────────────────
+const DECK_VERSION = 2; // 단어장 버전 — 올리면 기존 기본 단어장 자동 교체
 const ALL_DEFAULT_WORDS = [
-  ['Interception Drone', '요격드론'],
-  ['Fiber-Optic Controlled Drone', '광섬유 조종 드론'],
-  ['Electronic Warfare', '전자전'],
-  ['Combined Strike', '복합타격'],
-  ['Multi-axis', '다축'],
-  ['Vision-based Navigation', '영상기반 자율항법'],
-  ['Human-in-the-Loop (HIL)', '인간의 개입'],
-  ['Human-out-of-the-Loop (HOTL)', '인간의 배제'],
-  ['Autonomous', '자동'],
-  ['Semi-autonomous', '반자동'],
-  ['Target Perception', '표적 인지'],
-  ['Target Tracking', '표적 추적'],
-  ['Decision-Making', '의사결정'],
-  ['Autonomous Flight', '자율 비행'],
-  ['Threat Assessment', '위협 평가'],
-  ['Engagement Condition Evaluation', '교전 조건 판단'],
-  ['Target Prioritization', '타격 우선순위 결정'],
-  ['Trajectory Adjustment', '궤적형 (최단 경로)'],
-  ['Terminal Engagement Decision', '타격결심'],
-  ['Closed-loop', '폐루프'],
-  ['Open-loop', '개루프'],
-  ['Re-perception Request', '재인지 요청'],
-  ['Catapult', '함공모함 발사-낙하식'],
-  ['Fire-and-Forget', '이후 망각'],
-  ['Perception - Reasoning - Action', '인지 → 추론 → 행동'],
-  ['Multi-object Tracking', '객체 추적'],
-  ['Slight Control', '자율비행'],
-  ['Reinforcement Learning', '강화학습기반 제어기법'],
-  ['Dynamic Path Replanning', '동적 경로재계획 인공지능'],
-  ['Guidance Algorithm', '유도 알고리즘'],
-  ['Terminal', '종말단계'],
+  ['Adaptation Loop', '적응 순환 구조(적응 루프)'],
+  ['AI Pilot', 'AI 조종'],
   ['Air-to-Ground', '공대지'],
-  ['Optical Dazzling', '광각 센서 교란'],
-  ['Adaptation Loop', '자동적 적응 순환'],
-  ['Throughput', '처리량'],
+  ['Autonomous', '자율'],
+  ['Autonomous Engagement', '자율 교전'],
+  ['Autonomous Flight', '자율 비행'],
+  ['Autonomous Interception', '자율 요격'],
+  ['Autonomous Navigation', '완전항법(완전자율항법)'],
+  ['Autonomous Target Recognition (ATR)', '자동표적식별'],
+  ['C4ISR', '지휘-통제-통신-컴퓨터-정보-감시-정찰'],
+  ['Catapult', '항공모함 발사방식'],
+  ['Closed-loop Guidance', '폐루프 유도(실시간 피드백 기반 유도제어)'],
+  ['Combined Strike', '복합 공격'],
+  ['Command-Control-Communications-Computers (C4)', '지휘-통제-통신-컴퓨터'],
+  ['Computer Vision', '컴퓨터 비전'],
+  ['Control Link', '제어'],
+  ['Decision Support System', '의사결정 지원체계'],
+  ['Decision-Making', '의사 결정'],
   ['Deep Reinforcement Learning', '강화학습'],
-  ['Autonomous Navigation', '완전자율수행'],
-  ['Repository (Repo)', '저장소'],
-  ['Strapdown Camera', '스트랩다운 카메라'],
+  ['Drone Swarm', '드론 군집'],
+  ['Dynamic Path Replanning', '동적 경로 재계획'],
+  ['Edge AI', '엣지 AI'],
+  ['Electronic Warfare', '전자전'],
+  ['Engagement Condition Evaluation', '타격 조건 판단'],
+  ['Fiber-Optic Controlled Drone', '광섬유 조종 드론'],
+  ['Fire-and-Forget', '발사 후 자율유도'],
+  ['Flight Control', '비행 제어'],
+  ['GNSS-denied Environment', 'GNSS 거부 환경'],
+  ['GPS Spoofing', 'GPS 스푸핑'],
+  ['Guidance Algorithm', '유도 알고리즘'],
+  ['Guidance Law', '유도 법칙(목표까지 접근시키는 수학적 제어 알고리즘)'],
   ['Head-on Intercept', '전방차단'],
-  ['Tail-Chase', '후방추적'],
+  ['Human-in-the-Loop', '인간의 개입'],
+  ['Human-out-of-the-Loop', '인간 배제형(완전자율형)'],
+  ['Intelligence-Surveillance-Reconnaissance (ISR)', '정보-감시-정찰'],
+  ['Interceptor Drone', '요격드론'],
+  ['Kinetic Intercept', '운동에너지 요격'],
   ['Large Language Model', '대규모 언어 모델'],
+  ['Layered Defense', '다층방어'],
+  ['Loitering Munition', '배회탄'],
+  ['Machine Vision', '머신비전'],
+  ['Mission Autonomy', '임무 자율성'],
+  ['Multi-axis Attack', '다축 공격'],
+  ['Multi-layered Defense', '다계층 방어'],
+  ['Multi-object Tracking', '객체 추적'],
+  ['Object Detection', '객체 탐지'],
+  ['Observe-Orient-Decide-Act Loop (OODA)', '관찰-상황판단-결심-행동 순환'],
+  ['Open-loop', '개루프'],
+  ['Open-Source Intelligence (OSINT)', '공개출처정보'],
+  ['Optical Dazzling', '광학 교란'],
+  ['Perception-Reasoning-Action', '인지-추론-행동'],
+  ['Pursuit-Evasion', '추격-회피'],
+  ['Reinforcement Learning', '강화학습기반(제어기법)'],
+  ['Re-perception Request', '재인지 요청'],
+  ['Repository', '저장소'],
+  ['Semi-autonomous', '반자율'],
+  ['Sensor Fusion', '센서 융합'],
+  ['Situational Awareness', '상황 인식'],
+  ['SLAM', '동시적 위치추정 및 지도작성'],
+  ['Swarm Attack', '포화 공격'],
+  ['Tactical Data Link', '전술 데이터 링크'],
+  ['Tail-Chase', '후방차단'],
+  ['Target Perception', '표적 인지'],
+  ['Target Prioritization', '타격 우선순위 결정'],
+  ['Target Tracking', '표적 추적'],
+  ['Telemetry', '원격 측정'],
+  ['Temporal Reasoning', '시간 기반 추론(위치, 행동 예측)'],
+  ['Terminal', '종말단계'],
+  ['Terminal Engagement Decision', '종말단계 교전 결정'],
+  ['Threat Assessment', '위협 평가'],
+  ['Throughput', '처리량'],
+  ['Trajectory Adjustment', '실시간 경로 재계획'],
+  ['Video Link', '영상'],
+  ['Vision-based Guidance', '영상기반 유도'],
+  ['Vision-based Navigation', '영상기반 항법'],
 ];
 
 function seedDefaultDecks() {
-  // 기존에 두 개로 분리된 구버전 단어장이 있으면 하나로 합침
-  const old1 = decks.findIndex(d => d.name === 'Counter-UAS 드론 전문 용어 (1)');
-  const old2 = decks.findIndex(d => d.name === 'Counter-UAS 드론 전문 용어 (2)');
+  const DECK_NAME = 'Counter-UAS 드론 전문 용어';
+  const newWords = ALL_DEFAULT_WORDS.map(([en, ko]) => ({ id: genId(), en, ko, mastered: false }));
+
+  // 구버전(두 개로 분리된) 단어장 병합
+  const old1 = decks.findIndex(d => d.name === DECK_NAME + ' (1)');
+  const old2 = decks.findIndex(d => d.name === DECK_NAME + ' (2)');
   if (old1 !== -1 && old2 !== -1) {
-    const merged = {
-      id: decks[old1].id,
-      name: 'Counter-UAS 드론 전문 용어',
-      createdAt: decks[old1].createdAt,
-      words: [...decks[old1].words, ...decks[old2].words],
-    };
     decks.splice(Math.max(old1, old2), 1);
-    decks.splice(Math.min(old1, old2), 1, merged);
-    saveDecks(decks);
+    decks.splice(Math.min(old1, old2), 1);
+  }
+
+  // 기존 기본 단어장 버전 확인 — 구버전이면 단어 목록 교체
+  const existing = decks.findIndex(d => d.name === DECK_NAME);
+  if (existing !== -1) {
+    if ((decks[existing].version || 1) < DECK_VERSION) {
+      // 암기 상태 보존하며 단어 교체
+      const masteredSet = new Set(decks[existing].words.filter(w => w.mastered).map(w => w.en));
+      decks[existing].words = newWords.map(w => ({ ...w, mastered: masteredSet.has(w.en) }));
+      decks[existing].version = DECK_VERSION;
+      saveDecks(decks);
+    }
     return;
   }
 
   // 완전히 새로운 경우
-  if (decks.length > 0) return;
-  decks = [{
-    id: genId(),
-    name: 'Counter-UAS 드론 전문 용어',
-    createdAt: Date.now(),
-    words: ALL_DEFAULT_WORDS.map(([en, ko]) => ({ id: genId(), en, ko, mastered: false })),
-  }];
+  if (decks.length > 0) { saveDecks(decks); return; }
+  decks = [{ id: genId(), name: DECK_NAME, version: DECK_VERSION, createdAt: Date.now(), words: newWords }];
   saveDecks(decks);
 }
 
