@@ -1139,14 +1139,122 @@ function seedDefaultDecks() {
     decks[existing].version = DECK_VERSION;
   }
 
-  // 토익 단어장이 없으면 빈 상태로 추가
+  // 토익 단어장 — 없거나 단어 수가 부족하면 업데이트
   const toeicIdx = decks.findIndex(d => d.name === TOEIC_NAME);
+  const toeicWords = TOEIC_WORDS_1.map(([en, ko]) => ({ id: genId(), en, ko, mastered: false }));
   if (toeicIdx === -1) {
-    decks.push({ id: genId(), name: TOEIC_NAME, version: 1, createdAt: Date.now(), words: [] });
+    decks.push({ id: genId(), name: TOEIC_NAME, version: 1, createdAt: Date.now(), words: toeicWords });
+  } else if (decks[toeicIdx].words.length < TOEIC_WORDS_1.length) {
+    const masteredSet = new Set(decks[toeicIdx].words.filter(w => w.mastered).map(w => w.en));
+    decks[toeicIdx].words = toeicWords.map(w => ({ ...w, mastered: masteredSet.has(w.en) }));
+    decks[toeicIdx].version = 1;
   }
 
   saveDecks(decks);
 }
+
+const TOEIC_WORDS_1 = [
+  ['executive', '(명) 경영진, 임원 | (형) 경영의, 운영의'],
+  ['inventory', '(명) 재고, 재고 목록 | 재고 조사'],
+  ['feature', '(명) 특징, 특색 | 특집 기사'],
+  ['acknowledge', '(동) 수신을 인정하다 | 감사를 표현하다'],
+  ['voucher', '(명) 상품권, 바우처 | 영수증, 증명서'],
+  ['estimate', '(명) 견적서, 평가 | (동) 추산하다, 평가하다'],
+  ['resume', '(동) 재개하다 | (명) 이력서'],
+  ['issue', '(명) 문제, 이슈 | (동) 발행하다'],
+  ['property', '(명) 재산, 소유물 | 부동산'],
+  ['eligible', '(형) 자격이 있는 | 적격의'],
+  ['initiative', '(명) 주도권 | 새로운 계획, 선도적 행동'],
+  ['culinary', '(형) 요리의, 음식의'],
+  ['extensive', '(형) 광범위한 | 대규모의'],
+  ['deposit', '(명) 예치금, 보증금 | 침전물'],
+  ['retail', '(명) 소매 | (형) 소매의'],
+  ['affordable', '(형) 가격이 알맞은'],
+  ['grant', '(동) 승인하다 | 수여하다'],
+  ['significantly', '(부) 상당히, 현저하게 | 중요한 정도로, 의미 있게'],
+  ['reserve', '(동) 예약하다 | 보유하다'],
+  ['application', '(명) 신청, 지원서 | 적용, 응용'],
+  ['address', '(명) 주소 | (동) 문제를 다루다'],
+  ['suppose', '(동) 추정하다 | 생각하다'],
+  ['charge', '(명) 요금 | 책임'],
+  ['expire', '(동) 기한이 만료되다 | 효력이 끝나다'],
+  ['refund', '(명) 환불 | (동) 환불하다'],
+  ['promote', '(동) 촉진하다 | 승진시키다'],
+  ['revenue', '(명) 수익, 수입 | 세입'],
+  ['opportunity', '(명) 기회 | 적기, 호기'],
+  ['valid', '(형) 유효한 | 타당한'],
+  ['confidential', '(형) 기밀의, 비밀의 | 신뢰를 요하는'],
+  ['figure', '(명) 숫자 | 인물'],
+  ['traffic', '(명) 교통, 차량의 흐름 | 인터넷 트래픽, 데이터 흐름'],
+  ['audience', '(명) 청중, 관객 | 독자'],
+  ['occupy', '(동) 공간을 차지하다 | 시간이나 주의를 차지하다'],
+  ['approximately', '(부) 대략 | 거의'],
+  ['complimentary', '(형) 무료의 | 칭찬의'],
+  ['outstanding', '(형) 미해결의, 미지불된 | 뛰어난, 두드러진'],
+  ['imperative', '(형) 긴급한, 필수적인 | (명) 긴급한 문제, 필수적인 것'],
+  ['substantial', '(형) 상당한 | 실질적인, 실제의'],
+  ['decline', '(동) 감소하다 | 거절하다'],
+  ['balance', '(명) 균형 | 잔액'],
+  ['account', '(명) 계좌 | 설명, 설명서'],
+  ['proceed', '(동) 계속하다, 진행하다 | 시작하다'],
+  ['amenities', '(명) 편의시설 | 예의, 기품'],
+  ['renowned', '(형) 유명한'],
+  ['preserve', '(동) 보존하다 | (명) 저장식품'],
+  ['simply', '(부) 단순하게, 간결하게 | 그저, 단지'],
+  ['presence', '(명) 존재, 출석 | 풍모, 영향력'],
+  ['laboratory', '(명) 실험실'],
+  ['effective', '(형) 효과적인 | 효력을 발휘하는'],
+  ['enhance', '(동) 향상시키다 | 강화하다'],
+  ['insurance', '(명) 보험'],
+  ['spacious', '(형) 넓은, 공간이 많은 | 마음이 넓은, 너그러운'],
+  ['ingredient', '(명) 재료, 성분 | (성공 등의) 요소'],
+  ['withdraw', '(동) 철회하다 | 철수하다'],
+  ['banquet', '(명) 연회, 만찬 | 성대한 식사'],
+  ['experiment', '(명) 실험 | (동) 실험하다'],
+  ['specific', '(형) 구체적인, 명확한 | 특정한'],
+  ['specialize', '(동) 전문화하다'],
+  ['affect', '(동) 영향을 미치다 | (명) 정서, 감정'],
+  ['equip', '(동) 장비를 제공하다 | 준비시키다'],
+  ['reimbursement', '(명) 환급, 상환 | 보상'],
+  ['premises', '(명) 건물과 토지, 부지 | 구내'],
+  ['renovate', '(동) 수리하다, 개조하다'],
+  ['versatile', '(형) 다재다능한 | 다용도의'],
+  ['implement', '(동) 실행하다 | (명) 도구, 장치'],
+  ['informed', '(형) 정보에 기반한'],
+  ['commitment', '(명) 약속 | 헌신'],
+  ['direct', '(형) 직접적인 | (동) 명령하다, 지시하다'],
+  ['facilitate', '(동) 용이하게 하다, 촉진하다'],
+  ['commission', '(명) 수수료 | 위원회'],
+  ['cover', '(동) 덮다 | 포함하다'],
+  ['encourage', '(동) 격려하다 | 촉진하다'],
+  ['persuade', '(동) 설득하다 | 납득시키다'],
+  ['accompany', '(동) 동반하다, 함께 가다 | 수반하다'],
+  ['candidate', '(명) 후보자, 지원자 | 시험응시자'],
+  ['renew', '(동) 갱신하다 | 재개하다'],
+  ['launch', '(동) 출시하다 | 시작하다'],
+  ['reliable', '(형) 믿을 수 있는, 신뢰할 수 있는 | 신뢰성, 확실성'],
+  ['inform', '(동) 알리다 | 정보 제공하다'],
+  ['contribute', '(동) 기여하다 | 기부하다'],
+  ['strategy', '(명) 전략 | 전술, 방법'],
+  ['motivate', '(동) 동기부여하다 | 유도하다, 자극하다'],
+  ['consider', '(동) 고려하다 | ~라고 여기다'],
+  ['remind', '(동) 상기시키다 | 떠올리게 하다'],
+  ['suitable', '(형) 적합한, 알맞은 | 어울리는'],
+  ['beverage', '(명) 음료'],
+  ['portable', '(형) 휴대할 수 있는 | (명) 휴대용 기기'],
+  ['essential', '(형) 필수적인 | (명) 필수 요소'],
+  ['consent', '(명) 동의, 허락 | (동) 동의하다, 허락하다'],
+  ['tentative', '(형) 잠정적인, 임시의 | 시도적인, 시험적인'],
+  ['respective', '(형) 각각의, 각자의 | (부) 각각, 따로따로'],
+  ['arrange', '(동) 정리하다 | 준비하다'],
+  ['associate', '(동) 관련시키다, 연관짓다 | (사람과) 어울리다, 교제하다'],
+  ['publicity', '(명) 언론 보도, 광고 | 선전, 홍보'],
+  ['instructor', '(명) 강사, 교관'],
+  ['contractor', '(명) 계약자, 도급업자'],
+  ['relevant', '(형) 관련 있는 | 적절한'],
+  ['weekly', '(형) 매주 열리는 | (부) 매주'],
+  ['imply', '(동) 암시하다'],
+];
 
 // ── Init ───────────────────────────────────────────────────
 seedDefaultDecks();
