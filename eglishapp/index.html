@@ -938,11 +938,12 @@ function silenceAudio() {
   }
 }
 
-// 괄호/부연설명 제거하여 TTS 잡음 방지
+// 괄호/부연설명·구분자 제거하여 TTS 잡음 방지
 function cleanTTS(text) {
   return text
-    .replace(/\([^)]*\)/g, '')  // (괄호 내용) 제거
+    .replace(/\([^)]*\)/g, '')  // (괄호 내용) 제거 — (명)(동)(형) 등 품사 기호 포함
     .replace(/\[[^\]]*\]/g, '') // [대괄호 내용] 제거
+    .replace(/\|/g, ', ')       // | 구분자 → 쉼표로 (자연스럽게 읽힘)
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -953,23 +954,27 @@ function runAutoStep() {
   if (idx >= queue.length) { stopAutoPlay(); return; }
 
   const word = queue[idx];
-  setupMediaSession(word.en); // 잠금 화면에 현재 단어 표시
+  setupMediaSession(word.en);
 
   // 1단계: 영어 읽기
-  speakWithCb(word.en, 'en', () => {
+  speakWithCb(word.en, 'en', function() {
     if (!AP.running) return;
-    // 2단계: 1초 후 카드 뒤집기 (한국어 TTS 없음)
-    AP.timer = setTimeout(() => {
+    // 2단계: 0.8초 후 카드 뒤집기
+    AP.timer = setTimeout(function() {
       if (!AP.running) return;
       revealCard();
-      // 3단계: 2초 후 다음 카드
-      AP.timer = setTimeout(() => {
+      // 3단계: 한국어 뜻 읽기
+      speakWithCb(cleanTTS(word.ko), 'ko', function() {
         if (!AP.running) return;
-        practiceState.idx = idx + 1;
-        renderCard();
-        runAutoStep();
-      }, 2000);
-    }, 1000);
+        // 4단계: 1.5초 후 다음 카드
+        AP.timer = setTimeout(function() {
+          if (!AP.running) return;
+          practiceState.idx = idx + 1;
+          renderCard();
+          runAutoStep();
+        }, 1500);
+      });
+    }, 800);
   });
 }
 
