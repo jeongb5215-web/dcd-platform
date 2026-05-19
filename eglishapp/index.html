@@ -1139,16 +1139,31 @@ function seedDefaultDecks() {
     decks[existing].version = DECK_VERSION;
   }
 
-  // 토익 단어장 — 없거나 단어 수가 부족하면 업데이트
-  const toeicIdx = decks.findIndex(d => d.name === TOEIC_NAME);
-  const toeicWords = TOEIC_WORDS_1.map(([en, ko]) => ({ id: genId(), en, ko, mastered: false }));
-  if (toeicIdx === -1) {
-    decks.push({ id: genId(), name: TOEIC_NAME, version: 1, createdAt: Date.now(), words: toeicWords });
-  } else if (decks[toeicIdx].words.length < TOEIC_WORDS_1.length) {
-    const masteredSet = new Set(decks[toeicIdx].words.filter(w => w.mastered).map(w => w.en));
-    decks[toeicIdx].words = toeicWords.map(w => ({ ...w, mastered: masteredSet.has(w.en) }));
-    decks[toeicIdx].version = 1;
+  // 토익 단어장 — 기존 단일 덱을 3개로 분리 (마이그레이션)
+  const TOEIC_NAME_A = '토익 1200 단어 (1~400)';
+  const TOEIC_NAME_B = '토익 1200 단어 (401~800)';
+  const TOEIC_NAME_C = '토익 1200 단어 (801~1200)';
+  const oldToeicIdx = decks.findIndex(d => d.name === TOEIC_NAME);
+  let oldMasteredSet = new Set();
+  if (oldToeicIdx !== -1) {
+    oldMasteredSet = new Set(decks[oldToeicIdx].words.filter(w => w.mastered).map(w => w.en));
+    decks.splice(oldToeicIdx, 1);
   }
+
+  const makeWords = (slice) => slice.map(([en, ko]) => ({ id: genId(), en, ko, mastered: oldMasteredSet.has(en) }));
+  const slices = [TOEIC_WORDS_1.slice(0, 400), TOEIC_WORDS_1.slice(400, 800), TOEIC_WORDS_1.slice(800)];
+  const names = [TOEIC_NAME_A, TOEIC_NAME_B, TOEIC_NAME_C];
+
+  slices.forEach((slice, i) => {
+    const words = makeWords(slice);
+    const idx = decks.findIndex(d => d.name === names[i]);
+    if (idx === -1) {
+      decks.push({ id: genId(), name: names[i], version: 1, createdAt: Date.now(), words });
+    } else if (decks[idx].words.length < words.length) {
+      const ms = new Set(decks[idx].words.filter(w => w.mastered).map(w => w.en));
+      decks[idx].words = words.map(w => ({ ...w, mastered: ms.has(w.en) }));
+    }
+  });
 
   saveDecks(decks);
 }
