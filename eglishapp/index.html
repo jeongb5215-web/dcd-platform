@@ -965,10 +965,35 @@ function runAutoStep() {
 
 // 자동재생 전용 TTS — 발음만 재생, 콜백/시퀀스 없음
 function autoPlaySpeak(text) {
+  // 이전 발화·오디오 즉시 정지
   try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e) {}
+  if (currentAudio) {
+    currentAudio.onended = null;
+    currentAudio.onerror = null;
+    try { currentAudio.pause(); } catch(e) {}
+    currentAudio = null;
+  }
 
+  if (isMobile) {
+    // 모바일: Google TTS <audio> 사용
+    // Android Web Speech API는 speak() 한 번에 두 번 재생되는 브라우저 버그가 있음
+    var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=en-US&client=tw-ob&q='
+      + encodeURIComponent(text);
+    currentAudio = new Audio(url);
+    safePlay(currentAudio, function() {
+      // Google TTS 차단 시 Web Speech API 폴백
+      currentAudio = null;
+      _wsSpeak(text);
+    });
+    return;
+  }
+
+  // PC: Web Speech API
+  _wsSpeak(text);
+}
+
+function _wsSpeak(text) {
   if (!window.speechSynthesis) return;
-
   var utter = new SpeechSynthesisUtterance(text);
   utter.lang   = 'en-US';
   utter.rate   = 0.9;
@@ -978,7 +1003,6 @@ function autoPlaySpeak(text) {
           || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0; });
     if (v) utter.voice = v;
   }
-  // 50ms 대기: cancel() 처리 완료 후 speak (삼성·크롬 잔존 발화 방지)
   setTimeout(function() {
     if (!AP.running) return;
     try { window.speechSynthesis.speak(utter); } catch(e) {}
