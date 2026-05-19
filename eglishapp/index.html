@@ -868,6 +868,7 @@ function startAutoPlay() {
 function stopAutoPlay() {
   AP.running = false;
   clearTimeout(AP.timer);
+  clearTimeout(AP.fallback);
   silenceAudio();
   const btn = document.getElementById('btnAutoPlay');
   if (btn) { btn.textContent = '▶ 자동재생'; btn.classList.remove('on'); }
@@ -920,32 +921,41 @@ function runAutoStep() {
 
 // 콜백 있는 TTS (자동재생 전용)
 function speakWithCb(text, lang, cb) {
-  const tl = lang === 'ko' ? 'ko' : 'en-US';
-
-  // 이전 오디오 잡음 없이 정지
   silenceAudio();
+  clearTimeout(AP.fallback);
 
   // Web Speech API 우선 (PC/모바일 공통)
   if (window.speechSynthesis) {
     if (!AP.running && lang !== 'en') { cb(); return; }
-    setTimeout(() => {
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang    = lang === 'ko' ? 'ko-KR' : 'en-US';
-      utter.rate    = 0.85;
-      utter.volume  = 1;
-      if (lang === 'en' && cachedVoices.length) {
-        const v = cachedVoices.find(v => v.lang === 'en-US')
-               || cachedVoices.find(v => v.lang.startsWith('en'));
-        if (v) utter.voice = v;
-      }
-      utter.onend   = cb;
-      utter.onerror = cb;
-      window.speechSynthesis.speak(utter);
-    }, 80);
+
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang   = lang === 'ko' ? 'ko-KR' : 'en-US';
+    utter.rate   = 0.85;
+    utter.volume = 1;
+    if (lang === 'en' && cachedVoices.length) {
+      const v = cachedVoices.find(v => v.lang === 'en-US')
+             || cachedVoices.find(v => v.lang.startsWith('en'));
+      if (v) utter.voice = v;
+    }
+
+    // onend가 발화하지 않을 때 대비 폴백 타이머 (글자당 130ms + 최소 2초)
+    let done = false;
+    const safeCb = () => {
+      if (done) return;
+      done = true;
+      clearTimeout(AP.fallback);
+      cb();
+    };
+    utter.onend   = safeCb;
+    utter.onerror = safeCb;
+    AP.fallback = setTimeout(safeCb, Math.max(2000, text.length * 130));
+
+    window.speechSynthesis.speak(utter);
     return;
   }
 
   // Web Speech API 미지원 시 Google TTS Audio 폴백
+  const tl = lang === 'ko' ? 'ko' : 'en-US';
   AP.timer = setTimeout(() => {
     const url = 'https://translate.google.com/translate_tts'
       + '?ie=UTF-8&tl=' + tl + '&client=tw-ob&q=' + encodeURIComponent(text);
