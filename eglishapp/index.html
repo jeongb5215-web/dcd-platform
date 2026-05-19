@@ -788,10 +788,7 @@ function renderCard() {
       <button class="btn-speak" onclick="event.stopPropagation();speak('${escHtml(word.en).replace(/'/g,"\\'")}')">🔊 발음 듣기</button>
       <div class="card-ko">${escHtml(word.ko)}</div>
     </div>
-    <div class="practice-actions" id="practiceActions" style="${AP.running ? 'display:none;' : 'display:flex;'}">
-      <button class="btn-not-yet" onclick="markWord(false)">😅</button>
-      <button class="btn-mastered" onclick="markWord(true)">✅</button>
-    </div>`;
+    `;
 }
 
 function goCard(dir) {
@@ -974,7 +971,10 @@ function _wsSpeak(text, immediate) {
   utter.rate   = 0.9;
   utter.volume = 1;
   if (cachedVoices.length) {
-    var v = cachedVoices.find(function(x) { return x.lang === 'en-US'; })
+    var maleNames = /david|mark|fred|alex|daniel|google uk english male|microsoft david|microsoft mark/i;
+    var v = cachedVoices.find(function(x) { return x.lang === 'en-US' && maleNames.test(x.name); })
+          || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0 && maleNames.test(x.name); })
+          || cachedVoices.find(function(x) { return x.lang === 'en-US'; })
           || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0; });
     if (v) utter.voice = v;
   }
@@ -1048,15 +1048,11 @@ function speakWebAPI(text) {
       utter.rate   = 0.85;
       utter.volume = 1;
       if (cachedVoices.length) {
-        var found = null;
-        for (var i = 0; i < cachedVoices.length; i++) {
-          if (cachedVoices[i].lang === 'en-US') { found = cachedVoices[i]; break; }
-        }
-        if (!found) {
-          for (var j = 0; j < cachedVoices.length; j++) {
-            if (cachedVoices[j].lang.indexOf('en') === 0) { found = cachedVoices[j]; break; }
-          }
-        }
+        var maleNames = /david|mark|fred|alex|daniel|google uk english male|microsoft david|microsoft mark/i;
+        var found = cachedVoices.find(function(x) { return x.lang === 'en-US' && maleNames.test(x.name); })
+                 || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0 && maleNames.test(x.name); })
+                 || cachedVoices.find(function(x) { return x.lang === 'en-US'; })
+                 || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0; });
         if (found) utter.voice = found;
       }
       window.speechSynthesis.speak(utter);
