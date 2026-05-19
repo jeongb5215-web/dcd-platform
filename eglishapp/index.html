@@ -868,10 +868,29 @@ function startAutoPlay() {
 function stopAutoPlay() {
   AP.running = false;
   clearTimeout(AP.timer);
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  silenceAudio();
   const btn = document.getElementById('btnAutoPlay');
   if (btn) { btn.textContent = '▶ 자동재생'; btn.classList.remove('on'); }
+}
+
+// 오디오를 잡음 없이 완전히 정지
+function silenceAudio() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  if (currentAudio) {
+    currentAudio.onended = null;   // 콜백 제거 — ghost callback 방지
+    currentAudio.onerror = null;
+    if (!currentAudio.ended) currentAudio.pause();
+    currentAudio = null;
+  }
+}
+
+// 괄호/부연설명 제거하여 TTS 잡음 방지
+function cleanTTS(text) {
+  return text
+    .replace(/\([^)]*\)/g, '')  // (괄호 내용) 제거
+    .replace(/\[[^\]]*\]/g, '') // [대괄호 내용] 제거
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function runAutoStep() {
@@ -888,8 +907,8 @@ function runAutoStep() {
     AP.timer = setTimeout(() => {
       if (!AP.running) return;
       revealCard();
-      // 3단계: 한국어 읽기
-      speakWithCb(word.ko, 'ko', () => {
+      // 3단계: 한국어 읽기 (괄호 제거 후)
+      speakWithCb(cleanTTS(word.ko), 'ko', () => {
         if (!AP.running) return;
         // 4단계: 1.8초 후 다음 카드
         AP.timer = setTimeout(() => {
@@ -907,33 +926,39 @@ function runAutoStep() {
 function speakWithCb(text, lang, cb) {
   const tl = lang === 'ko' ? 'ko' : 'en-US';
 
+  // 이전 오디오 잡음 없이 정지
+  silenceAudio();
+
   if (isMobile) {
-    if (currentAudio) { currentAudio.pause(); currentAudio = null; }
-    const url = 'https://translate.google.com/translate_tts'
-      + '?ie=UTF-8&tl=' + tl + '&client=tw-ob&q=' + encodeURIComponent(text);
-    currentAudio = new Audio(url);
-    currentAudio.onended = cb;
-    currentAudio.onerror = cb;
-    currentAudio.play().catch(cb);
+    // 모바일: 50ms 후 새 오디오 시작 (직전 정지와 겹침 방지)
+    AP.timer = setTimeout(() => {
+      const url = 'https://translate.google.com/translate_tts'
+        + '?ie=UTF-8&tl=' + tl + '&client=tw-ob&q=' + encodeURIComponent(text);
+      currentAudio = new Audio(url);
+      currentAudio.onended = cb;
+      currentAudio.onerror = () => { currentAudio = null; cb(); };
+      currentAudio.play().catch(() => { currentAudio = null; cb(); });
+    }, 50);
     return;
   }
 
+  // PC: Web Speech API
   if (!window.speechSynthesis) { cb(); return; }
-  window.speechSynthesis.cancel();
   setTimeout(() => {
+    if (!AP.running && lang !== 'en') return; // 정지됐으면 한국어 건너뜀
     const utter = new SpeechSynthesisUtterance(text);
-    utter.lang   = lang === 'ko' ? 'ko-KR' : 'en-US';
-    utter.rate   = 0.85;
-    utter.volume = 1;
+    utter.lang    = lang === 'ko' ? 'ko-KR' : 'en-US';
+    utter.rate    = 0.85;
+    utter.volume  = 1;
     if (lang === 'en' && cachedVoices.length) {
       const v = cachedVoices.find(v => v.lang === 'en-US')
              || cachedVoices.find(v => v.lang.startsWith('en'));
       if (v) utter.voice = v;
     }
-    utter.onend  = cb;
+    utter.onend   = cb;
     utter.onerror = cb;
     window.speechSynthesis.speak(utter);
-  }, 60);
+  }, 80);
 }
 
 // ── Text-to-Speech ─────────────────────────────────────────
