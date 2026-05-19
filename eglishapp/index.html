@@ -334,23 +334,13 @@
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     padding: 32px 24px;
-    cursor: pointer;
     text-align: center;
     position: relative;
   }
-  .flashcard::after {
-    content: '탭하여 뜻 보기';
-    position: absolute;
-    bottom: 14px;
-    font-size: .75rem;
-    color: var(--text-sub);
-  }
-  .flashcard.revealed::after { display: none; }
   .flashcard:hover { box-shadow: 0 8px 32px rgba(91,45,142,.18); }
 
   .card-en { font-size: 1.6rem; font-weight: 700; color: var(--purple); margin-bottom: 4px; }
-  .card-ko { font-size: 1.1rem; color: #333; display: none; margin-top: 12px; line-height: 1.5; }
-  .flashcard.revealed .card-ko { display: block; }
+  .card-ko { font-size: 1.1rem; color: #333; margin-top: 12px; line-height: 1.5; }
 
   .card-nav {
     display: flex;
@@ -802,12 +792,12 @@ function renderCard() {
       <span class="card-nav-dots">${queue.map((_, i) => `<span class="dot ${i === idx ? 'active' : i < idx ? 'done' : ''}"></span>`).slice(Math.max(0, idx-3), idx+4).join('')}</span>
       <button class="btn-nav" onclick="goCard(1)">다음 →</button>
     </div>
-    <div class="flashcard" id="flashcard" ${AP.running ? '' : 'onclick="revealCard()"'}>
+    <div class="flashcard" id="flashcard">
       <div class="card-en">${escHtml(word.en)}</div>
       <button class="btn-speak" onclick="event.stopPropagation();speak('${escHtml(word.en).replace(/'/g,"\\'")}')">🔊 발음 듣기</button>
       <div class="card-ko">${escHtml(word.ko)}</div>
     </div>
-    <div class="practice-actions" id="practiceActions" style="display:none;">
+    <div class="practice-actions" id="practiceActions" style="${AP.running ? 'display:none;' : 'display:flex;'}">
       <button class="btn-not-yet" onclick="markWord(false)">😅 아직</button>
       <button class="btn-mastered" onclick="markWord(true)">✅ 암기!</button>
     </div>`;
@@ -823,12 +813,6 @@ function goCard(dir) {
   if (!AP.running && next < queue.length) speak(queue[next].en);
 }
 
-function revealCard() {
-  if (AP.running) return; // 자동재생 중 카드 뒤집기 차단
-  document.getElementById('flashcard')?.classList.add('revealed');
-  const actions = document.getElementById('practiceActions');
-  if (actions) actions.style.display = 'flex';
-}
 
 function markWord(mastered) {
   stopAutoPlay();
