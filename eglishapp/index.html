@@ -974,25 +974,25 @@ function autoPlaySpeak(text) {
     currentAudio = null;
   }
 
-  if (isMobile) {
-    // 모바일: Google TTS <audio> 사용
-    // Android Web Speech API는 speak() 한 번에 두 번 재생되는 브라우저 버그가 있음
+  if (isAndroid) {
+    // Android: Google TTS <audio>
+    // Android Chrome/Samsung 브라우저의 Web Speech API 이중 재생 버그 회피
     var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=en-US&client=tw-ob&q='
       + encodeURIComponent(text);
     currentAudio = new Audio(url);
     safePlay(currentAudio, function() {
-      // Google TTS 차단 시 Web Speech API 폴백
       currentAudio = null;
-      _wsSpeak(text);
+      _wsSpeak(text, false);
     });
     return;
   }
 
-  // PC: Web Speech API
-  _wsSpeak(text);
+  // iOS / PC: Web Speech API
+  // iOS는 setTimeout 없이 즉시 speak (setTimeout 사용 시 사용자 제스처 컨텍스트 단절)
+  _wsSpeak(text, isIOS);
 }
 
-function _wsSpeak(text) {
+function _wsSpeak(text, immediate) {
   if (!window.speechSynthesis) return;
   var utter = new SpeechSynthesisUtterance(text);
   utter.lang   = 'en-US';
@@ -1003,14 +1003,22 @@ function _wsSpeak(text) {
           || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0; });
     if (v) utter.voice = v;
   }
-  setTimeout(function() {
+  if (immediate) {
     if (!AP.running) return;
     try { window.speechSynthesis.speak(utter); } catch(e) {}
-  }, 50);
+  } else {
+    // PC / Android 폴백: 50ms 후 speak (cancel() 완전 처리 대기)
+    setTimeout(function() {
+      if (!AP.running) return;
+      try { window.speechSynthesis.speak(utter); } catch(e) {}
+    }, 50);
+  }
 }
 
 // ── Text-to-Speech ─────────────────────────────────────────
-const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+const isIOS     = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+const isAndroid = /Android/i.test(navigator.userAgent);
+const isMobile  = isIOS || isAndroid;
 
 // 음성 목록 캐시 — voiceschanged 미발생 브라우저(삼성 등) 대비 폴링 병행
 let cachedVoices = [];
