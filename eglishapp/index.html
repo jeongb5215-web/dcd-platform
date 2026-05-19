@@ -455,6 +455,43 @@
     pointer-events: none;
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* 자동재생 버튼 */
+  .btn-autoplay {
+    background: rgba(255,255,255,.2);
+    border: 1.5px solid rgba(255,255,255,.5);
+    color: #fff;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: .82rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .2s;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .btn-autoplay:hover { background: rgba(255,255,255,.35); }
+  .btn-autoplay.on { background: #fff; color: var(--purple); border-color: #fff; }
+
+  /* 자동재생 진행 바 */
+  .autoplay-bar-wrap {
+    width: 100%;
+    max-width: 400px;
+    height: 4px;
+    background: var(--gray-bar);
+    border-radius: 2px;
+    margin-top: 14px;
+    overflow: hidden;
+    display: none;
+  }
+  .autoplay-bar-wrap.show { display: block; }
+  .autoplay-bar-fill {
+    height: 100%;
+    background: var(--purple);
+    border-radius: 2px;
+    width: 0%;
+    transition: width linear;
+  }
 </style>
 </head>
 <body>
@@ -515,6 +552,7 @@
   <div class="practice-header">
     <button class="btn-icon" onclick="closePractice()">←</button>
     <h2 id="practiceTitle"></h2>
+    <button class="btn-autoplay" id="btnAutoPlay" onclick="toggleAutoPlay()">▶ 자동재생</button>
     <span class="practice-progress" id="practiceProgress"></span>
   </div>
   <div class="practice-content" id="practiceContent"></div>
@@ -776,6 +814,7 @@ function renderCard() {
 }
 
 function goCard(dir) {
+  stopAutoPlay();
   const { queue, idx } = practiceState;
   const next = idx + dir;
   if (next < 0 || next > queue.length) return;
@@ -791,6 +830,7 @@ function revealCard() {
 }
 
 function markWord(mastered) {
+  stopAutoPlay();
   const { queue, idx, deckId } = practiceState;
   queue[idx].mastered = mastered;
   const deck = decks.find(d => d.id === deckId);
@@ -806,8 +846,94 @@ function markWord(mastered) {
 }
 
 function closePractice() {
+  stopAutoPlay();
   document.getElementById('practiceScreen').classList.remove('open');
   renderDecks();
+}
+
+// ── Auto Play ──────────────────────────────────────────────
+const AP = { running: false, timer: null };
+
+function toggleAutoPlay() {
+  AP.running ? stopAutoPlay() : startAutoPlay();
+}
+
+function startAutoPlay() {
+  AP.running = true;
+  const btn = document.getElementById('btnAutoPlay');
+  if (btn) { btn.textContent = '⏹ 정지'; btn.classList.add('on'); }
+  runAutoStep();
+}
+
+function stopAutoPlay() {
+  AP.running = false;
+  clearTimeout(AP.timer);
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  const btn = document.getElementById('btnAutoPlay');
+  if (btn) { btn.textContent = '▶ 자동재생'; btn.classList.remove('on'); }
+}
+
+function runAutoStep() {
+  if (!AP.running) return;
+  const { queue, idx } = practiceState;
+  if (idx >= queue.length) { stopAutoPlay(); return; }
+
+  const word = queue[idx];
+
+  // 1단계: 영어 읽기
+  speakWithCb(word.en, 'en', () => {
+    if (!AP.running) return;
+    // 2단계: 0.8초 후 카드 뒤집기
+    AP.timer = setTimeout(() => {
+      if (!AP.running) return;
+      revealCard();
+      // 3단계: 한국어 읽기
+      speakWithCb(word.ko, 'ko', () => {
+        if (!AP.running) return;
+        // 4단계: 1.8초 후 다음 카드
+        AP.timer = setTimeout(() => {
+          if (!AP.running) return;
+          practiceState.idx = idx + 1;
+          renderCard();
+          runAutoStep();
+        }, 1800);
+      });
+    }, 800);
+  });
+}
+
+// 콜백 있는 TTS (자동재생 전용)
+function speakWithCb(text, lang, cb) {
+  const tl = lang === 'ko' ? 'ko' : 'en-US';
+
+  if (isMobile) {
+    if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+    const url = 'https://translate.google.com/translate_tts'
+      + '?ie=UTF-8&tl=' + tl + '&client=tw-ob&q=' + encodeURIComponent(text);
+    currentAudio = new Audio(url);
+    currentAudio.onended = cb;
+    currentAudio.onerror = cb;
+    currentAudio.play().catch(cb);
+    return;
+  }
+
+  if (!window.speechSynthesis) { cb(); return; }
+  window.speechSynthesis.cancel();
+  setTimeout(() => {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang   = lang === 'ko' ? 'ko-KR' : 'en-US';
+    utter.rate   = 0.85;
+    utter.volume = 1;
+    if (lang === 'en' && cachedVoices.length) {
+      const v = cachedVoices.find(v => v.lang === 'en-US')
+             || cachedVoices.find(v => v.lang.startsWith('en'));
+      if (v) utter.voice = v;
+    }
+    utter.onend  = cb;
+    utter.onerror = cb;
+    window.speechSynthesis.speak(utter);
+  }, 60);
 }
 
 // ── Text-to-Speech ─────────────────────────────────────────
