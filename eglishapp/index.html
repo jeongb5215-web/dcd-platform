@@ -802,7 +802,7 @@ function renderCard() {
       <span class="card-nav-dots">${queue.map((_, i) => `<span class="dot ${i === idx ? 'active' : i < idx ? 'done' : ''}"></span>`).slice(Math.max(0, idx-3), idx+4).join('')}</span>
       <button class="btn-nav" onclick="goCard(1)">다음 →</button>
     </div>
-    <div class="flashcard" id="flashcard" onclick="revealCard()">
+    <div class="flashcard" id="flashcard" ${AP.running ? '' : 'onclick="revealCard()"'}>
       <div class="card-en">${escHtml(word.en)}</div>
       <button class="btn-speak" onclick="event.stopPropagation();speak('${escHtml(word.en).replace(/'/g,"\\'")}')">🔊 발음 듣기</button>
       <div class="card-ko">${escHtml(word.ko)}</div>
@@ -820,10 +820,11 @@ function goCard(dir) {
   if (next < 0 || next > queue.length) return;
   practiceState.idx = next;
   renderCard();
-  if (next < queue.length) speak(queue[next].en);
+  if (!AP.running && next < queue.length) speak(queue[next].en);
 }
 
 function revealCard() {
+  if (AP.running) return; // 자동재생 중 카드 뒤집기 차단
   document.getElementById('flashcard')?.classList.add('revealed');
   const actions = document.getElementById('practiceActions');
   if (actions) actions.style.display = 'flex';
@@ -842,7 +843,7 @@ function markWord(mastered) {
   practiceState.idx = idx + 1;
   renderCard();
   const next = practiceState.idx;
-  if (next < practiceState.queue.length) speak(practiceState.queue[next].en);
+  if (!AP.running && next < practiceState.queue.length) speak(practiceState.queue[next].en);
 }
 
 function closePractice() {
@@ -920,22 +921,16 @@ function startAutoPlay() {
 function stopAutoPlay() {
   AP.running = false;
   clearTimeout(AP.timer);
-  clearTimeout(AP.fallback);
-  silenceAudio();
+  try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e) {}
+  if (currentAudio) {
+    currentAudio.onended = null;
+    currentAudio.onerror = null;
+    try { currentAudio.pause(); } catch(e) {}
+    currentAudio = null;
+  }
   stopAudioKeepalive();
   const btn = document.getElementById('btnAutoPlay');
   if (btn) { btn.textContent = '▶ 자동재생'; btn.classList.remove('on'); }
-}
-
-// 오디오를 잡음 없이 완전히 정지
-function silenceAudio() {
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-  if (currentAudio) {
-    currentAudio.onended = null;   // 콜백 제거 — ghost callback 방지
-    currentAudio.onerror = null;
-    if (!currentAudio.ended) currentAudio.pause();
-    currentAudio = null;
-  }
 }
 
 // 괄호/부연설명·구분자 제거하여 TTS 잡음 방지
@@ -948,6 +943,7 @@ function cleanTTS(text) {
     .trim();
 }
 
+// 자동재생 — 영어 발음 후 타이머로 다음 단어 이동 (콜백 없음)
 function runAutoStep() {
   if (!AP.running) return;
   const { queue, idx } = practiceState;
@@ -955,105 +951,38 @@ function runAutoStep() {
 
   const word = queue[idx];
   setupMediaSession(word.en);
+  autoPlaySpeak(word.en);
 
-  // 1단계: 영어 읽기
-  speakWithCb(word.en, 'en', function() {
+  // 단어 길이에 비례한 간격 후 다음 단어로 이동
+  const delay = Math.max(3000, word.en.length * 200 + 1500);
+  AP.timer = setTimeout(function() {
     if (!AP.running) return;
-    // 2단계: 0.8초 후 카드 뒤집기
-    AP.timer = setTimeout(function() {
-      if (!AP.running) return;
-      revealCard();
-      // 3단계: 한국어 뜻 읽기
-      speakWithCb(cleanTTS(word.ko), 'ko', function() {
-        if (!AP.running) return;
-        // 4단계: 1.5초 후 다음 카드
-        AP.timer = setTimeout(function() {
-          if (!AP.running) return;
-          practiceState.idx = idx + 1;
-          renderCard();
-          runAutoStep();
-        }, 1500);
-      });
-    }, 800);
-  });
+    practiceState.idx = idx + 1;
+    renderCard();
+    runAutoStep();
+  }, delay);
 }
 
-// 콜백 있는 TTS (자동재생 전용)
-// 모바일: <audio> 요소(Google TTS) 사용 — 화면 잠금 시에도 계속 재생됨
-// PC:     Web Speech API 사용
-function speakWithCb(text, lang, cb) {
-  silenceAudio();
-  clearTimeout(AP.fallback);
+// 자동재생 전용 TTS — 발음만 재생, 콜백/시퀀스 없음
+function autoPlaySpeak(text) {
+  try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e) {}
 
-  const tl = lang === 'ko' ? 'ko' : 'en-US';
+  if (!window.speechSynthesis) return;
 
-  // ── 모바일: Google TTS <audio> — 화면 잠금·백그라운드에서도 동작 ──
-  if (isMobile) {
-    const url = 'https://translate.google.com/translate_tts'
-      + '?ie=UTF-8&tl=' + tl + '&client=tw-ob&q=' + encodeURIComponent(text);
-
-    let done = false;
-    const safeCb = function() {
-      if (done) return;
-      done = true;
-      clearTimeout(AP.fallback);
-      currentAudio = null;
-      cb();
-    };
-
-    try {
-      currentAudio = new Audio(url);
-      currentAudio.onended = safeCb;
-      currentAudio.onerror = function() {
-        // Google TTS 차단 시 Web Speech API로 재시도
-        if (!done && window.speechSynthesis) {
-          done = true; clearTimeout(AP.fallback);
-          _speakWithCbWS(text, tl, cb);
-        } else { safeCb(); }
-      };
-      // onended 미발화 대비 폴백 타이머
-      AP.fallback = setTimeout(safeCb, Math.max(3000, text.length * 150));
-      safePlay(currentAudio, function() {
-        // play() 실패 → Web Speech API 재시도
-        currentAudio = null;
-        clearTimeout(AP.fallback);
-        if (window.speechSynthesis) _speakWithCbWS(text, tl, cb);
-        else cb();
-      });
-    } catch(e) { cb(); }
-    return;
-  }
-
-  // ── PC: Web Speech API ──
-  _speakWithCbWS(text, tl, cb);
-}
-
-// Web Speech API 콜백 TTS (PC + 모바일 폴백)
-function _speakWithCbWS(text, tl, cb) {
-  if (!window.speechSynthesis) { cb(); return; }
-
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang   = tl === 'ko' ? 'ko-KR' : 'en-US';
-  utter.rate   = 0.85;
+  var utter = new SpeechSynthesisUtterance(text);
+  utter.lang   = 'en-US';
+  utter.rate   = 0.9;
   utter.volume = 1;
-  if (tl !== 'ko' && cachedVoices.length) {
-    const v = cachedVoices.find(function(v) { return v.lang === 'en-US'; })
-           || cachedVoices.find(function(v) { return v.lang.indexOf('en') === 0; });
+  if (cachedVoices.length) {
+    var v = cachedVoices.find(function(x) { return x.lang === 'en-US'; })
+          || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0; });
     if (v) utter.voice = v;
   }
-
-  let done = false;
-  const safeCb = function() {
-    if (done) return;
-    done = true;
-    clearTimeout(AP.fallback);
-    cb();
-  };
-  utter.onend   = safeCb;
-  utter.onerror = safeCb;
-  AP.fallback = setTimeout(safeCb, Math.max(2000, text.length * 130));
-
-  try { window.speechSynthesis.speak(utter); } catch(e) { safeCb(); }
+  // 50ms 대기: cancel() 처리 완료 후 speak (삼성·크롬 잔존 발화 방지)
+  setTimeout(function() {
+    if (!AP.running) return;
+    try { window.speechSynthesis.speak(utter); } catch(e) {}
+  }, 50);
 }
 
 // ── Text-to-Speech ─────────────────────────────────────────
