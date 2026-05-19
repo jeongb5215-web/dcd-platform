@@ -974,52 +974,81 @@ function runAutoStep() {
 }
 
 // 콜백 있는 TTS (자동재생 전용)
+// 모바일: <audio> 요소(Google TTS) 사용 — 화면 잠금 시에도 계속 재생됨
+// PC:     Web Speech API 사용
 function speakWithCb(text, lang, cb) {
   silenceAudio();
   clearTimeout(AP.fallback);
 
-  // Web Speech API 우선 (PC/모바일 공통)
-  if (window.speechSynthesis) {
-    if (!AP.running && lang !== 'en') { cb(); return; }
+  const tl = lang === 'ko' ? 'ko' : 'en-US';
 
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang   = lang === 'ko' ? 'ko-KR' : 'en-US';
-    utter.rate   = 0.85;
-    utter.volume = 1;
-    if (lang === 'en' && cachedVoices.length) {
-      const v = cachedVoices.find(v => v.lang === 'en-US')
-             || cachedVoices.find(v => v.lang.startsWith('en'));
-      if (v) utter.voice = v;
-    }
+  // ── 모바일: Google TTS <audio> — 화면 잠금·백그라운드에서도 동작 ──
+  if (isMobile) {
+    const url = 'https://translate.google.com/translate_tts'
+      + '?ie=UTF-8&tl=' + tl + '&client=tw-ob&q=' + encodeURIComponent(text);
 
-    // onend가 발화하지 않을 때 대비 폴백 타이머 (글자당 130ms + 최소 2초)
     let done = false;
-    const safeCb = () => {
+    const safeCb = function() {
       if (done) return;
       done = true;
       clearTimeout(AP.fallback);
+      currentAudio = null;
       cb();
     };
-    utter.onend   = safeCb;
-    utter.onerror = safeCb;
-    AP.fallback = setTimeout(safeCb, Math.max(2000, text.length * 130));
 
-    try { window.speechSynthesis.speak(utter); } catch(e) { safeCb(); }
+    try {
+      currentAudio = new Audio(url);
+      currentAudio.onended = safeCb;
+      currentAudio.onerror = function() {
+        // Google TTS 차단 시 Web Speech API로 재시도
+        if (!done && window.speechSynthesis) {
+          done = true; clearTimeout(AP.fallback);
+          _speakWithCbWS(text, tl, cb);
+        } else { safeCb(); }
+      };
+      // onended 미발화 대비 폴백 타이머
+      AP.fallback = setTimeout(safeCb, Math.max(3000, text.length * 150));
+      safePlay(currentAudio, function() {
+        // play() 실패 → Web Speech API 재시도
+        currentAudio = null;
+        clearTimeout(AP.fallback);
+        if (window.speechSynthesis) _speakWithCbWS(text, tl, cb);
+        else cb();
+      });
+    } catch(e) { cb(); }
     return;
   }
 
-  // Web Speech API 미지원 시 Google TTS Audio 폴백
-  const tl = lang === 'ko' ? 'ko' : 'en-US';
-  AP.timer = setTimeout(function() {
-    try {
-      const url = 'https://translate.google.com/translate_tts'
-        + '?ie=UTF-8&tl=' + tl + '&client=tw-ob&q=' + encodeURIComponent(text);
-      currentAudio = new Audio(url);
-      currentAudio.onended = cb;
-      currentAudio.onerror = function() { currentAudio = null; cb(); };
-      safePlay(currentAudio, function() { currentAudio = null; cb(); });
-    } catch(e) { cb(); }
-  }, 50);
+  // ── PC: Web Speech API ──
+  _speakWithCbWS(text, tl, cb);
+}
+
+// Web Speech API 콜백 TTS (PC + 모바일 폴백)
+function _speakWithCbWS(text, tl, cb) {
+  if (!window.speechSynthesis) { cb(); return; }
+
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang   = tl === 'ko' ? 'ko-KR' : 'en-US';
+  utter.rate   = 0.85;
+  utter.volume = 1;
+  if (tl !== 'ko' && cachedVoices.length) {
+    const v = cachedVoices.find(function(v) { return v.lang === 'en-US'; })
+           || cachedVoices.find(function(v) { return v.lang.indexOf('en') === 0; });
+    if (v) utter.voice = v;
+  }
+
+  let done = false;
+  const safeCb = function() {
+    if (done) return;
+    done = true;
+    clearTimeout(AP.fallback);
+    cb();
+  };
+  utter.onend   = safeCb;
+  utter.onerror = safeCb;
+  AP.fallback = setTimeout(safeCb, Math.max(2000, text.length * 130));
+
+  try { window.speechSynthesis.speak(utter); } catch(e) { safeCb(); }
 }
 
 // ── Text-to-Speech ─────────────────────────────────────────
