@@ -903,22 +903,18 @@ function runAutoStep() {
   // 1단계: 영어 읽기
   speakWithCb(word.en, 'en', () => {
     if (!AP.running) return;
-    // 2단계: 0.8초 후 카드 뒤집기
+    // 2단계: 1초 후 카드 뒤집기 (한국어 TTS 없음)
     AP.timer = setTimeout(() => {
       if (!AP.running) return;
       revealCard();
-      // 3단계: 한국어 읽기 (괄호 제거 후)
-      speakWithCb(cleanTTS(word.ko), 'ko', () => {
+      // 3단계: 2초 후 다음 카드
+      AP.timer = setTimeout(() => {
         if (!AP.running) return;
-        // 4단계: 1.8초 후 다음 카드
-        AP.timer = setTimeout(() => {
-          if (!AP.running) return;
-          practiceState.idx = idx + 1;
-          renderCard();
-          runAutoStep();
-        }, 1800);
-      });
-    }, 800);
+        practiceState.idx = idx + 1;
+        renderCard();
+        runAutoStep();
+      }, 2000);
+    }, 1000);
   });
 }
 
@@ -1122,6 +1118,7 @@ const ALL_DEFAULT_WORDS = [
 
 function seedDefaultDecks() {
   const DECK_NAME = 'Counter-UAS 드론 전문 용어';
+  const TOEIC_NAME = '토익 1200 단어';
   const newWords = ALL_DEFAULT_WORDS.map(([en, ko]) => ({ id: genId(), en, ko, mastered: false }));
 
   // 구버전(두 개로 분리된) 단어장 병합
@@ -1132,22 +1129,22 @@ function seedDefaultDecks() {
     decks.splice(Math.min(old1, old2), 1);
   }
 
-  // 기존 기본 단어장 버전 확인 — 구버전이면 단어 목록 교체
+  // Counter-UAS 단어장 버전 확인 — 구버전이면 단어 교체
   const existing = decks.findIndex(d => d.name === DECK_NAME);
-  if (existing !== -1) {
-    if ((decks[existing].version || 1) < DECK_VERSION) {
-      // 암기 상태 보존하며 단어 교체
-      const masteredSet = new Set(decks[existing].words.filter(w => w.mastered).map(w => w.en));
-      decks[existing].words = newWords.map(w => ({ ...w, mastered: masteredSet.has(w.en) }));
-      decks[existing].version = DECK_VERSION;
-      saveDecks(decks);
-    }
-    return;
+  if (existing === -1) {
+    decks.unshift({ id: genId(), name: DECK_NAME, version: DECK_VERSION, createdAt: Date.now(), words: newWords });
+  } else if ((decks[existing].version || 1) < DECK_VERSION) {
+    const masteredSet = new Set(decks[existing].words.filter(w => w.mastered).map(w => w.en));
+    decks[existing].words = newWords.map(w => ({ ...w, mastered: masteredSet.has(w.en) }));
+    decks[existing].version = DECK_VERSION;
   }
 
-  // 완전히 새로운 경우
-  if (decks.length > 0) { saveDecks(decks); return; }
-  decks = [{ id: genId(), name: DECK_NAME, version: DECK_VERSION, createdAt: Date.now(), words: newWords }];
+  // 토익 단어장이 없으면 빈 상태로 추가
+  const toeicIdx = decks.findIndex(d => d.name === TOEIC_NAME);
+  if (toeicIdx === -1) {
+    decks.push({ id: genId(), name: TOEIC_NAME, version: 1, createdAt: Date.now(), words: [] });
+  }
+
   saveDecks(decks);
 }
 
