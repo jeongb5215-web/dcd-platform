@@ -883,16 +883,25 @@ function stopAudioKeepalive() {
   } catch(e) {}
 }
 
-// MediaSession API — 잠금 화면 컨트롤 등록
+// MediaSession API — 잠금 화면 컨트롤 등록 (미지원 브라우저 안전 처리)
 function setupMediaSession(word) {
-  if (!navigator.mediaSession) return;
-  navigator.mediaSession.metadata = new MediaMetadata({
-    title: word || '단어 자동재생',
-    artist: '토익 영어 단어장',
-  });
-  navigator.mediaSession.setActionHandler('play',  () => { if (!AP.running) startAutoPlay(); });
-  navigator.mediaSession.setActionHandler('pause', () => { if (AP.running)  stopAutoPlay(); });
-  navigator.mediaSession.setActionHandler('stop',  () => { if (AP.running)  stopAutoPlay(); });
+  try {
+    if (!navigator.mediaSession) return;
+    if (window.MediaMetadata) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: word || '단어 자동재생',
+        artist: '토익 영어 단어장',
+      });
+    }
+    var actions = {
+      play:  function() { if (!AP.running) startAutoPlay(); },
+      pause: function() { if (AP.running)  stopAutoPlay(); },
+      stop:  function() { if (AP.running)  stopAutoPlay(); }
+    };
+    Object.keys(actions).forEach(function(action) {
+      try { navigator.mediaSession.setActionHandler(action, actions[action]); } catch(e) {}
+    });
+  } catch(e) {}
 }
 
 function toggleAutoPlay() {
@@ -995,69 +1004,97 @@ function speakWithCb(text, lang, cb) {
     utter.onerror = safeCb;
     AP.fallback = setTimeout(safeCb, Math.max(2000, text.length * 130));
 
-    window.speechSynthesis.speak(utter);
+    try { window.speechSynthesis.speak(utter); } catch(e) { safeCb(); }
     return;
   }
 
   // Web Speech API 미지원 시 Google TTS Audio 폴백
   const tl = lang === 'ko' ? 'ko' : 'en-US';
-  AP.timer = setTimeout(() => {
-    const url = 'https://translate.google.com/translate_tts'
-      + '?ie=UTF-8&tl=' + tl + '&client=tw-ob&q=' + encodeURIComponent(text);
-    currentAudio = new Audio(url);
-    currentAudio.onended = cb;
-    currentAudio.onerror = () => { currentAudio = null; cb(); };
-    currentAudio.play().catch(() => { currentAudio = null; cb(); });
+  AP.timer = setTimeout(function() {
+    try {
+      const url = 'https://translate.google.com/translate_tts'
+        + '?ie=UTF-8&tl=' + tl + '&client=tw-ob&q=' + encodeURIComponent(text);
+      currentAudio = new Audio(url);
+      currentAudio.onended = cb;
+      currentAudio.onerror = function() { currentAudio = null; cb(); };
+      safePlay(currentAudio, function() { currentAudio = null; cb(); });
+    } catch(e) { cb(); }
   }, 50);
 }
 
 // ── Text-to-Speech ─────────────────────────────────────────
 const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
-// PC용 Web Speech API 음성 캐시
+// 음성 목록 캐시 — voiceschanged 미발생 브라우저(삼성 등) 대비 폴링 병행
 let cachedVoices = [];
+function loadVoices() {
+  if (!window.speechSynthesis) return;
+  const v = window.speechSynthesis.getVoices();
+  if (v && v.length) cachedVoices = v;
+}
 if (window.speechSynthesis) {
-  const loadV = () => { cachedVoices = window.speechSynthesis.getVoices(); };
-  window.speechSynthesis.addEventListener('voiceschanged', loadV);
-  loadV();
+  try { window.speechSynthesis.addEventListener('voiceschanged', loadVoices); } catch(e) {}
+  loadVoices();
+  // 삼성·구형 브라우저: voiceschanged 미발생 대비 폴링 (250ms × 최대 20회)
+  let _pollCount = 0;
+  const _pollVoices = setInterval(function() {
+    loadVoices();
+    if (cachedVoices.length || ++_pollCount >= 20) clearInterval(_pollVoices);
+  }, 250);
 }
 
 let currentAudio = null;
 
+// Audio.play() — IE11은 Promise 미반환이므로 안전하게 처리
+function safePlay(audio, onFail) {
+  try {
+    const p = audio.play();
+    if (p && typeof p.catch === 'function') p.catch(onFail);
+  } catch(e) { if (onFail) onFail(); }
+}
+
 // Google TTS Audio — Web Speech API 미지원 환경 폴백
 function speakAudio(text) {
-  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  if (currentAudio) { try { currentAudio.pause(); } catch(e) {} currentAudio = null; }
   const url = 'https://translate.google.com/translate_tts'
     + '?ie=UTF-8&tl=en-US&client=tw-ob&q=' + encodeURIComponent(text);
   currentAudio = new Audio(url);
-  currentAudio.play().catch(() => { currentAudio = null; });
+  safePlay(currentAudio, function() { currentAudio = null; });
 }
 
-// Web Speech API — PC/모바일 공통
+// Web Speech API — 전 브라우저 공통 (삼성·IE 호환)
 function speakWebAPI(text) {
-  if (!window.speechSynthesis) return;
-  const fire = () => {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang   = 'en-US';
-    utter.rate   = 0.85;
-    utter.volume = 1;
-    if (cachedVoices.length) {
-      const v = cachedVoices.find(v => v.lang === 'en-US')
-             || cachedVoices.find(v => v.lang.startsWith('en'));
-      if (v) utter.voice = v;
+  if (!window.speechSynthesis) { speakAudio(text); return; }
+  // 삼성·구형 브라우저: 이전 발화 중이면 cancel 후 50ms 대기
+  try {
+    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+      window.speechSynthesis.cancel();
     }
-    window.speechSynthesis.speak(utter);
-  };
-  if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-    window.speechSynthesis.cancel();
-    setTimeout(fire, 60);
-  } else {
-    fire();
-  }
+  } catch(e) {}
+  setTimeout(function() {
+    try {
+      var utter = new SpeechSynthesisUtterance(text);
+      utter.lang   = 'en-US';
+      utter.rate   = 0.85;
+      utter.volume = 1;
+      if (cachedVoices.length) {
+        var found = null;
+        for (var i = 0; i < cachedVoices.length; i++) {
+          if (cachedVoices[i].lang === 'en-US') { found = cachedVoices[i]; break; }
+        }
+        if (!found) {
+          for (var j = 0; j < cachedVoices.length; j++) {
+            if (cachedVoices[j].lang.indexOf('en') === 0) { found = cachedVoices[j]; break; }
+          }
+        }
+        if (found) utter.voice = found;
+      }
+      window.speechSynthesis.speak(utter);
+    } catch(e) { speakAudio(text); } // Web Speech API 실패 시 Google TTS 폴백
+  }, 50);
 }
 
 function speak(text) {
-  // Web Speech API 우선 (현대 모바일 브라우저 모두 지원)
   if (window.speechSynthesis) {
     speakWebAPI(text);
   } else {
