@@ -854,12 +854,55 @@ function closePractice() {
 // ── Auto Play ──────────────────────────────────────────────
 const AP = { running: false, timer: null };
 
+// ── 화면 잠금 중 오디오 세션 유지 (Web Audio API 무음 루프) ──
+let _keepCtx = null, _keepSrc = null;
+
+function startAudioKeepalive() {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    if (_keepCtx && _keepCtx.state !== 'closed') {
+      if (_keepCtx.state === 'suspended') _keepCtx.resume();
+      return;
+    }
+    _keepCtx = new AC();
+    // 2초짜리 무음 버퍼를 루프 재생 → OS가 미디어 세션으로 인식해 잠금 화면에서도 유지
+    const buf = _keepCtx.createBuffer(1, _keepCtx.sampleRate * 2, _keepCtx.sampleRate);
+    _keepSrc = _keepCtx.createBufferSource();
+    _keepSrc.buffer = buf;
+    _keepSrc.loop = true;
+    _keepSrc.connect(_keepCtx.destination);
+    _keepSrc.start(0);
+  } catch(e) {}
+}
+
+function stopAudioKeepalive() {
+  try {
+    if (_keepSrc)  { _keepSrc.stop(); _keepSrc = null; }
+    if (_keepCtx)  { _keepCtx.close(); _keepCtx = null; }
+  } catch(e) {}
+}
+
+// MediaSession API — 잠금 화면 컨트롤 등록
+function setupMediaSession(word) {
+  if (!navigator.mediaSession) return;
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: word || '단어 자동재생',
+    artist: '토익 영어 단어장',
+  });
+  navigator.mediaSession.setActionHandler('play',  () => { if (!AP.running) startAutoPlay(); });
+  navigator.mediaSession.setActionHandler('pause', () => { if (AP.running)  stopAutoPlay(); });
+  navigator.mediaSession.setActionHandler('stop',  () => { if (AP.running)  stopAutoPlay(); });
+}
+
 function toggleAutoPlay() {
   AP.running ? stopAutoPlay() : startAutoPlay();
 }
 
 function startAutoPlay() {
   AP.running = true;
+  startAudioKeepalive();
+  setupMediaSession('자동재생 중...');
   const btn = document.getElementById('btnAutoPlay');
   if (btn) { btn.textContent = '⏹ 정지'; btn.classList.add('on'); }
   runAutoStep();
@@ -870,6 +913,7 @@ function stopAutoPlay() {
   clearTimeout(AP.timer);
   clearTimeout(AP.fallback);
   silenceAudio();
+  stopAudioKeepalive();
   const btn = document.getElementById('btnAutoPlay');
   if (btn) { btn.textContent = '▶ 자동재생'; btn.classList.remove('on'); }
 }
@@ -900,6 +944,7 @@ function runAutoStep() {
   if (idx >= queue.length) { stopAutoPlay(); return; }
 
   const word = queue[idx];
+  setupMediaSession(word.en); // 잠금 화면에 현재 단어 표시
 
   // 1단계: 영어 읽기
   speakWithCb(word.en, 'en', () => {
