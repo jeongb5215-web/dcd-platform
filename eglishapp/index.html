@@ -399,22 +399,13 @@
     width: 100%;
     max-width: 400px;
   }
-  .btn-not-yet {
-    flex: 1; padding: 14px;
-    background: #fdecea; color: #c62828;
-    border: none; border-radius: 12px;
-    font-size: .95rem; font-weight: 700;
-    cursor: pointer; transition: background .2s;
+  .btn-not-yet, .btn-mastered {
+    background: none; border: none;
+    font-size: 2rem; cursor: pointer;
+    padding: 8px 16px;
+    opacity: .85; transition: opacity .2s, transform .15s;
   }
-  .btn-not-yet:hover { background: #ffcdd2; }
-  .btn-mastered {
-    flex: 1; padding: 14px;
-    background: #e8f5e9; color: #2e7d32;
-    border: none; border-radius: 12px;
-    font-size: .95rem; font-weight: 700;
-    cursor: pointer; transition: background .2s;
-  }
-  .btn-mastered:hover { background: #c8e6c9; }
+  .btn-not-yet:hover, .btn-mastered:hover { opacity: 1; transform: scale(1.2); }
 
   .practice-done {
     text-align: center;
