@@ -1088,7 +1088,7 @@ function showToast(msg) {
 }
 
 // ── Seed / Migrate Default Decks ───────────────────────────
-const DECK_VERSION = 3; // 단어장 버전 — 올리면 기존 기본 단어장 자동 교체
+const DECK_VERSION = 4; // 단어장 버전 — 올리면 기존 기본 단어장 자동 교체
 const ALL_DEFAULT_WORDS = [
   ['Adaptation Loop', '적응 순환 구조(적응 루프)'],
   ['AI Pilot', 'AI 조종'],
@@ -1168,6 +1168,11 @@ const ALL_DEFAULT_WORDS = [
   ['Video Link', '영상'],
   ['Vision-based Guidance', '영상기반 유도'],
   ['Vision-based Navigation', '영상기반 항법'],
+  ['Light Detection and Ranging', '라이다, 펄스 레이저 사용'],
+  ['Point Defense', '국소적 방어, 울타리 중심의'],
+  ['Wide-area Network Defense', '광역망 방어'],
+  ['Mitigation', '무력화'],
+  ['Latency', '시공간적 시차'],
 ];
 
 function seedDefaultDecks() {
