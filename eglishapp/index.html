@@ -918,21 +918,21 @@ function autoPlaySpeak(text) {
     currentAudio = null;
   }
 
-  if (isAndroid) {
-    // Android: Google TTS <audio>
-    // Android Chrome/Samsung 브라우저의 Web Speech API 이중 재생 버그 회피
+  if (isSamsungBrowser) {
+    // 삼성 브라우저: Google TTS Audio — setTimeout에서도 재생 허용됨
     var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=en-US&client=tw-ob&q='
       + encodeURIComponent(text);
     currentAudio = new Audio(url);
     safePlay(currentAudio, function() {
       currentAudio = null;
-      _wsSpeak(text, false);
+      _wsSpeak(text, false); // 폴백: Web Speech API
     });
     return;
   }
 
-  // iOS / PC: Web Speech API
+  // iOS / Android Chrome / PC / macOS Safari: Web Speech API
   // iOS는 setTimeout 없이 즉시 speak (setTimeout 사용 시 사용자 제스처 컨텍스트 단절)
+  // Android Chrome: Audio.play()가 setTimeout에서 차단되므로 Web Speech API 사용
   _wsSpeak(text, isIOS);
 }
 
@@ -963,9 +963,10 @@ function _wsSpeak(text, immediate) {
 }
 
 // ── Text-to-Speech ─────────────────────────────────────────
-const isIOS     = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-const isAndroid = /Android/i.test(navigator.userAgent);
-const isMobile  = isIOS || isAndroid;
+const isIOS           = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+const isAndroid       = /Android/i.test(navigator.userAgent);
+const isSamsungBrowser = /SamsungBrowser/i.test(navigator.userAgent);
+const isMobile        = isIOS || isAndroid;
 
 // 음성 목록 캐시 — voiceschanged 미발생 브라우저(삼성 등) 대비 폴링 병행
 let cachedVoices = [];
