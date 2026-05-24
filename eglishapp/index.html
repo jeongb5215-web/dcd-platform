@@ -340,7 +340,7 @@
   .flashcard:hover { box-shadow: 0 8px 32px rgba(91,45,142,.18); }
 
   .card-en { font-size: 1.6rem; font-weight: 700; color: var(--purple); margin-bottom: 4px; }
-  .card-ko { font-size: 1.1rem; color: #333; margin-top: 12px; line-height: 1.5; }
+  .card-ko { font-size: 1.3rem; font-weight: 600; color: #222; margin-top: 12px; line-height: 1.5; }
 
   .card-nav {
     display: flex;
@@ -393,19 +393,6 @@
   }
   .btn-speak:hover { background: #e0d0f5; }
 
-  .practice-actions {
-    display: flex; gap: 12px;
-    margin-top: 24px;
-    width: 100%;
-    max-width: 400px;
-  }
-  .btn-not-yet, .btn-mastered {
-    background: none; border: none;
-    font-size: 2rem; cursor: pointer;
-    padding: 8px 16px;
-    opacity: .85; transition: opacity .2s, transform .15s;
-  }
-  .btn-not-yet:hover, .btn-mastered:hover { opacity: 1; transform: scale(1.2); }
 
   .practice-done {
     text-align: center;
@@ -802,21 +789,6 @@ function goCard(dir) {
 }
 
 
-function markWord(mastered) {
-  stopAutoPlay();
-  const { queue, idx, deckId } = practiceState;
-  queue[idx].mastered = mastered;
-  const deck = decks.find(d => d.id === deckId);
-  if (deck) {
-    const word = deck.words.find(w => w.id === queue[idx].id);
-    if (word) word.mastered = mastered;
-    saveDecks(decks);
-  }
-  practiceState.idx = idx + 1;
-  renderCard();
-  const next = practiceState.idx;
-  if (!AP.running && next < practiceState.queue.length) speak(practiceState.queue[next].en);
-}
 
 function closePractice() {
   stopAutoPlay();
@@ -1076,6 +1048,20 @@ function forceLight() {
 forceLight();
 // MutationObserver: 삼성 브라우저가 나중에 다크 스타일 주입해도 재적용
 new MutationObserver(forceLight).observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'] });
+
+// ── iOS/macOS Safari: 화면 잠금 해제 후 AudioContext 재개 ──
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') {
+    // AudioContext가 suspended 상태이면 재개
+    if (_keepCtx && _keepCtx.state === 'suspended') {
+      try { _keepCtx.resume(); } catch(e) {}
+    }
+    // iOS Safari: speechSynthesis가 멈춘 경우 재개
+    if (AP.running && window.speechSynthesis) {
+      try { window.speechSynthesis.resume(); } catch(e) {}
+    }
+  }
+});
 
 // ── Toast ──────────────────────────────────────────────────
 let toastTimer;
