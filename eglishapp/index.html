@@ -1075,7 +1075,7 @@ function showToast(msg) {
 }
 
 // ── Seed / Migrate Default Decks ───────────────────────────
-const DECK_VERSION = 4; // 단어장 버전 — 올리면 기존 기본 단어장 자동 교체
+const DECK_VERSION = 5; // 단어장 버전 — 올리면 기존 기본 단어장 자동 교체
 const ALL_DEFAULT_WORDS = [
   ['Adaptation Loop', '적응 순환 구조(적응 루프)'],
   ['AI Pilot', 'AI 조종'],
@@ -1160,6 +1160,11 @@ const ALL_DEFAULT_WORDS = [
   ['Wide-area Network Defense', '광역망 방어'],
   ['Mitigation', '무력화'],
   ['Latency', '시공간적 시차'],
+  ['Object Pose Estimation', '물체 자세 추정'],
+  ['3D Reconstruction', '3D 재구성'],
+  ['Visual Positioning System', '시각 위치 시스템'],
+  ['Simultaneous Localization and Mapping', '현실 공간 실시간 맵 생성'],
+  ['Depth Perception', '깊이, 공간 인식'],
 ];
 
 function seedDefaultDecks() {
