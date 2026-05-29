@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swarm Drone 자율화 단계 | DcD</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0c10;color:#c8d0e0;font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;overflow-x:hidden}
+
+h1{font-size:13px;font-weight:900;letter-spacing:3px;color:#4fa3ff;text-transform:uppercase;margin-bottom:6px;text-align:center}
+.subtitle{font-size:22px;font-weight:700;color:#fff;text-align:center;margin-bottom:48px}
+
+/* ── 타임라인 ── */
+.timeline{display:flex;align-items:center;gap:0;margin-bottom:48px;width:100%;max-width:760px;position:relative}
+.tl-step{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;cursor:pointer}
+.tl-dot{width:36px;height:36px;border-radius:50%;border:2px solid #2a3a5c;background:#111520;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#5a6478;transition:all .4s;z-index:1;position:relative}
+.tl-label{font-size:10px;font-weight:700;color:#3a4a6a;margin-top:7px;letter-spacing:.5px;transition:color .4s;text-align:center}
+.tl-line{position:absolute;top:18px;left:50%;right:-50%;height:2px;background:#1e2535;z-index:0}
+.tl-step:last-child .tl-line{display:none}
+.tl-step.active .tl-dot{border-color:var(--c);background:var(--c);color:#fff;box-shadow:0 0 16px var(--c);transform:scale(1.15)}
+.tl-step.active .tl-label{color:#fff}
+.tl-step.done .tl-dot{border-color:var(--c);color:var(--c);background:rgba(79,163,255,.08)}
+.tl-step.done .tl-label{color:var(--c)}
+.tl-step.done .tl-line{background:var(--c)}
+
+/* ── 카드 ── */
+.cards{width:100%;max-width:760px;position:relative;min-height:320px}
+.card{position:absolute;top:0;left:0;width:100%;background:#111520;border:1px solid #1e2535;padding:36px 40px;opacity:0;transform:translateY(24px);transition:opacity .5s,transform .5s;pointer-events:none;border-left:4px solid var(--c)}
+.card.active{opacity:1;transform:translateY(0);pointer-events:auto;position:relative}
+
+.card-kicker{font-size:10px;font-weight:900;letter-spacing:3px;color:var(--c);margin-bottom:10px}
+.card-level{font-size:44px;font-weight:900;color:#fff;line-height:1;margin-bottom:4px}
+.card-en{font-size:18px;font-weight:700;color:var(--c);margin-bottom:20px;letter-spacing:.5px}
+.card-ko{font-size:15px;color:#a0b0c8;line-height:1.7;margin-bottom:24px;padding:16px 20px;background:rgba(255,255,255,.03);border-left:2px solid var(--c)}
+.card-ratio{display:inline-flex;align-items:center;gap:10px;background:#0d1521;border:1px solid #1e2535;padding:10px 20px;font-size:13px;color:#7a8ba8}
+.card-ratio span{color:#fff;font-weight:800;font-family:monospace;font-size:14px}
+
+/* ── 진행 바 ── */
+.progress-bar{width:100%;max-width:760px;height:3px;background:#1e2535;margin-top:32px;position:relative;overflow:hidden}
+.progress-fill{height:100%;background:var(--active-c,#4fa3ff);transition:width .05s linear;width:0%}
+
+/* ── 컨트롤 ── */
+.controls{display:flex;gap:12px;margin-top:24px}
+.ctrl-btn{background:#111520;border:1px solid #1e2535;color:#5a6478;padding:8px 20px;font-size:12px;font-weight:700;cursor:pointer;transition:.15s;letter-spacing:1px}
+.ctrl-btn:hover{border-color:#4fa3ff;color:#4fa3ff}
+.ctrl-btn.active{background:#4fa3ff;border-color:#4fa3ff;color:#06101e}
+
+@media(max-width:600px){
+  .card{padding:24px 20px}
+  .card-level{font-size:32px}
+  .card-en{font-size:15px}
+  .subtitle{font-size:17px}
+}
+</style>
+</head>
+<body>
+
+<h1>// Swarm Drone Autonomy</h1>
+<div class="subtitle">군집드론 자율화 단계</div>
+
+<div class="timeline" id="timeline"></div>
+
+<div class="cards" id="cards"></div>
+
+<div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+<div class="controls">
+  <button class="ctrl-btn" onclick="prev()">◀ 이전</button>
+  <button class="ctrl-btn active" id="play-btn" onclick="togglePlay()">⏸ 정지</button>
+  <button class="ctrl-btn" onclick="next()">다음 ▶</button>
+</div>
+
+<script>
+const levels=[
+  {
+    lv:'Lv1',en:'Operator Assistance',
+    ko:'동일 임무의 단순 동시 운용\n(기본 협조)',
+    ratio:'1(RPIC) : n(UAS)',
+    color:'#4fa3ff'
+  },
+  {
+    lv:'Lv2',en:'Centralized Swarming',
+    ko:'제한적 임무 분담 및\n편대 비행',
+    ratio:'1(Safety Pilot) : N(UAS)',
+    color:'#38e69b'
+  },
+  {
+    lv:'Lv3',en:'Conditional Swarming',
+    ko:'자율 협조+충돌회피 기반\n협업 임무',
+    ratio:'1(Safety Pilot) : N(UASSw)',
+    color:'#f4b942'
+  },
+  {
+    lv:'Lv4',en:'High Swarming',
+    ko:'동적 역할전환+재편성\n가능한 구집 자율성',
+    ratio:'M(SwS) : Nsw(UASSw)',
+    color:'#f97316'
+  },
+  {
+    lv:'Lv5',en:'Full Swarming',
+    ko:'목표 중심 완전 자율 군집\n(최소 인간 개입)',
+    ratio:'M1(SwS) : M2(SwS)',
+    color:'#ff5c5c'
+  }
+];
+
+let current=0,playing=true,timer,progress=0,TICK=40,DURATION=4000;
+const steps=DURATION/TICK;
+
+const tl=document.getElementById('timeline');
+const cardWrap=document.getElementById('cards');
+const progressEl=document.getElementById('progress');
+
+// 빌드
+levels.forEach((l,i)=>{
+  // 타임라인
+  const step=document.createElement('div');
+  step.className='tl-step';
+  step.style.setProperty('--c',l.color);
+  step.innerHTML=`<div class="tl-dot">${l.lv.replace('Lv','')}</div>${i<levels.length-1?'<div class="tl-line"></div>':''}<div class="tl-label">${l.en.split(' ')[0]}</div>`;
+  step.onclick=()=>goTo(i);
+  tl.appendChild(step);
+
+  // 카드
+  const card=document.createElement('div');
+  card.className='card';
+  card.style.setProperty('--c',l.color);
+  card.innerHTML=`
+    <div class="card-kicker">AUTONOMY ${l.lv}</div>
+    <div class="card-level">${l.lv}</div>
+    <div class="card-en">${l.en}</div>
+    <div class="card-ko">${l.ko.replace('\n','<br>')}</div>
+    <div class="card-ratio">운용 비율&nbsp;&nbsp;<span>${l.ratio}</span></div>`;
+  cardWrap.appendChild(card);
+});
+
+function render(){
+  const tlSteps=tl.querySelectorAll('.tl-step');
+  const cards=cardWrap.querySelectorAll('.card');
+  tlSteps.forEach((s,i)=>{
+    s.classList.remove('active','done');
+    if(i===current)s.classList.add('active');
+    else if(i<current)s.classList.add('done');
+  });
+  cards.forEach((c,i)=>c.classList.toggle('active',i===current));
+  progressEl.style.setProperty('--active-c',levels[current].color);
+  progressEl.style.background=levels[current].color;
+}
+
+function tick(){
+  if(!playing)return;
+  progress+=100/steps;
+  progressEl.style.width=Math.min(progress,100)+'%';
+  if(progress>=100){next();return;}
+  timer=setTimeout(tick,TICK);
+}
+
+function goTo(i){
+  current=i;progress=0;
+  progressEl.style.width='0%';
+  render();
+  clearTimeout(timer);
+  if(playing)timer=setTimeout(tick,TICK);
+}
+function next(){current=(current+1)%levels.length;progress=0;progressEl.style.width='0%';render();clearTimeout(timer);if(playing)timer=setTimeout(tick,TICK);}
+function prev(){current=(current-1+levels.length)%levels.length;progress=0;progressEl.style.width='0%';render();clearTimeout(timer);if(playing)timer=setTimeout(tick,TICK);}
+function togglePlay(){
+  playing=!playing;
+  document.getElementById('play-btn').textContent=playing?'⏸ 정지':'▶ 재생';
+  document.getElementById('play-btn').classList.toggle('active',playing);
+  if(playing)timer=setTimeout(tick,TICK);
+  else clearTimeout(timer);
+}
+
+goTo(0);
+</script>
+</body>
+</html>
