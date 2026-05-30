@@ -463,17 +463,17 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
 <!-- ═══════════════════════════════════════════════════
      CONNECTOR LABEL BADGES
 ════════════════════════════════════════════════════ -->
-<!-- 자동 재전파 label on feedback arc -->
-<rect x="620" y="549" width="90" height="16" rx="4" fill="rgba(255,92,92,.12)" stroke="rgba(255,92,92,.3)" stroke-width=".7"/>
-<text x="665" y="561" text-anchor="middle" font-size="8.5" fill="#ff5c5c" letter-spacing=".5">자동 재전파</text>
+<!-- 자동 재전파 — arc y=560 위로 이동 -->
+<rect x="730" y="530" width="90" height="16" rx="4" fill="rgba(255,92,92,.12)" stroke="rgba(255,92,92,.3)" stroke-width=".7"/>
+<text x="775" y="542" text-anchor="middle" font-size="8.5" fill="#ff5c5c" letter-spacing=".5">자동 재전파</text>
 
-<!-- 우선순위 판단 label on C2→defense -->
-<rect x="602" y="185" width="80" height="16" rx="4" fill="rgba(139,92,246,.15)" stroke="rgba(139,92,246,.3)" stroke-width=".7"/>
-<text x="642" y="197" text-anchor="middle" font-size="8" fill="#8b5cf6" letter-spacing=".5">우선순위 배분</text>
+<!-- 우선순위 배분 — 하층방어(y=384)~민간경보(y=440) 갭으로 이동 -->
+<rect x="631" y="392" width="94" height="16" rx="4" fill="rgba(139,92,246,.15)" stroke="rgba(139,92,246,.3)" stroke-width=".7"/>
+<text x="678" y="404" text-anchor="middle" font-size="8" fill="#8b5cf6" letter-spacing=".5">우선순위 배분</text>
 
-<!-- 위협정보 label on sensor→C2 -->
-<rect x="360" y="195" width="72" height="16" rx="4" fill="rgba(34,211,238,.1)" stroke="rgba(34,211,238,.3)" stroke-width=".7"/>
-<text x="396" y="207" text-anchor="middle" font-size="8" fill="#22d3ee" letter-spacing=".5">위협 정보</text>
+<!-- 위협 정보 — 센서 박스 아래 빈 공간으로 이동 -->
+<rect x="218" y="352" width="72" height="16" rx="4" fill="rgba(34,211,238,.1)" stroke="rgba(34,211,238,.3)" stroke-width=".7"/>
+<text x="254" y="364" text-anchor="middle" font-size="8" fill="#22d3ee" letter-spacing=".5">위협 정보</text>
 
 <!-- ═══════════════════════════════════════════════════
      TIER LABELS (vertical, left of defense boxes)
