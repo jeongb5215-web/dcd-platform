@@ -46,6 +46,11 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .hdr-t{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
 .hdr-b{background:rgba(255,92,92,.15);border:1px solid rgba(255,92,92,.4);color:var(--red);font-size:10px;padding:2px 8px;border-radius:20px}
 .divider{width:1px;height:16px;background:var(--border)}
+.nav-btn{font-size:11px;text-decoration:none;display:flex;align-items:center;gap:5px;padding:3px 12px;border-radius:20px;transition:all .2s;font-weight:600}
+.nav-btn.home{color:var(--muted);border:1px solid var(--border);background:transparent}
+.nav-btn.home:hover{color:var(--text);border-color:#5a6478}
+.nav-btn.lab{color:var(--purple);border:1px solid rgba(139,92,246,.4);background:rgba(139,92,246,.1)}
+.nav-btn.lab:hover{background:rgba(139,92,246,.22)}
 main{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:12px 16px;flex-direction:column;gap:12px}
 .chart-wrap{flex:1;width:100%;display:flex;align-items:center;justify-content:center;min-height:0}
 svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
@@ -67,6 +72,15 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
 <body>
 
 <header>
+  <a class="nav-btn home" href="https://jeongb5215-web.github.io/dcd-platform/">
+    <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M1 6l5-5 5 5M2.5 4.5V11h3V8h1v3h3V4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    홈
+  </a>
+  <a class="nav-btn lab" href="https://jeongb5215-web.github.io/dcd-platform/?goto=lab">
+    <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.3"/><path d="M4 6h4M6 4v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    LAB
+  </a>
+  <div class="divider"></div>
   <span class="logo">D<span>c</span>D</span>
   <div class="divider"></div>
   <span class="hdr-t">드론 포화공격 대응 C2 체계</span>

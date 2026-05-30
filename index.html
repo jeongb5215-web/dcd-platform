@@ -1852,6 +1852,14 @@
         });
       }
       document.querySelectorAll('.top-logo,.sh-logo').forEach(animateLogo);
+      /* ?goto=lab 파라미터 처리 */
+      var gotoParam=new URLSearchParams(location.search).get('goto');
+      if(gotoParam==='lab'){
+        setTimeout(function(){
+          var labTab=document.getElementById('lab-tab');
+          if(labTab) labTab.click();
+        },400);
+      }
     });
   </script>
 </body>
