@@ -36,7 +36,7 @@
   --bg:#0a0c10;--surface:#111520;--border:#1e2535;
   --blue:#4fa3ff;--red:#ff5c5c;--green:#38e69b;
   --gold:#f4b942;--purple:#8b5cf6;--orange:#f97316;
-  --cyan:#22d3ee;--text:#c8d0e0;--muted:#5a6478;
+  --cyan:#22d3ee;--text:#ffffff;--muted:#b0bac8;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden}
@@ -103,7 +103,7 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
     <path d="M0,0 L0,6 L8,3 z" fill="#8b5cf6" opacity=".9"/>
   </marker>
   <marker id="arr-muted" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-    <path d="M0,0 L0,6 L8,3 z" fill="#5a6478" opacity=".9"/>
+    <path d="M0,0 L0,6 L8,3 z" fill="#b0bac8" opacity=".9"/>
   </marker>
 
   <!-- Glow filters -->
@@ -181,10 +181,10 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
 <text x="490" y="22" text-anchor="middle" font-size="9" letter-spacing="2" fill="#8b5cf6" opacity=".7" font-weight="700">COMMAND</text>
 
 <!-- Defense layers label -->
-<text x="755" y="22" text-anchor="middle" font-size="9" letter-spacing="2" fill="#c8d0e0" opacity=".5" font-weight="700">방어 배분</text>
+<text x="755" y="22" text-anchor="middle" font-size="9" letter-spacing="2" fill="#ffffff" opacity=".5" font-weight="700">방어 배분</text>
 
 <!-- Result label -->
-<text x="990" y="22" text-anchor="middle" font-size="9" letter-spacing="2" fill="#c8d0e0" opacity=".5" font-weight="700">요격 결과</text>
+<text x="990" y="22" text-anchor="middle" font-size="9" letter-spacing="2" fill="#ffffff" opacity=".5" font-weight="700">요격 결과</text>
 
 <!-- Feedback label -->
 <text x="1225" y="22" text-anchor="middle" font-size="9" letter-spacing="2" fill="#f97316" opacity=".7" font-weight="700">FEEDBACK</text>
@@ -208,9 +208,9 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
   <!-- Icon bar -->
   <text x="75" y="256" text-anchor="middle" font-size="16" fill="#ff5c5c" opacity=".8">⚡</text>
   <text x="75" y="276" text-anchor="middle" font-size="11" font-weight="700" fill="#ff5c5c">다층 포화공격</text>
-  <text x="75" y="293" text-anchor="middle" font-size="9" fill="#c8d0e0" opacity=".7">Shahed / Geran</text>
-  <text x="75" y="307" text-anchor="middle" font-size="9" fill="#c8d0e0" opacity=".7">순항미사일</text>
-  <text x="75" y="321" text-anchor="middle" font-size="9" fill="#c8d0e0" opacity=".7">탄도성 위협</text>
+  <text x="75" y="293" text-anchor="middle" font-size="9" fill="#ffffff" opacity=".7">Shahed / Geran</text>
+  <text x="75" y="307" text-anchor="middle" font-size="9" fill="#ffffff" opacity=".7">순항미사일</text>
+  <text x="75" y="321" text-anchor="middle" font-size="9" fill="#ffffff" opacity=".7">탄도성 위협</text>
   <!-- Pulse ring -->
   <circle cx="75" cy="290" r="62" fill="none" stroke="#ff5c5c" stroke-width=".6" stroke-dasharray="3 5" opacity=".25" class="pulse"/>
 </g>
@@ -226,40 +226,40 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
 <g class="box-group" style="animation-delay:.08s">
   <rect x="165" y="70" width="186" height="46" rx="6" fill="url(#grad-cyan)" stroke="#22d3ee" stroke-width="1"/>
   <text x="178" y="88" font-size="9" fill="#22d3ee" opacity=".8" font-weight="700">◈</text>
-  <text x="192" y="88" font-size="11" font-weight="600" fill="#c8d0e0">장거리 레이다</text>
-  <text x="192" y="103" font-size="9" fill="#5a6478">Long-range RADAR</text>
+  <text x="192" y="88" font-size="11" font-weight="600" fill="#ffffff">장거리 레이다</text>
+  <text x="192" y="103" font-size="9" fill="#b0bac8">Long-range RADAR</text>
 </g>
 
 <!-- S2: RF/ELINT -->
 <g class="box-group" style="animation-delay:.12s">
   <rect x="165" y="126" width="186" height="46" rx="6" fill="url(#grad-cyan)" stroke="#22d3ee" stroke-width="1"/>
   <text x="178" y="144" font-size="9" fill="#22d3ee" opacity=".8" font-weight="700">◈</text>
-  <text x="192" y="144" font-size="11" font-weight="600" fill="#c8d0e0">RF/ELINT 탐지</text>
-  <text x="192" y="159" font-size="9" fill="#5a6478">Radio Freq. Intelligence</text>
+  <text x="192" y="144" font-size="11" font-weight="600" fill="#ffffff">RF/ELINT 탐지</text>
+  <text x="192" y="159" font-size="9" fill="#b0bac8">Radio Freq. Intelligence</text>
 </g>
 
 <!-- S3: EO/IR -->
 <g class="box-group" style="animation-delay:.16s">
   <rect x="165" y="182" width="186" height="46" rx="6" fill="url(#grad-cyan)" stroke="#22d3ee" stroke-width="1"/>
   <text x="178" y="200" font-size="9" fill="#22d3ee" opacity=".8" font-weight="700">◈</text>
-  <text x="192" y="200" font-size="11" font-weight="600" fill="#c8d0e0">EO/IR 감시</text>
-  <text x="192" y="215" font-size="9" fill="#5a6478">Electro-Optical / Infrared</text>
+  <text x="192" y="200" font-size="11" font-weight="600" fill="#ffffff">EO/IR 감시</text>
+  <text x="192" y="215" font-size="9" fill="#b0bac8">Electro-Optical / Infrared</text>
 </g>
 
 <!-- S4: 민간관측 -->
 <g class="box-group" style="animation-delay:.2s">
   <rect x="165" y="238" width="186" height="46" rx="6" fill="url(#grad-cyan)" stroke="#22d3ee" stroke-width="1"/>
   <text x="178" y="256" font-size="9" fill="#22d3ee" opacity=".8" font-weight="700">◈</text>
-  <text x="192" y="256" font-size="11" font-weight="600" fill="#c8d0e0">민간 관측 · OSINT</text>
-  <text x="192" y="271" font-size="9" fill="#5a6478">Open Source Intelligence</text>
+  <text x="192" y="256" font-size="11" font-weight="600" fill="#ffffff">민간 관측 · OSINT</text>
+  <text x="192" y="271" font-size="9" fill="#b0bac8">Open Source Intelligence</text>
 </g>
 
 <!-- S5: 전방부대 -->
 <g class="box-group" style="animation-delay:.24s">
   <rect x="165" y="294" width="186" height="46" rx="6" fill="url(#grad-cyan)" stroke="#22d3ee" stroke-width="1"/>
   <text x="178" y="312" font-size="9" fill="#22d3ee" opacity=".8" font-weight="700">◈</text>
-  <text x="192" y="312" font-size="11" font-weight="600" fill="#c8d0e0">전방부대 보고</text>
-  <text x="192" y="327" font-size="9" fill="#5a6478">Forward Unit Report</text>
+  <text x="192" y="312" font-size="11" font-weight="600" fill="#ffffff">전방부대 보고</text>
+  <text x="192" y="327" font-size="9" fill="#b0bac8">Forward Unit Report</text>
 </g>
 
 <!-- ═══════════════════════════════════════════════════
@@ -276,7 +276,7 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
   <text x="488" y="245" text-anchor="middle" font-size="9" fill="#8b5cf6" font-weight="700" letter-spacing="1.5">국가방공 C2</text>
   <!-- Main label -->
   <text x="488" y="272" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">공중상황 통합</text>
-  <text x="488" y="291" text-anchor="middle" font-size="11" fill="#c8d0e0" opacity=".8">위협 우선순위 판단</text>
+  <text x="488" y="291" text-anchor="middle" font-size="11" fill="#ffffff" opacity=".8">위협 우선순위 판단</text>
   <!-- Sub info -->
   <line x1="408" y1="302" x2="568" y2="302" stroke="#8b5cf6" stroke-width=".5" opacity=".4"/>
   <text x="488" y="318" text-anchor="middle" font-size="9" fill="#8b5cf6" opacity=".7">NATIONAL AIR DEFENSE C2</text>
@@ -294,8 +294,8 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
   <rect x="628" y="48" width="220" height="4" rx="2" fill="#f4b942" opacity=".5"/>
   <rect x="628" y="48" width="4" height="72" rx="2" fill="#f4b942" opacity=".6"/>
   <text x="642" y="68" font-size="10" fill="#f4b942" opacity=".9" font-weight="700">▲ 상층방어 배분</text>
-  <text x="642" y="86" font-size="9.5" fill="#c8d0e0" opacity=".8">Patriot · SAMP-T</text>
-  <text x="642" y="101" font-size="9" fill="#5a6478">탄도 · 고속 · 핵심위협</text>
+  <text x="642" y="86" font-size="9.5" fill="#ffffff" opacity=".8">Patriot · SAMP-T</text>
+  <text x="642" y="101" font-size="9" fill="#b0bac8">탄도 · 고속 · 핵심위협</text>
 </g>
 
 <!-- D2: 중층방어 -->
@@ -304,8 +304,8 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
   <rect x="628" y="180" width="220" height="4" rx="2" fill="#4fa3ff" opacity=".5"/>
   <rect x="628" y="180" width="4" height="72" rx="2" fill="#4fa3ff" opacity=".6"/>
   <text x="642" y="200" font-size="10" fill="#4fa3ff" opacity=".9" font-weight="700">◼ 중층방어 배분</text>
-  <text x="642" y="218" font-size="9.5" fill="#c8d0e0" opacity=".8">NASAMS · IRIS-T · Shorad</text>
-  <text x="642" y="233" font-size="9" fill="#5a6478">순항미사일 · 중고도 포착</text>
+  <text x="642" y="218" font-size="9.5" fill="#ffffff" opacity=".8">NASAMS · IRIS-T · Shorad</text>
+  <text x="642" y="233" font-size="9" fill="#b0bac8">순항미사일 · 중고도 포착</text>
 </g>
 
 <!-- D3: 하층방어 -->
@@ -314,8 +314,8 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
   <rect x="628" y="312" width="220" height="4" rx="2" fill="#38e69b" opacity=".5"/>
   <rect x="628" y="312" width="4" height="72" rx="2" fill="#38e69b" opacity=".6"/>
   <text x="642" y="332" font-size="10" fill="#38e69b" opacity=".9" font-weight="700">▼ 하층방어 배분</text>
-  <text x="642" y="350" font-size="9.5" fill="#c8d0e0" opacity=".8">EW · 기관포 · MANPADS</text>
-  <text x="642" y="365" font-size="9" fill="#5a6478">요격드론 · 근거리 대응</text>
+  <text x="642" y="350" font-size="9.5" fill="#ffffff" opacity=".8">EW · 기관포 · MANPADS</text>
+  <text x="642" y="365" font-size="9" fill="#b0bac8">요격드론 · 근거리 대응</text>
 </g>
 
 <!-- D4: 민간·기반시설 경보 -->
@@ -324,8 +324,8 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
   <rect x="628" y="440" width="220" height="4" rx="2" fill="#f97316" opacity=".5"/>
   <rect x="628" y="440" width="4" height="72" rx="2" fill="#f97316" opacity=".6"/>
   <text x="642" y="460" font-size="10" fill="#f97316" opacity=".9" font-weight="700">⚠ 민간·기반시설 경보</text>
-  <text x="642" y="478" font-size="9.5" fill="#c8d0e0" opacity=".8">전력망 · 항만 · 공항</text>
-  <text x="642" y="493" font-size="9" fill="#5a6478">지자체 · 민방위 연계</text>
+  <text x="642" y="478" font-size="9.5" fill="#ffffff" opacity=".8">전력망 · 항만 · 공항</text>
+  <text x="642" y="493" font-size="9" fill="#b0bac8">지자체 · 민방위 연계</text>
 </g>
 
 <!-- ═══════════════════════════════════════════════════
@@ -335,10 +335,10 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
 <g class="box-group" style="animation-delay:.65s">
   <rect x="884" y="148" width="193" height="214" rx="10" fill="url(#grad-surface)" stroke="#1e2535" stroke-width="1"/>
   <rect x="888" y="152" width="185" height="206" rx="8" fill="url(#grad-surface)" stroke="#c8d0e0" stroke-width="1.2" opacity=".6"/>
-  <rect x="888" y="152" width="185" height="5" rx="3" fill="#c8d0e0" opacity=".3"/>
+  <rect x="888" y="152" width="185" height="5" rx="3" fill="#ffffff" opacity=".3"/>
   <!-- Badge -->
   <rect x="930" y="162" width="100" height="18" rx="4" fill="rgba(200,208,224,.1)" stroke="rgba(200,208,224,.3)" stroke-width=".8"/>
-  <text x="980" y="175" text-anchor="middle" font-size="9" fill="#c8d0e0" font-weight="700" letter-spacing="1">요격 결과</text>
+  <text x="980" y="175" text-anchor="middle" font-size="9" fill="#ffffff" font-weight="700" letter-spacing="1">요격 결과</text>
   <!-- Tier result items -->
   <rect x="900" y="188" width="162" height="22" rx="4" fill="rgba(244,185,66,.12)" stroke="rgba(244,185,66,.3)" stroke-width=".8"/>
   <circle cx="914" cy="199" r="4" fill="#f4b942" opacity=".8"/>
@@ -356,10 +356,10 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
   <text x="1044" y="263" font-size="9" fill="#38e69b" opacity=".7" text-anchor="end">EW / 기관포</text>
 
   <line x1="900" y1="280" x2="1062" y2="280" stroke="#1e2535" stroke-width=".8"/>
-  <text x="980" y="293" text-anchor="middle" font-size="9" fill="#5a6478">INTERCEPT ASSESSMENT</text>
-  <text x="980" y="307" text-anchor="middle" font-size="10" fill="#c8d0e0" opacity=".7">통합 격추율 산출</text>
-  <text x="980" y="323" text-anchor="middle" font-size="9" fill="#5a6478">잔여 위협 재분류</text>
-  <text x="980" y="341" text-anchor="middle" font-size="9" fill="#5a6478">탄약 소모 현황</text>
+  <text x="980" y="293" text-anchor="middle" font-size="9" fill="#b0bac8">INTERCEPT ASSESSMENT</text>
+  <text x="980" y="307" text-anchor="middle" font-size="10" fill="#ffffff" opacity=".7">통합 격추율 산출</text>
+  <text x="980" y="323" text-anchor="middle" font-size="9" fill="#b0bac8">잔여 위협 재분류</text>
+  <text x="980" y="341" text-anchor="middle" font-size="9" fill="#b0bac8">탄약 소모 현황</text>
 </g>
 
 <!-- ═══════════════════════════════════════════════════
@@ -370,8 +370,8 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
   <rect x="888" y="420" width="185" height="72" rx="8" fill="url(#grad-orange)" stroke="#f97316" stroke-width="1.2"/>
   <rect x="888" y="420" width="185" height="4" rx="2" fill="#f97316" opacity=".5"/>
   <text x="980" y="445" text-anchor="middle" font-size="11" font-weight="700" fill="#f97316">피해 최소화</text>
-  <text x="980" y="462" text-anchor="middle" font-size="10" fill="#c8d0e0" opacity=".8">복구 대기</text>
-  <text x="980" y="477" text-anchor="middle" font-size="9" fill="#5a6478">Damage Control</text>
+  <text x="980" y="462" text-anchor="middle" font-size="10" fill="#ffffff" opacity=".8">복구 대기</text>
+  <text x="980" y="477" text-anchor="middle" font-size="9" fill="#b0bac8">Damage Control</text>
 </g>
 
 <!-- ═══════════════════════════════════════════════════
@@ -385,11 +385,11 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
   <!-- Badge -->
   <rect x="1155" y="430" width="120" height="18" rx="4" fill="rgba(255,92,92,.2)" stroke="rgba(255,92,92,.4)" stroke-width=".8"/>
   <text x="1215" y="443" text-anchor="middle" font-size="9" fill="#ff5c5c" font-weight="700" letter-spacing="1">전장 피드백</text>
-  <text x="1215" y="463" text-anchor="middle" font-size="11" font-weight="700" fill="#c8d0e0">BATTLE FEEDBACK</text>
+  <text x="1215" y="463" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">BATTLE FEEDBACK</text>
   <line x1="1135" y1="472" x2="1305" y2="472" stroke="#ff5c5c" stroke-width=".4" opacity=".4"/>
-  <text x="1215" y="487" text-anchor="middle" font-size="9" fill="#5a6478">잔여 위협 현황</text>
-  <text x="1215" y="501" text-anchor="middle" font-size="9" fill="#5a6478">요격률 · 탄약소모</text>
-  <text x="1215" y="515" text-anchor="middle" font-size="9" fill="#5a6478">재전파 → C2</text>
+  <text x="1215" y="487" text-anchor="middle" font-size="9" fill="#b0bac8">잔여 위협 현황</text>
+  <text x="1215" y="501" text-anchor="middle" font-size="9" fill="#b0bac8">요격률 · 탄약소모</text>
+  <text x="1215" y="515" text-anchor="middle" font-size="9" fill="#b0bac8">재전파 → C2</text>
 </g>
 
 <!-- ═══════════════════════════════════════════════════
