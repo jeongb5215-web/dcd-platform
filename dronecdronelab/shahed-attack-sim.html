@@ -255,25 +255,25 @@ function makeDrone(id, sy, type, isScout) {
     // 선행 드론: 통제선 레이다(RADARS[2]) 직접 타격 경로
     role='scout';
     wps=[
-      {x:ENTRY_X, y:sy,              alt:700},
-      {x:130,     y:RADARS[2].y+4,   alt:650},
-      {x:RADARS[2].x, y:RADARS[2].y, alt:500},  // 레이다 타격 지점
+      {x:ENTRY_X, y:sy,              alt:3000},
+      {x:130,     y:RADARS[2].y+4,   alt:3000},
+      {x:RADARS[2].x, y:RADARS[2].y, alt:800},  // 타격 시 중고도로 강하
     ];
   } else {
     // 군집 드론: 뭉쳐서 출발 → 무작위 경로 산개
     role='swarm';
     const cy = 44 + rnd(7); // 군집 중심 y
     wps=[
-      {x:ENTRY_X, y:sy,               alt:600},
-      {x:ID_LINE, y:cy+rnd(12),        alt:600},
-      {x:CT_LINE, y:cy+rnd(12),        alt:600},
-      {x:105,     y:Math.max(38,cy+rnd(10)), alt:700},
-      {x:90,      y:56+rnd(6),         alt:60},
-      {x:73,      y:56+rnd(6),         alt:50},
-      {x:63,      y:68+rnd(5),         alt:55},
-      {x:45,      y:68+rnd(5),         alt:55},
-      {x:28,      y:64+rnd(4),         alt:30},
-      {x:TARGET.x,y:TARGET.y,          alt:25},
+      {x:ENTRY_X, y:sy,               alt:3000},
+      {x:ID_LINE, y:cy+rnd(12),        alt:3000},
+      {x:CT_LINE, y:cy+rnd(12),        alt:3000},
+      {x:105,     y:Math.max(38,cy+rnd(10)), alt:3000},
+      {x:90,      y:56+rnd(6),         alt:80},   // 강 저고도
+      {x:73,      y:56+rnd(6),         alt:60},
+      {x:63,      y:68+rnd(5),         alt:80},
+      {x:45,      y:68+rnd(5),         alt:80},
+      {x:28,      y:64+rnd(4),         alt:50},   // 최종 접근 저고도
+      {x:TARGET.x,y:TARGET.y,          alt:50},
     ];
     if(id===G.droneCount-1){
       wps.splice(8,0,{x:35, y:TARGET.y-2, alt:20});
@@ -351,10 +351,10 @@ function updateDrone(d, dt){
     return;
   }
 
-  // 고도 목표
+  // 고도 목표 (산악=3km 강제 상승, 강=80m 이하 강제 강하)
   let tAlt=wp.alt;
-  if(overMountain(d.x,d.y)) tAlt=Math.max(tAlt,850);
-  if(overRiver(d.x,d.y))    tAlt=Math.min(tAlt,60);
+  if(overMountain(d.x,d.y)) tAlt=Math.max(tAlt,3000);
+  if(overRiver(d.x,d.y))    tAlt=Math.min(tAlt,80);
   d.alt+=(tAlt-d.alt)*Math.min(dt*0.6,1);
 
   // 탐지
@@ -610,16 +610,16 @@ function render(){
       return;
     }
 
-    const altF=Math.min(1,d.alt/650);
+    const altF=Math.min(1,d.alt/3000);  // 기준고도 3km
     const sz=3+altF*4;
     const alp=0.3+altF*0.7;
 
-    // 고도별 색상: 고고도=파랑, 중간=원래색, 저고도=흰색
+    // 고도별 색상: 고고도(>2km)=파랑, 중고도(500~1km)=기본색, 저고도(<200m)=흰색
     let dCol;
     if(d.role==='scout') dCol='#ff5c5c';
-    else if(altF>0.65)   dCol='#4fa3ff';          // 고고도 → 파랑
-    else if(altF<0.28)   dCol='#ffffff';           // 저고도 → 흰색
-    else                 dCol=d.color;             // 중고도 → 기본색
+    else if(altF>0.67)   dCol='#4fa3ff';           // 고고도 >2km → 파랑
+    else if(altF<0.07)   dCol='#ffffff';            // 저고도 <200m → 흰색
+    else                 dCol=d.color;              // 중고도 500m~1km → 기본색
 
     // 탐지 링
     if(d.detected){
@@ -653,9 +653,9 @@ function render(){
       c.fillText('▶레이다타격',dx2,dy2+sz+13);
     }
 
-    // 저고도 표시
-    if(d.alt<120){
-      c.fillStyle='rgba(255,255,255,0.9)'; c.font='bold 10px monospace'; c.textAlign='left';
+    // 저고도 수치 표시 (<200m)
+    if(d.alt<200){
+      c.fillStyle='rgba(255,255,255,0.92)'; c.font='bold 10px monospace'; c.textAlign='left';
       c.fillText(`${Math.round(d.alt)}m`,dx2+sz+4,dy2+4);
     }
   });
@@ -674,9 +674,9 @@ function render(){
   c.fillStyle='rgba(17,21,32,0.85)'; c.fillRect(lx-6,ly-6,112,62);
   c.strokeStyle='rgba(30,37,53,0.9)'; c.lineWidth=1; c.strokeRect(lx-6,ly-6,112,62);
   c.font='bold 11px sans-serif'; c.textAlign='left';
-  [['#4fa3ff','고고도 (>500m)'],['#f97316','중고도 (100-500m)'],['#ffffff','저고도 (<100m)']].forEach(([col,lbl],i)=>{
-    c.fillStyle=col; c.fillRect(lx,ly+i*16,10,10);
-    c.fillStyle='rgba(200,210,230,0.9)'; c.fillText(lbl,lx+14,ly+i*16+9);
+  [['#4fa3ff','고고도 (>2km)'],['#f97316','중고도 (500m~1km)'],['#ffffff','저고도 (50~100m)']].forEach(([col,lbl],i)=>{
+    c.fillStyle=col; c.fillRect(lx,ly+i*17,10,10);
+    c.fillStyle='rgba(200,210,230,0.92)'; c.fillText(lbl,lx+14,ly+i*17+9);
   });
 }
 
