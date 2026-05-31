@@ -90,8 +90,8 @@ canvas{flex:1;display:block;width:100%;height:100%}
 </header>
 
 <div class="sc-bar">
-  <div class="sc-tab active" data-sc="1"><span class="sc-num">S1</span>샤헤드-136 군집 공격 (360 km/h × 10대)</div>
-  <div class="sc-tab" data-sc="2"><span class="sc-num">S2</span>샤헤드-238 고속 공격 (1000 km/h × 10대)</div>
+  <div class="sc-tab active" data-sc="1"><span class="sc-num">S1</span>샤헤드-136 군집 공격 (185 km/h × 10대)</div>
+  <div class="sc-tab" data-sc="2"><span class="sc-num">S2</span>샤헤드-238 고속 공격 (500 km/h × 10대)</div>
   <div class="sc-tab" data-sc="3"><span class="sc-num">S3</span>복합 공격 (136 × 6 + 238 × 4)</div>
   <div style="flex:1"></div>
 </div>
@@ -146,8 +146,10 @@ canvas{flex:1;display:block;width:100%;height:100%}
         <div class="stat-r"><span class="sk">비행 중</span><span class="sv" id="sA" style="color:var(--orange)">—</span></div>
         <div class="stat-r"><span class="sk">격추</span><span class="sv" id="sK" style="color:var(--red)">0대</span></div>
         <div class="stat-r"><span class="sk">TARGET 도달</span><span class="sv" id="sH" style="color:var(--gold)">0대</span></div>
-        <div class="stat-r"><span class="sk">레이다 회피 기동</span><span class="sv" id="sEv">0회</span></div>
+        <div class="stat-r"><span class="sk">레이다 타격 기동</span><span class="sv" id="sEv">0회</span></div>
         <div class="stat-r"><span class="sk">TARGET 최근접 거리</span><span class="sv" id="sCl">—</span></div>
+        <div class="stat-r"><span class="sk">통제선→TARGET 예상</span><span class="sv" id="sEst" style="color:var(--blue)">—</span></div>
+        <div class="stat-r"><span class="sk">통제선→TARGET 실측</span><span class="sv" id="sTrans" style="color:var(--green)">—</span></div>
         <div class="stat-r"><span class="sk">현재 단계</span><span class="sv" id="sPh" style="color:var(--muted);font-size:9px">대기중</span></div>
       </div>
     </div>
@@ -227,6 +229,7 @@ const G = {
   droneCount:10, scenario:1,
   drones:[], evadeTotal:0,
   hitCount:0, killCount:0,
+  bestTransit: -1,   // 통제선→TARGET 최단 실측 시간(초)
   raf:null, lastF:null,
   buildings: [],   // 사전 생성된 빌딩
   sweep: 0,        // 레이다 스윕 각도
@@ -247,7 +250,7 @@ function genBuildings() {
 // ── 드론 생성 ──────────────────────────────────────────────────────────────
 function makeDrone(id, sy, type, isScout) {
   // 속도 2배 적용
-  const spd = type==='238' ? 1000/3600 : 360/3600; // km/s
+  const spd = type==='238' ? 500/3600 : 185/3600; // km/s
   const rnd = (r) => (Math.random()-0.5)*r;
   let wps, role;
 
@@ -287,13 +290,14 @@ function makeDrone(id, sy, type, isScout) {
     trail:[], detected:false,
     iCooldown:0,
     launchDelay: isScout ? 0 : 3+Math.random()*17,
-    targetRadarIdx: -1,    // 타격 대상 레이다 인덱스 (-1=없음)
+    targetRadarIdx: -1,
+    ctCrossTime: -1,       // 통제선 통과 시뮬 시각 (G.t)
     color: isScout ? '#ff5c5c' : (type==='238'?'#f97316':'#22c55e'),
   };
 }
 
 function initDrones(){
-  G.drones=[];G.evadeTotal=0;G.hitCount=0;G.killCount=0;
+  G.drones=[];G.evadeTotal=0;G.hitCount=0;G.killCount=0;G.bestTransit=-1;
   // 레이다 상태 초기화
   RADARS.forEach(r=>{ r.active=true; r.struck=false; });
 
@@ -367,6 +371,9 @@ function updateDrone(d, dt){
   // 탐지
   d.detected=isDetected(d);
 
+  // 통제선 통과 시각 기록 (처음 한 번)
+  if(d.ctCrossTime<0 && d.x<=CT_LINE) d.ctCrossTime=G.t;
+
   // ── 탐지 즉시 레이다 타격 기동 (군집 드론, 미할당 상태 1회) ──
   if(d.detected && d.targetRadarIdx<0 && d.role!=='scout'){
     const ri=RADARS.findIndex(r=>
@@ -414,6 +421,11 @@ function updateDrone(d, dt){
     if(d.wi<d.wps.length-1) d.wi++;
     else{
       d.state='HIT'; G.hitCount++;
+      // 통제선→TARGET 도달시간 기록
+      if(d.ctCrossTime>=0){
+        const transit=G.t-d.ctCrossTime;
+        if(G.bestTransit<0||transit<G.bestTransit) G.bestTransit=transit;
+      }
       addLog(`T+${fmtT(G.t)} [목표도달] #${d.id+1} ${d.type==='238'?'샤헤드-238':'샤헤드-136'}`,'h');
     }
   } else {
@@ -808,6 +820,15 @@ function updateStats(){
   let mn=Infinity;
   G.drones.forEach(d=>{if(d.state==='FLY'){const dd=Math.hypot(d.x-TARGET.x,d.y-TARGET.y);if(dd<mn)mn=dd;}});
   document.getElementById('sCl').textContent=mn<9999?`${Math.round(mn)}km`:'—';
+
+  // 통제선→TARGET 예상 도달시간 (이론값)
+  const dist_ct=CT_LINE-TARGET.x; // km
+  const sc=G.scenario;
+  const spd_kms = sc===2 ? 500/3600 : 185/3600; // km/s
+  const estSec = dist_ct / spd_kms;
+  document.getElementById('sEst').textContent=fmtT(estSec);
+  // 실측 최단 도달시간
+  document.getElementById('sTrans').textContent=G.bestTransit>=0?fmtT(G.bestTransit):'—';
 
   const avgX=alive?G.drones.filter(d=>d.state==='FLY').reduce((s,d)=>s+d.x,0)/alive:0;
   let ph='대기중';
