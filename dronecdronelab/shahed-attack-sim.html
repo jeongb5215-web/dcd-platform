@@ -577,11 +577,14 @@ function render(){
     const detR=px(r.det*G.radarS);
     const jamR=r.jam>0?px(r.jam*G.jamS):0;
 
-    // 재밍 원
+    // 재밍 원 (빨간색 구분)
     if(r.jam>0){
       c.beginPath(); c.arc(rx,ry,jamR,0,Math.PI*2);
-      c.fillStyle='rgba(255,92,92,0.07)'; c.fill();
-      c.strokeStyle='rgba(255,92,92,0.4)'; c.lineWidth=1; c.setLineDash([3,3]); c.stroke(); c.setLineDash([]);
+      c.fillStyle='rgba(220,40,40,0.13)'; c.fill();
+      c.strokeStyle='rgba(255,70,70,0.75)'; c.lineWidth=1.5; c.setLineDash([4,3]); c.stroke(); c.setLineDash([]);
+      // 재밍 내부 글로우
+      c.beginPath(); c.arc(rx,ry,jamR*0.5,0,Math.PI*2);
+      c.fillStyle='rgba(255,50,50,0.07)'; c.fill();
     }
     // 거리별 탐지 구역 동심원 (75%·50%)
     [[0.75,'rgba(79,163,255,0.12)'],[0.5,'rgba(79,163,255,0.22)']].forEach(([ratio,col])=>{
