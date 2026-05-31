@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>샤헤드 드론 공격패턴 시뮬레이션 | DcD Lab</title>
+<script>
+(function(){
+  var params=new URLSearchParams(location.search);
+  var urlToken=params.get('dcd_token');
+  var granted=false;
+  if(urlToken){
+    try{
+      var stored=JSON.parse(localStorage.getItem('dcd_lab_token')||'null');
+      if(stored&&stored.token===urlToken&&stored.expiry>Date.now()){granted=true;localStorage.removeItem('dcd_lab_token');}
+    }catch(e){}
+  }
+  if(!granted){document.addEventListener('DOMContentLoaded',function(){
+    document.body.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#0a0c10;color:#c8d0e0;font-family:sans-serif;gap:20px;text-align:center;padding:20px">'
+      +'<div style="font-size:48px">🔒</div><div style="font-size:18px;font-weight:700;color:#ff5c5c">접근이 차단되었습니다</div>'
+      +'<div style="font-size:13px;color:#5a6478;max-width:360px">이 시뮬레이션은 DcD 플랫폼 LAB 게시판을 통해서만 접근할 수 있습니다.</div>'
+      +'<a href="https://jeongb5215-web.github.io/dcd-platform/" style="margin-top:10px;padding:10px 24px;background:#1e3a6e;color:#fff;text-decoration:none;font-size:13px;font-weight:700">DcD 플랫폼으로 이동</a></div>';
+  });}
+})();
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0c10;--surface:#111520;--border:#1e2535;--blue:#4fa3ff;--red:#ff5c5c;--green:#38e69b;--gold:#f4b942;--purple:#8b5cf6;--orange:#f97316;--text:#ffffff;--muted:#b0bac8;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 18px;height:50px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.logo{font-family:'Dancing Script',cursive;font-size:20px;color:#fff}.logo span{color:var(--blue)}
+.hdr-t{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.hdr-b{background:rgba(255,92,92,.15);border:1px solid rgba(255,92,92,.4);color:var(--red);font-size:10px;padding:2px 8px;border-radius:20px}
+.dvd{width:1px;height:16px;background:var(--border)}
+.nav-btn{font-size:11px;text-decoration:none;display:flex;align-items:center;gap:5px;padding:3px 12px;border-radius:20px;transition:all .2s;font-weight:600}
+.nav-btn.home{color:var(--muted);border:1px solid var(--border);background:transparent}.nav-btn.home:hover{color:var(--text)}
+.nav-btn.lab{color:var(--purple);border:1px solid rgba(139,92,246,.4);background:rgba(139,92,246,.1)}.nav-btn.lab:hover{background:rgba(139,92,246,.22)}
+.sc-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:stretch;flex-shrink:0;height:40px;overflow-x:auto}
+.sc-tab{display:flex;align-items:center;gap:6px;padding:0 16px;cursor:pointer;color:var(--muted);font-size:11px;border-right:1px solid var(--border);transition:all .2s;user-select:none;white-space:nowrap}
+.sc-tab:hover{background:rgba(255,255,255,.03)}
+.sc-tab.active{color:var(--text);background:rgba(255,92,92,.06);border-bottom:2px solid var(--red)}
+.sc-num{background:var(--border);border-radius:3px;padding:1px 6px;font-size:10px;font-family:'Cascadia Mono',monospace}
+.sc-tab.active .sc-num{background:rgba(255,92,92,.25);color:var(--red)}
+.wrap{flex:1;display:flex;overflow:hidden}
+.ctrl{width:268px;min-width:268px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:9px;display:flex;flex-direction:column;gap:7px}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.sect{border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.sect-hd{background:rgba(255,255,255,.03);border-bottom:1px solid var(--border);padding:6px 10px;font-size:9px;letter-spacing:2px;color:#fff;font-weight:700;text-transform:uppercase;display:flex;align-items:center;gap:5px}
+.d5{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.sect-bd{padding:9px;display:flex;flex-direction:column;gap:8px}
+.sl-item{display:flex;flex-direction:column;gap:4px}
+.sl-hdr{display:flex;align-items:center;gap:6px}
+.sl-lbl{font-size:11px;color:#fff;font-weight:600;flex:1}
+.sl-val{font-family:'Cascadia Mono',monospace;font-size:11px;color:var(--blue);background:rgba(79,163,255,.1);border:1px solid rgba(79,163,255,.2);padding:1px 6px;border-radius:4px;white-space:nowrap}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:var(--border);border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--blue);box-shadow:0 0 4px rgba(79,163,255,.5);cursor:pointer}
+.stat-r{display:flex;align-items:center;gap:6px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.stat-r:last-child{border-bottom:none}
+.sk{color:var(--muted);font-size:10px;flex:1}.sv{font-family:'Cascadia Mono',monospace;font-size:11px;color:#fff;font-weight:600}
+.btn-row{display:flex;gap:5px}
+.btn{flex:1;padding:7px 0;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;border:none;transition:all .2s;letter-spacing:.5px}
+.btn-s{background:rgba(56,230,155,.15);color:var(--green);border:1px solid rgba(56,230,155,.4)}.btn-s:hover{background:rgba(56,230,155,.28)}
+.btn-p{background:rgba(244,185,66,.15);color:var(--gold);border:1px solid rgba(244,185,66,.4)}.btn-p:hover{background:rgba(244,185,66,.28)}
+.btn-r{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--border)}.btn-r:hover{background:rgba(255,255,255,.1)}
+.viz{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;position:relative}
+canvas{flex:1;display:block;width:100%;height:100%}
+.lgd{background:var(--surface);border-top:1px solid var(--border);padding:5px 12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;flex-shrink:0}
+.lg-i{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted)}
+.lg-d{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.ev-log{max-height:80px;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
+.ev-e{font-size:9px;font-family:'Cascadia Mono',monospace;padding:2px 5px;border-radius:3px;background:rgba(255,255,255,.04)}
+.ev-e.d{color:var(--red)}.ev-e.h{color:var(--gold)}.ev-e.v{color:var(--green)}
+.phase-tag{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);border:1px solid var(--border);border-radius:20px;padding:4px 16px;font-size:11px;color:var(--gold);font-weight:700;letter-spacing:1px;pointer-events:none;display:none}
+</style>
+</head>
+<body>
+<header>
+  <a class="nav-btn home" href="https://jeongb5215-web.github.io/dcd-platform/">
+    <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M1 6l5-5 5 5M2.5 4.5V11h3V8h1v3h3V4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>홈
+  </a>
+  <a class="nav-btn lab" href="https://jeongb5215-web.github.io/dcd-platform/?goto=lab">
+    <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.3"/><path d="M4 6h4M6 4v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>LAB
+  </a>
+  <div class="dvd"></div>
+  <span class="logo">D<span>c</span>D</span>
+  <div class="dvd"></div>
+  <span class="hdr-t">SHAHED ATTACK PATTERN SIM</span>
+  <div class="hdr-b" style="margin-left:auto">THREAT ANALYSIS</div>
+</header>
+
+<div class="sc-bar">
+  <div class="sc-tab active" data-sc="1"><span class="sc-num">S1</span>샤헤드-136 군집 공격 (180 km/h × 10대)</div>
+  <div class="sc-tab" data-sc="2"><span class="sc-num">S2</span>샤헤드-238 고속 공격 (500 km/h × 10대)</div>
+  <div class="sc-tab" data-sc="3"><span class="sc-num">S3</span>복합 공격 (136 × 6 + 238 × 4)</div>
+  <div style="flex:1"></div>
+</div>
+
+<div class="wrap">
+  <div class="ctrl">
+    <div class="sect">
+      <div class="sect-hd"><div class="d5" style="background:var(--green)"></div>시뮬레이션 제어</div>
+      <div class="sect-bd">
+        <div class="btn-row">
+          <button class="btn btn-s" id="btnStart" onclick="simStart()">▶ 시작</button>
+          <button class="btn btn-p" onclick="simPause()">⏸ 일시정지</button>
+          <button class="btn btn-r" onclick="simReset()">↺ 초기화</button>
+        </div>
+        <div class="sl-item">
+          <div class="sl-hdr"><span class="sl-lbl">재생 배속</span><span class="sl-val" id="vSpd">8×</span></div>
+          <input type="range" min="1" max="30" value="8" step="1" oninput="document.getElementById('vSpd').textContent=this.value+'×';G.ts=+this.value">
+        </div>
+        <div class="sl-item">
+          <div class="sl-hdr"><span class="sl-lbl">드론 대수 (S1/S2)</span><span class="sl-val" id="vCnt">10대</span></div>
+          <input type="range" min="3" max="20" value="10" step="1" oninput="document.getElementById('vCnt').textContent=this.value+'대';G.droneCount=+this.value;simReset()">
+        </div>
+      </div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-hd"><div class="d5" style="background:var(--red)"></div>방어 체계</div>
+      <div class="sect-bd">
+        <div class="sl-item">
+          <div class="sl-hdr"><span class="sl-lbl">요격 성공률</span><span class="sl-val" id="vKp">65%</span></div>
+          <input type="range" min="5" max="95" value="65" step="5" oninput="document.getElementById('vKp').textContent=this.value+'%';G.killP=this.value/100">
+        </div>
+        <div class="sl-item">
+          <div class="sl-hdr"><span class="sl-lbl">레이다 탐지 범위</span><span class="sl-val" id="vRs">100%</span></div>
+          <input type="range" min="30" max="150" value="100" step="10" oninput="document.getElementById('vRs').textContent=this.value+'%';G.radarS=this.value/100">
+        </div>
+        <div class="sl-item">
+          <div class="sl-hdr"><span class="sl-lbl">전자전 재밍 강도</span><span class="sl-val" id="vJs">100%</span></div>
+          <input type="range" min="30" max="150" value="100" step="10" oninput="document.getElementById('vJs').textContent=this.value+'%';G.jamS=this.value/100">
+        </div>
+        <div class="sl-item">
+          <div class="sl-hdr"><span class="sl-lbl">요격 시스템</span><span class="sl-val" id="vInt">ON</span></div>
+          <input type="range" min="0" max="1" value="1" step="1" oninput="document.getElementById('vInt').textContent=this.value==='1'?'ON':'OFF';G.interceptOn=this.value==='1'">
+        </div>
+      </div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-hd"><div class="d5" style="background:var(--blue)"></div>실시간 현황</div>
+      <div class="sect-bd">
+        <div class="stat-r"><span class="sk">경과 시간</span><span class="sv" id="sT">00:00</span></div>
+        <div class="stat-r"><span class="sk">비행 중</span><span class="sv" id="sA" style="color:var(--orange)">—</span></div>
+        <div class="stat-r"><span class="sk">격추</span><span class="sv" id="sK" style="color:var(--red)">0대</span></div>
+        <div class="stat-r"><span class="sk">TARGET 도달</span><span class="sv" id="sH" style="color:var(--gold)">0대</span></div>
+        <div class="stat-r"><span class="sk">레이다 회피 기동</span><span class="sv" id="sEv">0회</span></div>
+        <div class="stat-r"><span class="sk">TARGET 최근접 거리</span><span class="sv" id="sCl">—</span></div>
+        <div class="stat-r"><span class="sk">현재 단계</span><span class="sv" id="sPh" style="color:var(--muted);font-size:9px">대기중</span></div>
+      </div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-hd"><div class="d5" style="background:var(--gold)"></div>교전 로그</div>
+      <div class="sect-bd" style="padding:6px 8px">
+        <div class="ev-log" id="evLog"></div>
+      </div>
+    </div>
+
+    <div class="sect">
+      <div class="sect-hd"><div class="d5" style="background:var(--purple)"></div>비행 규칙</div>
+      <div class="sect-bd" style="gap:5px">
+        <div style="font-size:9px;color:var(--muted);line-height:1.7">
+          ① 산악 통과 시 고고도 비행<br>
+          ② 강 통과 시 최저고도 비행<br>
+          ③ 레이다·재밍 범위 탐지 → 외곽 우회 후 재진입<br>
+          ④ 목표 접근 시 최저고도 유지<br>
+          ⑤ 최종 1대가 목표측 레이다에 최근접 진입<br>
+          ⑥ 샤헤드-238 (500km/h) 동일 패턴 적용 가능 여부 검증
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="viz">
+    <div class="phase-tag" id="phTag"></div>
+    <canvas id="cvs"></canvas>
+    <div class="lgd">
+      <div class="lg-i"><div class="lg-d" style="background:#22c55e;border-radius:50%"></div>샤헤드-136</div>
+      <div class="lg-i"><div class="lg-d" style="background:#f97316;border-radius:50%"></div>샤헤드-238</div>
+      <div class="lg-i"><div class="lg-d" style="background:rgba(79,163,255,.35);border:1px solid #4fa3ff;border-radius:50%"></div>레이다 탐지권</div>
+      <div class="lg-i"><div class="lg-d" style="background:rgba(255,92,92,.3);border:1px solid #ff5c5c;border-radius:50%"></div>재밍 범위</div>
+      <div class="lg-i"><div class="lg-d" style="background:rgba(34,74,34,.7)"></div>산악</div>
+      <div class="lg-i"><div class="lg-d" style="background:rgba(30,80,180,.5)"></div>강</div>
+      <div class="lg-i">
+        <svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="#4fa3ff" stroke-width="1.5" stroke-dasharray="4,2"/></svg>방공식별선
+      </div>
+      <div class="lg-i">
+        <svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="#ff5c5c" stroke-width="1.5" stroke-dasharray="4,2"/></svg>통제선
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── 세계 좌표 (km) ──────────────────────────────────────────────────────────
+const WW = 150, WH = 90; // 세계 크기 (km)
+
+const TERRAIN = {
+  mountains: [
+    {cx:48, cy:17, rx:15, ry:11},   // 북서 산악 (레이다+재밍)
+    {cx:82, cy:37, rx:17, ry:13},   // 중앙 산악
+    {cx:115,cy:21, rx:13, ry:9},    // 북동 산악 (레이다)
+    {cx:58, cy:71, rx:11, ry:7},    // 남서 산악
+  ],
+  river: {x1:35, x2:130, y1:52, y2:58},
+  city:  {x1:4,  x2:36,  y1:40, y2:80},
+};
+
+const RADARS = [
+  {x:48,  y:17, det:24, jam:14, label:'북서 레이다+재밍'},
+  {x:33,  y:47, det:19, jam:11, label:'도심 레이다+재밍'},
+  {x:115, y:21, det:30, jam:0,  label:'북동 탐지 레이다'},
+];
+const TARGET = {x:12, y:61};
+const ID_LINE = 132;   // 방공식별선 x (km)
+const CT_LINE = 110;   // 통제선 x (km)
+const ENTRY_X = 148;
+
+// ── 글로벌 상태 ────────────────────────────────────────────────────────────
+const G = {
+  running:false, ts:8, t:0,
+  killP:0.65, radarS:1, jamS:1, interceptOn:true,
+  droneCount:10, scenario:1,
+  drones:[], evadeTotal:0,
+  hitCount:0, killCount:0,
+  raf:null, lastF:null,
+  buildings: [],   // 사전 생성된 빌딩
+  sweep: 0,        // 레이다 스윕 각도
+};
+
+// 빌딩 사전 생성
+function genBuildings() {
+  G.buildings = [];
+  const {x1,x2,y1,y2}=TERRAIN.city;
+  const cols=7, rows=8;
+  for(let c=0;c<cols;c++) for(let r=0;r<rows;r++){
+    const bx=x1+1+(c/(cols-1))*(x2-x1-2)+( (Math.random()-.5)*1.5 );
+    const by=y1+1+(r/(rows-1))*(y2-y1-2)+( (Math.random()-.5)*1.5 );
+    G.buildings.push({x:bx,y:by,w:1.8+Math.random()*1.2, h:1.2+Math.random()*.8});
+  }
+}
+
+// ── 드론 생성 ──────────────────────────────────────────────────────────────
+function makeDrone(id, sy, type) {
+  const spd = type==='238' ? 500/3600 : 180/3600; // km/s
+  // 웨이포인트: 레이다 회피 경로 사전 계산
+  const wy = Math.max(sy, 44); // 레이다3(북동) 남쪽 우회
+  const wps = [
+    {x:ENTRY_X, y:sy,  alt:600},
+    {x:ID_LINE, y:sy,  alt:600},
+    {x:CT_LINE, y:sy,  alt:600},
+    {x:105,     y:wy,  alt:700},  // 북동 레이다 남측 우회
+    {x:90,      y:56,  alt:60},   // 강 진입 (저고도)
+    {x:73,      y:56,  alt:50},   // 강 통과
+    {x:63,      y:70,  alt:55},   // 북서 레이다 남측 우회
+    {x:45,      y:68,  alt:55},   // 우회 완료
+    {x:28,      y:64,  alt:30},   // 목표 접근 (최저고도)
+    {x:TARGET.x,y:TARGET.y,alt:25},
+  ];
+  // 마지막 드론(id === G.droneCount-1)은 목표측 레이다 최근접 경로
+  if(id === G.droneCount-1){
+    wps.splice(8,0,{x:35, y:TARGET.y-2, alt:20});
+  }
+  return {
+    id, type, x:ENTRY_X, y:sy, alt:600, spd,
+    wps, wi:0,
+    state:'FLY',  // FLY | DEAD | HIT
+    trail:[], detected:false,
+    iCooldown:0, // 요격 쿨다운 (시뮬 초)
+    evaded:false,
+    color: type==='238'?'#f97316':'#22c55e',
+  };
+}
+
+function initDrones(){
+  G.drones=[];G.evadeTotal=0;G.hitCount=0;G.killCount=0;
+  const n=G.droneCount, sc=G.scenario;
+  for(let i=0;i<n;i++){
+    const sy = 24 + (i/Math.max(n-1,1))*44;
+    let tp='136';
+    if(sc===2) tp='238';
+    else if(sc===3 && i>=(n-Math.round(n*0.4))) tp='238';
+    G.drones.push(makeDrone(i,sy,tp));
+  }
+}
+
+// ── 지형 쿼리 ─────────────────────────────────────────────────────────────
+function overMountain(x,y){
+  return TERRAIN.mountains.some(m=>{
+    const nx=(x-m.cx)/m.rx, ny=(y-m.cy)/m.ry;
+    return nx*nx+ny*ny<1;
+  });
+}
+function overRiver(x,y){
+  const r=TERRAIN.river;
+  return x>=r.x1&&x<=r.x2&&y>=r.y1&&y<=r.y2;
+}
+
+// ── 탐지 체크 (고도 반영) ─────────────────────────────────────────────────
+function isDetected(d){
+  return RADARS.some(r=>{
+    const dist=Math.hypot(d.x-r.x,d.y-r.y);
+    const effDet=r.det*G.radarS;
+    if(dist>effDet) return false;
+    const altF=Math.min(1,d.alt/400); // 저고도 → 탐지율 감소
+    return dist < effDet*(0.25+0.75*altF);
+  });
+}
+
+// ── 드론 업데이트 ─────────────────────────────────────────────────────────
+function updateDrone(d, dt){
+  if(d.state!=='FLY') return;
+  const wp=d.wps[d.wi];
+  if(!wp){d.state='HIT';G.hitCount++;addLog(`T+${fmtT(G.t)} [목표도달] #${d.id+1} ${d.type==='238'?'샤헤드-238':'샤헤드-136'}`,'h');return;}
+
+  // 고도 목표: 산악→높게, 강→낮게, wp 목표 고도로 수렴
+  let tAlt = wp.alt;
+  if(overMountain(d.x,d.y)) tAlt=Math.max(tAlt,850);
+  if(overRiver(d.x,d.y))    tAlt=Math.min(tAlt,60);
+  d.alt += (tAlt-d.alt)*Math.min(dt*0.6,1);
+
+  // 탐지 여부
+  d.detected=isDetected(d);
+
+  // 이동
+  const dx=wp.x-d.x, dy=wp.y-d.y, dist=Math.hypot(dx,dy);
+  const step=d.spd*dt;
+  if(dist<step+0.05){
+    d.x=wp.x;d.y=wp.y;
+    if(d.wi<d.wps.length-1) d.wi++;
+    else{d.state='HIT';G.hitCount++;addLog(`T+${fmtT(G.t)} [목표도달] #${d.id+1} ${d.type==='238'?'샤헤드-238':'샤헤드-136'}`,'h');}
+  } else {
+    d.x+=dx/dist*step;
+    d.y+=dy/dist*step;
+  }
+
+  // 궤적
+  if(!d.trail.length||Math.hypot(d.x-d.trail[d.trail.length-1].x,d.y-d.trail[d.trail.length-1].y)>0.25){
+    d.trail.push({x:d.x,y:d.y});
+    if(d.trail.length>400) d.trail.shift();
+  }
+
+  // 요격
+  d.iCooldown=Math.max(0,d.iCooldown-dt);
+  if(d.detected && G.interceptOn && d.iCooldown<=0){
+    d.iCooldown=18;
+    if(Math.random()<G.killP*dt*0.12){
+      d.state='DEAD';G.killCount++;
+      addLog(`T+${fmtT(G.t)} [격추] #${d.id+1} ${d.type==='238'?'샤헤드-238':'샤헤드-136'} — ${nearRadar(d)}`,'d');
+    }
+  }
+}
+
+function nearRadar(d){
+  let mn=Infinity,nm='';
+  RADARS.forEach(r=>{const dd=Math.hypot(d.x-r.x,d.y-r.y);if(dd<mn){mn=dd;nm=r.label;}});
+  return nm;
+}
+
+// ── 시뮬레이션 제어 ───────────────────────────────────────────────────────
+function simStart(){
+  if(G.running) return;
+  if(!G.drones.length) initDrones();
+  G.running=true; G.lastF=performance.now();
+  requestAnimationFrame(loop);
+}
+function simPause(){G.running=false;}
+function simReset(){
+  G.running=false; G.t=0;
+  if(G.raf) cancelAnimationFrame(G.raf);
+  logEntries=[];
+  document.getElementById('evLog').innerHTML='';
+  initDrones(); render(); updateStats();
+}
+
+function loop(now){
+  if(!G.running) return;
+  const wallDt=(now-G.lastF)/1000;
+  G.lastF=now;
+  const dt=Math.min(wallDt*G.ts,2.5);
+  G.t+=dt;
+  G.sweep+=dt*0.6;
+  G.drones.forEach(d=>updateDrone(d,dt));
+  render(); updateStats();
+  const done=G.drones.every(d=>d.state!=='FLY');
+  if(!done) G.raf=requestAnimationFrame(loop);
+  else{G.running=false;showPhase('시뮬레이션 종료');}
+}
+
+// ── 렌더링 ────────────────────────────────────────────────────────────────
+const cvs=document.getElementById('cvs');
+const ctx=cvs.getContext('2d');
+
+function px(xkm){ return xkm/WW*cvs.width; }
+function py(ykm){ return ykm/WH*cvs.height; }
+function tc(xkm,ykm){ return [px(xkm),py(ykm)]; }
+
+function render(){
+  cvs.width=cvs.offsetWidth; cvs.height=cvs.offsetHeight;
+  const c=ctx;
+
+  // 배경
+  c.fillStyle='#0a0c10'; c.fillRect(0,0,cvs.width,cvs.height);
+
+  // 그리드
+  c.strokeStyle='rgba(30,37,53,0.55)'; c.lineWidth=0.5;
+  for(let x=0;x<=WW;x+=10){c.beginPath();c.moveTo(px(x),0);c.lineTo(px(x),cvs.height);c.stroke();}
+  for(let y=0;y<=WH;y+=10){c.beginPath();c.moveTo(0,py(y));c.lineTo(cvs.width,py(y));c.stroke();}
+
+  // ─ 강 ─
+  const rv=TERRAIN.river;
+  c.fillStyle='rgba(20,60,160,0.38)';
+  c.strokeStyle='rgba(79,163,255,0.35)'; c.lineWidth=1;
+  c.beginPath(); c.rect(px(rv.x1),py(rv.y1),px(rv.x2)-px(rv.x1),py(rv.y2)-py(rv.y1));
+  c.fill(); c.stroke();
+  c.fillStyle='rgba(79,163,255,0.55)'; c.font=`bold ${Math.max(9,cvs.height*0.018)}px sans-serif`; c.textAlign='center';
+  c.fillText('강',px((rv.x1+rv.x2)/2),py((rv.y1+rv.y2)/2)+4);
+
+  // ─ 산악 ─
+  TERRAIN.mountains.forEach(m=>{
+    const [cx,cy]=[px(m.cx),py(m.cy)];
+    const rx=px(m.rx), ry=py(m.ry);
+    // 타원형 산악
+    c.save(); c.translate(cx,cy); c.scale(1,ry/rx);
+    c.beginPath(); c.arc(0,0,rx,0,Math.PI*2);
+    c.fillStyle='rgba(22,60,22,0.6)'; c.fill();
+    c.strokeStyle='rgba(56,120,56,0.5)'; c.lineWidth=1; c.stroke();
+    // 봉우리 삼각형
+    c.beginPath(); c.moveTo(0,-rx*0.9); c.lineTo(-rx*0.35,rx*0.1); c.lineTo(rx*0.35,rx*0.1); c.closePath();
+    c.fillStyle='rgba(40,90,40,0.5)'; c.fill();
+    c.restore();
+    c.fillStyle='rgba(100,200,100,0.7)';
+    c.font=`${Math.max(9,cvs.height*0.016)}px sans-serif`; c.textAlign='center';
+    c.fillText('산악',cx,cy+4);
+  });
+
+  // ─ 도시 빌딩 ─
+  G.buildings.forEach(b=>{
+    const [bx,by]=[px(b.x),py(b.y)];
+    const bw=px(b.w), bh=py(b.h);
+    c.fillStyle='rgba(55,55,90,0.45)';
+    c.strokeStyle='rgba(90,90,140,0.5)'; c.lineWidth=0.5;
+    c.fillRect(bx-bw/2,by-bh/2,bw,bh);
+    c.strokeRect(bx-bw/2,by-bh/2,bw,bh);
+  });
+  const ci=TERRAIN.city;
+  c.fillStyle='rgba(100,100,160,0.65)';
+  c.font=`bold ${Math.max(9,cvs.height*0.016)}px sans-serif`; c.textAlign='center';
+  c.fillText('도시',px((ci.x1+ci.x2)/2),py((ci.y1+ci.y2)/2));
+
+  // ─ 레이다 ─
+  RADARS.forEach((r,i)=>{
+    const [rx,ry]=[px(r.x),py(r.y)];
+    const detR=px(r.det*G.radarS);
+    const jamR=r.jam>0?px(r.jam*G.jamS):0;
+
+    // 재밍 원
+    if(r.jam>0){
+      c.beginPath(); c.arc(rx,ry,jamR,0,Math.PI*2);
+      c.fillStyle='rgba(255,92,92,0.07)'; c.fill();
+      c.strokeStyle='rgba(255,92,92,0.35)'; c.lineWidth=1; c.setLineDash([3,3]); c.stroke(); c.setLineDash([]);
+    }
+    // 탐지 원
+    c.beginPath(); c.arc(rx,ry,detR,0,Math.PI*2);
+    c.strokeStyle='rgba(79,163,255,0.28)'; c.lineWidth=1; c.setLineDash([4,4]); c.stroke(); c.setLineDash([]);
+
+    // 스윕 웨지
+    const sa=G.sweep*(0.8+i*0.25);
+    c.beginPath(); c.moveTo(rx,ry);
+    c.arc(rx,ry,detR,sa-0.45,sa+0.45); c.closePath();
+    c.fillStyle='rgba(79,163,255,0.07)'; c.fill();
+
+    // 레이다 아이콘
+    c.beginPath(); c.arc(rx,ry,5,0,Math.PI*2); c.fillStyle='#4fa3ff'; c.fill();
+    c.strokeStyle='rgba(255,255,255,0.8)'; c.lineWidth=1.5;
+    c.beginPath(); c.moveTo(rx,ry); c.lineTo(rx-7,ry-8); c.stroke();
+    c.beginPath(); c.moveTo(rx,ry); c.lineTo(rx+7,ry-8); c.stroke();
+    c.beginPath(); c.moveTo(rx-7,ry-8); c.lineTo(rx+7,ry-8); c.stroke();
+
+    c.fillStyle='rgba(79,163,255,0.85)';
+    c.font=`${Math.max(8,cvs.height*0.014)}px sans-serif`; c.textAlign='center';
+    c.fillText(r.label,rx,ry+15);
+    c.fillText(`탐지 ${r.det}km${r.jam?` / 재밍 ${r.jam}km`:''}`,rx,ry+25);
+  });
+
+  // ─ 방공식별선 / 통제선 ─
+  drawDefLine(c, ID_LINE, 'rgba(79,163,255,0.7)', '방공식별선');
+  drawDefLine(c, CT_LINE, 'rgba(255,92,92,0.7)', '통제선');
+
+  // ─ TARGET ─
+  const [tx,ty]=tc(TARGET.x,TARGET.y);
+  const pulse=0.5+0.5*Math.sin(Date.now()/320);
+  c.beginPath(); c.arc(tx,ty,11+pulse*7,0,Math.PI*2);
+  c.strokeStyle=`rgba(255,92,92,${0.25+pulse*0.35})`; c.lineWidth=2; c.stroke();
+  c.beginPath(); c.arc(tx,ty,8,0,Math.PI*2);
+  c.fillStyle='rgba(255,92,92,0.88)'; c.fill();
+  c.strokeStyle='#fff'; c.lineWidth=1.5; c.stroke();
+  c.fillStyle='#fff'; c.font=`bold ${Math.max(9,cvs.height*0.016)}px sans-serif`; c.textAlign='center';
+  c.fillText('TARGET',tx,ty+20);
+
+  // ─ 드론 궤적 ─
+  G.drones.forEach(d=>{
+    if(d.trail.length<2) return;
+    c.beginPath();
+    d.trail.forEach((p,i)=>{
+      const [px2,py2]=tc(p.x,p.y);
+      i===0?c.moveTo(px2,py2):c.lineTo(px2,py2);
+    });
+    c.strokeStyle=d.state==='DEAD'?'rgba(255,92,92,0.12)':`${d.color}1a`;
+    c.lineWidth=1; c.stroke();
+  });
+
+  // ─ 드론 ─
+  G.drones.forEach(d=>{
+    const [dx2,dy2]=tc(d.x,d.y);
+    if(d.state==='DEAD'){
+      // 격추 마크
+      c.strokeStyle='rgba(255,92,92,0.6)'; c.lineWidth=1.5;
+      c.beginPath();c.moveTo(dx2-4,dy2-4);c.lineTo(dx2+4,dy2+4);c.stroke();
+      c.beginPath();c.moveTo(dx2+4,dy2-4);c.lineTo(dx2-4,dy2+4);c.stroke();
+      c.beginPath();c.arc(dx2,dy2,5,0,Math.PI*2);
+      c.strokeStyle='rgba(255,92,92,0.35)';c.stroke();
+      return;
+    }
+    if(d.state==='HIT'){
+      c.beginPath();c.arc(dx2,dy2,6,0,Math.PI*2);
+      c.fillStyle='rgba(244,185,66,0.8)';c.fill();
+      return;
+    }
+
+    const altF=Math.min(1,d.alt/650);
+    const sz=3+altF*4;
+    const alp=0.25+altF*0.75;
+
+    // 탐지 링
+    if(d.detected){
+      c.beginPath();c.arc(dx2,dy2,sz+5,0,Math.PI*2);
+      c.strokeStyle=`rgba(255,92,92,${alp*0.9})`;c.lineWidth=1.5;c.stroke();
+    }
+
+    // 드론 삼각형 (이동 방향)
+    const wp=d.wps[d.wi];
+    if(wp){
+      const ang=Math.atan2(wp.y-d.y,wp.x-d.x);
+      c.save(); c.translate(dx2,dy2); c.rotate(ang);
+      c.beginPath();
+      c.moveTo(sz+3,0); c.lineTo(-sz,-sz*0.65); c.lineTo(-sz*0.4,0); c.lineTo(-sz,sz*0.65);
+      c.closePath();
+      const hexAlp=Math.floor(alp*255).toString(16).padStart(2,'0');
+      c.fillStyle=d.color+hexAlp;
+      c.strokeStyle=d.color; c.lineWidth=0.8; c.fill(); c.stroke();
+      c.restore();
+    }
+
+    // ID 레이블
+    c.fillStyle=`rgba(255,255,255,${alp*0.7})`;
+    c.font=`7px monospace`; c.textAlign='center';
+    c.fillText(`#${d.id+1}`,dx2,dy2-sz-4);
+
+    // 저고도 표시
+    if(d.alt<120){
+      c.fillStyle='rgba(56,230,155,0.85)'; c.font='7px monospace'; c.textAlign='left';
+      c.fillText(`${Math.round(d.alt)}m`,dx2+sz+3,dy2+3);
+    }
+  });
+
+  // ─ 스케일 바 ─
+  const s10=px(10);
+  c.fillStyle='rgba(176,186,200,0.55)'; c.font='9px sans-serif'; c.textAlign='left';
+  c.fillText('10km',12+s10,cvs.height-7);
+  c.strokeStyle='rgba(176,186,200,0.6)'; c.lineWidth=1.5;
+  c.beginPath();c.moveTo(10,cvs.height-11);c.lineTo(10+s10,cvs.height-11);c.stroke();
+  c.beginPath();c.moveTo(10,cvs.height-15);c.lineTo(10,cvs.height-7);c.stroke();
+  c.beginPath();c.moveTo(10+s10,cvs.height-15);c.lineTo(10+s10,cvs.height-7);c.stroke();
+
+  // ─ 고도 범례 ─
+  const lx=cvs.width-90, ly=15;
+  c.fillStyle='rgba(17,21,32,0.8)'; c.fillRect(lx-5,ly-5,90,55);
+  c.strokeStyle='rgba(30,37,53,0.8)'; c.lineWidth=1; c.strokeRect(lx-5,ly-5,90,55);
+  c.font='8px sans-serif'; c.textAlign='left';
+  [['rgba(34,197,94,1)','고고도 (>500m)'],[`rgba(34,197,94,0.55)`,'중고도 (100-500m)'],['rgba(34,197,94,0.25)','저고도 (<100m)']].forEach(([col,lbl],i)=>{
+    c.fillStyle=col; c.fillRect(lx,ly+i*14,8,8);
+    c.fillStyle='rgba(176,186,200,0.8)'; c.fillText(lbl,lx+11,ly+i*14+7);
+  });
+}
+
+function drawDefLine(c, xkm, color, label){
+  const x=px(xkm);
+  c.strokeStyle=color; c.lineWidth=1.5; c.setLineDash([6,4]);
+  c.beginPath();c.moveTo(x,0);c.lineTo(x,cvs.height);c.stroke();
+  c.setLineDash([]);
+  c.save();c.translate(x-8,cvs.height*0.12);c.rotate(-Math.PI/2);
+  c.fillStyle=color; c.font=`bold 9px sans-serif`; c.textAlign='center';
+  c.fillText(label,0,0); c.restore();
+}
+
+// ── 통계 업데이트 ─────────────────────────────────────────────────────────
+let logEntries=[];
+function addLog(msg,type){
+  logEntries.unshift({msg,type});
+  if(logEntries.length>60) logEntries.pop();
+  document.getElementById('evLog').innerHTML=logEntries.slice(0,14).map(e=>`<div class="ev-e ${e.type}">${e.msg}</div>`).join('');
+}
+
+function fmtT(s){
+  const m=Math.floor(s/60),ss=Math.floor(s%60);
+  return `${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+}
+
+function updateStats(){
+  const alive=G.drones.filter(d=>d.state==='FLY').length;
+  document.getElementById('sT').textContent=fmtT(G.t);
+  document.getElementById('sA').textContent=alive+'대';
+  document.getElementById('sK').textContent=G.killCount+'대';
+  document.getElementById('sH').textContent=G.hitCount+'대';
+  document.getElementById('sEv').textContent=G.evadeTotal+'회';
+
+  let mn=Infinity;
+  G.drones.forEach(d=>{if(d.state==='FLY'){const dd=Math.hypot(d.x-TARGET.x,d.y-TARGET.y);if(dd<mn)mn=dd;}});
+  document.getElementById('sCl').textContent=mn<9999?`${Math.round(mn)}km`:'—';
+
+  const avgX=alive?G.drones.filter(d=>d.state==='FLY').reduce((s,d)=>s+d.x,0)/alive:0;
+  let ph='대기중';
+  if(G.running){
+    if(avgX>=ID_LINE) ph='경계 접근';
+    else if(avgX>=CT_LINE) ph='방공식별선 통과';
+    else if(avgX>=90)  ph='통제선 돌파';
+    else if(avgX>=65)  ph='산악·강 기동 중';
+    else if(avgX>=40)  ph='저고도 침투 중';
+    else               ph='목표 최종 접근';
+  }
+  document.getElementById('sPh').textContent=ph;
+}
+
+function showPhase(msg){
+  const el=document.getElementById('phTag');
+  el.textContent=msg;el.style.display='block';
+  setTimeout(()=>el.style.display='none',3500);
+}
+
+// ── 시나리오 탭 ───────────────────────────────────────────────────────────
+document.querySelectorAll('.sc-tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.sc-tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    G.scenario=+t.dataset.sc;
+    simReset();
+  });
+});
+
+// ── 초기화 ────────────────────────────────────────────────────────────────
+genBuildings();
+simReset();
+window.addEventListener('resize',()=>{if(!G.running)render();});
+</script>
+</body>
+</html>

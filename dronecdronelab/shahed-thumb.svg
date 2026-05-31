@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" width="400" height="240">
+  <defs>
+    <radialGradient id="bg" cx="55%" cy="45%" r="70%">
+      <stop offset="0%" stop-color="#1d0606"/>
+      <stop offset="100%" stop-color="#060810"/>
+    </radialGradient>
+    <filter id="glow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="sm" x="-20%" y="-60%" width="140%" height="220%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="240" fill="url(#bg)"/>
+
+  <!-- Tactical grid -->
+  <g stroke="#ffffff" stroke-width="0.4" opacity="0.05">
+    <line x1="50" y1="0" x2="50" y2="240"/><line x1="100" y1="0" x2="100" y2="240"/>
+    <line x1="150" y1="0" x2="150" y2="240"/><line x1="200" y1="0" x2="200" y2="240"/>
+    <line x1="250" y1="0" x2="250" y2="240"/><line x1="300" y1="0" x2="300" y2="240"/>
+    <line x1="350" y1="0" x2="350" y2="240"/>
+    <line x1="0" y1="40" x2="400" y2="40"/><line x1="0" y1="80" x2="400" y2="80"/>
+    <line x1="0" y1="120" x2="400" y2="120"/><line x1="0" y1="160" x2="400" y2="160"/>
+    <line x1="0" y1="200" x2="400" y2="200"/>
+  </g>
+
+  <!-- Defense radar rings (target area, bottom-left) -->
+  <circle cx="44" cy="198" r="36" fill="none" stroke="#4fa3ff" stroke-width="0.7" stroke-dasharray="3,4" opacity="0.2"/>
+  <circle cx="44" cy="198" r="62" fill="none" stroke="#ff5c5c" stroke-width="0.7" stroke-dasharray="3,5" opacity="0.13"/>
+
+  <!-- Target crosshair -->
+  <circle cx="44" cy="198" r="9" fill="rgba(255,92,92,0.22)"/>
+  <circle cx="44" cy="198" r="5" fill="#ff5c5c" opacity="0.88"/>
+  <line x1="44" y1="184" x2="44" y2="212" stroke="#ff5c5c" stroke-width="0.8" opacity="0.45"/>
+  <line x1="30" y1="198" x2="58" y2="198" stroke="#ff5c5c" stroke-width="0.8" opacity="0.45"/>
+  <text x="44" y="175" text-anchor="middle" fill="#ff5c5c" font-family="'Courier New',monospace" font-size="8" opacity="0.65">TARGET</text>
+
+  <!-- Attack flight path (dashed trail from right to target) -->
+  <path d="M 302,118 C 220,114 130,158 57,194" fill="none" stroke="#f97316" stroke-width="1.3" stroke-dasharray="8,5" opacity="0.32"/>
+
+  <!-- Ghost swarm drones (right side, V-formation) -->
+  <g fill="#f97316">
+    <g opacity="0.24" transform="translate(356,84)"><polygon points="-16,0 23,-14 23,14"/></g>
+    <g opacity="0.20" transform="translate(378,99)"><polygon points="-13,0 19,-11 19,11"/></g>
+    <g opacity="0.24" transform="translate(356,156)"><polygon points="-16,0 23,-14 23,14"/></g>
+    <g opacity="0.20" transform="translate(378,141)"><polygon points="-13,0 19,-11 19,11"/></g>
+    <g opacity="0.16" transform="translate(392,120)"><polygon points="-11,0 16,-10 16,10"/></g>
+  </g>
+
+  <!-- ── MAIN SHAHED-136 (top-down, nose pointing west/left) ── -->
+
+  <!-- Wing ambient glow -->
+  <polygon points="136,120 297,67 297,173" fill="#f97316" filter="url(#glow)" opacity="0.18"/>
+
+  <!-- Delta wing body -->
+  <polygon points="136,120 297,67 297,173" fill="#b45309" opacity="0.92"/>
+  <!-- Leading-edge highlight (top half) -->
+  <polygon points="136,120 297,67 297,94 202,118" fill="#f97316" opacity="0.52"/>
+  <!-- Trailing shadow (bottom half) -->
+  <polygon points="136,120 297,173 297,146 202,122" fill="#92400e" opacity="0.52"/>
+
+  <!-- Fuselage -->
+  <ellipse cx="218" cy="120" rx="82" ry="6.5" fill="#ea580c" filter="url(#sm)"/>
+  <!-- Fuselage centerline -->
+  <line x1="143" y1="119" x2="290" y2="119" stroke="#fbbf24" stroke-width="0.8" opacity="0.38"/>
+
+  <!-- Nose cone -->
+  <polygon points="130,120 148,113 148,127" fill="#fef3c7"/>
+
+  <!-- V-tail fins -->
+  <polygon points="284,120 270,106 279,114" fill="#fcd34d" opacity="0.82"/>
+  <polygon points="284,120 270,134 279,126" fill="#fcd34d" opacity="0.82"/>
+
+  <!-- Engine/pusher prop housing -->
+  <ellipse cx="292" cy="120" rx="8" ry="6.5" fill="#1f2937" stroke="#f97316" stroke-width="1.5"/>
+  <line x1="292" y1="113.5" x2="292" y2="126.5" stroke="#6b7280" stroke-width="3" stroke-linecap="round"/>
+  <line x1="285" y1="120" x2="299" y2="120" stroke="#6b7280" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Wing-tip lights -->
+  <circle cx="297" cy="67" r="2.8" fill="#fbbf24" opacity="0.9"/>
+  <circle cx="297" cy="173" r="2.8" fill="#fbbf24" opacity="0.9"/>
+
+  <!-- ── Labels & UI overlays ── -->
+
+  <!-- Title -->
+  <text x="14" y="18" fill="#f97316" font-family="'Courier New',monospace" font-size="16" font-weight="bold" letter-spacing="1.5">SHAHED-136</text>
+  <line x1="14" y1="24" x2="178" y2="24" stroke="#f97316" stroke-width="0.7" opacity="0.4"/>
+  <text x="14" y="35" fill="#9ca3af" font-family="'Courier New',monospace" font-size="9" letter-spacing="0.4">드론 공격패턴 시뮬레이션</text>
+
+  <!-- Swarm count badge -->
+  <rect x="14" y="42" width="78" height="17" rx="2" fill="rgba(249,115,22,0.14)" stroke="rgba(249,115,22,0.42)" stroke-width="1"/>
+  <text x="53" y="54.5" text-anchor="middle" fill="#fb923c" font-family="'Courier New',monospace" font-size="9" font-weight="bold">× 10대  SWARM</text>
+
+  <!-- Speed badge (top-right) -->
+  <rect x="316" y="9" width="72" height="33" rx="2" fill="rgba(249,115,22,0.1)" stroke="rgba(249,115,22,0.35)" stroke-width="1"/>
+  <text x="352" y="22" text-anchor="middle" fill="#f97316" font-family="'Courier New',monospace" font-size="10" font-weight="bold">180 km/h</text>
+  <text x="352" y="35" text-anchor="middle" fill="#6b7280" font-family="'Courier New',monospace" font-size="8">CRUISE SPD</text>
+
+  <!-- Threat level (bottom-right) -->
+  <rect x="310" y="198" width="78" height="33" rx="2" fill="rgba(255,92,92,0.1)" stroke="rgba(255,92,92,0.38)" stroke-width="1"/>
+  <text x="349" y="211" text-anchor="middle" fill="#ff5c5c" font-family="'Courier New',monospace" font-size="9" font-weight="bold">THREAT  HIGH</text>
+  <text x="349" y="224" text-anchor="middle" fill="#6b7280" font-family="'Courier New',monospace" font-size="8">LOITERING MUNITION</text>
+
+  <!-- DcD LAB brand (bottom-left) -->
+  <text x="14" y="232" fill="#8b5cf6" font-family="serif" font-size="11" font-weight="bold" opacity="0.55">DcD</text>
+  <text x="34" y="232" fill="#6b7280" font-family="'Courier New',monospace" font-size="8" opacity="0.55"> LAB SIM</text>
+</svg>
