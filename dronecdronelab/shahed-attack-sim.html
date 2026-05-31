@@ -831,13 +831,21 @@ function render(){
   c.fillText('(km)', cvs.width-3, rulerY+11);
 
   // ─ 고도 범례 ─
-  const lx=cvs.width-120, ly=12;
-  c.fillStyle='rgba(11,14,22,0.88)'; c.fillRect(lx-6,ly-5,122,74);
-  c.strokeStyle='rgba(79,163,255,0.2)'; c.lineWidth=1; c.strokeRect(lx-6,ly-5,122,58);
+  const lx=cvs.width-138, ly=12;
+  const legItems=[
+    ['#4fa3ff','고고도 (2~3km)'],
+    ['#f97316','중고도 (500m~1km)'],
+    ['#ffffff','저고도 (50~100m)'],
+    ['#22c55e','고도 변화 중'],
+    ['#ff5c5c','레이다 타격 담당'],
+  ];
+  const legH=legItems.length*17+12;
+  c.fillStyle='rgba(11,14,22,0.9)'; c.fillRect(lx-6,ly-5,140,legH);
+  c.strokeStyle='rgba(79,163,255,0.2)'; c.lineWidth=1; c.strokeRect(lx-6,ly-5,140,legH);
   c.font='bold 10px sans-serif'; c.textAlign='left';
-  [['#4fa3ff','고고도 (2~3km)'],['#f97316','중고도 (500m~1km)'],['#ffffff','저고도 (50~100m)'],['#22c55e','고도 변화 중']].forEach(([col,lbl],i)=>{
-    c.fillStyle=col; c.fillRect(lx,ly+i*16,9,9);
-    c.fillStyle='rgba(200,215,240,0.92)'; c.fillText(lbl,lx+13,ly+i*16+8);
+  legItems.forEach(([col,lbl],i)=>{
+    c.fillStyle=col; c.fillRect(lx,ly+i*17,9,9);
+    c.fillStyle='rgba(200,215,240,0.92)'; c.fillText(lbl,lx+13,ly+i*17+8);
   });
 }
 
