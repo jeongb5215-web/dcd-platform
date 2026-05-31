@@ -569,6 +569,35 @@ function render(){
   drawDefLine(c, ID_LINE, 'rgba(79,163,255,0.7)', '방공식별선');
   drawDefLine(c, CT_LINE, 'rgba(255,92,92,0.7)', '통제선');
 
+  // ─ 상단 리드선: TARGET ↔ 통제선 = 40km ─
+  {
+    const ldY=20, ldTx=px(TARGET.x), ldCx=px(CT_LINE);
+    // 배경 바
+    c.fillStyle='rgba(6,8,18,0.7)';
+    c.fillRect(ldTx-2, ldY-14, ldCx-ldTx+4, 22);
+    // 화살 선
+    c.strokeStyle='rgba(244,185,66,0.75)'; c.lineWidth=1.5; c.setLineDash([]);
+    c.beginPath(); c.moveTo(ldTx+5,ldY); c.lineTo(ldCx-5,ldY); c.stroke();
+    // 화살촉 왼쪽 (TARGET)
+    c.beginPath(); c.moveTo(ldTx,ldY); c.lineTo(ldTx+9,ldY-4); c.lineTo(ldTx+9,ldY+4); c.closePath();
+    c.fillStyle='rgba(244,185,66,0.8)'; c.fill();
+    // 화살촉 오른쪽 (통제선)
+    c.beginPath(); c.moveTo(ldCx,ldY); c.lineTo(ldCx-9,ldY-4); c.lineTo(ldCx-9,ldY+4); c.closePath();
+    c.fill();
+    // 수직 틱
+    c.strokeStyle='rgba(244,185,66,0.55)'; c.lineWidth=1;
+    c.beginPath(); c.moveTo(ldTx,ldY-10); c.lineTo(ldTx,ldY+10); c.stroke();
+    c.beginPath(); c.moveTo(ldCx,ldY-10); c.lineTo(ldCx,ldY+10); c.stroke();
+    // 거리 라벨
+    const ldMx=(ldTx+ldCx)/2;
+    c.fillStyle='rgba(255,215,70,0.95)'; c.font='bold 9px monospace'; c.textAlign='center';
+    c.fillText('40 km',ldMx,ldY-4);
+    // 양끝 라벨
+    c.fillStyle='rgba(200,200,200,0.55)'; c.font='7px monospace';
+    c.textAlign='left';  c.fillText('TARGET', ldTx+2, ldY+9);
+    c.textAlign='right'; c.fillText('통제선', ldCx-2, ldY+9);
+  }
+
   // ─ TARGET ─
   const [tx,ty]=tc(TARGET.x,TARGET.y);
   const pulse=0.5+0.5*Math.sin(Date.now()/320);
@@ -660,21 +689,43 @@ function render(){
     }
   });
 
-  // ─ 스케일 바 ─
-  const s10=px(10);
-  c.fillStyle='rgba(176,186,200,0.55)'; c.font='9px sans-serif'; c.textAlign='left';
-  c.fillText('10km',12+s10,cvs.height-7);
-  c.strokeStyle='rgba(176,186,200,0.6)'; c.lineWidth=1.5;
-  c.beginPath();c.moveTo(10,cvs.height-11);c.lineTo(10+s10,cvs.height-11);c.stroke();
-  c.beginPath();c.moveTo(10,cvs.height-15);c.lineTo(10,cvs.height-7);c.stroke();
-  c.beginPath();c.moveTo(10+s10,cvs.height-15);c.lineTo(10+s10,cvs.height-7);c.stroke();
+  // ─ 하단 1km 격자 눈금자 ─
+  const rulerY = cvs.height - 16;
+  // 배경 바
+  c.fillStyle='rgba(6,8,18,0.75)';
+  c.fillRect(0, rulerY-14, cvs.width, 30);
+  // 기준선
+  c.strokeStyle='rgba(100,135,175,0.5)'; c.lineWidth=1;
+  c.beginPath(); c.moveTo(0,rulerY); c.lineTo(cvs.width,rulerY); c.stroke();
+
+  for(let xkm=0; xkm<=WW; xkm++){
+    const xp=px(xkm);
+    if(xkm%10===0){
+      // 주 눈금 (10km)
+      c.strokeStyle='rgba(160,195,235,0.7)'; c.lineWidth=1;
+      c.beginPath(); c.moveTo(xp,rulerY-11); c.lineTo(xp,rulerY); c.stroke();
+      c.fillStyle='rgba(160,195,235,0.75)'; c.font='bold 8px monospace'; c.textAlign='center';
+      c.fillText(xkm, xp, rulerY+11);
+    } else if(xkm%5===0){
+      // 중간 눈금 (5km)
+      c.strokeStyle='rgba(100,140,185,0.5)'; c.lineWidth=0.8;
+      c.beginPath(); c.moveTo(xp,rulerY-7); c.lineTo(xp,rulerY); c.stroke();
+    } else {
+      // 소 눈금 (1km)
+      c.strokeStyle='rgba(55,80,115,0.35)'; c.lineWidth=0.5;
+      c.beginPath(); c.moveTo(xp,rulerY-3); c.lineTo(xp,rulerY); c.stroke();
+    }
+  }
+  // 단위 표기
+  c.fillStyle='rgba(120,155,195,0.55)'; c.font='7px monospace'; c.textAlign='right';
+  c.fillText('(km)', cvs.width-3, rulerY+11);
 
   // ─ 고도 범례 ─
   const lx=cvs.width-120, ly=12;
   c.fillStyle='rgba(11,14,22,0.88)'; c.fillRect(lx-6,ly-5,122,58);
   c.strokeStyle='rgba(79,163,255,0.2)'; c.lineWidth=1; c.strokeRect(lx-6,ly-5,122,58);
   c.font='bold 10px sans-serif'; c.textAlign='left';
-  [['#4fa3ff','고고도 (>2km)'],['#f97316','중고도 (500m~1km)'],['#ffffff','저고도 (50~100m)']].forEach(([col,lbl],i)=>{
+  [['#4fa3ff','고고도 (2~3km)'],['#f97316','중고도 (500m~1km)'],['#ffffff','저고도 (50~100m)']].forEach(([col,lbl],i)=>{
     c.fillStyle=col; c.fillRect(lx,ly+i*16,9,9);
     c.fillStyle='rgba(200,215,240,0.92)'; c.fillText(lbl,lx+13,ly+i*16+8);
   });
