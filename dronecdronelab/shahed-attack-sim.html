@@ -490,7 +490,8 @@ function updateDrone(d, dt){
 
   // 요격 (선행 드론은 탐지 무관 — 이미 깊숙이 침투)
   d.iCooldown=Math.max(0,d.iCooldown-dt);
-  if(d.detected && G.interceptOn && d.iCooldown<=0 && d.role!=='scout'){
+  // 디코이는 레이다 타격 임무 보장 — 요격 제외
+  if(d.detected && G.interceptOn && d.iCooldown<=0 && d.role!=='decoy'){
     d.iCooldown=18;
     if(Math.random()<1-Math.exp(-G.killP*0.12*dt)){  // 시간 독립 확률
       d.state='DEAD'; G.killCount++;
@@ -776,8 +777,8 @@ function render(){
     // 고도별 색상: 부드러운 보간 (고고도=파랑, 중고도=기본, 저고도=흰색)
     const dCol=altColor(d);
 
-    // 탐지 링
-    if(d.detected){
+    // 탐지 링 (디코이는 표시 안 함 — 요격 면제 중)
+    if(d.detected && d.role!=='decoy'){
       c.beginPath();c.arc(dx2,dy2,sz+5,0,Math.PI*2);
       c.strokeStyle=`rgba(255,92,92,${alp*0.9})`;c.lineWidth=1.5;c.stroke();
     }
