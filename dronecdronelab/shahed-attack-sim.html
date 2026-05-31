@@ -532,7 +532,7 @@ function loop(now){
   G.lastF=now;
   const totalDt=Math.min(wallDt*G.ts, 4.0);
   G.t+=totalDt;
-  G.sweep+=totalDt*0.6;
+  G.sweep+=wallDt*0.6;  // 레이다 스윕: 배속 무관, 실시간 기준
 
   // 서브스텝: 고배속에서도 레이다 탐지·요격이 정확히 작동
   const SUB=0.12;  // 서브스텝 최대 0.12 시뮬초
