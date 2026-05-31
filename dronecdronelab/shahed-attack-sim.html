@@ -204,7 +204,7 @@ const TERRAIN = {
   mountains: [
     {cx:48, cy:17, rx:15, ry:11},   // 북서 산악 (레이다+재밍)
     {cx:82, cy:37, rx:17, ry:13},   // 중앙 산악
-    {cx:115,cy:21, rx:13, ry:9},    // 북동 산악 (레이다)
+    {cx:115,cy:36, rx:13, ry:9},    // 북동 산악 (레이다, 강 위 탐지 위치)
     {cx:58, cy:71, rx:11, ry:7},    // 남서 산악
   ],
   river: {x1:35, x2:130, y1:52, y2:58},
@@ -212,10 +212,10 @@ const TERRAIN = {
 };
 
 const RADARS = [
-  {x:48,  y:17, det:7,  jam:3,  label:'도심권 외곽 레이다', active:true, struck:false},
-  {x:58,  y:71, det:7,  jam:3,  label:'도심권 외곽 레이다', active:true, struck:false},
-  {x:33,  y:47, det:5,  jam:2,  label:'도심권 레이다',      active:true, struck:false},
-  {x:115, y:21, det:15, jam:0,  label:'통제선 탐지 레이다', active:true, struck:false},
+  {x:48,  y:17, det:20, jam:3,  label:'도심권 외곽 레이다', active:true, struck:false},  // [0] 탐지 20km
+  {x:58,  y:71, det:7,  jam:3,  label:'도심권 외곽 레이다', active:true, struck:false},  // [1]
+  {x:33,  y:47, det:5,  jam:2,  label:'도심권 레이다',      active:true, struck:false},  // [2]
+  {x:115, y:43, det:15, jam:0,  label:'통제선 탐지 레이다', active:true, struck:false},  // [3] ← 강 위 탐지 (y43+15=y58)
 ];
 const TARGET = {x:12, y:61};
 const ID_LINE = 145;   // 방공식별선 x (km)
@@ -255,12 +255,12 @@ function makeDrone(id, sy, type, isScout) {
   let wps, role;
 
   if(isScout){
-    // 선행 드론: 통제선 레이다(RADARS[2]) 직접 타격 경로
+    // 선행 드론: 통제선 레이다(RADARS[3]) 직접 타격 경로
     role='scout';
     wps=[
       {x:ENTRY_X, y:sy,              alt:3000},
-      {x:130,     y:RADARS[2].y+4,   alt:3000},
-      {x:RADARS[2].x, y:RADARS[2].y, alt:800},  // 타격 시 중고도로 강하
+      {x:130,     y:RADARS[3].y+4,   alt:3000},
+      {x:RADARS[3].x, y:RADARS[3].y, alt:800},  // 타격 시 중고도로 강하
     ];
   } else {
     // 군집 드론: 뭉쳐서 출발 → 무작위 경로 산개
@@ -410,7 +410,7 @@ function updateDrone(d, dt){
 
     // ── 선행 드론: 마지막 웨이포인트 = 레이다 타격 ──
     if(d.role==='scout' && d.wi===d.wps.length-1){
-      const tgt=RADARS[2];
+      const tgt=RADARS[3];
       if(!tgt.struck){
         tgt.active=false; tgt.struck=true;
         addLog(`T+${fmtT(G.t)} [레이다 파괴] #${d.id+1} 통제선 레이다 타격 → OFFLINE`,'v');
