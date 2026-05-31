@@ -215,12 +215,12 @@ const TERRAIN = {
 };
 
 const RADARS = [
-  {x:48,  y:17, det:25, jam:3,  label:'북서 산악 레이다',   active:true, struck:false},  // [0] 북서 산악 25km
-  {x:58,  y:71, det:25, jam:3,  label:'남서 산악 레이다',   active:true, struck:false},  // [1] 남서 산악 25km
-  {x:33,  y:47, det:7,  jam:3,  label:'도심권 레이다',      active:true, struck:false},  // [2] 도심 상단
-  {x:20,  y:68, det:7,  jam:3,  label:'도심권 레이다(하)',  active:true, struck:false},  // [3] 도심 하단
-  {x:82,  y:37, det:25, jam:3,  label:'중앙 산악 레이다',   active:true, struck:false},  // [4] 중앙 산악 25km
-  {x:115, y:43, det:30, jam:0,  label:'통제선 탐지 레이다', active:true, struck:false},  // [5] 통제선 산악 30km
+  {x:48,  y:17, det:25, jam:3,  label:'북서 산악 레이다',   active:true, struck:false, firstAttacker:-1},
+  {x:58,  y:71, det:25, jam:3,  label:'남서 산악 레이다',   active:true, struck:false, firstAttacker:-1},
+  {x:33,  y:47, det:7,  jam:3,  label:'도심권 레이다',      active:true, struck:false, firstAttacker:-1},
+  {x:20,  y:68, det:7,  jam:3,  label:'도심권 레이다(하)',  active:true, struck:false, firstAttacker:-1},
+  {x:82,  y:37, det:25, jam:3,  label:'중앙 산악 레이다',   active:true, struck:false, firstAttacker:-1},
+  {x:115, y:43, det:30, jam:0,  label:'통제선 탐지 레이다', active:true, struck:false, firstAttacker:-1},
 ];
 const TARGET = {x:12, y:61};
 const ID_LINE = 145;   // 방공식별선 x (km)
@@ -235,8 +235,7 @@ const G = {
   drones:[], evadeTotal:0,
   hitCount:0, killCount:0,
   bestTransit: -1,
-  decoyAssigned: false,
-  swarmRadarAssigned: false,  // 스웜 중 레이다 타격 1대만 허용
+  // 레이다별 첫 탐지 드론이 타격 담당 (RADARS[i].firstAttacker로 관리)
   raf:null, lastF:null,
   buildings: [],   // 사전 생성된 빌딩
   sweep: 0,        // 레이다 스윕 각도
@@ -327,8 +326,8 @@ function makeDrone(id, sy, type) {
 
 function initDrones(){
   G.drones=[];G.evadeTotal=0;G.hitCount=0;G.killCount=0;
-  G.bestTransit=-1; G.decoyAssigned=false; G.swarmRadarAssigned=false;
-  RADARS.forEach(r=>{ r.active=true; r.struck=false; });
+  G.bestTransit=-1;
+  RADARS.forEach(r=>{ r.active=true; r.struck=false; r.firstAttacker=-1; });
 
   const n=G.droneCount, sc=G.scenario;
   // 전원 군집 출발 — 레이다에 최초 탐지된 드론이 디코이로 자동 지정
@@ -409,43 +408,27 @@ function updateDrone(d, dt){
   // 통제선 통과 시각 기록 (처음 한 번)
   if(d.ctCrossTime<0 && d.x<=CT_LINE) d.ctCrossTime=G.t;
 
-  // ── 최초 탐지 드론 → 디코이 자동 지정 ──
-  if(d.detected && !G.decoyAssigned){
-    G.decoyAssigned=true;
-    d.role='decoy';
-    d.color='#ff5c5c';
-    d.launchDelay=0;
-    addLog(`T+${fmtT(G.t)} [디코이 지정] #${d.id+1} — 레이다 연속 타격 임무 개시`,'v');
-  }
-
-  // ── 디코이: 활성 레이다 신호 자동 추적·타격 (모든 레이다 파괴까지) ──
-  if(d.role==='decoy' && d.targetRadarIdx<0){
-    const ri=findNearestActiveRadar(d);
-    if(ri>=0){
-      d.targetRadarIdx=ri;
-      d.wps.splice(d.wi,0,{
-        x:RADARS[ri].x, y:RADARS[ri].y,
-        alt:Math.min(800,d.alt), radarHit:ri
-      });
-      addLog(`T+${fmtT(G.t)} [디코이 표적] #${d.id+1} → ${RADARS[ri].label}`,'v');
-      G.evadeTotal++;
-    }
-  }
-
-  // ── 스웜 1대만 레이다 타격 (최초 탐지 스웜 드론에게만 허용) ──
-  if(d.detected && d.targetRadarIdx<0 && d.role==='swarm' && !G.swarmRadarAssigned){
+  // ── 레이다에 탐지된 경우: 해당 레이다의 첫 탐지 드론이 타격 담당 ──
+  // 미탐지 드론은 레이다를 그냥 통과 (아무것도 하지 않음)
+  if(d.detected && d.targetRadarIdx<0){
     const ri=RADARS.findIndex(r=>
-      r.active && Math.hypot(d.x-r.x,d.y-r.y)<r.det*G.radarS
+      r.active && !r.struck && r.firstAttacker<0 &&
+      Math.hypot(d.x-r.x,d.y-r.y)<r.det*G.radarS
     );
     if(ri>=0){
-      G.swarmRadarAssigned=true;
+      // 이 레이다의 첫 탐지 드론 → 타격 담당 지정
+      RADARS[ri].firstAttacker=d.id;
       d.targetRadarIdx=ri;
+      d.role='attacker';
+      d.color='#ff5c5c';
       d.wps.splice(d.wi,0,{
         x:RADARS[ri].x, y:RADARS[ri].y,
         alt:Math.min(800,d.alt), radarHit:ri
       });
-      addLog(`T+${fmtT(G.t)} [스웜 타격기동] #${d.id+1} → ${RADARS[ri].label}`,'v');
+      addLog(`T+${fmtT(G.t)} [레이다 타격 지정] #${d.id+1} → ${RADARS[ri].label}`,'v');
+      G.evadeTotal++;
     }
+    // 이미 타격 담당이 있는 레이다에 탐지된 나머지 드론 → 그냥 통과
   }
 
   // 이동
@@ -490,8 +473,8 @@ function updateDrone(d, dt){
 
   // 요격 (선행 드론은 탐지 무관 — 이미 깊숙이 침투)
   d.iCooldown=Math.max(0,d.iCooldown-dt);
-  // 디코이는 레이다 타격 임무 보장 — 요격 제외
-  if(d.detected && G.interceptOn && d.iCooldown<=0 && d.role!=='decoy'){
+  // 레이다 타격 담당 드론(targetRadarIdx>=0)은 요격 면제 — 타격 보장
+  if(d.detected && G.interceptOn && d.iCooldown<=0 && d.targetRadarIdx<0){
     d.iCooldown=18;
     if(Math.random()<1-Math.exp(-G.killP*0.12*dt)){  // 시간 독립 확률
       d.state='DEAD'; G.killCount++;
@@ -553,7 +536,7 @@ function blendCol(c1,c2,t){
   return `rgb(${Math.round(r1+(r2-r1)*t)},${Math.round(g1+(g2-g1)*t)},${Math.round(b1+(b2-b1)*t)})`;
 }
 function altColor(d){
-  if(d.role==='decoy') return '#ff5c5c';
+  if(d.role==='attacker') return '#ff5c5c';
   const altF=Math.min(1,d.alt/3000);
   if(altF>=0.67){   // 고고도 → 파랑
     return blendCol(d.color,'#4fa3ff',Math.min(1,(altF-0.67)/0.33));
@@ -777,8 +760,8 @@ function render(){
     // 고도별 색상: 부드러운 보간 (고고도=파랑, 중고도=기본, 저고도=흰색)
     const dCol=altColor(d);
 
-    // 탐지 링 (디코이는 표시 안 함 — 요격 면제 중)
-    if(d.detected && d.role!=='decoy'){
+    // 탐지 링 (타격 담당은 표시 안 함 — 요격 면제)
+    if(d.detected && d.targetRadarIdx<0){
       c.beginPath();c.arc(dx2,dy2,sz+5,0,Math.PI*2);
       c.strokeStyle=`rgba(255,92,92,${alp*0.9})`;c.lineWidth=1.5;c.stroke();
     }
@@ -798,15 +781,16 @@ function render(){
     }
 
     // ID 레이블
-    const idLabel = d.role==='decoy' ? '디코이' : `#${d.id+1}`;
-    c.fillStyle = d.role==='decoy' ? 'rgba(255,100,100,1)' : `rgba(255,255,255,${alp*0.85})`;
+    const isAttacker = d.targetRadarIdx>=0;
+    const idLabel = isAttacker ? '타격' : `#${d.id+1}`;
+    c.fillStyle = isAttacker ? 'rgba(255,100,100,1)' : `rgba(255,255,255,${alp*0.85})`;
     c.font=`bold 8px monospace`; c.textAlign='center';
     c.fillText(idLabel,dx2,dy2-sz-4);
 
-    // 디코이 임무 표시
-    if(d.role==='decoy'){
+    // 타격 임무 표시
+    if(isAttacker){
       c.font='7px monospace'; c.fillStyle='rgba(255,210,60,0.9)';
-      c.fillText('▶레이다연속타격',dx2,dy2+sz+10);
+      c.fillText(`▶${RADARS[d.targetRadarIdx]?.label||'레이다'}`,dx2,dy2+sz+10);
     }
 
     // 저고도 수치 표시 (<200m)
