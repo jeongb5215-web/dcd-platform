@@ -163,11 +163,11 @@ canvas{flex:1;display:block;width:100%;height:100%}
       <div class="sect-hd"><div class="d5" style="background:var(--purple)"></div>비행 규칙</div>
       <div class="sect-bd" style="gap:5px">
         <div style="font-size:12px;color:var(--muted);line-height:1.85;font-weight:500">
-          ① 선행 드론 1대: 통제선 레이다 먼저 타격 (레이다 차단)<br>
+          ① 선행 드론 1대: 통제선 레이다 즉시 타격 → OFFLINE<br>
           ② 군집 드론 9대: 뭉쳐서 랜덤 지연 출발 · 경로 산개<br>
-          ③ 산악 통과 시 고고도 / 강 통과 시 최저고도 비행<br>
-          ④ 레이다 탐지권 진입 → 남측 우회 후 재접근<br>
-          ⑤ 목표 최종 접근 시 최저고도 유지<br>
+          ③ <b style="color:#4fa3ff">탐지 즉시 레이다 타격 기동</b> → 파괴 후 목표 재개<br>
+          ④ 거리별 탐지 구역: 50%(확실) / 75%(중간) / 100%(외곽)<br>
+          ⑤ 산악 3km 상승 / 강 80m 저고도 / 최종 50m 접근<br>
           ⑥ 샤헤드-238 (1000km/h) 동일 패턴 적용
         </div>
       </div>
@@ -286,8 +286,8 @@ function makeDrone(id, sy, type, isScout) {
     state:'FLY',
     trail:[], detected:false,
     iCooldown:0,
-    // 선행 드론은 즉시 출발, 군집은 랜덤 지연 (3~20 시뮬 초)
     launchDelay: isScout ? 0 : 3+Math.random()*17,
+    targetRadarIdx: -1,    // 타격 대상 레이다 인덱스 (-1=없음)
     color: isScout ? '#ff5c5c' : (type==='238'?'#f97316':'#22c55e'),
   };
 }
@@ -328,12 +328,19 @@ function overRiver(x,y){
 // ── 탐지 체크 (고도 반영, 파괴된 레이다 제외) ────────────────────────────
 function isDetected(d){
   return RADARS.some(r=>{
-    if(!r.active) return false;            // 파괴된 레이다 무시
+    if(!r.active) return false;
     const dist=Math.hypot(d.x-r.x,d.y-r.y);
     const effDet=r.det*G.radarS;
     if(dist>effDet) return false;
-    const altF=Math.min(1,d.alt/400);
-    return dist < effDet*(0.25+0.75*altF);
+    const altF=Math.min(1,d.alt/400);       // 저고도 → 탐지 어려움
+    // 거리 구역별 탐지 기준:
+    //  0~50% 범위 (확실 탐지): 극저고도(altF<0.05)만 회피
+    //  50~75% 범위: 고도 영향 중간
+    //  75~100% 범위: 고도+거리 모두 중요 (저고도면 탐지 안 됨)
+    const ratio = dist/effDet;
+    if(ratio < 0.5)  return altF > 0.05;
+    if(ratio < 0.75) return altF > 0.2;
+    return altF > 0.5;   // 외곽: 중고도 이상만 탐지
   });
 }
 
@@ -360,18 +367,46 @@ function updateDrone(d, dt){
   // 탐지
   d.detected=isDetected(d);
 
+  // ── 탐지 즉시 레이다 타격 기동 (군집 드론, 미할당 상태 1회) ──
+  if(d.detected && d.targetRadarIdx<0 && d.role!=='scout'){
+    const ri=RADARS.findIndex(r=>
+      r.active && Math.hypot(d.x-r.x,d.y-r.y)<r.det*G.radarS
+    );
+    if(ri>=0){
+      d.targetRadarIdx=ri;
+      // 현재 위치 다음 웨이포인트로 레이다 타격 지점 삽입
+      d.wps.splice(d.wi,0,{
+        x:RADARS[ri].x, y:RADARS[ri].y,
+        alt:Math.min(800,d.alt),
+        radarHit:ri
+      });
+      addLog(`T+${fmtT(G.t)} [타격기동] #${d.id+1} → ${RADARS[ri].label}`,'v');
+      G.evadeTotal++;
+    }
+  }
+
   // 이동
   const ddx=wp.x-d.x, ddy=wp.y-d.y, dist=Math.hypot(ddx,ddy);
   const step=d.spd*dt;
   if(dist<step+0.05){
     d.x=wp.x; d.y=wp.y;
 
-    // 선행 드론: 마지막 웨이포인트 = 레이다 타격
+    // ── 레이다 타격 웨이포인트 도달 (군집) ──
+    if(wp.radarHit!==undefined){
+      const r=RADARS[wp.radarHit];
+      if(r&&!r.struck){
+        r.active=false; r.struck=true;
+        addLog(`T+${fmtT(G.t)} [레이다 파괴] #${d.id+1} ${r.label} → OFFLINE`,'v');
+      }
+      d.targetRadarIdx=-1; // 타격 완료, 다음 목표 계속
+    }
+
+    // ── 선행 드론: 마지막 웨이포인트 = 레이다 타격 ──
     if(d.role==='scout' && d.wi===d.wps.length-1){
       const tgt=RADARS[2];
       if(!tgt.struck){
         tgt.active=false; tgt.struck=true;
-        addLog(`T+${fmtT(G.t)} [레이다 파괴] #${d.id+1} 통제선 레이다 타격 — 탐지 차단`,'v');
+        addLog(`T+${fmtT(G.t)} [레이다 파괴] #${d.id+1} 통제선 레이다 타격 → OFFLINE`,'v');
       }
       d.state='HIT'; G.hitCount++; return;
     }
@@ -531,9 +566,17 @@ function render(){
       c.fillStyle='rgba(255,92,92,0.07)'; c.fill();
       c.strokeStyle='rgba(255,92,92,0.4)'; c.lineWidth=1; c.setLineDash([3,3]); c.stroke(); c.setLineDash([]);
     }
-    // 탐지 원
+    // 거리별 탐지 구역 동심원 (75%·50%)
+    [[0.75,'rgba(79,163,255,0.12)'],[0.5,'rgba(79,163,255,0.22)']].forEach(([ratio,col])=>{
+      c.beginPath(); c.arc(rx,ry,detR*ratio,0,Math.PI*2);
+      c.strokeStyle=col; c.lineWidth=0.7; c.setLineDash([2,3]); c.stroke(); c.setLineDash([]);
+    });
+    // 50% 이내 확실 탐지 구역 채우기
+    c.beginPath(); c.arc(rx,ry,detR*0.5,0,Math.PI*2);
+    c.fillStyle='rgba(79,163,255,0.05)'; c.fill();
+    // 외곽 탐지 원 (100%)
     c.beginPath(); c.arc(rx,ry,detR,0,Math.PI*2);
-    c.strokeStyle='rgba(79,163,255,0.3)'; c.lineWidth=1; c.setLineDash([4,4]); c.stroke(); c.setLineDash([]);
+    c.strokeStyle='rgba(79,163,255,0.28)'; c.lineWidth=1; c.setLineDash([4,4]); c.stroke(); c.setLineDash([]);
 
     // 스윕 웨지
     const sa=G.sweep*(0.8+i*0.25);
