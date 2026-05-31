@@ -234,7 +234,8 @@ const G = {
   droneCount:10, scenario:1,
   drones:[], evadeTotal:0,
   hitCount:0, killCount:0,
-  bestTransit: -1,   // 통제선→TARGET 최단 실측 시간(초)
+  bestTransit: -1,
+  decoyAssigned: false,  // 최초 탐지 드론 → 디코이 지정 여부
   raf:null, lastF:null,
   buildings: [],   // 사전 생성된 빌딩
   sweep: 0,        // 레이다 스윕 각도
@@ -252,73 +253,50 @@ function genBuildings() {
   }
 }
 
-// ── 드론 생성 ──────────────────────────────────────────────────────────────
-function makeDrone(id, sy, type, isScout) {
-  // 속도 2배 적용
-  const spd = type==='238' ? 500/3600 : 185/3600; // km/s
+// ── 드론 생성 (전원 군집 — 디코이는 최초 탐지 시 동적 지정) ──────────────
+function makeDrone(id, sy, type) {
+  const spd = type==='238' ? 500/3600 : 185/3600;
   const rnd = (r) => (Math.random()-0.5)*r;
-  let wps, role;
-
-  if(isScout){
-    // 선행 드론: 통제선 레이다(RADARS[5]) 직접 타격 경로
-    role='scout';
-    wps=[
-      {x:ENTRY_X, y:sy,              alt:3000},
-      {x:130,     y:RADARS[5].y+4,   alt:3000},
-      {x:RADARS[5].x, y:RADARS[5].y, alt:800},
-    ];
-  } else {
-    // 군집 드론: 뭉쳐서 출발 → 무작위 경로 산개
-    role='swarm';
-    const cy = 44 + rnd(7); // 군집 중심 y
-    wps=[
-      {x:ENTRY_X, y:sy,               alt:3000},
-      {x:ID_LINE, y:cy+rnd(12),        alt:3000},
-      {x:CT_LINE, y:cy+rnd(12),        alt:3000},
-      {x:105,     y:Math.max(38,cy+rnd(10)), alt:3000},
-      {x:90,      y:56+rnd(6),         alt:80},   // 강 저고도
-      {x:73,      y:56+rnd(6),         alt:60},
-      {x:63,      y:68+rnd(5),         alt:80},
-      {x:45,      y:68+rnd(5),         alt:80},
-      {x:28,      y:64+rnd(4),         alt:50},   // 최종 접근 저고도
-      {x:TARGET.x,y:TARGET.y,          alt:50},
-    ];
-    if(id===G.droneCount-1){
-      wps.splice(8,0,{x:35, y:TARGET.y-2, alt:20});
-    }
-  }
-
+  const cy = 44 + rnd(7);
+  const wps=[
+    {x:ENTRY_X, y:sy,                    alt:3000},
+    {x:ID_LINE, y:cy+rnd(12),            alt:3000},
+    {x:CT_LINE, y:cy+rnd(12),            alt:3000},
+    {x:105,     y:Math.max(38,cy+rnd(10)), alt:3000},
+    {x:90,      y:56+rnd(6),             alt:80},
+    {x:73,      y:56+rnd(6),             alt:60},
+    {x:63,      y:68+rnd(5),             alt:80},
+    {x:45,      y:68+rnd(5),             alt:80},
+    {x:28,      y:64+rnd(4),             alt:50},
+    {x:TARGET.x,y:TARGET.y,              alt:50},
+  ];
+  if(id===G.droneCount-1) wps.splice(8,0,{x:35,y:TARGET.y-2,alt:20});
   return {
-    id, type, role, x:ENTRY_X, y:sy, alt:600, spd,
+    id, type, role:'swarm', x:ENTRY_X, y:sy, alt:600, spd,
     wps, wi:0,
     state:'FLY',
     trail:[], detected:false,
     iCooldown:0,
-    launchDelay: isScout ? 0 : 3+Math.random()*17,
+    launchDelay: 3+Math.random()*17,
     targetRadarIdx: -1,
-    ctCrossTime: -1,       // 통제선 통과 시뮬 시각 (G.t)
-    color: isScout ? '#ff5c5c' : (type==='238'?'#f97316':'#22c55e'),
+    ctCrossTime: -1,
+    color: type==='238'?'#f97316':'#22c55e',
   };
 }
 
 function initDrones(){
-  G.drones=[];G.evadeTotal=0;G.hitCount=0;G.killCount=0;G.bestTransit=-1;
-  // 레이다 상태 초기화
+  G.drones=[];G.evadeTotal=0;G.hitCount=0;G.killCount=0;
+  G.bestTransit=-1; G.decoyAssigned=false;
   RADARS.forEach(r=>{ r.active=true; r.struck=false; });
 
   const n=G.droneCount, sc=G.scenario;
-  const scoutType = sc===2?'238':'136';
-
-  // #0: 선행 드론 (레이다 타격)
-  G.drones.push(makeDrone(0, 32, scoutType, true));
-
-  // #1~n-1: 군집 드론 (뭉쳐서 산개 출발)
-  for(let i=1;i<n;i++){
-    const sy = 44 + (Math.random()-0.5)*6; // 군집 출발
+  // 전원 군집 출발 — 레이다에 최초 탐지된 드론이 디코이로 자동 지정
+  for(let i=0;i<n;i++){
+    const sy = 44 + (Math.random()-0.5)*6;
     let tp='136';
     if(sc===2) tp='238';
     else if(sc===3 && i>=(n-Math.round(n*0.4))) tp='238';
-    G.drones.push(makeDrone(i,sy,tp,false));
+    G.drones.push(makeDrone(i,sy,tp));
   }
 }
 
@@ -332,6 +310,17 @@ function overMountain(x,y){
 function overRiver(x,y){
   const r=TERRAIN.river;
   return x>=r.x1&&x<=r.x2&&y>=r.y1&&y<=r.y2;
+}
+
+// ── 가장 가까운 활성 레이다 인덱스 반환 ──────────────────────────────────
+function findNearestActiveRadar(d){
+  let mn=Infinity, ri=-1;
+  RADARS.forEach((r,i)=>{
+    if(!r.active||r.struck) return;
+    const dd=Math.hypot(d.x-r.x,d.y-r.y);
+    if(dd<mn){mn=dd;ri=i;}
+  });
+  return ri;
 }
 
 // ── 탐지 체크 (고도 반영, 파괴된 레이다 제외) ────────────────────────────
@@ -379,21 +368,41 @@ function updateDrone(d, dt){
   // 통제선 통과 시각 기록 (처음 한 번)
   if(d.ctCrossTime<0 && d.x<=CT_LINE) d.ctCrossTime=G.t;
 
-  // ── 탐지 즉시 레이다 타격 기동 (군집 드론, 미할당 상태 1회) ──
-  if(d.detected && d.targetRadarIdx<0 && d.role!=='scout'){
+  // ── 최초 탐지 드론 → 디코이 자동 지정 ──
+  if(d.detected && !G.decoyAssigned){
+    G.decoyAssigned=true;
+    d.role='decoy';
+    d.color='#ff5c5c';
+    d.launchDelay=0;
+    addLog(`T+${fmtT(G.t)} [디코이 지정] #${d.id+1} — 레이다 연속 타격 임무 개시`,'v');
+  }
+
+  // ── 디코이: 활성 레이다 신호 자동 추적·타격 (모든 레이다 파괴까지) ──
+  if(d.role==='decoy' && d.targetRadarIdx<0){
+    const ri=findNearestActiveRadar(d);
+    if(ri>=0){
+      d.targetRadarIdx=ri;
+      d.wps.splice(d.wi,0,{
+        x:RADARS[ri].x, y:RADARS[ri].y,
+        alt:Math.min(800,d.alt), radarHit:ri
+      });
+      addLog(`T+${fmtT(G.t)} [디코이 표적] #${d.id+1} → ${RADARS[ri].label}`,'v');
+      G.evadeTotal++;
+    }
+  }
+
+  // ── 일반 군집 드론: 탐지 시 해당 레이다 1회 타격 후 목표 재개 ──
+  if(d.detected && d.targetRadarIdx<0 && d.role==='swarm'){
     const ri=RADARS.findIndex(r=>
       r.active && Math.hypot(d.x-r.x,d.y-r.y)<r.det*G.radarS
     );
     if(ri>=0){
       d.targetRadarIdx=ri;
-      // 현재 위치 다음 웨이포인트로 레이다 타격 지점 삽입
       d.wps.splice(d.wi,0,{
         x:RADARS[ri].x, y:RADARS[ri].y,
-        alt:Math.min(800,d.alt),
-        radarHit:ri
+        alt:Math.min(800,d.alt), radarHit:ri
       });
       addLog(`T+${fmtT(G.t)} [타격기동] #${d.id+1} → ${RADARS[ri].label}`,'v');
-      G.evadeTotal++;
     }
   }
 
@@ -403,24 +412,15 @@ function updateDrone(d, dt){
   if(dist<step+0.05){
     d.x=wp.x; d.y=wp.y;
 
-    // ── 레이다 타격 웨이포인트 도달 (군집) ──
+    // ── 레이다 타격 웨이포인트 도달 ──
     if(wp.radarHit!==undefined){
       const r=RADARS[wp.radarHit];
       if(r&&!r.struck){
         r.active=false; r.struck=true;
         addLog(`T+${fmtT(G.t)} [레이다 파괴] #${d.id+1} ${r.label} → OFFLINE`,'v');
       }
-      d.targetRadarIdx=-1; // 타격 완료, 다음 목표 계속
-    }
-
-    // ── 선행 드론: 마지막 웨이포인트 = 레이다 타격 ──
-    if(d.role==='scout' && d.wi===d.wps.length-1){
-      const tgt=RADARS[5];
-      if(!tgt.struck){
-        tgt.active=false; tgt.struck=true;
-        addLog(`T+${fmtT(G.t)} [레이다 파괴] #${d.id+1} 통제선 레이다 타격 → OFFLINE`,'v');
-      }
-      d.state='HIT'; G.hitCount++; return;
+      d.targetRadarIdx=-1;
+      // 디코이: 즉시 다음 활성 레이다 탐색 (다음 업데이트에서 자동 처리)
     }
 
     if(d.wi<d.wps.length-1) d.wi++;
@@ -705,7 +705,7 @@ function render(){
 
     // 고도별 색상: 고고도(>2km)=파랑, 중고도(500~1km)=기본색, 저고도(<200m)=흰색
     let dCol;
-    if(d.role==='scout') dCol='#ff5c5c';
+    if(d.role==='decoy') dCol='#ff5c5c';
     else if(altF>0.67)   dCol='#4fa3ff';           // 고고도 >2km → 파랑
     else if(altF<0.07)   dCol='#ffffff';            // 저고도 <200m → 흰색
     else                 dCol=d.color;              // 중고도 500m~1km → 기본색
@@ -731,15 +731,15 @@ function render(){
     }
 
     // ID 레이블
-    const idLabel = d.role==='scout' ? '선행' : `#${d.id+1}`;
-    c.fillStyle = d.role==='scout' ? 'rgba(255,92,92,0.95)' : `rgba(255,255,255,${alp*0.85})`;
+    const idLabel = d.role==='decoy' ? '디코이' : `#${d.id+1}`;
+    c.fillStyle = d.role==='decoy' ? 'rgba(255,100,100,1)' : `rgba(255,255,255,${alp*0.85})`;
     c.font=`bold 8px monospace`; c.textAlign='center';
     c.fillText(idLabel,dx2,dy2-sz-4);
 
-    // 선행 드론 레이다 타격 표시
-    if(d.role==='scout'){
-      c.font='7px monospace'; c.fillStyle='rgba(255,200,50,0.85)';
-      c.fillText('▶레이다타격',dx2,dy2+sz+10);
+    // 디코이 임무 표시
+    if(d.role==='decoy'){
+      c.font='7px monospace'; c.fillStyle='rgba(255,210,60,0.9)';
+      c.fillText('▶레이다연속타격',dx2,dy2+sz+10);
     }
 
     // 저고도 수치 표시 (<200m)
