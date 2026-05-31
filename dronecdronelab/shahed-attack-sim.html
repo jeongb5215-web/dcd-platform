@@ -216,8 +216,8 @@ const RADARS = [
   {x:115, y:21, det:15, jam:0,  label:'통제선 탐지 레이다', active:true, struck:false},
 ];
 const TARGET = {x:12, y:61};
-const ID_LINE = 132;   // 방공식별선 x (km)
-const CT_LINE = 110;   // 통제선 x (km)
+const ID_LINE = 145;   // 방공식별선 x (km)
+const CT_LINE = 133;   // 통제선 x (km)  ← 북동 산악(102~128) 우측
 const ENTRY_X = 148;
 
 // ── 글로벌 상태 ────────────────────────────────────────────────────────────
@@ -469,8 +469,8 @@ function render(){
   c.strokeStyle='rgba(79,163,255,0.35)'; c.lineWidth=1;
   c.beginPath(); c.rect(px(rv.x1),py(rv.y1),px(rv.x2)-px(rv.x1),py(rv.y2)-py(rv.y1));
   c.fill(); c.stroke();
-  c.fillStyle='rgba(79,163,255,0.55)'; c.font=`bold ${Math.max(9,cvs.height*0.018)}px sans-serif`; c.textAlign='center';
-  c.fillText('강',px((rv.x1+rv.x2)/2),py((rv.y1+rv.y2)/2)+4);
+  c.fillStyle='rgba(79,163,255,0.7)'; c.font=`bold ${Math.max(13,cvs.height*0.026)}px sans-serif`; c.textAlign='center';
+  c.fillText('강',px((rv.x1+rv.x2)/2),py((rv.y1+rv.y2)/2)+5);
 
   // ─ 산악 ─
   TERRAIN.mountains.forEach(m=>{
@@ -485,9 +485,9 @@ function render(){
     c.beginPath(); c.moveTo(0,-rx*0.9); c.lineTo(-rx*0.35,rx*0.1); c.lineTo(rx*0.35,rx*0.1); c.closePath();
     c.fillStyle='rgba(40,90,40,0.5)'; c.fill();
     c.restore();
-    c.fillStyle='rgba(100,200,100,0.7)';
-    c.font=`${Math.max(9,cvs.height*0.016)}px sans-serif`; c.textAlign='center';
-    c.fillText('산악',cx,cy+4);
+    c.fillStyle='rgba(130,220,130,0.85)';
+    c.font=`bold ${Math.max(12,cvs.height*0.022)}px sans-serif`; c.textAlign='center';
+    c.fillText('산악',cx,cy+5);
   });
 
   // ─ 도시 빌딩 ─
@@ -500,12 +500,12 @@ function render(){
     c.strokeRect(bx-bw/2,by-bh/2,bw,bh);
   });
   const ci=TERRAIN.city;
-  c.fillStyle='rgba(100,100,160,0.65)';
-  c.font=`bold ${Math.max(9,cvs.height*0.016)}px sans-serif`; c.textAlign='center';
+  c.fillStyle='rgba(150,150,210,0.85)';
+  c.font=`bold ${Math.max(13,cvs.height*0.024)}px sans-serif`; c.textAlign='center';
   c.fillText('도시',px((ci.x1+ci.x2)/2),py((ci.y1+ci.y2)/2));
 
   // ─ 레이다 ─
-  const fs=Math.max(9,cvs.height*0.013);
+  const fs=Math.max(11,cvs.height*0.018);
   RADARS.forEach((r,i)=>{
     const [rx,ry]=[px(r.x),py(r.y)];
 
@@ -517,8 +517,8 @@ function render(){
       c.beginPath();c.arc(rx,ry,8,0,Math.PI*2);
       c.strokeStyle='rgba(255,92,92,0.3)';c.lineWidth=1.5;c.stroke();
       c.font=`bold ${fs}px monospace`; c.textAlign='center';
-      c.fillStyle='rgba(255,92,92,0.7)';
-      c.fillText('DESTROYED',rx,ry+18);
+      c.fillStyle='rgba(255,92,92,0.85)';
+      c.fillText('DESTROYED',rx,ry+22);
       return;
     }
 
@@ -577,8 +577,8 @@ function render(){
   c.beginPath(); c.arc(tx,ty,8,0,Math.PI*2);
   c.fillStyle='rgba(255,92,92,0.88)'; c.fill();
   c.strokeStyle='#fff'; c.lineWidth=1.5; c.stroke();
-  c.fillStyle='#fff'; c.font=`bold ${Math.max(9,cvs.height*0.016)}px sans-serif`; c.textAlign='center';
-  c.fillText('TARGET',tx,ty+20);
+  c.fillStyle='#fff'; c.font=`bold ${Math.max(13,cvs.height*0.022)}px sans-serif`; c.textAlign='center';
+  c.fillText('TARGET',tx,ty+24);
 
   // ─ 드론 궤적 ─
   G.drones.forEach(d=>{
@@ -612,7 +612,14 @@ function render(){
 
     const altF=Math.min(1,d.alt/650);
     const sz=3+altF*4;
-    const alp=0.25+altF*0.75;
+    const alp=0.3+altF*0.7;
+
+    // 고도별 색상: 고고도=파랑, 중간=원래색, 저고도=흰색
+    let dCol;
+    if(d.role==='scout') dCol='#ff5c5c';
+    else if(altF>0.65)   dCol='#4fa3ff';          // 고고도 → 파랑
+    else if(altF<0.28)   dCol='#ffffff';           // 저고도 → 흰색
+    else                 dCol=d.color;             // 중고도 → 기본색
 
     // 탐지 링
     if(d.detected){
@@ -629,27 +636,27 @@ function render(){
       c.moveTo(sz+3,0); c.lineTo(-sz,-sz*0.65); c.lineTo(-sz*0.4,0); c.lineTo(-sz,sz*0.65);
       c.closePath();
       const hexAlp=Math.floor(alp*255).toString(16).padStart(2,'0');
-      c.fillStyle=d.color+hexAlp;
-      c.strokeStyle=d.color; c.lineWidth=0.8; c.fill(); c.stroke();
+      c.fillStyle=dCol+hexAlp;
+      c.strokeStyle=dCol; c.lineWidth=0.8; c.fill(); c.stroke();
       c.restore();
     }
 
     // ID 레이블
     const idLabel = d.role==='scout' ? '선행' : `#${d.id+1}`;
-    c.fillStyle = d.role==='scout' ? 'rgba(255,92,92,0.95)' : `rgba(255,255,255,${alp*0.7})`;
-    c.font=`bold 8px monospace`; c.textAlign='center';
-    c.fillText(idLabel,dx2,dy2-sz-4);
+    c.fillStyle = d.role==='scout' ? 'rgba(255,92,92,0.95)' : `rgba(255,255,255,${alp*0.85})`;
+    c.font=`bold 11px monospace`; c.textAlign='center';
+    c.fillText(idLabel,dx2,dy2-sz-5);
 
     // 선행 드론 레이다 타격 표시
     if(d.role==='scout'){
-      c.font='7px monospace'; c.fillStyle='rgba(255,200,50,0.85)';
-      c.fillText('▶레이다타격',dx2,dy2+sz+10);
+      c.font='bold 10px monospace'; c.fillStyle='rgba(255,200,50,0.9)';
+      c.fillText('▶레이다타격',dx2,dy2+sz+13);
     }
 
     // 저고도 표시
     if(d.alt<120){
-      c.fillStyle='rgba(56,230,155,0.85)'; c.font='7px monospace'; c.textAlign='left';
-      c.fillText(`${Math.round(d.alt)}m`,dx2+sz+3,dy2+3);
+      c.fillStyle='rgba(255,255,255,0.9)'; c.font='bold 10px monospace'; c.textAlign='left';
+      c.fillText(`${Math.round(d.alt)}m`,dx2+sz+4,dy2+4);
     }
   });
 
@@ -663,13 +670,13 @@ function render(){
   c.beginPath();c.moveTo(10+s10,cvs.height-15);c.lineTo(10+s10,cvs.height-7);c.stroke();
 
   // ─ 고도 범례 ─
-  const lx=cvs.width-90, ly=15;
-  c.fillStyle='rgba(17,21,32,0.8)'; c.fillRect(lx-5,ly-5,90,55);
-  c.strokeStyle='rgba(30,37,53,0.8)'; c.lineWidth=1; c.strokeRect(lx-5,ly-5,90,55);
-  c.font='8px sans-serif'; c.textAlign='left';
-  [['rgba(34,197,94,1)','고고도 (>500m)'],[`rgba(34,197,94,0.55)`,'중고도 (100-500m)'],['rgba(34,197,94,0.25)','저고도 (<100m)']].forEach(([col,lbl],i)=>{
-    c.fillStyle=col; c.fillRect(lx,ly+i*14,8,8);
-    c.fillStyle='rgba(176,186,200,0.8)'; c.fillText(lbl,lx+11,ly+i*14+7);
+  const lx=cvs.width-110, ly=15;
+  c.fillStyle='rgba(17,21,32,0.85)'; c.fillRect(lx-6,ly-6,112,62);
+  c.strokeStyle='rgba(30,37,53,0.9)'; c.lineWidth=1; c.strokeRect(lx-6,ly-6,112,62);
+  c.font='bold 11px sans-serif'; c.textAlign='left';
+  [['#4fa3ff','고고도 (>500m)'],['#f97316','중고도 (100-500m)'],['#ffffff','저고도 (<100m)']].forEach(([col,lbl],i)=>{
+    c.fillStyle=col; c.fillRect(lx,ly+i*16,10,10);
+    c.fillStyle='rgba(200,210,230,0.9)'; c.fillText(lbl,lx+14,ly+i*16+9);
   });
 }
 
@@ -678,8 +685,8 @@ function drawDefLine(c, xkm, color, label){
   c.strokeStyle=color; c.lineWidth=1.5; c.setLineDash([6,4]);
   c.beginPath();c.moveTo(x,0);c.lineTo(x,cvs.height);c.stroke();
   c.setLineDash([]);
-  c.save();c.translate(x-8,cvs.height*0.12);c.rotate(-Math.PI/2);
-  c.fillStyle=color; c.font=`bold 9px sans-serif`; c.textAlign='center';
+  c.save();c.translate(x-10,cvs.height*0.14);c.rotate(-Math.PI/2);
+  c.fillStyle=color; c.font=`bold 12px sans-serif`; c.textAlign='center';
   c.fillText(label,0,0); c.restore();
 }
 
