@@ -162,15 +162,18 @@ canvas{flex:1;display:block;width:100%;height:100%}
     </div>
 
     <div class="sect">
-      <div class="sect-hd"><div class="d5" style="background:var(--purple)"></div>비행 규칙</div>
-      <div class="sect-bd" style="gap:5px">
+      <div class="sect-hd" id="ruleHd" onclick="toggleRules()" style="cursor:pointer;user-select:none;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:6px"><div class="d5" style="background:var(--purple)"></div>비행 규칙</div>
+        <span id="ruleArrow" style="font-size:10px;color:var(--muted);transition:transform .2s">▼</span>
+      </div>
+      <div class="sect-bd" id="ruleBd" style="gap:5px;display:none">
         <div style="font-size:12px;color:var(--muted);line-height:1.85;font-weight:500">
           ① 선행 드론 1대: 통제선 레이다 즉시 타격 → OFFLINE<br>
           ② 군집 드론 9대: 뭉쳐서 랜덤 지연 출발 · 경로 산개<br>
           ③ <b style="color:#4fa3ff">탐지 즉시 레이다 타격 기동</b> → 파괴 후 목표 재개<br>
           ④ 거리별 탐지 구역: 50%(확실) / 75%(중간) / 100%(외곽)<br>
           ⑤ 산악 3km 상승 / 강 80m 저고도 / 최종 50m 접근<br>
-          ⑥ 샤헤드-238 (1000km/h) 동일 패턴 적용
+          ⑥ 샤헤드-238 (500km/h) 동일 패턴 적용
         </div>
       </div>
     </div>
@@ -860,6 +863,15 @@ document.querySelectorAll('.sc-tab').forEach(t=>{
     simReset();
   });
 });
+
+// ── 비행 규칙 토글 ────────────────────────────────────────────────────────
+function toggleRules(){
+  const bd=document.getElementById('ruleBd');
+  const arrow=document.getElementById('ruleArrow');
+  const open=bd.style.display==='none';
+  bd.style.display=open?'flex':'none';
+  arrow.textContent=open?'▲':'▼';
+}
 
 // ── 초기화 ────────────────────────────────────────────────────────────────
 genBuildings();
