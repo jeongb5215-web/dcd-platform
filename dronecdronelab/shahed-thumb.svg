@@ -1,135 +1,135 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" width="400" height="240">
   <defs>
-    <radialGradient id="bg" cx="55%" cy="45%" r="70%">
+    <radialGradient id="bgT" cx="55%" cy="25%" r="60%">
+      <stop offset="0%" stop-color="#0c1a0c"/>
+      <stop offset="100%" stop-color="#060810"/>
+    </radialGradient>
+    <radialGradient id="bgB" cx="55%" cy="75%" r="60%">
       <stop offset="0%" stop-color="#1d0a04"/>
       <stop offset="100%" stop-color="#060810"/>
     </radialGradient>
-    <filter id="glow" x="-25%" y="-25%" width="150%" height="150%">
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="sm" x="-20%" y="-80%" width="140%" height="260%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="jet" x="-60%" y="-100%" width="320%" height="300%">
       <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-    <filter id="sm" x="-20%" y="-60%" width="140%" height="220%">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="b"/>
-      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <filter id="jet" x="-50%" y="-100%" width="300%" height="300%">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="b"/>
-      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
+    <clipPath id="clipTop"><rect x="0" y="0" width="400" height="118"/></clipPath>
+    <clipPath id="clipBot"><rect x="0" y="122" width="400" height="118"/></clipPath>
   </defs>
 
-  <!-- Background -->
-  <rect width="400" height="240" fill="url(#bg)"/>
+  <!-- Background halves -->
+  <rect width="400" height="118" fill="url(#bgT)"/>
+  <rect y="122" width="400" height="118" fill="url(#bgB)"/>
 
-  <!-- Tactical grid -->
-  <g stroke="#ffffff" stroke-width="0.4" opacity="0.05">
-    <line x1="50" y1="0" x2="50" y2="240"/><line x1="100" y1="0" x2="100" y2="240"/>
-    <line x1="150" y1="0" x2="150" y2="240"/><line x1="200" y1="0" x2="200" y2="240"/>
-    <line x1="250" y1="0" x2="250" y2="240"/><line x1="300" y1="0" x2="300" y2="240"/>
-    <line x1="350" y1="0" x2="350" y2="240"/>
-    <line x1="0" y1="40" x2="400" y2="40"/><line x1="0" y1="80" x2="400" y2="80"/>
-    <line x1="0" y1="120" x2="400" y2="120"/><line x1="0" y1="160" x2="400" y2="160"/>
-    <line x1="0" y1="200" x2="400" y2="200"/>
+  <!-- Grid (both halves) -->
+  <g stroke="#fff" stroke-width="0.4" opacity="0.05">
+    <line x1="80"  y1="0" x2="80"  y2="240"/><line x1="160" y1="0" x2="160" y2="240"/>
+    <line x1="240" y1="0" x2="240" y2="240"/><line x1="320" y1="0" x2="320" y2="240"/>
+    <line x1="0" y1="40"  x2="400" y2="40"/><line x1="0" y1="80"  x2="400" y2="80"/>
+    <line x1="0" y1="160" x2="400" y2="160"/><line x1="0" y1="200" x2="400" y2="200"/>
   </g>
 
-  <!-- High-speed streaks (jet speed indicator) -->
-  <g stroke="#f97316" stroke-width="1.2" opacity="0.18">
-    <line x1="308" y1="93"  x2="398" y2="88"/>
-    <line x1="312" y1="106" x2="398" y2="103"/>
-    <line x1="308" y1="134" x2="398" y2="137"/>
-    <line x1="312" y1="147" x2="398" y2="152"/>
+  <!-- ═══════ UPPER HALF — SHAHED-136 ═══════ -->
+  <g clip-path="url(#clipTop)">
+    <!-- Flight path 136 -->
+    <path d="M 288,74 C 210,72 130,90 55,112" fill="none" stroke="#22c55e" stroke-width="1" stroke-dasharray="6,4" opacity="0.28"/>
+
+    <!-- Wing glow 136 -->
+    <polygon points="118,74 258,40 258,108" fill="#22c55e" filter="url(#glow)" opacity="0.18"/>
+    <!-- Delta wing 136 -->
+    <polygon points="118,74 258,40 258,108" fill="#166534" opacity="0.9"/>
+    <polygon points="118,74 258,40 258,58 190,72"  fill="#22c55e" opacity="0.5"/>
+    <polygon points="118,74 258,108 258,90 190,76" fill="#14532d" opacity="0.5"/>
+    <!-- Body 136 -->
+    <ellipse cx="188" cy="74" rx="70" ry="4.5" fill="#16a34a" filter="url(#sm)"/>
+    <line x1="124" y1="73.5" x2="255" y2="73.5" stroke="#86efac" stroke-width="0.6" opacity="0.35"/>
+    <!-- Nose 136 -->
+    <polygon points="112,74 127,68 127,80" fill="#dcfce7"/>
+    <!-- V-tail 136 -->
+    <polygon points="248,74 236,63 243,69" fill="#86efac" opacity="0.75"/>
+    <polygon points="248,74 236,85 243,79" fill="#86efac" opacity="0.75"/>
+    <!-- Pusher propeller (136 특징) -->
+    <ellipse cx="252" cy="74" rx="6.5" ry="5" fill="#1c1917" stroke="#22c55e" stroke-width="1.3"/>
+    <line x1="252" y1="69" x2="252" y2="79" stroke="#6b7280" stroke-width="2.2" stroke-linecap="round"/>
+    <line x1="246" y1="74" x2="258" y2="74" stroke="#6b7280" stroke-width="1.6" stroke-linecap="round"/>
+    <!-- Wing tips 136 -->
+    <circle cx="258" cy="40"  r="2.2" fill="#bbf7d0" opacity="0.85"/>
+    <circle cx="258" cy="108" r="2.2" fill="#bbf7d0" opacity="0.85"/>
+    <!-- S1 badge -->
+    <rect x="14" y="10" width="28" height="15" rx="3" fill="rgba(34,197,94,0.2)" stroke="rgba(34,197,94,0.55)" stroke-width="1"/>
+    <text x="28" y="21.5" text-anchor="middle" fill="#22c55e" font-family="'Courier New',monospace" font-size="9" font-weight="bold">S1</text>
+    <!-- 136 label -->
+    <text x="48" y="22" fill="#22c55e" font-family="'Courier New',monospace" font-size="12" font-weight="bold" letter-spacing="1">SHAHED-136</text>
+    <!-- Speed -->
+    <rect x="316" y="10" width="72" height="28" rx="2" fill="rgba(34,197,94,0.1)" stroke="rgba(34,197,94,0.35)" stroke-width="1"/>
+    <text x="352" y="22"  text-anchor="middle" fill="#22c55e" font-family="'Courier New',monospace" font-size="10" font-weight="bold">185 km/h</text>
+    <text x="352" y="33"  text-anchor="middle" fill="#6b7280" font-family="'Courier New',monospace" font-size="7.5">PROP CRUISE</text>
   </g>
 
-  <!-- Radar rings (target, bottom-left) -->
-  <circle cx="44" cy="198" r="36" fill="none" stroke="#4fa3ff" stroke-width="0.7" stroke-dasharray="3,4" opacity="0.2"/>
-  <circle cx="44" cy="198" r="62" fill="none" stroke="#ff5c5c" stroke-width="0.7" stroke-dasharray="3,5" opacity="0.13"/>
-  <circle cx="44" cy="198" r="5" fill="#ff5c5c" opacity="0.88"/>
-  <line x1="44" y1="184" x2="44" y2="212" stroke="#ff5c5c" stroke-width="0.8" opacity="0.45"/>
-  <line x1="30" y1="198" x2="58"  y2="198" stroke="#ff5c5c" stroke-width="0.8" opacity="0.45"/>
-  <text x="44" y="175" text-anchor="middle" fill="#ff5c5c" font-family="'Courier New',monospace" font-size="8" opacity="0.65">TARGET</text>
+  <!-- ─── Center divider ─── -->
+  <line x1="0" y1="120" x2="400" y2="120" stroke="#4fa3ff" stroke-width="0.5" opacity="0.25"/>
+  <rect x="174" y="114" width="52" height="12" rx="6" fill="#0a0c10"/>
+  <text x="200" y="123.5" text-anchor="middle" fill="#4fa3ff" font-family="'Courier New',monospace" font-size="8" opacity="0.65">VS</text>
 
-  <!-- Attack flight path -->
-  <path d="M 305,118 C 220,114 130,158 57,194" fill="none" stroke="#f97316" stroke-width="1.5" stroke-dasharray="8,5" opacity="0.35"/>
-
-  <!-- JET EXHAUST PLUME (right of drone) -->
-  <ellipse cx="322" cy="120" rx="32" ry="7"  fill="#fbbf24" filter="url(#jet)"  opacity="0.22"/>
-  <ellipse cx="336" cy="120" rx="22" ry="5"  fill="#f97316" filter="url(#jet)"  opacity="0.18"/>
-  <ellipse cx="350" cy="120" rx="14" ry="3"  fill="#fde68a" filter="url(#jet)"  opacity="0.12"/>
-
-  <!-- Ghost swarm drones (right, V-formation) -->
-  <g fill="#f97316">
-    <g opacity="0.22" transform="translate(358,84)"><polygon points="-17,0 24,-13 24,13"/></g>
-    <g opacity="0.17" transform="translate(380,98)"><polygon points="-14,0 20,-10 20,10"/></g>
-    <g opacity="0.22" transform="translate(358,156)"><polygon points="-17,0 24,-13 24,13"/></g>
-    <g opacity="0.17" transform="translate(380,142)"><polygon points="-14,0 20,-10 20,10"/></g>
-    <g opacity="0.13" transform="translate(393,120)"><polygon points="-12,0 17,-9  17,9"/></g>
+  <!-- ═══════ LOWER HALF — SHAHED-238 ═══════ -->
+  <g clip-path="url(#clipBot)">
+    <!-- High-speed streaks 238 -->
+    <g stroke="#f97316" stroke-width="1" opacity="0.16">
+      <line x1="266" y1="149" x2="398" y2="144"/>
+      <line x1="270" y1="159" x2="398" y2="156"/>
+      <line x1="266" y1="181" x2="398" y2="184"/>
+      <line x1="270" y1="191" x2="398" y2="196"/>
+    </g>
+    <!-- Jet exhaust plume 238 -->
+    <ellipse cx="278" cy="166" rx="26" ry="5.5" fill="#fbbf24" filter="url(#jet)"  opacity="0.22"/>
+    <ellipse cx="292" cy="166" rx="18" ry="3.5" fill="#f97316" filter="url(#jet)"  opacity="0.18"/>
+    <!-- Flight path 238 -->
+    <path d="M 288,166 C 210,162 130,180 55,205" fill="none" stroke="#f97316" stroke-width="1.2" stroke-dasharray="6,4" opacity="0.28"/>
+    <!-- Wing glow 238 -->
+    <polygon points="118,166 262,132 262,200" fill="#f97316" filter="url(#glow)" opacity="0.2"/>
+    <!-- Delta wing 238 (more swept) -->
+    <polygon points="118,166 262,132 262,200" fill="#c2410c" opacity="0.92"/>
+    <polygon points="118,166 262,132 262,150 196,164" fill="#f97316" opacity="0.55"/>
+    <polygon points="118,166 262,200 262,182 196,168" fill="#78350f" opacity="0.5"/>
+    <!-- Body 238 (thinner) -->
+    <ellipse cx="190" cy="166" rx="72" ry="4" fill="#ea580c" filter="url(#sm)"/>
+    <line x1="126" y1="165.5" x2="260" y2="165.5" stroke="#fbbf24" stroke-width="0.6" opacity="0.35"/>
+    <!-- Sharp nose 238 -->
+    <polygon points="110,166 128,159 128,173" fill="#fef9c3"/>
+    <!-- Canard fins (238 특징) -->
+    <polygon points="144,166 130,157 139,162" fill="#fde68a" opacity="0.7"/>
+    <polygon points="144,166 130,175 139,170" fill="#fde68a" opacity="0.7"/>
+    <!-- V-tail 238 -->
+    <polygon points="252,166 239,153 246,161" fill="#fcd34d" opacity="0.78"/>
+    <polygon points="252,166 239,179 246,171" fill="#fcd34d" opacity="0.78"/>
+    <!-- Jet nozzle (238 특징 — 프로펠러 없음) -->
+    <ellipse cx="257" cy="166" rx="8.5" ry="6" fill="#1c1917" stroke="#f97316" stroke-width="1.5"/>
+    <ellipse cx="257" cy="166" rx="4"   ry="2.8" fill="#fbbf24" opacity="0.9"/>
+    <ellipse cx="266" cy="166" rx="7"   ry="3"   fill="#fbbf24" filter="url(#sm)" opacity="0.65"/>
+    <!-- Wing tips 238 -->
+    <circle cx="262" cy="132" r="2.2" fill="#fde68a" opacity="0.88"/>
+    <circle cx="262" cy="200" r="2.2" fill="#fde68a" opacity="0.88"/>
+    <!-- S2 badge -->
+    <rect x="14" y="128" width="28" height="15" rx="3" fill="rgba(249,115,22,0.2)" stroke="rgba(249,115,22,0.55)" stroke-width="1"/>
+    <text x="28" y="139.5" text-anchor="middle" fill="#f97316" font-family="'Courier New',monospace" font-size="9" font-weight="bold">S2</text>
+    <!-- 238 label -->
+    <text x="48" y="140" fill="#f97316" font-family="'Courier New',monospace" font-size="12" font-weight="bold" letter-spacing="1">SHAHED-238</text>
+    <!-- Speed -->
+    <rect x="316" y="128" width="72" height="28" rx="2" fill="rgba(249,115,22,0.12)" stroke="rgba(249,115,22,0.45)" stroke-width="1"/>
+    <text x="352" y="140" text-anchor="middle" fill="#f97316" font-family="'Courier New',monospace" font-size="11" font-weight="bold">500 km/h</text>
+    <text x="352" y="151" text-anchor="middle" fill="#6b7280" font-family="'Courier New',monospace" font-size="7.5">JET ENGINE</text>
   </g>
-
-  <!-- ── SHAHED-238 TOP-DOWN (nose left, jet engine rear) ── -->
-
-  <!-- Wing ambient glow -->
-  <polygon points="130,120 304,60 304,180" fill="#f97316" filter="url(#glow)" opacity="0.2"/>
-
-  <!-- Delta wing (more swept than 136) -->
-  <polygon points="130,120 304,60 304,180" fill="#b45309" opacity="0.92"/>
-  <!-- Leading-edge highlight top -->
-  <polygon points="130,120 304,60 304,86 208,118" fill="#f97316" opacity="0.56"/>
-  <!-- Trailing shadow bottom -->
-  <polygon points="130,120 304,180 304,154 208,122" fill="#78350f" opacity="0.52"/>
-
-  <!-- Fuselage (thinner, more aerodynamic) -->
-  <ellipse cx="222" cy="120" rx="92" ry="5" fill="#ea580c" filter="url(#sm)"/>
-  <!-- Spine -->
-  <line x1="138" y1="119.5" x2="302" y2="119.5" stroke="#fbbf24" stroke-width="0.8" opacity="0.38"/>
-
-  <!-- Sharp nose cone (238 is more pointed) -->
-  <polygon points="122,120 143,113 143,127" fill="#fef9c3"/>
-
-  <!-- Canard fins (238 has small foreplanes) -->
-  <polygon points="162,120 146,109 156,115" fill="#fde68a" opacity="0.72"/>
-  <polygon points="162,120 146,131 156,125" fill="#fde68a" opacity="0.72"/>
-
-  <!-- V-tail (sharper sweep) -->
-  <polygon points="290,120 274,104 282,112" fill="#fcd34d" opacity="0.80"/>
-  <polygon points="290,120 274,136 282,128" fill="#fcd34d" opacity="0.80"/>
-
-  <!-- Jet engine nozzle (no propeller!) -->
-  <ellipse cx="295" cy="120" rx="10" ry="7.5" fill="#1c1917" stroke="#f97316" stroke-width="1.8"/>
-  <!-- Inner nozzle glow -->
-  <ellipse cx="295" cy="120" rx="5"  ry="3.5" fill="#fbbf24" opacity="0.85"/>
-  <!-- Immediate exhaust -->
-  <ellipse cx="305" cy="120" rx="9"  ry="4"   fill="#fbbf24" filter="url(#sm)" opacity="0.7"/>
-
-  <!-- Wing-tip lights -->
-  <circle cx="304" cy="60"  r="2.8" fill="#fbbf24" opacity="0.9"/>
-  <circle cx="304" cy="180" r="2.8" fill="#fbbf24" opacity="0.9"/>
-
-  <!-- ── Labels / UI ── -->
-
-  <!-- Title -->
-  <text x="14" y="18" fill="#f97316" font-family="'Courier New',monospace" font-size="16" font-weight="bold" letter-spacing="1.5">SHAHED-238</text>
-  <line x1="14" y1="24" x2="180" y2="24" stroke="#f97316" stroke-width="0.7" opacity="0.4"/>
-  <text x="14" y="35" fill="#9ca3af" font-family="'Courier New',monospace" font-size="9" letter-spacing="0.4">드론 공격패턴 시뮬레이션</text>
-
-  <!-- Swarm badge -->
-  <rect x="14" y="42" width="78" height="17" rx="2" fill="rgba(249,115,22,0.14)" stroke="rgba(249,115,22,0.42)" stroke-width="1"/>
-  <text x="53" y="54.5" text-anchor="middle" fill="#fb923c" font-family="'Courier New',monospace" font-size="9" font-weight="bold">× 10대  SWARM</text>
-
-  <!-- Speed badge (top-right) — 500 km/h jet -->
-  <rect x="316" y="9" width="72" height="33" rx="2" fill="rgba(249,115,22,0.12)" stroke="rgba(249,115,22,0.45)" stroke-width="1"/>
-  <text x="352" y="22" text-anchor="middle" fill="#f97316" font-family="'Courier New',monospace" font-size="11" font-weight="bold">500 km/h</text>
-  <text x="352" y="35" text-anchor="middle" fill="#6b7280" font-family="'Courier New',monospace" font-size="8">JET SPEED</text>
-
-  <!-- Propulsion badge (distinguishes from 136) -->
-  <rect x="316" y="48" width="72" height="16" rx="2" fill="rgba(251,191,36,0.1)" stroke="rgba(251,191,36,0.35)" stroke-width="1"/>
-  <text x="352" y="60" text-anchor="middle" fill="#fbbf24" font-family="'Courier New',monospace" font-size="8" font-weight="bold">JET ENGINE</text>
-
-  <!-- Threat level (bottom-right) -->
-  <rect x="310" y="198" width="78" height="33" rx="2" fill="rgba(255,92,92,0.1)" stroke="rgba(255,92,92,0.38)" stroke-width="1"/>
-  <text x="349" y="211" text-anchor="middle" fill="#ff5c5c" font-family="'Courier New',monospace" font-size="9" font-weight="bold">THREAT  HIGH</text>
-  <text x="349" y="224" text-anchor="middle" fill="#6b7280" font-family="'Courier New',monospace" font-size="8">JET LOITERING</text>
 
   <!-- DcD LAB brand -->
-  <text x="14" y="232" fill="#8b5cf6" font-family="serif" font-size="11" font-weight="bold" opacity="0.55">DcD</text>
-  <text x="34" y="232" fill="#6b7280" font-family="'Courier New',monospace" font-size="8" opacity="0.55"> LAB SIM</text>
+  <text x="14" y="234" fill="#8b5cf6" font-family="serif" font-size="10" font-weight="bold" opacity="0.5">DcD</text>
+  <text x="33" y="234" fill="#6b7280" font-family="'Courier New',monospace" font-size="7.5" opacity="0.5"> LAB SIM</text>
+  <!-- Title bottom-right -->
+  <text x="386" y="234" text-anchor="end" fill="#374151" font-family="'Courier New',monospace" font-size="7.5" opacity="0.5">드론 공격패턴 시뮬레이션</text>
 </svg>
