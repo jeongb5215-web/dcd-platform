@@ -164,13 +164,13 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
 <rect width="1360" height="580" fill="url(#grid)"/>
 
 <!-- Section labels -->
-<text x="85" y="22" text-anchor="middle" font-size="9" letter-spacing="2" fill="#ff5c5c" opacity=".7" font-weight="700">THREAT</text>
-<text x="258" y="22" text-anchor="middle" font-size="9" letter-spacing="2" fill="#22d3ee" opacity=".7" font-weight="700">분산탐지망</text>
+<text x="85" y="22" text-anchor="middle" font-size="11" letter-spacing="2" fill="#ff5c5c" opacity=".95" font-weight="900">THREAT</text>
+<text x="258" y="22" text-anchor="middle" font-size="11" letter-spacing="2" fill="#22d3ee" opacity=".95" font-weight="900">분산탐지망</text>
 <line x1="158" y1="28" x2="358" y2="28" stroke="#22d3ee" stroke-width=".5" opacity=".3"/>
-<text x="490" y="22" text-anchor="middle" font-size="9" letter-spacing="2" fill="#8b5cf6" opacity=".7" font-weight="700">COMMAND</text>
-<text x="755" y="22" text-anchor="middle" font-size="9" letter-spacing="2" fill="#ffffff" opacity=".5" font-weight="700">방어 배분</text>
-<text x="990" y="22" text-anchor="middle" font-size="9" letter-spacing="2" fill="#ffffff" opacity=".5" font-weight="700">요격 결과</text>
-<text x="1225" y="22" text-anchor="middle" font-size="9" letter-spacing="2" fill="#f97316" opacity=".7" font-weight="700">FEEDBACK</text>
+<text x="490" y="22" text-anchor="middle" font-size="11" letter-spacing="2" fill="#8b5cf6" opacity=".95" font-weight="900">COMMAND</text>
+<text x="755" y="22" text-anchor="middle" font-size="11" letter-spacing="2" fill="#ffffff" opacity=".8" font-weight="900">방어 배분</text>
+<text x="990" y="22" text-anchor="middle" font-size="11" letter-spacing="2" fill="#ffffff" opacity=".8" font-weight="900">요격 결과</text>
+<text x="1225" y="22" text-anchor="middle" font-size="11" letter-spacing="2" fill="#f97316" opacity=".95" font-weight="900">FEEDBACK</text>
 
 <!-- Column separators -->
 <line x1="140" y1="30" x2="140" y2="560" stroke="#1e2535" stroke-width="1" stroke-dasharray="4 6" opacity=".5"/>
@@ -179,16 +179,39 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
 <line x1="870" y1="30" x2="870" y2="560" stroke="#1e2535" stroke-width="1" stroke-dasharray="4 6" opacity=".5"/>
 <line x1="1110" y1="30" x2="1110" y2="560" stroke="#1e2535" stroke-width="1" stroke-dasharray="4 6" opacity=".5"/>
 
-<!-- [1] 다층 포화공격 -->
+<!-- [1] 다층 포화공격 — 5개 위협 축 -->
+<text x="72" y="122" text-anchor="middle" font-size="9" fill="#ff5c5c" font-weight="700" letter-spacing="1" opacity=".9">다층 포화공격</text>
+<line x1="5" y1="127" x2="139" y2="127" stroke="#ff5c5c" stroke-width=".6" opacity=".35"/>
+
 <g class="box-group" style="animation-delay:.0s">
-  <rect x="10" y="230" width="130" height="120" rx="8" fill="url(#grad-red)" stroke="#ff5c5c" stroke-width="1.2" filter="url(#glow-red)"/>
-  <rect x="10" y="230" width="130" height="4" rx="2" fill="#ff5c5c" opacity=".6"/>
-  <text x="75" y="256" text-anchor="middle" font-size="16" fill="#ff5c5c" opacity=".8">⚡</text>
-  <text x="75" y="276" text-anchor="middle" font-size="11" font-weight="700" fill="#ff5c5c">다층 포화공격</text>
-  <text x="75" y="293" text-anchor="middle" font-size="9" fill="#ffffff" opacity=".85">Shahed / Geran</text>
-  <text x="75" y="307" text-anchor="middle" font-size="9" fill="#ffffff" opacity=".85">순항미사일</text>
-  <text x="75" y="321" text-anchor="middle" font-size="9" fill="#ffffff" opacity=".85">탄도성 위협</text>
-  <circle cx="75" cy="290" r="62" fill="none" stroke="#ff5c5c" stroke-width=".6" stroke-dasharray="3 5" opacity=".25" class="pulse"/>
+  <rect x="4" y="133" width="132" height="52" rx="6" fill="url(#grad-red)" stroke="#ff5c5c" stroke-width="1" filter="url(#glow-red)"/>
+  <rect x="4" y="133" width="132" height="3" rx="2" fill="#ff5c5c" opacity=".5"/>
+  <text x="14" y="150" font-size="8.5" fill="#ff5c5c" font-weight="700">① 벨라루스 북부 축</text>
+  <text x="14" y="165" font-size="8" fill="#ffffff" opacity=".85">전투기 이륙</text>
+</g>
+<g class="box-group" style="animation-delay:.04s">
+  <rect x="4" y="193" width="132" height="52" rx="6" fill="url(#grad-red)" stroke="#ff5c5c" stroke-width="1"/>
+  <rect x="4" y="193" width="132" height="3" rx="2" fill="#ff5c5c" opacity=".5"/>
+  <text x="14" y="210" font-size="8.5" fill="#ff5c5c" font-weight="700">② 흑해 축</text>
+  <text x="14" y="225" font-size="8" fill="#ffffff" opacity=".85">함정·잠수함 미사일</text>
+</g>
+<g class="box-group" style="animation-delay:.08s">
+  <rect x="4" y="253" width="132" height="52" rx="6" fill="url(#grad-red)" stroke="#ff5c5c" stroke-width="1"/>
+  <rect x="4" y="253" width="132" height="3" rx="2" fill="#ff5c5c" opacity=".5"/>
+  <text x="14" y="270" font-size="8.5" fill="#ff5c5c" font-weight="700">③ 러시아 본토 축</text>
+  <text x="14" y="285" font-size="8" fill="#ffffff" opacity=".85">드론 이륙</text>
+</g>
+<g class="box-group" style="animation-delay:.12s">
+  <rect x="4" y="313" width="132" height="52" rx="6" fill="url(#grad-red)" stroke="#ff5c5c" stroke-width="1"/>
+  <rect x="4" y="313" width="132" height="3" rx="2" fill="#ff5c5c" opacity=".5"/>
+  <text x="14" y="330" font-size="8.5" fill="#ff5c5c" font-weight="700">④ 러시아 항공기 축</text>
+  <text x="14" y="345" font-size="8" fill="#ffffff" opacity=".85">전투기 등 이륙</text>
+</g>
+<g class="box-group" style="animation-delay:.16s">
+  <rect x="4" y="373" width="132" height="52" rx="6" fill="url(#grad-red)" stroke="#ff5c5c" stroke-width="1"/>
+  <rect x="4" y="373" width="132" height="3" rx="2" fill="#ff5c5c" opacity=".5"/>
+  <text x="14" y="390" font-size="8.5" fill="#ff5c5c" font-weight="700">⑤ 크림반도 축</text>
+  <text x="14" y="405" font-size="8" fill="#ffffff" opacity=".85">드론·미사일 등 발사</text>
 </g>
 
 <!-- [2] 분산탐지망 sensors -->
@@ -323,9 +346,11 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
 </g>
 
 <!-- Connection lines -->
-<path d="M140,290 L165,219" stroke="#ff5c5c" stroke-width="1.5" fill="none" stroke-dasharray="6 4" marker-end="url(#arr-red)" class="flow-line"/>
-<path d="M140,290 L165,163" stroke="#ff5c5c" stroke-width="1.2" fill="none" stroke-dasharray="5 5" marker-end="url(#arr-red)" opacity=".5" class="flow-line"/>
-<path d="M140,290 L165,387" stroke="#ff5c5c" stroke-width="1.2" fill="none" stroke-dasharray="5 5" marker-end="url(#arr-red)" opacity=".5" class="flow-line"/>
+<path d="M136,159 L165,163" stroke="#ff5c5c" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#arr-red)" class="flow-line" opacity=".8"/>
+<path d="M136,219 L165,219" stroke="#ff5c5c" stroke-width="1.4" fill="none" stroke-dasharray="5 4" marker-end="url(#arr-red)" class="flow-line"/>
+<path d="M136,279 L165,275" stroke="#ff5c5c" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#arr-red)" class="flow-line" opacity=".8"/>
+<path d="M136,339 L165,331" stroke="#ff5c5c" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#arr-red)" class="flow-line" opacity=".8"/>
+<path d="M136,399 L165,387" stroke="#ff5c5c" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#arr-red)" class="flow-line" opacity=".8"/>
 
 <path d="M351,163 Q380,163 388,255" stroke="#22d3ee" stroke-width="1.3" fill="none" stroke-dasharray="6 4" marker-end="url(#arr-purple)" class="flow-line" opacity=".8"/>
 <path d="M351,219 Q378,219 388,262" stroke="#22d3ee" stroke-width="1.3" fill="none" stroke-dasharray="6 4" marker-end="url(#arr-purple)" class="flow-line" opacity=".8"/>
@@ -343,8 +368,8 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
 <path d="M848,348 L888,259" stroke="#38e69b" stroke-width="1.5" fill="none" stroke-dasharray="6 4" marker-end="url(#arr-green)" class="flow-line"/>
 <path d="M848,466 L888,466" stroke="#f97316" stroke-width="1.5" fill="none" stroke-dasharray="6 4" marker-end="url(#arr-orange)" class="flow-slow"/>
 <path d="M1073,466 L1120,466" stroke="#ff5c5c" stroke-width="1.5" fill="none" stroke-dasharray="6 4" marker-end="url(#arr-red)" class="flow-slow"/>
-<path d="M1215,428 Q1215,390 1073,360" stroke="#ff5c5c" stroke-width="1" fill="none" stroke-dasharray="4 5" marker-end="url(#arr-red)" opacity=".5" class="flow-slow"/>
-<path d="M1120,548 L488,548 L488,350" stroke="#ff5c5c" stroke-width="1" fill="none" stroke-dasharray="3 7" marker-end="url(#arr-purple)" opacity=".45" class="flow-slow"/>
+<path d="M1215,428 L1215,360 L1073,360" stroke="#ff5c5c" stroke-width="1.2" fill="none" stroke-dasharray="4 5" marker-end="url(#arr-red)" opacity=".7" class="flow-slow"/>
+<path d="M1120,548 L488,548 L488,350" stroke="#ff5c5c" stroke-width="1.5" fill="none" stroke-dasharray="3 7" marker-end="url(#arr-purple)" opacity=".75" class="flow-slow"/>
 
 <!-- Labels -->
 <!-- 자동 재전파 — arc y=560 위로 이동 -->
