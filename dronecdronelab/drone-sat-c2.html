@@ -243,6 +243,12 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
   <text x="14" y="390" font-size="8.5" fill="#ff5c5c" font-weight="700">⑤ 크림반도 축</text>
   <text x="14" y="405" font-size="8" fill="#ffffff" opacity=".85">드론·미사일 등 발사</text>
 </g>
+<g class="box-group" style="animation-delay:.20s">
+  <rect x="4" y="433" width="132" height="52" rx="6" fill="url(#grad-red)" stroke="#ff5c5c" stroke-width="1.2" filter="url(#glow-red)"/>
+  <rect x="4" y="433" width="132" height="3" rx="2" fill="#ff5c5c" opacity=".7"/>
+  <text x="14" y="450" font-size="8.5" fill="#ff5c5c" font-weight="700">⑥ 다층 포화공격</text>
+  <text x="14" y="465" font-size="8" fill="#ffffff" opacity=".85">Shahed·미사일·드론 혼합</text>
+</g>
 
 <!-- ═══════════════════════════════════════════════════
      [2] 분산탐지망 SENSORS (5 boxes)
@@ -425,12 +431,15 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
      CONNECTION LINES
 ════════════════════════════════════════════════════ -->
 
-<!-- [공격 → 센서] 5개 위협 축 → 분산탐지망 -->
-<path d="M136,159 L165,163" stroke="#ff5c5c" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#arr-red)" class="flow-line" opacity=".8"/>
-<path d="M136,219 L165,219" stroke="#ff5c5c" stroke-width="1.4" fill="none" stroke-dasharray="5 4" marker-end="url(#arr-red)" class="flow-line"/>
-<path d="M136,279 L165,275" stroke="#ff5c5c" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#arr-red)" class="flow-line" opacity=".8"/>
-<path d="M136,339 L165,331" stroke="#ff5c5c" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#arr-red)" class="flow-line" opacity=".8"/>
-<path d="M136,399 L165,387" stroke="#ff5c5c" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#arr-red)" class="flow-line" opacity=".8"/>
+<!-- [6개 위협 → 버스(x=148) → 위협정보 점선 박스 수렴] -->
+<line x1="148" y1="159" x2="148" y2="459" stroke="#ff5c5c" stroke-width=".9" stroke-dasharray="4 3" opacity=".55"/>
+<path d="M136,159 L148,159" stroke="#ff5c5c" stroke-width="1" fill="none" stroke-dasharray="4 3" opacity=".75"/>
+<path d="M136,219 L148,219" stroke="#ff5c5c" stroke-width="1" fill="none" stroke-dasharray="4 3" opacity=".75"/>
+<path d="M136,279 L148,279" stroke="#ff5c5c" stroke-width="1" fill="none" stroke-dasharray="4 3" opacity=".75"/>
+<path d="M136,339 L148,339" stroke="#ff5c5c" stroke-width="1" fill="none" stroke-dasharray="4 3" opacity=".75"/>
+<path d="M136,399 L148,399" stroke="#ff5c5c" stroke-width="1" fill="none" stroke-dasharray="4 3" opacity=".75"/>
+<path d="M136,459 L148,459" stroke="#ff5c5c" stroke-width="1" fill="none" stroke-dasharray="4 3" opacity=".75"/>
+<path d="M148,290 L158,290" stroke="#ff5c5c" stroke-width="1.5" fill="none" marker-end="url(#arr-red)" opacity=".9" class="flow-line"/>
 
 <!-- [센서 → C2] All 5 sensors to C2 -->
 <path d="M351,163 Q380,163 388,255" stroke="#22d3ee" stroke-width="1.3" fill="none"
@@ -480,9 +489,9 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
 <path d="M1073,466 L1120,466" stroke="#ff5c5c" stroke-width="1.5" fill="none"
   stroke-dasharray="6 4" marker-end="url(#arr-red)" class="flow-slow"/>
 
-<!-- [전장피드백 → 요격결과 (직선)] -->
-<path d="M1215,428 L1215,360 L1073,360" stroke="#ff5c5c" stroke-width="1.2" fill="none"
-  stroke-dasharray="4 5" marker-end="url(#arr-red)" opacity=".7" class="flow-slow"/>
+<!-- [요격결과 오른쪽 중앙 → 전장피드백] -->
+<path d="M1073,255 L1215,255 L1215,428" stroke="#ff5c5c" stroke-width="1.3" fill="none"
+  stroke-dasharray="5 4" marker-end="url(#arr-red)" opacity=".75" class="flow-slow"/>
 
 <!-- [전장피드백 → C2 (재전파)] -->
 <path d="M1120,548 L488,548 L488,350" stroke="#ff5c5c" stroke-width="1.5" fill="none"
@@ -499,9 +508,9 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 120px)}
 <rect x="441" y="196" width="94" height="16" rx="4" fill="rgba(139,92,246,.15)" stroke="rgba(139,92,246,.3)" stroke-width=".7"/>
 <text x="488" y="208" text-anchor="middle" font-size="8" fill="#8b5cf6" letter-spacing=".5">우선순위 배분</text>
 
-<!-- 위협 정보 — 센서 박스 아래 빈 공간으로 이동 -->
-<rect x="218" y="418" width="72" height="16" rx="4" fill="rgba(34,211,238,.1)" stroke="rgba(34,211,238,.3)" stroke-width=".7"/>
-<text x="254" y="430" text-anchor="middle" font-size="8" fill="#22d3ee" letter-spacing=".5">위협 정보</text>
+<!-- 위협 정보 수렴 레이블 (버스 출력점 옆) -->
+<rect x="100" y="282" width="56" height="16" rx="4" fill="rgba(34,211,238,.12)" stroke="#22d3ee" stroke-width=".8"/>
+<text x="128" y="294" text-anchor="middle" font-size="7.5" fill="#22d3ee" font-weight="700" letter-spacing=".5">위협 정보</text>
 
 <!-- ═══════════════════════════════════════════════════
      TIER LABELS (vertical, left of defense boxes)
