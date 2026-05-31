@@ -320,6 +320,7 @@ function makeDrone(id, sy, type) {
     launchDelay: 3+Math.random()*17,
     targetRadarIdx: -1,
     ctCrossTime: -1,
+    altTransition: false,  // 고도 변화 중 여부
     color: type==='238'?'#f97316':'#22c55e',
   };
 }
@@ -400,6 +401,7 @@ function updateDrone(d, dt){
   let tAlt=wp.alt;
   if(overMountain(d.x,d.y)) tAlt=Math.max(tAlt,3000);
   if(overRiver(d.x,d.y))    tAlt=Math.min(tAlt,80);
+  d.altTransition = Math.abs(tAlt - d.alt) > 120; // 고도 변화 중 감지
   d.alt+=(tAlt-d.alt)*Math.min(dt*0.6,1);
 
   // 탐지
@@ -515,7 +517,7 @@ function loop(now){
   G.lastF=now;
   const totalDt=Math.min(wallDt*G.ts, 4.0);
   G.t+=totalDt;
-  G.sweep+=wallDt*0.6;  // 레이다 스윕: 배속 무관, 실시간 기준
+  G.sweep+=wallDt*2.2;  // 레이다 스윕: 배속 무관, 실시간 기준 (빠른 회전)
 
   // 서브스텝: 고배속에서도 레이다 탐지·요격이 정확히 작동
   const SUB=0.12;  // 서브스텝 최대 0.12 시뮬초
@@ -537,9 +539,10 @@ function blendCol(c1,c2,t){
 }
 function altColor(d){
   if(d.role==='attacker') return '#ff5c5c';
-  if(d.alt>=2000) return '#4fa3ff';   // 고고도 2~3km → 파랑
-  if(d.alt>=500)  return '#f97316';   // 중고도 500m~1km → 오렌지
-  return '#ffffff';                    // 저고도 50~100m → 흰색
+  if(d.altTransition)     return '#22c55e';  // 고도 변화 중 → 녹색
+  if(d.alt>=2000) return '#4fa3ff';          // 고고도 2~3km → 파랑
+  if(d.alt>=500)  return '#f97316';          // 중고도 500m~1km → 오렌지
+  return '#ffffff';                           // 저고도 50~100m → 흰색
 }
 
 // ── 렌더링 ────────────────────────────────────────────────────────────────
@@ -829,10 +832,10 @@ function render(){
 
   // ─ 고도 범례 ─
   const lx=cvs.width-120, ly=12;
-  c.fillStyle='rgba(11,14,22,0.88)'; c.fillRect(lx-6,ly-5,122,58);
+  c.fillStyle='rgba(11,14,22,0.88)'; c.fillRect(lx-6,ly-5,122,74);
   c.strokeStyle='rgba(79,163,255,0.2)'; c.lineWidth=1; c.strokeRect(lx-6,ly-5,122,58);
   c.font='bold 10px sans-serif'; c.textAlign='left';
-  [['#4fa3ff','고고도 (2~3km)'],['#f97316','중고도 (500m~1km)'],['#ffffff','저고도 (50~100m)']].forEach(([col,lbl],i)=>{
+  [['#4fa3ff','고고도 (2~3km)'],['#f97316','중고도 (500m~1km)'],['#ffffff','저고도 (50~100m)'],['#22c55e','고도 변화 중']].forEach(([col,lbl],i)=>{
     c.fillStyle=col; c.fillRect(lx,ly+i*16,9,9);
     c.fillStyle='rgba(200,215,240,0.92)'; c.fillText(lbl,lx+13,ly+i*16+8);
   });
