@@ -469,8 +469,8 @@ function render(){
   c.strokeStyle='rgba(79,163,255,0.35)'; c.lineWidth=1;
   c.beginPath(); c.rect(px(rv.x1),py(rv.y1),px(rv.x2)-px(rv.x1),py(rv.y2)-py(rv.y1));
   c.fill(); c.stroke();
-  c.fillStyle='rgba(79,163,255,0.7)'; c.font=`bold ${Math.max(13,cvs.height*0.026)}px sans-serif`; c.textAlign='center';
-  c.fillText('강',px((rv.x1+rv.x2)/2),py((rv.y1+rv.y2)/2)+5);
+  c.fillStyle='rgba(79,163,255,0.7)'; c.font=`bold ${Math.max(10,cvs.height*0.015)}px sans-serif`; c.textAlign='center';
+  c.fillText('강',px((rv.x1+rv.x2)/2),py((rv.y1+rv.y2)/2)+4);
 
   // ─ 산악 ─
   TERRAIN.mountains.forEach(m=>{
@@ -486,8 +486,8 @@ function render(){
     c.fillStyle='rgba(40,90,40,0.5)'; c.fill();
     c.restore();
     c.fillStyle='rgba(130,220,130,0.85)';
-    c.font=`bold ${Math.max(12,cvs.height*0.022)}px sans-serif`; c.textAlign='center';
-    c.fillText('산악',cx,cy+5);
+    c.font=`bold ${Math.max(9,cvs.height*0.013)}px sans-serif`; c.textAlign='center';
+    c.fillText('산악',cx,cy+4);
   });
 
   // ─ 도시 빌딩 ─
@@ -501,11 +501,11 @@ function render(){
   });
   const ci=TERRAIN.city;
   c.fillStyle='rgba(150,150,210,0.85)';
-  c.font=`bold ${Math.max(13,cvs.height*0.024)}px sans-serif`; c.textAlign='center';
+  c.font=`bold ${Math.max(9,cvs.height*0.013)}px sans-serif`; c.textAlign='center';
   c.fillText('도시',px((ci.x1+ci.x2)/2),py((ci.y1+ci.y2)/2));
 
   // ─ 레이다 ─
-  const fs=Math.max(11,cvs.height*0.018);
+  const fs=Math.max(9,cvs.height*0.012);
   RADARS.forEach((r,i)=>{
     const [rx,ry]=[px(r.x),py(r.y)];
 
@@ -577,8 +577,8 @@ function render(){
   c.beginPath(); c.arc(tx,ty,8,0,Math.PI*2);
   c.fillStyle='rgba(255,92,92,0.88)'; c.fill();
   c.strokeStyle='#fff'; c.lineWidth=1.5; c.stroke();
-  c.fillStyle='#fff'; c.font=`bold ${Math.max(13,cvs.height*0.022)}px sans-serif`; c.textAlign='center';
-  c.fillText('TARGET',tx,ty+24);
+  c.fillStyle='#fff'; c.font=`bold ${Math.max(9,cvs.height*0.013)}px sans-serif`; c.textAlign='center';
+  c.fillText('TARGET',tx,ty+18);
 
   // ─ 드론 궤적 ─
   G.drones.forEach(d=>{
@@ -644,19 +644,19 @@ function render(){
     // ID 레이블
     const idLabel = d.role==='scout' ? '선행' : `#${d.id+1}`;
     c.fillStyle = d.role==='scout' ? 'rgba(255,92,92,0.95)' : `rgba(255,255,255,${alp*0.85})`;
-    c.font=`bold 11px monospace`; c.textAlign='center';
-    c.fillText(idLabel,dx2,dy2-sz-5);
+    c.font=`bold 8px monospace`; c.textAlign='center';
+    c.fillText(idLabel,dx2,dy2-sz-4);
 
     // 선행 드론 레이다 타격 표시
     if(d.role==='scout'){
-      c.font='bold 10px monospace'; c.fillStyle='rgba(255,200,50,0.9)';
-      c.fillText('▶레이다타격',dx2,dy2+sz+13);
+      c.font='7px monospace'; c.fillStyle='rgba(255,200,50,0.85)';
+      c.fillText('▶레이다타격',dx2,dy2+sz+10);
     }
 
     // 저고도 수치 표시 (<200m)
     if(d.alt<200){
-      c.fillStyle='rgba(255,255,255,0.92)'; c.font='bold 10px monospace'; c.textAlign='left';
-      c.fillText(`${Math.round(d.alt)}m`,dx2+sz+4,dy2+4);
+      c.fillStyle='rgba(255,255,255,0.88)'; c.font='7px monospace'; c.textAlign='left';
+      c.fillText(`${Math.round(d.alt)}m`,dx2+sz+3,dy2+3);
     }
   });
 
@@ -670,13 +670,13 @@ function render(){
   c.beginPath();c.moveTo(10+s10,cvs.height-15);c.lineTo(10+s10,cvs.height-7);c.stroke();
 
   // ─ 고도 범례 ─
-  const lx=cvs.width-138, ly=14;
-  c.fillStyle='rgba(11,14,22,0.9)'; c.fillRect(lx-8,ly-6,142,72);
-  c.strokeStyle='rgba(79,163,255,0.2)'; c.lineWidth=1; c.strokeRect(lx-8,ly-6,142,72);
-  c.font='bold 13px sans-serif'; c.textAlign='left';
+  const lx=cvs.width-120, ly=12;
+  c.fillStyle='rgba(11,14,22,0.88)'; c.fillRect(lx-6,ly-5,122,58);
+  c.strokeStyle='rgba(79,163,255,0.2)'; c.lineWidth=1; c.strokeRect(lx-6,ly-5,122,58);
+  c.font='bold 10px sans-serif'; c.textAlign='left';
   [['#4fa3ff','고고도 (>2km)'],['#f97316','중고도 (500m~1km)'],['#ffffff','저고도 (50~100m)']].forEach(([col,lbl],i)=>{
-    c.fillStyle=col; c.fillRect(lx,ly+i*19,12,12);
-    c.fillStyle='rgba(215,225,245,0.95)'; c.fillText(lbl,lx+17,ly+i*19+11);
+    c.fillStyle=col; c.fillRect(lx,ly+i*16,9,9);
+    c.fillStyle='rgba(200,215,240,0.92)'; c.fillText(lbl,lx+13,ly+i*16+8);
   });
 }
 
@@ -685,8 +685,8 @@ function drawDefLine(c, xkm, color, label){
   c.strokeStyle=color; c.lineWidth=1.5; c.setLineDash([6,4]);
   c.beginPath();c.moveTo(x,0);c.lineTo(x,cvs.height);c.stroke();
   c.setLineDash([]);
-  c.save();c.translate(x-10,cvs.height*0.14);c.rotate(-Math.PI/2);
-  c.fillStyle=color; c.font=`bold 12px sans-serif`; c.textAlign='center';
+  c.save();c.translate(x-8,cvs.height*0.12);c.rotate(-Math.PI/2);
+  c.fillStyle=color; c.font=`bold 10px sans-serif`; c.textAlign='center';
   c.fillText(label,0,0); c.restore();
 }
 
