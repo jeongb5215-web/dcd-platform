@@ -537,13 +537,9 @@ function blendCol(c1,c2,t){
 }
 function altColor(d){
   if(d.role==='attacker') return '#ff5c5c';
-  const altF=Math.min(1,d.alt/3000);
-  if(altF>=0.67){   // 고고도 → 파랑
-    return blendCol(d.color,'#4fa3ff',Math.min(1,(altF-0.67)/0.33));
-  } else if(altF<=0.15){ // 저고도 → 흰색
-    return blendCol('#ffffff',d.color,altF/0.15);
-  }
-  return d.color;   // 중고도 → 기본색
+  if(d.alt>=2000) return '#4fa3ff';   // 고고도 2~3km → 파랑
+  if(d.alt>=500)  return '#f97316';   // 중고도 500m~1km → 오렌지
+  return '#ffffff';                    // 저고도 50~100m → 흰색
 }
 
 // ── 렌더링 ────────────────────────────────────────────────────────────────
