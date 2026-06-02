@@ -225,32 +225,32 @@ canvas{flex:1;display:block;width:100%;height:100%}
 </div>
 
 <script>
-// ── 세계 좌표 (km) ──────────────────────────────────────────────────────────
-const WW = 150, WH = 90; // 세계 크기 (km)
+// ── 세계 좌표 (km) — 통제선→TARGET = 정확히 40km ──────────────────────────
+const WW = 80, WH = 90; // 세계 크기 (km)  ※ 80km 기준 스케일
 
 const TERRAIN = {
   mountains: [
-    {cx:48, cy:17, rx:15, ry:11},   // 북서 산악 (레이다+재밍)
-    {cx:82, cy:37, rx:17, ry:13},   // 중앙 산악
-    {cx:115,cy:36, rx:13, ry:9},    // 북동 산악 (레이다, 강 위 탐지 위치)
-    {cx:58, cy:71, rx:11, ry:7},    // 남서 산악
+    {cx:26, cy:17, rx:8,  ry:11},   // 북서 산악
+    {cx:44, cy:37, rx:9,  ry:13},   // 중앙 산악
+    {cx:61, cy:36, rx:7,  ry:9},    // 북동 산악 (통제선 탐지)
+    {cx:31, cy:71, rx:6,  ry:7},    // 남서 산악
   ],
-  river: {x1:35, x2:130, y1:52, y2:58},
-  city:  {x1:4,  x2:36,  y1:40, y2:80},
+  river: {x1:19, x2:69, y1:52, y2:58},
+  city:  {x1:2,  x2:19, y1:40, y2:80},
 };
 
 const RADARS = [
-  {x:48,  y:17, det:25, jam:5,  label:'북서 산악 레이다',   active:true, struck:false, firstAttacker:-1},
-  {x:58,  y:71, det:25, jam:5,  label:'남서 산악 레이다',   active:true, struck:false, firstAttacker:-1},
-  {x:33,  y:47, det:7,  jam:3,  label:'도심권 레이다',      active:true, struck:false, firstAttacker:-1},
-  {x:20,  y:68, det:7,  jam:3,  label:'도심권 레이다(하)',  active:true, struck:false, firstAttacker:-1},
-  {x:82,  y:37, det:25, jam:5,  label:'중앙 산악 레이다',   active:true, struck:false, firstAttacker:-1},
-  {x:115, y:43, det:30, jam:0,  label:'통제선 탐지 레이다', active:true, struck:false, firstAttacker:-1},
+  {x:26, y:17, det:25, jam:5,  label:'북서 산악 레이다',   active:true, struck:false, firstAttacker:-1},
+  {x:31, y:71, det:25, jam:5,  label:'남서 산악 레이다',   active:true, struck:false, firstAttacker:-1},
+  {x:18, y:47, det:7,  jam:3,  label:'도심권 레이다',      active:true, struck:false, firstAttacker:-1},
+  {x:11, y:68, det:7,  jam:3,  label:'도심권 레이다(하)',  active:true, struck:false, firstAttacker:-1},
+  {x:44, y:37, det:25, jam:5,  label:'중앙 산악 레이다',   active:true, struck:false, firstAttacker:-1},
+  {x:61, y:43, det:30, jam:0,  label:'통제선 탐지 레이다', active:true, struck:false, firstAttacker:-1},
 ];
-const TARGET = {x:12, y:61};
-const ID_LINE = 145;   // 방공식별선 x (km)
-const CT_LINE = 133;   // 통제선 x (km)  ← 북동 산악(102~128) 우측
-const ENTRY_X = 148;
+const TARGET  = {x:6,  y:61};
+const ID_LINE = 54;    // 방공식별선 x (km)
+const CT_LINE = 46;    // 통제선 x (km) ← CT_LINE - TARGET.x = 46-6 = 40km ✓
+const ENTRY_X = 76;
 
 // ── 글로벌 상태 ────────────────────────────────────────────────────────────
 const G = {
@@ -288,53 +288,53 @@ function makeDrone(id, sy, type) {
   if(pat===0){
     // 패턴A: 강 경유 표준 경로 (중간 고도)
     wps=[
-      {x:ENTRY_X,y:sy,              alt:3000},
-      {x:ID_LINE,y:44+rnd(10),      alt:3000},
-      {x:CT_LINE,y:44+rnd(10),      alt:3000},
-      {x:105,    y:Math.max(35,44+rnd(8)),alt:3000},
-      {x:90,     y:56+rnd(4),       alt:80},   // 강 저고도
-      {x:73,     y:56+rnd(4),       alt:60},
-      {x:63,     y:68+rnd(4),       alt:80},
-      {x:45,     y:68+rnd(4),       alt:80},
-      {x:28,     y:64+rnd(4),       alt:50},
-      {x:TARGET.x,y:TARGET.y,       alt:50},
+      {x:ENTRY_X,y:sy,                    alt:3000},
+      {x:ID_LINE,y:44+rnd(8),             alt:3000},
+      {x:CT_LINE,y:44+rnd(8),             alt:3000},
+      {x:56,     y:Math.max(35,44+rnd(6)),alt:3000},
+      {x:48,     y:56+rnd(4),             alt:80},
+      {x:39,     y:56+rnd(4),             alt:60},
+      {x:34,     y:68+rnd(4),             alt:80},
+      {x:24,     y:68+rnd(4),             alt:80},
+      {x:15,     y:64+rnd(4),             alt:50},
+      {x:TARGET.x,y:TARGET.y,             alt:50},
     ];
   } else if(pat===1){
     // 패턴B: 북쪽 우회 (산악 타고 고고도 침투)
     wps=[
-      {x:ENTRY_X,y:sy,              alt:3000},
-      {x:ID_LINE,y:22+rnd(8),       alt:3000},
-      {x:CT_LINE,y:26+rnd(8),       alt:3000},
-      {x:100,    y:30+rnd(6),       alt:3000},
-      {x:80,     y:32+rnd(6),       alt:3000},  // 산악 통과 고고도
-      {x:60,     y:42+rnd(5),       alt:500},   // 도심 진입 하강
-      {x:40,     y:52+rnd(5),       alt:200},
-      {x:22,     y:60+rnd(4),       alt:80},
-      {x:TARGET.x,y:TARGET.y,       alt:50},
+      {x:ENTRY_X,y:sy,         alt:3000},
+      {x:ID_LINE,y:22+rnd(6),  alt:3000},
+      {x:CT_LINE,y:26+rnd(6),  alt:3000},
+      {x:53,     y:30+rnd(5),  alt:3000},
+      {x:43,     y:32+rnd(5),  alt:3000},
+      {x:32,     y:42+rnd(4),  alt:500},
+      {x:21,     y:52+rnd(4),  alt:200},
+      {x:12,     y:60+rnd(3),  alt:80},
+      {x:TARGET.x,y:TARGET.y,  alt:50},
     ];
   } else if(pat===2){
     // 패턴C: 남쪽 우회 (강 하류·저고도 침투)
     wps=[
-      {x:ENTRY_X,y:sy,              alt:3000},
-      {x:ID_LINE,y:62+rnd(8),       alt:3000},
-      {x:CT_LINE,y:66+rnd(8),       alt:3000},
-      {x:100,    y:70+rnd(5),       alt:500},
-      {x:75,     y:73+rnd(5),       alt:100},   // 강 남쪽 저고도
-      {x:55,     y:72+rnd(4),       alt:80},
-      {x:35,     y:70+rnd(4),       alt:60},
-      {x:20,     y:66+rnd(4),       alt:50},
-      {x:TARGET.x,y:TARGET.y,       alt:50},
+      {x:ENTRY_X,y:sy,         alt:3000},
+      {x:ID_LINE,y:62+rnd(6),  alt:3000},
+      {x:CT_LINE,y:66+rnd(6),  alt:3000},
+      {x:53,     y:70+rnd(4),  alt:500},
+      {x:40,     y:73+rnd(4),  alt:100},
+      {x:29,     y:72+rnd(3),  alt:80},
+      {x:19,     y:70+rnd(3),  alt:60},
+      {x:11,     y:66+rnd(3),  alt:50},
+      {x:TARGET.x,y:TARGET.y,  alt:50},
     ];
   } else {
     // 패턴D: 직선 돌진 (고도 단계적 강하)
     wps=[
-      {x:ENTRY_X,y:sy,              alt:3000},
-      {x:ID_LINE,y:44+rnd(6),       alt:3000},
-      {x:CT_LINE,y:44+rnd(6),       alt:2000},
-      {x:95,     y:50+rnd(6),       alt:1000},  // 단계 강하
-      {x:70,     y:56+rnd(6),       alt:300},
-      {x:45,     y:62+rnd(5),       alt:100},
-      {x:TARGET.x,y:TARGET.y,       alt:50},
+      {x:ENTRY_X,y:sy,         alt:3000},
+      {x:ID_LINE,y:44+rnd(5),  alt:3000},
+      {x:CT_LINE,y:44+rnd(5),  alt:2000},
+      {x:51,     y:50+rnd(5),  alt:1000},
+      {x:37,     y:56+rnd(5),  alt:300},
+      {x:24,     y:62+rnd(4),  alt:100},
+      {x:TARGET.x,y:TARGET.y,  alt:50},
     ];
   }
   return {
