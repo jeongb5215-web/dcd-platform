@@ -117,16 +117,16 @@ canvas{flex:1;display:block;width:100%;height:100%}
         <div class="sl-item">
           <div class="sl-hdr">
             <span class="sl-lbl" style="color:#22c55e">샤헤드-136 속도</span>
-            <span class="sl-val" id="v136" style="color:#22c55e">185 km/h</span>
+            <span class="sl-val" id="v136" style="color:#22c55e">180 km/h</span>
           </div>
-          <input type="range" min="50" max="400" value="185" step="5" oninput="document.getElementById('v136').textContent=this.value+' km/h';G.spd136=+this.value;simReset()">
+          <input type="range" min="50" max="180" value="180" step="5" oninput="document.getElementById('v136').textContent=this.value+' km/h';G.spd136=+this.value;simReset()">
         </div>
         <div class="sl-item">
           <div class="sl-hdr">
             <span class="sl-lbl" style="color:var(--orange)">샤헤드-238 속도</span>
             <span class="sl-val" id="v238" style="color:var(--orange)">500 km/h</span>
           </div>
-          <input type="range" min="200" max="1000" value="500" step="10" oninput="document.getElementById('v238').textContent=this.value+' km/h';G.spd238=+this.value;simReset()">
+          <input type="range" min="200" max="500" value="500" step="10" oninput="document.getElementById('v238').textContent=this.value+' km/h';G.spd238=+this.value;simReset()">
         </div>
       </div>
     </div>
@@ -246,7 +246,7 @@ const G = {
   running:false, ts:8, t:0,
   killP:0.65, radarS:1, jamS:1, interceptOn:true,
   droneCount:10, scenario:1,
-  spd136:185, spd238:500,   // 기종별 속도 (km/h)
+  spd136:180, spd238:500,   // 기종별 속도 (km/h)
   drones:[], evadeTotal:0,
   hitCount:0, killCount:0,
   bestTransit: -1,
@@ -416,8 +416,16 @@ function updateDrone(d, dt){
   let tAlt=wp.alt;
   if(overMountain(d.x,d.y)) tAlt=Math.max(tAlt,3000);
   if(overRiver(d.x,d.y))    tAlt=Math.min(tAlt,80);
-  d.altTransition = Math.abs(tAlt - d.alt) > 120; // 고도 변화 중 감지
-  d.alt+=(tAlt-d.alt)*Math.min(dt*0.6,1);
+  const altDelta=tAlt-d.alt;
+  d.altTransition = Math.abs(altDelta) > 120;
+  d.alt+=altDelta*Math.min(dt*0.6,1);
+
+  // ── 비행 물리: 고도 변화 시 속도 변동 ──
+  // 상승 → 감속(최대 -35%), 하강 → 가속(최대 +18%)
+  const baseKms=(d.type==='238' ? G.spd238 : G.spd136)/3600;
+  const normDelta=Math.max(-1,Math.min(1,altDelta/1500));
+  const spdMult=normDelta>=0 ? 1-normDelta*0.35 : 1-normDelta*0.18;
+  d.spd=baseKms*Math.max(0.50,Math.min(1.20,spdMult));
 
   // 탐지
   d.detected=isDetected(d);
@@ -801,10 +809,11 @@ function render(){
     c.font=`bold 11px monospace`; c.textAlign='center';
     c.fillText(idLabel, dx2, dy2-sz-5);
 
-    // 속도 표시 (km/h)
+    // 속도 표시 (km/h) — 고도 변화 시 녹색으로 강조
     const kmh = Math.round(d.spd*3600);
-    c.fillStyle=`rgba(200,225,255,${alp*0.8})`; c.font='9px monospace'; c.textAlign='center';
-    c.fillText(`${kmh}㎞/h`, dx2, dy2+sz+10);
+    const spdCol = d.altTransition ? 'rgba(74,222,128,0.95)' : `rgba(200,225,255,${alp*0.85})`;
+    c.fillStyle=spdCol; c.font='bold 11px monospace'; c.textAlign='center';
+    c.fillText(`${kmh}㎞/h`, dx2, dy2+sz+12);
 
     // 타격 임무 표시
     if(isAttacker){
