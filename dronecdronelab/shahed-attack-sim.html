@@ -53,7 +53,7 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .sl-hdr{display:flex;align-items:center;gap:6px}
 .sl-lbl{font-size:13px;color:#fff;font-weight:700;flex:1}
 .sl-val{font-family:'Cascadia Mono',monospace;font-size:13px;color:var(--blue);background:rgba(79,163,255,.12);border:1px solid rgba(79,163,255,.3);padding:2px 8px;border-radius:4px;white-space:nowrap;font-weight:700}
-input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--border);border-radius:2px;outline:none;cursor:pointer}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;background:var(--border);border-radius:2px;outline:none;cursor:pointer}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--blue);box-shadow:0 0 5px rgba(79,163,255,.6);cursor:pointer}
 .stat-r{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05)}
 .stat-r:last-child{border-bottom:none}
@@ -113,6 +113,20 @@ canvas{flex:1;display:block;width:100%;height:100%}
         <div class="sl-item">
           <div class="sl-hdr"><span class="sl-lbl">드론 대수 (S1/S2)</span><span class="sl-val" id="vCnt">10대</span></div>
           <input type="range" min="3" max="20" value="10" step="1" oninput="document.getElementById('vCnt').textContent=this.value+'대';G.droneCount=+this.value;simReset()">
+        </div>
+        <div class="sl-item">
+          <div class="sl-hdr">
+            <span class="sl-lbl" style="color:#22c55e">샤헤드-136 속도</span>
+            <span class="sl-val" id="v136" style="color:#22c55e">185 km/h</span>
+          </div>
+          <input type="range" min="50" max="400" value="185" step="5" oninput="document.getElementById('v136').textContent=this.value+' km/h';G.spd136=+this.value;simReset()">
+        </div>
+        <div class="sl-item">
+          <div class="sl-hdr">
+            <span class="sl-lbl" style="color:var(--orange)">샤헤드-238 속도</span>
+            <span class="sl-val" id="v238" style="color:var(--orange)">500 km/h</span>
+          </div>
+          <input type="range" min="200" max="1000" value="500" step="10" oninput="document.getElementById('v238').textContent=this.value+' km/h';G.spd238=+this.value;simReset()">
         </div>
       </div>
     </div>
@@ -232,6 +246,7 @@ const G = {
   running:false, ts:8, t:0,
   killP:0.65, radarS:1, jamS:1, interceptOn:true,
   droneCount:10, scenario:1,
+  spd136:185, spd238:500,   // 기종별 속도 (km/h)
   drones:[], evadeTotal:0,
   hitCount:0, killCount:0,
   bestTransit: -1,
@@ -255,7 +270,7 @@ function genBuildings() {
 
 // ── 드론 생성 (전원 군집 — 디코이는 최초 탐지 시 동적 지정) ──────────────
 function makeDrone(id, sy, type) {
-  const spd = type==='238' ? 500/3600 : 185/3600;
+  const spd = type==='238' ? G.spd238/3600 : G.spd136/3600;
   const rnd = (r) => (Math.random()-0.5)*r;
   const pat = id % 4; // 드론 ID별 4가지 패턴 순환
   let wps;
@@ -779,23 +794,28 @@ function render(){
       c.restore();
     }
 
-    // ID 레이블
+    // ID 레이블 (크기 확대)
     const isAttacker = d.targetRadarIdx>=0;
     const idLabel = isAttacker ? '타격' : `#${d.id+1}`;
-    c.fillStyle = isAttacker ? 'rgba(255,100,100,1)' : `rgba(255,255,255,${alp*0.85})`;
-    c.font=`bold 8px monospace`; c.textAlign='center';
-    c.fillText(idLabel,dx2,dy2-sz-4);
+    c.fillStyle = isAttacker ? 'rgba(255,100,100,1)' : `rgba(255,255,255,${alp*0.9})`;
+    c.font=`bold 11px monospace`; c.textAlign='center';
+    c.fillText(idLabel, dx2, dy2-sz-5);
+
+    // 속도 표시 (km/h)
+    const kmh = Math.round(d.spd*3600);
+    c.fillStyle=`rgba(200,225,255,${alp*0.8})`; c.font='9px monospace'; c.textAlign='center';
+    c.fillText(`${kmh}㎞/h`, dx2, dy2+sz+10);
 
     // 타격 임무 표시
     if(isAttacker){
-      c.font='7px monospace'; c.fillStyle='rgba(255,210,60,0.9)';
-      c.fillText(`▶${RADARS[d.targetRadarIdx]?.label||'레이다'}`,dx2,dy2+sz+10);
+      c.font='bold 9px monospace'; c.fillStyle='rgba(255,210,60,0.95)'; c.textAlign='center';
+      c.fillText(`▶${RADARS[d.targetRadarIdx]?.label||'레이다'}`, dx2, dy2+sz+22);
     }
 
     // 저고도 수치 표시 (<200m)
     if(d.alt<200){
-      c.fillStyle='rgba(255,255,255,0.88)'; c.font='7px monospace'; c.textAlign='left';
-      c.fillText(`${Math.round(d.alt)}m`,dx2+sz+3,dy2+3);
+      c.fillStyle='rgba(255,255,255,0.88)'; c.font='bold 9px monospace'; c.textAlign='left';
+      c.fillText(`${Math.round(d.alt)}m`, dx2+sz+4, dy2+3);
     }
   });
 
@@ -887,7 +907,7 @@ function updateStats(){
   // 통제선→TARGET 예상 도달시간 (이론값)
   const dist_ct=CT_LINE-TARGET.x; // km
   const sc=G.scenario;
-  const spd_kms = sc===2 ? 500/3600 : 185/3600; // km/s
+  const spd_kms = sc===2 ? G.spd238/3600 : G.spd136/3600;
   const estSec = dist_ct / spd_kms;
   document.getElementById('sEst').textContent=fmtT(estSec);
   // 실측 최단 도달시간
