@@ -162,8 +162,8 @@ canvas{flex:1;display:block;width:100%;height:100%}
         <div class="stat-r"><span class="sk">TARGET 도달</span><span class="sv" id="sH" style="color:var(--gold)">0대</span></div>
         <div class="stat-r"><span class="sk">레이다 타격 기동</span><span class="sv" id="sEv">0회</span></div>
         <div class="stat-r"><span class="sk">TARGET 최근접 거리</span><span class="sv" id="sCl">—</span></div>
-        <div class="stat-r"><span class="sk">통제선→TARGET 예상</span><span class="sv" id="sEst" style="color:var(--blue)">—</span></div>
-        <div class="stat-r"><span class="sk">통제선→TARGET 실측</span><span class="sv" id="sTrans" style="color:var(--green)">—</span></div>
+        <div class="stat-r"><span class="sk">절대확보선→TARGET 예상</span><span class="sv" id="sEst" style="color:var(--blue)">—</span></div>
+        <div class="stat-r"><span class="sk">절대확보선→TARGET 실측</span><span class="sv" id="sTrans" style="color:var(--green)">—</span></div>
         <div class="stat-r"><span class="sk">현재 단계</span><span class="sv" id="sPh" style="color:var(--muted);font-size:9px">대기중</span></div>
       </div>
     </div>
@@ -218,7 +218,7 @@ canvas{flex:1;display:block;width:100%;height:100%}
         <svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="#4fa3ff" stroke-width="1.5" stroke-dasharray="4,2"/></svg>방공식별선
       </div>
       <div class="lg-i">
-        <svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="#ff5c5c" stroke-width="1.5" stroke-dasharray="4,2"/></svg>통제선
+        <svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="#ff5c5c" stroke-width="1.5" stroke-dasharray="4,2"/></svg>절대확보선
       </div>
     </div>
   </div>
@@ -248,8 +248,8 @@ const RADARS = [
   {x:61, y:43, det:30, jam:0,  label:'통제선 탐지 레이다', active:true, struck:false, firstAttacker:-1},
 ];
 const TARGET  = {x:6,  y:61};
-const ID_LINE = 54;    // 방공식별선 x (km)
-const CT_LINE = 46;    // 통제선 x (km) ← CT_LINE - TARGET.x = 46-6 = 40km ✓
+const ID_LINE = 69;    // 방공식별선 x (km) ← 강 끝단(river.x2=69)
+const CT_LINE = 46;    // 절대확보선 x (km) ← CT_LINE - TARGET.x = 46-6 = 40km ✓
 const ENTRY_X = 76;
 
 // ── 글로벌 상태 ────────────────────────────────────────────────────────────
@@ -714,7 +714,7 @@ function render(){
 
   // ─ 방공식별선 / 통제선 ─
   drawDefLine(c, ID_LINE, 'rgba(79,163,255,0.7)', '방공식별선');
-  drawDefLine(c, CT_LINE, 'rgba(255,92,92,0.7)', '통제선');
+  drawDefLine(c, CT_LINE, 'rgba(255,92,92,0.7)', '절대확보선');
 
   // ─ 상단 리드선: TARGET ↔ 통제선 = 40km ─
   {
@@ -742,7 +742,7 @@ function render(){
     // 양끝 라벨
     c.fillStyle='rgba(200,200,200,0.55)'; c.font='7px monospace';
     c.textAlign='left';  c.fillText('TARGET', ldTx+2, ldY+9);
-    c.textAlign='right'; c.fillText('통제선', ldCx-2, ldY+9);
+    c.textAlign='right'; c.fillText('절대확보선', ldCx-2, ldY+9);
   }
 
   // ─ TARGET ─
@@ -938,7 +938,7 @@ function updateStats(){
   if(G.running){
     if(avgX>=ID_LINE) ph='경계 접근';
     else if(avgX>=CT_LINE) ph='방공식별선 통과';
-    else if(avgX>=90)  ph='통제선 돌파';
+    else if(avgX>=CT_LINE-10) ph='절대확보선 돌파';
     else if(avgX>=65)  ph='산악·강 기동 중';
     else if(avgX>=40)  ph='저고도 침투 중';
     else               ph='목표 최종 접근';
