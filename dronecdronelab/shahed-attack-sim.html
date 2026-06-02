@@ -181,13 +181,24 @@ canvas{flex:1;display:block;width:100%;height:100%}
         <span id="ruleArrow" style="font-size:10px;color:var(--muted);transition:transform .2s">▼</span>
       </div>
       <div class="sect-bd" id="ruleBd" style="gap:5px;display:none">
-        <div style="font-size:12px;color:var(--muted);line-height:1.85;font-weight:500">
-          ① 선행 드론 1대: 통제선 레이다 즉시 타격 → OFFLINE<br>
-          ② 군집 드론 9대: 뭉쳐서 랜덤 지연 출발 · 경로 산개<br>
-          ③ <b style="color:#4fa3ff">탐지 즉시 레이다 타격 기동</b> → 파괴 후 목표 재개<br>
+        <div style="font-size:12px;color:var(--muted);line-height:1.9;font-weight:500">
+          <b style="color:#ff5c5c">[ 탐지·타격 ]</b><br>
+          ① 레이다에 <b style="color:#ff5c5c">최초 탐지된 드론</b>이 자동으로 타격 담당 지정<br>
+          ② 레이다별 독립 지정 — 미탐지 드론은 그냥 통과<br>
+          ③ 타격 담당 드론은 <b style="color:#fbbf24">요격 면제</b>, 레이다 파괴 후 임무 종료<br>
           ④ 거리별 탐지 구역: 50%(확실) / 75%(중간) / 100%(외곽)<br>
-          ⑤ 산악 3km 상승 / 강 80m 저고도 / 최종 50m 접근<br>
-          ⑥ 샤헤드-238 (500km/h) 동일 패턴 적용
+          <br>
+          <b style="color:#4fa3ff">[ 비행 패턴 ]</b><br>
+          ⑤ 전원 군집 출발 → 4가지 경로로 산개<br>
+          &nbsp;&nbsp;A: 강 경유 표준 · B: 북쪽 고고도 우회<br>
+          &nbsp;&nbsp;C: 남쪽 저고도 · D: 직선 단계 강하<br>
+          ⑥ 산악 3km 상승 / 강 80m 저고도 / 최종 50m 접근<br>
+          <br>
+          <b style="color:#22c55e">[ 속도·고도 물리 ]</b><br>
+          ⑦ <b style="color:#22c55e">상승 시 최대 -35% 감속</b>, 하강 시 최대 +18% 가속<br>
+          ⑧ 고도 변화 중 → 녹색 표시 / 속도 실시간 반영<br>
+          ⑨ 샤헤드-136 최대 <b>180 km/h</b> · 샤헤드-238 최대 <b>500 km/h</b><br>
+          &nbsp;&nbsp;(슬라이더로 기종별 속도 조정 가능)
         </div>
       </div>
     </div>
