@@ -645,7 +645,7 @@
 
   <section id="screen-app" class="screen">
     <nav class="topbar">
-      <button class="top-logo" onclick="showScreen('landing')">Drone <span class="sh-amp">&amp;</span> <span class="sh-cd">C-drone</span></button><div class="top-divider"></div>
+      <button class="top-logo" onclick="enterApp()">Drone <span class="sh-amp">&amp;</span> <span class="sh-cd">C-drone</span></button><div class="top-divider"></div>
       <button class="nav-tab active" onclick="switchPanel('drone',this)">DRONE</button>
       <button class="nav-tab" onclick="switchPanel('cdrone',this)">C-DRONE</button>
       <button class="nav-tab" onclick="switchPanel('tactics',this)">TACTICS</button>
@@ -789,6 +789,9 @@
       if(id==='app'&&!currentUser){
         id='login';
         showNotif('로그인이 필요합니다.',true);
+      }
+      if(id==='landing'&&currentUser){
+        id='app';
       }
       document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
       document.getElementById('screen-'+id).classList.add('active');
