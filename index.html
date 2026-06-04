@@ -829,6 +829,7 @@
     function enterPanel(id){
       if(!currentUser){showScreen('login');return;}
       enterApp();
+      if(id==='lab')renderLabPanel();
       const tabMap={drone:'DRONE',cdrone:'C-DRONE',tactics:'TACTICS',other:'OTHER',lab:'LAB'};
       document.querySelectorAll('.nav-tab').forEach(function(t){
         if(t.textContent.trim()===tabMap[id]){switchPanel(id,t);}
@@ -929,6 +930,7 @@
       if(currentRole==='member'){
         showNotif('일반회원은 LAB에 접근할 수 없습니다.',true);return;
       }
+      renderLabPanel();
       switchPanel('lab',btn);
     }
     function updateLabTab(){
