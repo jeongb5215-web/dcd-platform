@@ -183,7 +183,8 @@ canvas{flex:1;display:block;width:100%;height:100%}
       <div class="sect-bd" id="ruleBd" style="gap:5px;display:none;max-height:220px;overflow-y:auto">
         <div style="font-size:12px;color:var(--muted);line-height:1.9;font-weight:500">
           <b style="color:#ff5c5c">[ 탐지·타격 ]</b><br>
-          ① 레이다에 <b style="color:#ff5c5c">최초 탐지된 드론</b>이 자동으로 타격 담당 지정<br>
+          ① <b style="color:#ff5c5c">첫번째 산악지역 레이다</b>: 탐지 즉시 모든 드론 타격<br>
+          &nbsp;&nbsp;나머지 레이다: 최초 탐지 드론 1대만 타격 담당<br>
           ② 레이다별 독립 지정 — 미탐지 드론은 그냥 통과<br>
           ③ 타격 담당 드론은 <b style="color:#fbbf24">요격 면제</b>, 레이다 파괴 후 임무 종료<br>
           ④ 거리별 탐지 구역: 50%(확실) / 75%(중간) / 100%(외곽)<br>
@@ -198,7 +199,12 @@ canvas{flex:1;display:block;width:100%;height:100%}
           ⑦ <b style="color:#22c55e">상승 시 최대 -35% 감속</b>, 하강 시 최대 +18% 가속<br>
           ⑧ 고도 변화 중 → 녹색 표시 / 속도 실시간 반영<br>
           ⑨ 샤헤드-136 최대 <b>180 km/h</b> · 샤헤드-238 최대 <b>500 km/h</b><br>
-          &nbsp;&nbsp;(슬라이더로 기종별 속도 조정 가능)
+          &nbsp;&nbsp;(슬라이더로 기종별 속도 조정 가능)<br>
+          <br>
+          <b style="color:#f97316">[ 샤헤드-238 제트 패턴 ]</b><br>
+          ⑩ 순항고도 <b style="color:#f97316">5,000~7,000m</b> (제트엔진 고고도 비행)<br>
+          ⑪ 강 위에서도 고도 유지 — 저고도 강하 없음<br>
+          ⑫ 목표 30km 전방부터 <b style="color:#f97316">급강하</b>, 종말 100m 접근
         </div>
       </div>
     </div>
@@ -240,8 +246,8 @@ const TERRAIN = {
 };
 
 const RADARS = [
-  {x:26, y:17, det:25, jam:5,  label:'북서 산악 레이다',   active:true, struck:false, firstAttacker:-1},
-  {x:31, y:71, det:25, jam:5,  label:'남서 산악 레이다',   active:true, struck:false, firstAttacker:-1},
+  {x:26, y:17, det:20, jam:5,  label:'북서 산악 레이다',   active:true, struck:false, firstAttacker:-1},
+  {x:31, y:71, det:20, jam:5,  label:'남서 산악 레이다',   active:true, struck:false, firstAttacker:-1},
   {x:18, y:47, det:7,  jam:3,  label:'도심권 레이다',      active:true, struck:false, firstAttacker:-1},
   {x:11, y:68, det:7,  jam:3,  label:'도심권 레이다(하)',  active:true, struck:false, firstAttacker:-1},
   {x:44, y:37, det:25, jam:5,  label:'중앙 산악 레이다',   active:true, struck:false, firstAttacker:-1},
@@ -337,9 +343,34 @@ function makeDrone(id, sy, type) {
       {x:TARGET.x,y:TARGET.y,  alt:50},
     ];
   }
+  // 샤헤드-238: 제트엔진 고속·고고도 비행 패턴 (136 패턴 덮어쓰기)
+  if(type==='238'){
+    const crz=5000+Math.random()*2000;  // 순항고도 5,000~7,000m
+    if(pat===0||pat===2){
+      // 직선 고고도 강습 — 최단경로, 종말 급강하
+      wps=[
+        {x:ENTRY_X, y:sy,           alt:crz},
+        {x:ID_LINE, y:44+rnd(6),    alt:crz},
+        {x:CT_LINE, y:44+rnd(6),    alt:Math.round(crz*0.75)},
+        {x:28,      y:56+rnd(4),    alt:800},
+        {x:TARGET.x,y:TARGET.y,     alt:100},
+      ];
+    } else {
+      // 고고도 우회 강습 — 북(pat1)/남(pat3) 편류 후 급강하
+      const yOff=pat===1?-14:14;
+      wps=[
+        {x:ENTRY_X, y:sy,              alt:crz},
+        {x:ID_LINE, y:44+yOff+rnd(5),  alt:crz},
+        {x:CT_LINE, y:44+yOff+rnd(5),  alt:Math.round(crz*0.7)},
+        {x:32,      y:54+rnd(5),       alt:1500},
+        {x:TARGET.x,y:TARGET.y,        alt:100},
+      ];
+    }
+  }
+
   return {
-    id, type, role:'swarm', x:ENTRY_X, y:sy, alt:600, spd,
-    wps, wi:0,
+    id, type, role:'swarm', x:ENTRY_X, y:sy, alt:type==='238'?5500:600, spd,
+    wps, wi:1,  // wi=0은 출발 좌표(dist=0) — 탐지 splice가 스킵되는 버그 방지
     state:'FLY',
     trail:[], detected:false,
     iCooldown:0,
@@ -426,7 +457,7 @@ function updateDrone(d, dt){
   // 고도 목표 (산악=3km 강제 상승, 강=80m 이하 강제 강하)
   let tAlt=wp.alt;
   if(overMountain(d.x,d.y)) tAlt=Math.max(tAlt,3000);
-  if(overRiver(d.x,d.y))    tAlt=Math.min(tAlt,80);
+  if(overRiver(d.x,d.y)&&d.type!=='238') tAlt=Math.min(tAlt,80); // 238 제트는 강 위도 고고도 유지
   const altDelta=tAlt-d.alt;
   d.altTransition = Math.abs(altDelta) > 120;
   d.alt+=altDelta*Math.min(dt*0.6,1);
@@ -444,27 +475,37 @@ function updateDrone(d, dt){
   // 통제선 통과 시각 기록 (처음 한 번)
   if(d.ctCrossTime<0 && d.x<=CT_LINE) d.ctCrossTime=G.t;
 
-  // ── 레이다에 탐지된 경우: 해당 레이다의 첫 탐지 드론이 타격 담당 ──
-  // 미탐지 드론은 레이다를 그냥 통과 (아무것도 하지 않음)
+  // ── 레이다에 탐지된 경우: 타격 담당 즉시 지정 ──
   if(d.detected && d.targetRadarIdx<0){
-    const ri=RADARS.findIndex(r=>
-      r.active && !r.struck && r.firstAttacker<0 &&
-      Math.hypot(d.x-r.x,d.y-r.y)<r.det*G.radarS
-    );
+    let ri=-1;
+    // ① 통제선 탐지 레이다(i=5) 최우선 체크 — 범위 내 첫 드론은 반드시 이 레이다 타격
+    {
+      const r=RADARS[5];
+      if(r.active&&!r.struck&&r.firstAttacker<0&&
+         Math.hypot(d.x-r.x,d.y-r.y)<=r.det*G.radarS) ri=5;
+    }
+    // ② 통제선 미해당 시: 나머지 레이다 중 가장 가까운 것 선택
+    if(ri<0){
+      let minDist=Infinity;
+      for(let i=0;i<RADARS.length;i++){
+        if(i===5) continue; // 위에서 이미 처리
+        const r=RADARS[i];
+        if(!r.active||r.struck) continue;
+        const dist=Math.hypot(d.x-r.x,d.y-r.y);
+        if(dist>r.det*G.radarS) continue;
+        if(i!==0&&r.firstAttacker>=0) continue; // 첫번째 산악 제외, 중복 담당 불가
+        if(dist<minDist){minDist=dist;ri=i;}
+      }
+    }
     if(ri>=0){
-      // 이 레이다의 첫 탐지 드론 → 타격 담당 지정
-      RADARS[ri].firstAttacker=d.id;
+      if(RADARS[ri].firstAttacker<0) RADARS[ri].firstAttacker=d.id;
       d.targetRadarIdx=ri;
       d.role='attacker';
       d.color='#ff5c5c';
-      d.wps.splice(d.wi,0,{
-        x:RADARS[ri].x, y:RADARS[ri].y,
-        alt:Math.min(800,d.alt), radarHit:ri
-      });
+      d.wps.splice(d.wi,0,{x:RADARS[ri].x,y:RADARS[ri].y,alt:Math.min(800,d.alt),radarHit:ri});
       addLog(`T+${fmtT(G.t)} [레이다 타격 지정] #${d.id+1} → ${RADARS[ri].label}`,'v');
       G.evadeTotal++;
     }
-    // 이미 타격 담당이 있는 레이다에 탐지된 나머지 드론 → 그냥 통과
   }
 
   // 이동
