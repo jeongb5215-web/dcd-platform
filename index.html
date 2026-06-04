@@ -1037,7 +1037,7 @@
           <div class="ch-card-body">
             <span class="ch-card-eyebrow" style="background:${color}1a;color:${color}">${a.source}</span>
             <div style="display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap;margin-bottom:4px">
-              ${(a.tags&&a.tags.length)?a.tags.map(t=>`<span class="art-tag">${t.toUpperCase()}</span>`).join(''):''}
+              ${((a.tags||a.keywords||[]).length)?(a.tags||a.keywords).map(t=>`<span class="art-tag">${t.toUpperCase()}</span>`).join(''):''}
               <div class="ch-card-title" style="margin-bottom:0;flex:1;min-width:0">${a.title}</div>
             </div>
             <div class="ch-card-summary">${a.summary}</div>
@@ -1061,7 +1061,7 @@
               <div>
                 <span class="ch-feat-eyebrow" style="background:${color}1a;color:${color}">${featured.source}</span>
                 <div style="display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap;margin-bottom:8px">
-                  ${(featured.tags&&featured.tags.length)?featured.tags.map(t=>`<span class="art-tag">${t.toUpperCase()}</span>`).join(''):''}
+                  ${((featured.tags||featured.keywords||[]).length)?(featured.tags||featured.keywords).map(t=>`<span class="art-tag">${t.toUpperCase()}</span>`).join(''):''}
                   <div class="ch-feat-title" style="margin-bottom:0;flex:1;min-width:0">${featured.title}</div>
                 </div>
                 <div class="ch-feat-summary">${featured.summary.length>240?featured.summary.slice(0,240)+'…':featured.summary}</div>
