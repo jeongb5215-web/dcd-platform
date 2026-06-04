@@ -959,7 +959,7 @@
         ${accessBadge}
         ${allCards.length?`<div class="lab-grid">
           ${allCards.map(item=>`
-            <div class="lab-card" style="${!canOpen?'cursor:default':''}">
+            <div class="lab-card" style="cursor:${canOpen&&item.url?'pointer':'default'}" ${canOpen&&item.url?`onclick="openLabSim('${item.url}')"`:''}>
               <div class="lab-thumb">
                 ${item.thumb?`<img src="${item.thumb}" alt="${item.title}">`:'<div class="lab-thumb-icon">⚗️</div>'}
               </div>
@@ -968,7 +968,7 @@
                 <div class="lab-card-desc">${item.desc}</div>
                 <div class="lab-card-footer">
                   <span class="lab-card-date">${item.date}</span>
-                  ${canOpen&&item.url?`<button class="lab-link-btn" onclick="openLabSim('${item.url}')">시뮬레이션 열기 →</button>`:canOpen?'<span style="font-size:11px;color:#aaa">링크 없음</span>':'<span style="font-size:11px;color:#c4b5fd">🔒 관리자 전용</span>'}
+                  ${canOpen&&item.url?`<span class="lab-link-btn">시뮬레이션 열기 →</span>`:canOpen?'<span style="font-size:11px;color:#aaa">링크 없음</span>':'<span style="font-size:11px;color:#c4b5fd">🔒 관리자 전용</span>'}
                 </div>
               </div>
             </div>`).join('')}
@@ -980,7 +980,13 @@
       const token=Math.random().toString(36).slice(2)+Date.now().toString(36);
       localStorage.setItem('dcd_lab_token',JSON.stringify({token,expiry:Date.now()+300000}));
       const sep=url.includes('?')?'&':'?';
-      window.open(url+sep+'dcd_token='+token,'_blank','noopener');
+      const a=document.createElement('a');
+      a.href=url+sep+'dcd_token='+token;
+      a.target='_blank';
+      a.rel='noopener';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
     function addLabItem(){
       const title=document.getElementById('lab-title').value.trim();
