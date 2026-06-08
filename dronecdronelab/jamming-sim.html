@@ -172,17 +172,20 @@ canvas.gcv{display:block;width:100%;height:100%}
     </div>
   </div>
 
-  <!-- 고정 물리 상수 -->
+  <!-- 주파수 선택 -->
   <div class="sect">
-    <div class="sect-hd"><span class="dot5" style="background:var(--green)"></span>물리 상수 (고정)</div>
-    <div class="sect-bd">
-      <div class="stat-r"><span class="sk">GPS 위성 신호 S</span><span class="sv" style="color:var(--green)">−130 dBm</span></div>
-      <div class="stat-r"><span class="sk">주파수</span><span class="sv">1.575 GHz (L1)</span></div>
-      <div class="stat-r"><span class="sk">잡음 지수 N₀</span><span class="sv">−164 dBm/Hz</span></div>
-      <div class="stat-r"><span class="sk">대역폭</span><span class="sv">2 MHz (GPS)</span></div>
-      <div class="stat-r"><span class="sk">시스템 손실 L</span><span class="sv">1 dB</span></div>
-      <div class="stat-r"><span class="sk">GPS 두절 임계 J/S</span><span class="sv" style="color:var(--red)">≥ 60 dB</span></div>
-      <div class="stat-r"><span class="sk">GPS 저하 임계 J/S</span><span class="sv" style="color:var(--orange)">≥ 40 dB</span></div>
+    <div class="sect-hd"><span class="dot5" style="background:var(--green)"></span>재밍 주파수 선택</div>
+    <div class="sect-bd" style="gap:8px">
+      <select id="freqSelect" onchange="setFreqPreset(this.value)" style="width:100%;background:#1a2030;color:var(--text);border:1px solid var(--border);border-radius:5px;padding:6px 8px;font-size:11px;cursor:pointer">
+        <option value="L1">1.575 GHz — GPS L1 항법</option>
+        <option value="C24">2.400 GHz — 드론 C2 링크</option>
+        <option value="F58">5.800 GHz — FPV 영상링크</option>
+      </select>
+      <div class="stat-r"><span class="sk">재밍 대상</span><span class="sv" id="dispLinkName" style="color:var(--green)">GPS 항법 신호</span></div>
+      <div class="stat-r"><span class="sk">기준 신호 S</span><span class="sv" id="dispS">−130 dBm</span></div>
+      <div class="stat-r"><span class="sk">대역폭</span><span class="sv" id="dispBW">2 MHz</span></div>
+      <div class="stat-r"><span class="sk">두절 임계 J/S</span><span class="sv" id="dispCrit" style="color:var(--red)">≥ 60 dB</span></div>
+      <div class="stat-r"><span class="sk">저하 임계 J/S</span><span class="sv" id="dispDeg" style="color:var(--orange)">≥ 40 dB</span></div>
     </div>
   </div>
 
@@ -192,10 +195,10 @@ canvas.gcv{display:block;width:100%;height:100%}
     <div class="sect-bd" id="jammerCfgPanel"></div>
   </div>
 
-  <!-- ILS 보호 안내 -->
-  <div style="background:rgba(56,230,155,.06);border:1px solid rgba(56,230,155,.2);border-radius:6px;padding:9px 11px;font-size:10px;color:var(--muted);line-height:1.65">
-    <span style="color:var(--green);font-weight:bold">ILS 보호됨</span><br>
-    ILS 로컬라이저 (108–112 MHz) 및 활공각 (328–335 MHz)은 GPS 재머(1.575 GHz) 영향 없음. 단, RNAV/RNP 접근절차는 GPS 의존으로 <span style="color:var(--red)">불가</span>.
+  <!-- 주파수별 운용 참고 -->
+  <div id="freqNoteBox" style="background:rgba(56,230,155,.06);border:1px solid rgba(56,230,155,.2);border-radius:6px;padding:9px 11px;font-size:10px;color:var(--muted);line-height:1.65">
+    <span style="color:var(--green);font-weight:bold">운용 참고</span><br>
+    <span id="freqNoteText">ILS 로컬라이저 (108–112 MHz) 및 활공각 (328–335 MHz)은 GPS 재머(1.575 GHz) 영향 없음. 단, RNAV/RNP 접근절차는 GPS 의존으로 불가.</span>
   </div>
 
   <!-- 항공기 영향 분석 테이블 -->
@@ -274,15 +277,32 @@ canvas.gcv{display:block;width:100%;height:100%}
 // 물리 상수
 // ══════════════════════════════════════════════════════════════
 const C        = 3e8;
-const FREQ     = 1.575e9;        // GPS L1
-const S_GPS    = -130;           // dBm  GPS 위성 최소 수신 전력
-const N0       = -164;           // dBm/Hz  N₀ = −174 + 10dB 공항 잡음
-const BW_GPS   = 2e6;            // Hz
-const L_SYS    = 1;              // dB
-const JS_CRIT  = 60;             // dB  GPS 완전 두절
-const JS_DEG   = 40;             // dB  GPS 심각 저하
-const JS_MIN   = 20;             // dB  GPS 경미 저하
+const N0       = -164;
+const L_SYS    = 1;
 const BER_THR  = 1e-2;
+
+// 주파수별 프리셋
+const FREQ_PRESETS = {
+  L1:  { freq:1.575e9, label:'1.575 GHz (GPS L1)',     S:-130, BW:2e6,
+         linkName:'GPS 항법 신호',
+         crit:60, deg:40, min:20,
+         note:'ILS(108–335 MHz) 영향 없음. RNAV/RNP 접근절차는 GPS 의존으로 불가.' },
+  C24: { freq:2.4e9,   label:'2.400 GHz (드론 C2)',   S:-85,  BW:20e6,
+         linkName:'드론 C2·텔레메트리 링크',
+         crit:20, deg:10, min:3,
+         note:'DJI 등 상용 드론 조종·텔레메트리 링크. WiFi 장비 동시 영향 가능.' },
+  F58: { freq:5.8e9,   label:'5.800 GHz (FPV 영상)', S:-80,  BW:20e6,
+         linkName:'FPV 영상 전송링크',
+         crit:15, deg:8,  min:2,
+         note:'FPV 드론 영상링크 재밍. 조종신호(2.4 GHz)는 별도 재밍 필요.' },
+};
+let activePreset = FREQ_PRESETS.L1;
+let FREQ    = activePreset.freq;
+let S_GPS   = activePreset.S;
+let BW_GPS  = activePreset.BW;
+let JS_CRIT = activePreset.crit;
+let JS_DEG  = activePreset.deg;
+let JS_MIN  = activePreset.min;
 
 // ══════════════════════════════════════════════════════════════
 // 공항 레이아웃  (1000 × 1000 m, 남북 활주로, 북쪽 접근)
@@ -1013,6 +1033,24 @@ function dBmToW(dbm) {
 bindSl('ptx','Ptx',v=>`${v} dBm`,'ptxVal',v=>{ document.getElementById('ptxW').textContent=dBmToW(v); });
 bindSl('eta','eta',v=>`${parseFloat(v).toFixed(2)}`,'etaVal');
 document.getElementById('ptxW').textContent = dBmToW(P.Ptx);
+
+function setFreqPreset(key) {
+  activePreset = FREQ_PRESETS[key];
+  FREQ    = activePreset.freq;
+  S_GPS   = activePreset.S;
+  BW_GPS  = activePreset.BW;
+  JS_CRIT = activePreset.crit;
+  JS_DEG  = activePreset.deg;
+  JS_MIN  = activePreset.min;
+  // UI 업데이트
+  document.getElementById('dispLinkName').textContent = activePreset.linkName;
+  document.getElementById('dispS').textContent = `${activePreset.S} dBm`;
+  document.getElementById('dispBW').textContent = activePreset.BW >= 1e6 ? `${activePreset.BW/1e6} MHz` : `${activePreset.BW/1e3} kHz`;
+  document.getElementById('dispCrit').textContent = `≥ ${activePreset.crit} dB`;
+  document.getElementById('dispDeg').textContent  = `≥ ${activePreset.deg} dB`;
+  document.getElementById('freqNoteText').textContent = activePreset.note;
+  rebuild();
+}
 
 // ══════════════════════════════════════════════════════════════
 // 리사이즈 & 재계산
