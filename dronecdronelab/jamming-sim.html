@@ -288,46 +288,26 @@ const BER_THR  = 1e-2;
 // 공항 레이아웃  (1000 × 1000 m, 남북 활주로, 북쪽 접근)
 // ══════════════════════════════════════════════════════════════
 const APT = {
-  // 서측 활주로 쌍 (15L/33R, 15R/33L)
-  rwy1: { x1:55,  x2:82,  y1:60, y2:940 },
-  rwy2: { x1:120, x2:147, y1:60, y2:940 },
-  // 동측 활주로 쌍 (16L/34R, 16R/34L)
-  rwy3: { x1:853, x2:880, y1:60, y2:940 },
-  rwy4: { x1:918, x2:945, y1:60, y2:940 },
-  // 제1여객터미널 (T1) — 중앙 남쪽
-  t1:   { x1:290, x2:710, y1:160, y2:390 },
-  t1pier:{ x1:355, x2:645, y1:390, y2:470 }, // T1 탑승동
-  // 제2여객터미널 (T2) — 중앙 북쪽
-  t2:   { x1:330, x2:670, y1:650, y2:820 },
-  t2pier:{ x1:370, x2:630, y1:470, y2:650 }, // T2 탑승동/연결
-  // 계류장
-  apronW:{ x1:148, x2:285, y1:180, y2:860 },
-  apronE:{ x1:715, x2:852, y1:180, y2:860 },
-  // 동서 유도로 (횡단)
-  twyN: { x1:148, x2:852, y1:870, y2:884 },
-  twyM: { x1:148, x2:852, y1:490, y2:504 },
-  twyS: { x1:148, x2:852, y1:136, y2:150 },
-  tower:{ x:500, y:310, r:14 },
-  // ILS (4개 활주로 북측)
-  ilsLoc1:{ x:68,  y:960 }, ilsLoc2:{ x:133, y:960 },
-  ilsLoc3:{ x:866, y:960 }, ilsLoc4:{ x:931, y:960 },
-  ilsGs1: { x:82,  y:888 }, ilsGs2:  { x:147, y:888 },
-  ilsGs3: { x:853, y:888 }, ilsGs4:  { x:918, y:888 },
-  fence: 20,
+  // 중앙 집결 활주로 4본 (28m 폭, 35m 간격)
+  rwy1: { x1:390, x2:418, y1:60, y2:940 },  // 외측 좌
+  rwy2: { x1:453, x2:481, y1:60, y2:940 },  // 내측 좌
+  rwy3: { x1:519, x2:547, y1:60, y2:940 },  // 내측 우
+  rwy4: { x1:582, x2:610, y1:60, y2:940 },  // 외측 우
+  fence: 20,  // 공항 외곽 울타리 (그리드 가장자리 20m)
 };
 
 // ══════════════════════════════════════════════════════════════
 // 항공기 분석 위치
 // ══════════════════════════════════════════════════════════════
 const AIRCRAFT = [
-  { id:'AC1', label:'15L 북측 접지대', x:68,  y:890, phase:'ILS 최종 접근' },
-  { id:'AC2', label:'15R 북측 접지대', x:133, y:890, phase:'ILS 최종 접근' },
-  { id:'AC3', label:'16L 북측 접지대', x:866, y:890, phase:'ILS 최종 접근' },
-  { id:'AC4', label:'16R 북측 접지대', x:931, y:890, phase:'ILS 최종 접근' },
-  { id:'AC5', label:'15L 중앙',        x:68,  y:500, phase:'착륙/이륙' },
-  { id:'AC6', label:'16R 중앙',        x:931, y:500, phase:'착륙/이륙' },
-  { id:'AC7', label:'T1 게이트',       x:450, y:320, phase:'주기 중' },
-  { id:'AC8', label:'T2 게이트',       x:450, y:730, phase:'주기 중' },
+  { id:'AC1', label:'RWY1 북측 접지대', x:404, y:890, phase:'ILS 최종 접근' },
+  { id:'AC2', label:'RWY2 북측 접지대', x:467, y:890, phase:'ILS 최종 접근' },
+  { id:'AC3', label:'RWY3 북측 접지대', x:533, y:890, phase:'ILS 최종 접근' },
+  { id:'AC4', label:'RWY4 북측 접지대', x:596, y:890, phase:'ILS 최종 접근' },
+  { id:'AC5', label:'RWY1 중앙',        x:404, y:500, phase:'착륙/이륙' },
+  { id:'AC6', label:'RWY4 중앙',        x:596, y:500, phase:'착륙/이륙' },
+  { id:'AC7', label:'활주로 북단',      x:500, y:950, phase:'접근 중' },
+  { id:'AC8', label:'활주로 남단',      x:500, y: 50, phase:'접근 중' },
 ];
 
 // ══════════════════════════════════════════════════════════════
@@ -337,13 +317,13 @@ const SCENARIOS = [
   {
     id: 0,
     name: 'S1',
-    title: '활주로 → 외곽 (4대)',
-    desc: '평행 활주로 구역 동서남북 4방향 지향성 재머. 각 방향 외부로 재밍 발사 — 공항 외곽 항공기 GPS 두절 및 후방 사이드로브가 활주로 내 항공기에 미치는 역방향 영향 분석.',
+    title: '울타리 → 외곽 (4방향)',
+    desc: '공항 울타리 북·남·동·서 4개 지향성 재머가 각각 외곽 방향으로 재밍을 발사. 중앙 활주로는 메인빔 외부에 위치하여 직접 영향 없음. 공항 외곽 접근 항공기 GPS 차단 효과 분석.',
     jammers: [
-      { x:500, y:880, type:'dir', gMax:17, theta3dB:22, azim_compass:0,   label:'재머N (활주로 북)', color:'#38e69b' },
-      { x:500, y:120, type:'dir', gMax:17, theta3dB:22, azim_compass:180, label:'재머S (활주로 남)', color:'#4fa3ff' },
-      { x:660, y:500, type:'dir', gMax:17, theta3dB:22, azim_compass:90,  label:'재머E (활주로 동)', color:'#f4b942' },
-      { x:340, y:500, type:'dir', gMax:17, theta3dB:22, azim_compass:270, label:'재머W (활주로 서)', color:'#f97316' },
+      { x:500, y:980, type:'dir', gMax:17, theta3dB:22, azim_compass:0,   label:'재머N (북 울타리)', color:'#38e69b' },
+      { x:500, y: 20, type:'dir', gMax:17, theta3dB:22, azim_compass:180, label:'재머S (남 울타리)', color:'#4fa3ff' },
+      { x:980, y:500, type:'dir', gMax:17, theta3dB:22, azim_compass:90,  label:'재머E (동 울타리)', color:'#f4b942' },
+      { x: 20, y:500, type:'dir', gMax:17, theta3dB:22, azim_compass:270, label:'재머W (서 울타리)', color:'#f97316' },
     ],
   },
   {
@@ -592,13 +572,21 @@ function drawContour(threshold, color) {
 }
 
 function drawAirport() {
-  // ── 울타리 (점선 실선)
+  // ── 공항 외곽 울타리 (실선 + 라벨)
   const f = APT.fence;
   const p0 = w2c(f, f), p1 = w2c(GRID_M-f, GRID_M-f);
   ctx.save();
-  ctx.strokeStyle = 'rgba(60,60,60,0.75)'; ctx.lineWidth = 1.5; ctx.setLineDash([5,4]);
+  ctx.strokeStyle = 'rgba(40,40,40,0.85)'; ctx.lineWidth = 2;
   ctx.strokeRect(p0.cx, p1.cy, p1.cx - p0.cx, p0.cy - p1.cy);
-  ctx.setLineDash([]); ctx.restore();
+  // 울타리 라벨 (4방향)
+  ctx.fillStyle='rgba(40,40,40,0.6)'; ctx.font='bold 9px sans-serif'; ctx.textAlign='center';
+  const mid=w2c(500,500);
+  const fN=w2c(500,GRID_M-f), fS=w2c(500,f), fE=w2c(GRID_M-f,500), fW=w2c(f,500);
+  ctx.fillText('울타리(북)', fN.cx, fN.cy-5);
+  ctx.fillText('울타리(남)', fS.cx, fS.cy+12);
+  ctx.save(); ctx.translate(fE.cx+12, fE.cy); ctx.rotate(Math.PI/2); ctx.fillText('울타리(동)',0,0); ctx.restore();
+  ctx.save(); ctx.translate(fW.cx-12, fW.cy); ctx.rotate(-Math.PI/2); ctx.fillText('울타리(서)',0,0); ctx.restore();
+  ctx.restore();
 
   // ── 활주로 4본 + 중심선
   const rwys=[APT.rwy1,APT.rwy2,APT.rwy3,APT.rwy4];
