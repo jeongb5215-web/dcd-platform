@@ -99,8 +99,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
 .viz-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:5px 12px;display:flex;align-items:center;gap:9px;font-size:10px;color:var(--muted);flex-shrink:0}
 .cinfo{font-family:'Cascadia Mono',monospace;font-size:10px;color:var(--blue)}
 .sep{color:var(--border)}
-.canvas-wrap{flex:1;position:relative;overflow:hidden;min-height:0}
-canvas#simCanvas{display:block;width:100%;height:100%;cursor:crosshair}
+.canvas-wrap{flex:1;position:relative;overflow:hidden;min-height:0;background:#fff}
+canvas#simCanvas{display:block;width:100%;height:100%;cursor:crosshair;background:#fff}
 .colorbar{position:absolute;right:12px;top:8px}
 #cbCanvas{display:block;border-radius:3px;box-shadow:0 0 0 1px var(--border)}
 .cb-labels{position:absolute;right:32px;top:8px;display:flex;flex-direction:column;justify-content:space-between;font-size:8px;font-family:'Cascadia Mono',monospace;color:var(--muted);text-align:right}
@@ -469,18 +469,18 @@ function gpsLevel(js) {
 function jsToRGBA(js) {
   if (js >= JS_CRIT) {         // 60+ : 빨강
     const t = Math.min((js - JS_CRIT) / 25, 1);
-    return [lerp(239,180,t), lerp(68,20,t), lerp(68,20,t), 225];
+    return [lerp(239,180,t), lerp(68,20,t), lerp(68,20,t), 210];
   } else if (js >= JS_DEG) {   // 40–60: 주황
     const t = (js - JS_DEG) / (JS_CRIT - JS_DEG);
-    return [lerp(234,239,t), lerp(179,68,t), lerp(8,68,t), 215];
+    return [lerp(234,239,t), lerp(179,68,t), lerp(8,68,t), 200];
   } else if (js >= JS_MIN) {   // 20–40: 노랑
     const t = (js - JS_MIN) / (JS_DEG - JS_MIN);
-    return [lerp(161,234,t), lerp(197,179,t), lerp(5,8,t), 205];
-  } else if (js >= 0) {        // 0–20: 파랑
+    return [lerp(251,234,t), lerp(191,179,t), lerp(36,8,t), 185];
+  } else if (js >= 0) {        // 0–20: 연파랑
     const t = js / JS_MIN;
-    return [lerp(15,161,t), lerp(40,197,t), lerp(80,5,t), 195];
+    return [lerp(219,168,t), lerp(234,210,t), lerp(254,240,t), Math.round(lerp(30,160,t))];
   } else {
-    return [8, 16, 36, 185];
+    return [0, 0, 0, 0];       // 재밍 없음: 투명 (흰 배경 노출)
   }
 }
 function lerp(a, b, t) { return Math.round(a + (b - a) * t); }
@@ -540,7 +540,8 @@ function c2w(cx, cy) {
 }
 
 function drawFrame(stats) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   // 히트맵 (전체 뷰 영역)
   ctx.imageSmoothingEnabled = false;
@@ -591,131 +592,31 @@ function drawContour(threshold, color) {
 }
 
 function drawAirport() {
-  const W = canvas.width, H = canvas.height;
-  const isExt = VIEW.xMin < 0;
-
-  // 확장 뷰: 공항 경계 박스 표시
-  if (isExt) {
-    const tl = w2c(0, GRID_M), br = w2c(GRID_M, 0);
-    ctx.save();
-    ctx.strokeStyle = 'rgba(79,163,255,0.55)'; ctx.lineWidth = 2;
-    ctx.strokeRect(tl.cx, tl.cy, br.cx - tl.cx, br.cy - tl.cy);
-    ctx.fillStyle = 'rgba(79,163,255,0.45)'; ctx.font = 'bold 10px monospace'; ctx.textAlign = 'center';
-    ctx.fillText('공항 구역 (1,000 × 1,000 m)', (tl.cx+br.cx)/2, tl.cy - 7);
-    ctx.restore();
-  }
-
-  // 그리드 라인 (확장 뷰: 500m 단위 / 기본: 100m 단위)
-  ctx.save();
-  ctx.strokeStyle = 'rgba(30,37,53,0.4)'; ctx.lineWidth = 1;
-  const step = isExt ? 500 : 100;
-  const xs = Math.ceil(VIEW.xMin / step) * step;
-  const ys = Math.ceil(VIEW.yMin / step) * step;
-  for (let m = xs; m <= VIEW.xMax; m += step) {
-    const {cx} = w2c(m, 0);
-    ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, H); ctx.stroke();
-    if (m !== 0) {
-      ctx.fillStyle = 'rgba(90,100,120,0.5)'; ctx.font = '8px monospace'; ctx.textAlign = 'left';
-      ctx.fillText(`${m}`, cx+2, H-3);
-    }
-  }
-  for (let m = ys; m <= VIEW.yMax; m += step) {
-    const {cy} = w2c(0, m);
-    ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(W, cy); ctx.stroke();
-    if (m !== 0) {
-      ctx.fillStyle = 'rgba(90,100,120,0.5)'; ctx.font = '8px monospace';
-      ctx.fillText(`${m}`, 2, cy-2);
-    }
-  }
-  ctx.restore();
-
-  // 울타리 (점선)
+  // ── 울타리 (점선 실선)
   const f = APT.fence;
   const p0 = w2c(f, f), p1 = w2c(GRID_M-f, GRID_M-f);
   ctx.save();
-  ctx.strokeStyle = 'rgba(90,100,120,0.5)'; ctx.lineWidth = 1; ctx.setLineDash([4,4]);
+  ctx.strokeStyle = 'rgba(60,60,60,0.75)'; ctx.lineWidth = 1.5; ctx.setLineDash([5,4]);
   ctx.strokeRect(p0.cx, p1.cy, p1.cx - p0.cx, p0.cy - p1.cy);
   ctx.setLineDash([]); ctx.restore();
-
-  // ── 계류장 (서·동)
-  drawRect(APT.apronW.x1, APT.apronW.y1, APT.apronW.x2, APT.apronW.y2, 'rgba(35,45,65,0.6)', 'rgba(55,75,105,0.4)', 1);
-  drawRect(APT.apronE.x1, APT.apronE.y1, APT.apronE.x2, APT.apronE.y2, 'rgba(35,45,65,0.6)', 'rgba(55,75,105,0.4)', 1);
-
-  // ── 동서 유도로 3개
-  drawRwyRect(APT.twyN.x1, APT.twyN.y1, APT.twyN.x2, APT.twyN.y2, 'rgba(48,58,72,0.8)', 'rgba(65,85,108,0.45)');
-  drawRwyRect(APT.twyM.x1, APT.twyM.y1, APT.twyM.x2, APT.twyM.y2, 'rgba(48,58,72,0.8)', 'rgba(65,85,108,0.45)');
-  drawRwyRect(APT.twyS.x1, APT.twyS.y1, APT.twyS.x2, APT.twyS.y2, 'rgba(48,58,72,0.8)', 'rgba(65,85,108,0.45)');
-
-  // ── T1 탑승동 / T2 연결동
-  drawRect(APT.t1pier.x1, APT.t1pier.y1, APT.t1pier.x2, APT.t1pier.y2, 'rgba(45,55,75,0.75)', 'rgba(75,105,145,0.5)', 1);
-  drawRect(APT.t2pier.x1, APT.t2pier.y1, APT.t2pier.x2, APT.t2pier.y2, 'rgba(45,55,75,0.75)', 'rgba(75,105,145,0.5)', 1);
-
-  // ── T1 본관
-  drawRect(APT.t1.x1, APT.t1.y1, APT.t1.x2, APT.t1.y2, 'rgba(50,62,85,0.82)', 'rgba(85,118,165,0.65)', 1.5);
-  { const c=w2c((APT.t1.x1+APT.t1.x2)/2,(APT.t1.y1+APT.t1.y2)/2);
-    ctx.save(); ctx.fillStyle='rgba(160,185,220,0.75)'; ctx.font='bold 10px monospace'; ctx.textAlign='center';
-    ctx.fillText('T1', c.cx, c.cy+3); ctx.restore(); }
-
-  // ── T2 본관
-  drawRect(APT.t2.x1, APT.t2.y1, APT.t2.x2, APT.t2.y2, 'rgba(50,62,85,0.82)', 'rgba(85,118,165,0.65)', 1.5);
-  { const c=w2c((APT.t2.x1+APT.t2.x2)/2,(APT.t2.y1+APT.t2.y2)/2);
-    ctx.save(); ctx.fillStyle='rgba(160,185,220,0.75)'; ctx.font='bold 10px monospace'; ctx.textAlign='center';
-    ctx.fillText('T2', c.cx, c.cy+3); ctx.restore(); }
 
   // ── 활주로 4본 + 중심선
   const rwys=[APT.rwy1,APT.rwy2,APT.rwy3,APT.rwy4];
   const rwyLabels=[['33R','15L'],['33L','15R'],['34R','16L'],['34L','16R']];
   for(let i=0;i<4;i++){
     const r=rwys[i], rcx=(r.x1+r.x2)/2;
-    drawRwyRect(r.x1, r.y1, r.x2, r.y2, 'rgba(55,60,72,0.88)', 'rgba(118,130,152,0.72)');
+    drawRwyRect(r.x1, r.y1, r.x2, r.y2, 'rgba(80,80,80,0.85)', 'rgba(40,40,40,0.7)');
     const rt=w2c(rcx,r.y1), rb=w2c(rcx,r.y2);
-    ctx.save(); ctx.strokeStyle='rgba(200,210,225,0.32)'; ctx.lineWidth=1; ctx.setLineDash([10,9]);
+    ctx.save(); ctx.strokeStyle='rgba(255,255,255,0.65)'; ctx.lineWidth=1; ctx.setLineDash([10,9]);
     ctx.beginPath(); ctx.moveTo(rt.cx,rt.cy); ctx.lineTo(rb.cx,rb.cy); ctx.stroke();
     ctx.setLineDash([]); ctx.restore();
-    // 접지대
-    drawRect(r.x1,850,r.x2,910,'rgba(255,255,255,0.05)','rgba(255,255,255,0.13)',1);
-    drawRect(r.x1,90, r.x2,150,'rgba(255,255,255,0.04)','rgba(255,255,255,0.10)',1);
     // 활주로 라벨
     const rn=w2c(rcx,935), rs=w2c(rcx,55);
-    ctx.save(); ctx.fillStyle='rgba(200,210,220,0.58)'; ctx.font='bold 8px monospace'; ctx.textAlign='center';
+    ctx.save(); ctx.fillStyle='rgba(60,60,60,0.7)'; ctx.font='bold 8px monospace'; ctx.textAlign='center';
     ctx.fillText(rwyLabels[i][0], rn.cx, rn.cy);
     ctx.fillText(rwyLabels[i][1], rs.cx, rs.cy);
     ctx.restore();
   }
-
-  // ── 관제탑
-  { const {cx:tx,cy:ty}=w2c(APT.tower.x,APT.tower.y);
-    const tr=(APT.tower.r/GRID_M)*canvas.height;
-    ctx.save();
-    ctx.fillStyle='rgba(80,100,132,0.85)';
-    ctx.beginPath(); ctx.arc(tx,ty,tr,0,Math.PI*2); ctx.fill();
-    ctx.strokeStyle='rgba(130,162,205,0.75)'; ctx.lineWidth=1.5; ctx.stroke();
-    ctx.fillStyle='rgba(200,212,225,0.75)'; ctx.font='bold 8px monospace'; ctx.textAlign='center';
-    ctx.fillText('TWR',tx,ty+3); ctx.restore(); }
-
-  // ── ILS 마커 (4개 활주로)
-  drawILSMarker(APT.ilsLoc1.x,APT.ilsLoc1.y,'LOC1');
-  drawILSMarker(APT.ilsLoc2.x,APT.ilsLoc2.y,'LOC2');
-  drawILSMarker(APT.ilsLoc3.x,APT.ilsLoc3.y,'LOC3');
-  drawILSMarker(APT.ilsLoc4.x,APT.ilsLoc4.y,'LOC4');
-  drawILSMarker(APT.ilsGs1.x,APT.ilsGs1.y,'G/S1');
-  drawILSMarker(APT.ilsGs2.x,APT.ilsGs2.y,'G/S2');
-  drawILSMarker(APT.ilsGs3.x,APT.ilsGs3.y,'G/S3');
-  drawILSMarker(APT.ilsGs4.x,APT.ilsGs4.y,'G/S4');
-
-  // ── ILS 접근 경로 (4개 활주로 북측)
-  ctx.save(); ctx.strokeStyle='rgba(79,163,255,0.32)'; ctx.lineWidth=1.5; ctx.setLineDash([5,5]);
-  for(const r of rwys){
-    const rcx=(r.x1+r.x2)/2;
-    const pa=w2c(rcx,910), pb=w2c(rcx,990);
-    ctx.beginPath(); ctx.moveTo(pa.cx,pa.cy); ctx.lineTo(pb.cx,pb.cy); ctx.stroke();
-  }
-  ctx.setLineDash([]); ctx.restore();
-
-  // ── 인천공항 레이블
-  { const lp=w2c(500,500);
-    ctx.save(); ctx.fillStyle='rgba(160,185,220,0.18)'; ctx.font='bold 11px monospace'; ctx.textAlign='center';
-    ctx.fillText('RKSI  인천국제공항', lp.cx, lp.cy); ctx.restore(); }
 }
 
 function drawRect(x1, y1, x2, y2, fill, stroke, lw) {
@@ -756,7 +657,10 @@ function drawJammerMarker(jmr) {
   [[-7,0],[7,0],[0,-7],[0,7]].forEach(([dx,dy]) => {
     ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+dx,cy+dy); ctx.stroke();
   });
-  ctx.fillStyle = jmr.color; ctx.font = 'bold 9px monospace'; ctx.textAlign = 'center';
+  ctx.fillStyle = '#fff'; ctx.strokeStyle='rgba(0,0,0,0.5)'; ctx.lineWidth=2.5;
+  ctx.font = 'bold 9px monospace'; ctx.textAlign = 'center';
+  ctx.strokeText('JAM', cx, cy-14);
+  ctx.fillStyle = jmr.color;
   ctx.fillText('JAM', cx, cy-14);
   ctx.restore();
 }
