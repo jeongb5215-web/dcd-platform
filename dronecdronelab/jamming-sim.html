@@ -362,12 +362,12 @@ const SCENARIOS = [
     id: 2,
     name: 'S3',
     title: '옴니 4방향 (500m 외곽)',
-    desc: '공항 울타리 500m 외곽 동서남북 옴니 안테나 4대 동시 방사. 방향 제약 없이 4대 합산 전력으로 공항 전역 GPS 두절. 지향성 재머 대비 단일 이득 낮으나 사각지대 없음.',
+    desc: '공항 울타리 북·남·동·서 옴니 안테나 4대 동시 방사. 방향 제약 없이 전방향 방사로 공항 내·외 전역 커버. 지향성 재머 대비 단일 이득 낮으나 사각지대 없음.',
     jammers: [
-      { x:500,  y:1500, type:'omni', gMax:2.15, theta3dB:360, azim_compass:0, label:'재머N (북 500m)', color:'#38e69b' },
-      { x:500,  y:-500, type:'omni', gMax:2.15, theta3dB:360, azim_compass:0, label:'재머S (남 500m)', color:'#ff5c5c' },
-      { x:1500, y:500,  type:'omni', gMax:2.15, theta3dB:360, azim_compass:0, label:'재머E (동 500m)', color:'#f4b942' },
-      { x:-500, y:500,  type:'omni', gMax:2.15, theta3dB:360, azim_compass:0, label:'재머W (서 500m)', color:'#8b5cf6' },
+      { x:500, y:980, type:'omni', gMax:2.15, theta3dB:360, azim_compass:0, label:'재머N (북 울타리)', color:'#38e69b' },
+      { x:500, y: 20, type:'omni', gMax:2.15, theta3dB:360, azim_compass:0, label:'재머S (남 울타리)', color:'#ff5c5c' },
+      { x:980, y:500, type:'omni', gMax:2.15, theta3dB:360, azim_compass:0, label:'재머E (동 울타리)', color:'#f4b942' },
+      { x: 20, y:500, type:'omni', gMax:2.15, theta3dB:360, azim_compass:0, label:'재머W (서 울타리)', color:'#8b5cf6' },
     ],
   },
 ];
