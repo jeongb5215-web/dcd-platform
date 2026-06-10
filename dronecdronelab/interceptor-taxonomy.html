@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interceptor UAV Engagement Paradigms – Taxonomy</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;600;700&display=swap');
+
+  :root {
+    --bg:       #0b0e13;
+    --surface:  #131820;
+    --border:   #1e2a38;
+    --accent1:  #00c8ff;   /* ODE – sensor blue */
+    --accent2:  #ff6b35;   /* ECE – cue orange  */
+    --muted:    #4a5a6e;
+    --text:     #d4dde8;
+    --label:    #7a92a8;
+    --mono:     'Share Tech Mono', monospace;
+    --sans:     'Inter', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 24px 64px;
+  }
+
+  /* ── Header ── */
+  .fig-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .18em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-align: center;
+    color: #e8f1fa;
+    margin-bottom: 4px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+    color: var(--label);
+    text-align: center;
+    letter-spacing: .06em;
+    margin-bottom: 40px;
+  }
+
+  /* ── Root node ── */
+  .root-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 860px;
+  }
+
+  .root-node {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 36px;
+    text-align: center;
+  }
+
+  .root-node .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .14em;
+    margin-bottom: 4px;
+  }
+
+  .root-node .title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #e8f1fa;
+  }
+
+  /* ── Connector lines ── */
+  .connector-down {
+    width: 1.5px;
+    height: 28px;
+    background: var(--border);
+  }
+
+  .branch-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+    width: 100%;
+    position: relative;
+  }
+
+  .branch-row::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(50% - 60px);
+    height: 1.5px;
+    background: var(--border);
+  }
+
+  .branch-left, .branch-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    max-width: 400px;
+  }
+
+  .branch-left { padding-right: 30px; }
+  .branch-right { padding-left: 30px; }
+
+  .branch-line-left {
+    width: 50%;
+    height: 1.5px;
+    align-self: flex-end;
+    background: var(--border);
+  }
+
+  .branch-line-right {
+    width: 50%;
+    height: 1.5px;
+    align-self: flex-start;
+    background: var(--border);
+  }
+
+  /* ── Type cards ── */
+  .type-card {
+    border-radius: 8px;
+    border: 1.5px solid;
+    padding: 20px 22px;
+    width: 100%;
+    position: relative;
+  }
+
+  .type-card.ode {
+    border-color: var(--accent1);
+    background: rgba(0,200,255,.04);
+  }
+
+  .type-card.ece {
+    border-color: var(--accent2);
+    background: rgba(255,107,53,.04);
+  }
+
+  .type-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    padding: 3px 8px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  .ode .type-badge { background: rgba(0,200,255,.12); color: var(--accent1); }
+  .ece .type-badge { background: rgba(255,107,53,.12); color: var(--accent2); }
+
+  .type-card h2 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    color: #e8f1fa;
+  }
+
+  .type-card .korean {
+    font-size: 11px;
+    color: var(--label);
+    margin-bottom: 14px;
+  }
+
+  .attr-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .attr-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .attr-list li .attr-key {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--label);
+    white-space: nowrap;
+    padding-top: 2px;
+    min-width: 72px;
+  }
+
+  /* ── Example tag ── */
+  .example-tag {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ex-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .1em;
+  }
+
+  .ex-name {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .ode .ex-name { color: var(--accent1); }
+  .ece .ex-name { color: var(--accent2); }
+
+  /* ── Criterion divider ── */
+  .criterion {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .12em;
+    text-align: center;
+    margin: 10px 0;
+  }
+
+  /* ── Comparison table ── */
+  .compare-wrap {
+    width: 100%;
+    max-width: 860px;
+    margin-top: 44px;
+  }
+
+  .compare-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .16em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  thead tr {
+    border-bottom: 1.5px solid var(--border);
+  }
+
+  thead th {
+    padding: 10px 14px;
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  thead th.col-ode { color: var(--accent1); }
+  thead th.col-ece { color: var(--accent2); }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+
+  tbody td {
+    padding: 9px 14px;
+    vertical-align: top;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  tbody td:first-child {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--label);
+    letter-spacing: .08em;
+    white-space: nowrap;
+  }
+
+  tbody td.val-ode { color: var(--accent1); }
+  tbody td.val-ece { color: var(--accent2); }
+
+  /* ── Definition box ── */
+  .def-wrap {
+    width: 100%;
+    max-width: 860px;
+    margin-top: 36px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px 24px;
+  }
+
+  .def-wrap .def-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    color: var(--muted);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .def-wrap p {
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: var(--label);
+  }
+
+  .def-wrap p em {
+    font-style: normal;
+    color: #e8f1fa;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<div class="fig-label">Figure 1</div>
+<h1>Taxonomy of Interceptor UAV Engagement Paradigms</h1>
+<p class="subtitle">Classification by Detection Source · C-UAS Domain</p>
+
+<!-- Root -->
+<div class="root-wrap">
+  <div class="root-node">
+    <div class="tag">UPPER CONCEPT</div>
+    <div class="title">Interceptor UAV Engagement Systems</div>
+  </div>
+
+  <div class="connector-down"></div>
+  <div class="criterion">1st Classification Criterion: Detection Source (탐지 주체)</div>
+  <div class="connector-down"></div>
+
+  <!-- Branch -->
+  <div class="branch-row">
+    <!-- Left branch line -->
+    <div style="flex:1; display:flex; flex-direction:column; align-items:flex-end; max-width:400px; padding-right:30px;">
+      <div style="width:50%; height:1.5px; background:#1e2a38;"></div>
+      <div style="width:1.5px; height:24px; background:#1e2a38; margin-right: calc(50% - 0.75px);"></div>
+
+      <!-- ODE Card -->
+      <div class="type-card ode" style="width:100%;">
+        <div class="type-badge">TYPE I · ODE</div>
+        <h2>Organic Detection-Engagement</h2>
+        <div class="korean">직접 탐지 타격체계</div>
+        <ul class="attr-list">
+          <li><span class="attr-key">DETECTION</span> Onboard sensor (EO/IR/RF)</li>
+          <li><span class="attr-key">TRACKING</span> Autonomous onboard processing</li>
+          <li><span class="attr-key">TERMINAL</span> Full autonomous engagement</li>
+          <li><span class="attr-key">AUTONOMY</span> High — self-contained S2S loop</li>
+          <li><span class="attr-key">DEPENDENCY</span> None (standalone)</li>
+        </ul>
+        <div class="example-tag">
+          <span class="ex-label">EXAMPLE ▸</span>
+          <span class="ex-name">Yolka (Ёлка) — Russia</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right branch -->
+    <div style="flex:1; display:flex; flex-direction:column; align-items:flex-start; max-width:400px; padding-left:30px;">
+      <div style="width:50%; height:1.5px; background:#1e2a38;"></div>
+      <div style="width:1.5px; height:24px; background:#1e2a38; margin-left: calc(50% - 0.75px);"></div>
+
+      <!-- ECE Card -->
+      <div class="type-card ece" style="width:100%;">
+        <div class="type-badge">TYPE II · ECE</div>
+        <h2>Externally Cued Engagement</h2>
+        <div class="korean">간접 탐지 타격체계</div>
+        <ul class="attr-list">
+          <li><span class="attr-key">DETECTION</span> Off-board sensor network</li>
+          <li><span class="attr-key">TRACKING</span> Network-assisted / cued handoff</li>
+          <li><span class="attr-key">TERMINAL</span> Semi-autonomous (proximity trigger)</li>
+          <li><span class="attr-key">AUTONOMY</span> Medium — relies on external cue</li>
+          <li><span class="attr-key">DEPENDENCY</span> C2 link / ground sensor required</li>
+        </ul>
+        <div class="example-tag">
+          <span class="ex-label">EXAMPLE ▸</span>
+          <span class="ex-name">Sting — Ukraine</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison Table -->
+  <div class="compare-wrap">
+    <div class="compare-title">Comparative Analysis</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Attribute</th>
+          <th class="col-ode">Type I · ODE</th>
+          <th class="col-ece">Type II · ECE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Detection Locus</td>
+          <td class="val-ode">Onboard</td>
+          <td class="val-ece">Off-board</td>
+        </tr>
+        <tr>
+          <td>Primary Sensor</td>
+          <td>EO / IR / RF (carried)</td>
+          <td>Ground radar / EO network</td>
+        </tr>
+        <tr>
+          <td>Data Link Need</td>
+          <td>Optional</td>
+          <td>Essential</td>
+        </tr>
+        <tr>
+          <td>Engagement Trigger</td>
+          <td>Onboard target lock</td>
+          <td>External cue + proximity</td>
+        </tr>
+        <tr>
+          <td>Autonomy Level</td>
+          <td>High (LOAC Lvl 3)</td>
+          <td>Medium (LOAC Lvl 2)</td>
+        </tr>
+        <tr>
+          <td>Jamming Vulnerability</td>
+          <td>Lower</td>
+          <td>Higher (link-dependent)</td>
+        </tr>
+        <tr>
+          <td>Operational Example</td>
+          <td>Yolka (Russia, RU-UKR)</td>
+          <td>Sting (Ukraine, RU-UKR)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Definition box -->
+  <div class="def-wrap">
+    <div class="def-label">Conceptual Definition (Draft)</div>
+    <p>
+      Two distinct engagement paradigms are identified. <em>Organic Detection-Engagement (ODE)</em>
+      refers to a framework in which the interceptor UAV autonomously detects, tracks, and engages
+      the target drone using onboard sensors, forming a self-contained sensor-to-shooter loop.
+      <em>Externally Cued Engagement (ECE)</em> refers to a framework in which target detection
+      is performed by off-board sensor networks, with the interceptor assuming autonomous control
+      only upon receiving an external cue and achieving proximity to the target.
+    </p>
+  </div>
+
+</div>
+
+</body>
+</html>
