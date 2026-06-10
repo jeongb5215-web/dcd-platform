@@ -120,6 +120,14 @@
     .top-right{margin-left:auto;display:flex;align-items:center;gap:14px}
     .ver-badge{background:#4fa3ff;color:#fff;font-size:10px;font-weight:900;padding:3px 8px;letter-spacing:1px;border-radius:2px}
     .user-badge{color:#1a1a2e;font-size:12px;font-weight:700;letter-spacing:.3px}
+    .token-badge{background:rgba(244,185,66,.12);border:1px solid rgba(244,185,66,.45);color:#c8952a;font-size:11px;font-weight:900;padding:4px 10px;letter-spacing:.5px;cursor:default;display:none}
+    .token-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:9999}
+    .token-modal-card{background:#0d1321;border:1px solid rgba(244,185,66,.3);padding:32px;max-width:360px;width:90%;text-align:center}
+    .token-modal-title{color:#fff;font-size:15px;font-weight:900;letter-spacing:1px;margin-bottom:6px}
+    .token-modal-fname{color:#64748b;font-size:12px;margin-bottom:16px;word-break:break-all}
+    .token-modal-cost{color:#f4b942;font-size:32px;font-weight:900;margin:12px 0 4px}
+    .token-modal-bal{color:#94a3b8;font-size:12px;margin-bottom:22px}
+    .token-modal-actions{display:flex;gap:10px;justify-content:center}
     .logout-btn{background:none;border:1px solid #dde3ec;color:#6b7280;padding:6px 16px;font-size:12px;font-weight:600}
     .logout-btn:hover{border-color:var(--red);color:var(--red)}
     .app-content{flex:1;overflow:auto}
@@ -652,7 +660,7 @@
       <button class="nav-tab" onclick="switchPanel('other',this)">OTHER</button>
       <button class="nav-tab" id="lab-tab" onclick="switchLabPanel(this)">LAB</button>
       <button id="admin-tab" class="nav-tab admin-tab" onclick="switchPanel('admin',this)" style="display:none">ADMIN</button>
-      <div class="top-right"><span class="ver-badge">v5</span><span id="user-badge" class="user-badge">GUEST</span><button class="logout-btn" onclick="doLogout()">로그아웃</button></div>
+      <div class="top-right"><span class="ver-badge">v5</span><span id="token-badge" class="token-badge">🪙 0</span><span id="user-badge" class="user-badge">GUEST</span><button class="logout-btn" onclick="doLogout()">로그아웃</button></div>
     </nav>
     <div class="app-content">
       <section id="panel-drone" class="panel active"></section>
@@ -671,11 +679,25 @@
     </div>
   </footer>
 
+  <div id="token-modal" class="token-modal-overlay" style="display:none" onclick="if(event.target===this)closeTokenModal()">
+    <div class="token-modal-card">
+      <div class="token-modal-title">// 문서 다운로드</div>
+      <div class="token-modal-fname" id="tm-fname"></div>
+      <div class="token-modal-cost"><span id="tm-cost">0</span> 🪙</div>
+      <div class="token-modal-bal">현재 잔액: <span id="tm-balance" style="color:#f4b942;font-weight:900">0</span> 🪙 → 차감 후: <span id="tm-after" style="color:#f4b942;font-weight:900">0</span> 🪙</div>
+      <div class="token-modal-actions">
+        <button class="btn-primary" onclick="confirmTokenDownload()">다운로드</button>
+        <button class="btn-secondary" onclick="closeTokenModal()">취소</button>
+      </div>
+    </div>
+  </div>
+
   <div class="notif" id="notif"></div>
 
   <script>
     const ROLE_CODES={'super2024':'superadmin','admin2024':'admin','expert1234':'expert','1234':'member'};
     const MAX_MEMBERS=1000;
+    const GH_BASE='https://jeongb5215-web.github.io/dcd-platform/';
     let currentUser=null;
     let currentRole='guest';
     let isAdmin=false;
@@ -683,6 +705,9 @@
     let pinnedIntelIds=[];
     let selectedTags=[];
     const SUB_TAGS=['Commercial','Military','Detection','Identify','Hardkill','Softkill','Ukraine','Russia','Law','Tactics'];
+    let tokenStore={};
+    let currentTokens=0;
+    let pendingTokenDownload=null;
 
     let members=[
       {id:1,name:'김민준',email:'minjun@kaist.ac.kr',password:'',phone:'+82 010-1234-5678',date:'2026-04-28',status:'approved',role:'expert'},
@@ -694,6 +719,7 @@
 
     let articles=[
       {id:18,cat:'drone',title:'군집드론 자율화 단계 (Lv1~Lv5) 인터랙티브 애니메이션',summary:'군집드론 자율화 수준을 Lv1(Operator Assistance)부터 Lv5(Full Swarming)까지 5단계로 구분하여 각 단계별 운용 개념, 한국어 설명, 운용자-드론 비율(Operator Ratio)을 인터랙티브 애니메이션으로 시각화한 자료이다. 단계가 높아질수록 인간 개입이 줄고 드론 군집의 자율 의사결정 수준이 높아지며, Lv5에서는 목표 중심 완전 자율 군집 운용이 가능하다.',source:'DcD 분석',date:'2026-05-15',keywords:['Drone Swarm Defense','Commercial'],thumb:'https://jeongb5215-web.github.io/dcd-platform/drone/swarm%20drone%20pig.jpg',attachments:[{type:'link',label:'▶ 군집드론 자율화 단계 애니메이션 열기',url:'https://jeongb5215-web.github.io/dcd-platform/drone/swarm-levels.html'},{type:'link',label:'🖼 인포그래픽 이미지 저장',url:'https://jeongb5215-web.github.io/dcd-platform/drone/swarm-infographic.html'}],likes:0,likedBy:[],comments:[]},
+      {id:21,cat:'tactics',title:'Shield AI - V-BAT',summary:'Shield AI - V-BAT',source:'Shield AI',date:'2026-06-10',keywords:['Anti-Drone','Counter-UAV','Military'],thumb:'',attachments:[{type:'document',name:'Shield AI - V-BAT.pdf',size:'',url:'https://jeongb5215-web.github.io/dcd-platform/Shield%20AI%20-%20V-BAT.pdf',tokenCost:10}],likes:0,likedBy:[],comments:[]},
       {id:20,cat:'tactics',title:'GNSS(Global Navigation Satellite System), 주파수 대역',summary:'GNSS(Global Navigation Satellite System), 주파수 대역',source:'DcD 분석',date:'2026-05-11',keywords:['GNSS Spoofing','Anti-Drone'],thumb:'',attachments:[{type:'document',name:'GNSS.pdf',size:'',url:'https://jeongb5215-web.github.io/dcd-platform/GNSS.pdf',access:'expert'}],likes:0,likedBy:[],comments:[]},
       {id:19,cat:'tactics',title:'CRPA(Controlled Reception Pattern Antenna) 기술 분석',summary:'CRPA(제어 수신 패턴 안테나)는 다수의 안테나 소자를 활용해 재밍·스푸핑 신호를 동적으로 무력화하는 항재밍 안테나 시스템이다. 널 생성(Null Generation)·널 조향(Null Steering)으로 재밍 신호 방향을 차단하고, 빔 형성(Beam Forming)·빔 조향(Beam Steering)으로 정상 GPS 신호를 최대화한다. 전파 방해 및 간섭이 빈번한 전술 환경에서 운용되는 플랫폼에 필수적인 기술로, 재밍·스푸핑 신호에 실시간 적응하기 때문에 기존 단일 안테나 대비 현저히 높은 항재밍 성능을 제공한다. 국방 분야를 중심으로 적용이 확대되고 있으며, GPS 취약성 보완 핵심 기술로 평가된다.',source:'DcD 분석',date:'2026-05-11',keywords:['GNSS Spoofing','Anti-Drone','Counter-UAV'],thumb:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Soldier_with_commercial_drones.jpg/500px-Soldier_with_commercial_drones.jpg',attachments:[{type:'document',name:'CRPA.pdf',size:'0.1MB',url:'https://jeongb5215-web.github.io/dcd-platform/CRPA.pdf',access:'expert'}],likes:0,likedBy:[],comments:[]},
       {id:17,cat:'drone',title:'Swarm Drone(군집드론) 기술 트렌드 요점',summary:'군집드론(Swarm Drone)은 다수의 소형 드론이 자율적으로 상호 통신하며 협력 비행·임무 수행하는 차세대 드론 운용 개념으로, 현재 군사·민간 분야 모두에서 급속히 발전하고 있다. 분산형 제어 알고리즘, 저지연 메시 네트워크, AI 기반 집단 의사결정 기술이 핵심 요소이며, 단일 드론 대비 생존성·임무 효율성이 대폭 향상된다. 본 자료는 군집드론 네트워크 아키텍처와 통신 구조, 전술적 운용 트렌드, 대응(Counter-Swarm) 과제를 요점 정리한 분석 자료이다.',source:'DcD 분석',date:'2026-05-15',keywords:['Drone Swarm Defense','Drone Detection','Commercial'],thumb:'https://jeongb5215-web.github.io/dcd-platform/drone/swarm%20drone%20pig.jpg',attachments:[{type:'document',name:'swram drone network.pdf',size:'0.3MB',url:'https://jeongb5215-web.github.io/dcd-platform/drone/swram%20drone%20network.pdf',access:'expert'},{type:'image',name:'Swarm Drone Network 구성도',url:'https://jeongb5215-web.github.io/dcd-platform/drone/swarm%20drone%20pig.jpg'},{type:'link',label:'군집드론 자율화 단계 애니메이션',url:'https://jeongb5215-web.github.io/dcd-platform/drone/swarm-levels.html'}],likes:0,likedBy:[],comments:[]},
@@ -840,6 +866,9 @@
     function applyLogin(email,role){
       currentUser=email;currentRole=role;
       isAdmin=(role==='admin'||role==='superadmin');
+      loadTokens();
+      currentTokens=isAdmin?9999:((tokenStore[email]||0));
+      updateTokenBadge();
       const roleName={superadmin:'SUPER ADMIN',admin:'ADMIN',expert:'EXPERT',member:'MEMBER'}[role];
       const displayName=(role==='admin'||role==='superadmin')?'JBH2S':email.split('@')[0].toUpperCase();
       document.getElementById('user-badge').textContent=displayName+' · '+roleName;
@@ -865,6 +894,7 @@
     function doLogout(){
       localStorage.removeItem('dcd_admin_session');
       currentUser=null;currentRole='guest';isAdmin=false;
+      currentTokens=0;updateTokenBadge();
       const ub=document.getElementById('user-badge');
       if(ub)ub.textContent='GUEST';
       const at=document.getElementById('admin-tab');
@@ -885,6 +915,7 @@
         }
       }catch(e){localStorage.removeItem('dcd_admin_session');}
     }
+    loadTokens();
     function doRegister(){
       const name=document.getElementById('reg-name').value.trim();
       const email=document.getElementById('reg-email').value.trim();
@@ -1244,11 +1275,31 @@
           <textarea id="post-body" rows="5" placeholder="관계자에게 제공할 정보 요약"></textarea>
           <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between">
             <label style="margin:0">첨부 자료 <span id="attach-count-badge" style="display:none" class="attach-count-badge">0</span></label>
-            <select id="post-access" style="background:#f8fafc;border:1px solid #e2e8f0;color:#374151;padding:5px 8px;font-size:11px;font-weight:800">
-              <option value="member">전체 회원 열람 가능</option>
-              <option value="expert" selected>전문가 이상 다운로드</option>
-              <option value="admin">관리자 전용</option>
-            </select>
+            <div style="display:flex;align-items:center;gap:8px">
+              <select id="post-access" style="background:#f8fafc;border:1px solid #e2e8f0;color:#374151;padding:5px 8px;font-size:11px;font-weight:800">
+                <option value="member">전체 회원 열람 가능</option>
+                <option value="expert" selected>전문가 이상 다운로드</option>
+                <option value="admin">관리자 전용</option>
+              </select>
+              <span style="font-size:11px;color:#94a3b8">또는 🪙</span>
+              <input id="doc-token-cost" type="number" min="0" placeholder="토큰" title="토큰 비용 (0=역할 기반)" style="width:70px;padding:5px 8px;font-size:12px;background:#f8fafc;border:1px solid #e2e8f0;color:#374151">
+            </div>
+          </div>
+          <div style="margin-top:8px;background:#fffbeb;border:1px solid #fde68a;padding:10px 12px">
+            <div style="font-size:10px;color:#92400e;font-weight:900;letter-spacing:1px;margin-bottom:6px">// GITHUB PDF 빠른 등록</div>
+            <div style="font-size:11px;color:#78350f;margin-bottom:8px">파일을 GitHub에 커밋한 후 아래에서 파일명을 입력하세요 (루트 기준).</div>
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+              <select id="gh-folder" style="background:#fff;border:1px solid #fde68a;color:#374151;padding:5px 8px;font-size:11px;font-weight:800;flex-shrink:0">
+                <option value="">루트 (/)</option>
+                <option value="docs/">docs/</option>
+                <option value="drone/">drone/</option>
+                <option value="cdrone/">cdrone/</option>
+                <option value="tactics/">tactics/</option>
+              </select>
+              <input id="gh-filename" placeholder="파일명.pdf" style="flex:1;min-width:120px;font-size:12px;padding:5px 8px;background:#fff;border:1px solid #fde68a;color:#374151">
+              <input id="gh-token-cost" type="number" min="0" placeholder="🪙 토큰" title="토큰 비용" style="width:80px;font-size:12px;padding:5px 8px;background:#fff;border:1px solid #fde68a;color:#374151;flex-shrink:0">
+              <button class="mini-btn ok" style="white-space:nowrap;flex-shrink:0" onclick="addGithubPdf()">+ 등록</button>
+            </div>
           </div>
           <div class="attach-type-tabs">
             <button class="attach-type-btn active" onclick="switchAttachType('doc',this)">📄 문서</button>
@@ -1630,7 +1681,7 @@
       articles=articles.filter(x=>x.id!==id);
       renderAll();showNotif('삭제되었습니다.');
     }
-    function approveMember(id){const m=members.find(x=>x.id===id);if(m){m.status='approved';renderAdmin();updateMemberCount();showNotif(m.name+' 승인 완료')}}
+    function approveMember(id){const m=members.find(x=>x.id===id);if(m){m.status='approved';grantTokens(m.email,100);renderAdmin();updateMemberCount();showNotif(m.name+' 승인 완료 (+100 🪙 토큰 지급)')}}
     function denyMember(id){const m=members.find(x=>x.id===id);if(m){m.status='denied';renderAdmin();showNotif(m.name+' 거절 처리')}}
     function deleteMember(id){if(!confirm('회원을 삭제하시겠습니까?'))return;members=members.filter(x=>x.id!==id);renderAdmin();updateMemberCount();showNotif('회원이 삭제되었습니다.')}
     function clearForm(){
@@ -1662,10 +1713,11 @@
     }
     function handleDocFiles(input){
       const access=document.getElementById('post-access')?document.getElementById('post-access').value:'expert';
+      const tokenCost=parseInt(document.getElementById('doc-token-cost')?.value||'0')||0;
       Array.from(input.files).forEach(file=>{
         const reader=new FileReader();
         reader.onload=e=>{
-          pendingAttachments.push({type:'document',name:file.name,size:formatFileSize(file.size),dataUrl:e.target.result,access});
+          pendingAttachments.push({type:'document',name:file.name,size:formatFileSize(file.size),dataUrl:e.target.result,access,tokenCost});
           renderDocPreview();updateAttachBadge();
         };
         reader.readAsDataURL(file);
@@ -1705,7 +1757,7 @@
           <span class="att-icon">📄</span>
           <span class="att-name">${a.name}</span>
           <span class="att-size">${a.size}</span>
-          <span class="att-size" style="color:var(--blue);margin-left:4px">${a.access==='member'?'전체':'expert'==='expert'?'Expert+':'Admin'}</span>
+          ${a.tokenCost>0?`<span class="att-size" style="color:#c8952a;margin-left:4px">🪙 ${a.tokenCost}</span>`:`<span class="att-size" style="color:var(--blue);margin-left:4px">${a.access==='member'?'전체':'Expert+'}</span>`}
           <button class="att-del" onclick="removeAttachment(${a._i})" title="삭제">×</button>
         </div>`).join('')||'';
     }
@@ -1798,6 +1850,16 @@
       function canAccess(acc){const need={member:1,expert:2,admin:3}[acc]||1;return myRank>=need;}
       const imgHtml=images.length?`<div class="article-img-wrap">${images.map(img=>`<img class="article-img-thumb" src="${img.dataUrl||img.url}" alt="${img.name||''}" title="클릭하면 원본 보기" onclick="window.open(this.src,'_blank')">`).join('')}</div>`:'';
       const docHtml=docs.length?`<div class="article-docs">${docs.map(doc=>{
+        if(doc.tokenCost>0){
+          if(isAdmin)return`<a class="article-doc-item" href="${doc.dataUrl||doc.url}" download="${doc.name}" target="_blank" rel="noopener"><span>📄</span><span style="flex:1">${doc.name}</span><span style="color:#c8952a;font-size:11px">🪙 ${doc.tokenCost}</span><span class="access-lbl open">무료 (관리자)</span></a>`;
+          if(!currentUser)return`<div class="article-doc-locked"><span>🔒</span><span style="flex:1">${doc.name}</span><span class="access-lbl expert">로그인 필요</span></div>`;
+          const canAfford=currentTokens>=doc.tokenCost;
+          const safeUrl=(doc.dataUrl||doc.url||'').replace(/'/g,'%27');
+          const safeName=doc.name.replace(/'/g,'&#39;');
+          return canAfford
+            ?`<div class="article-doc-item" style="cursor:pointer" onclick="tryDownloadDoc('${safeUrl}','${safeName}',${doc.tokenCost})"><span>📄</span><span style="flex:1">${doc.name}</span><span style="color:#c8952a;font-size:11px">🪙 ${doc.tokenCost}</span><span class="access-lbl open">다운로드</span></div>`
+            :`<div class="article-doc-locked"><span>🪙</span><span style="flex:1">${doc.name}</span><span style="color:#c8952a;font-size:11px">${doc.tokenCost} 토큰 필요 (현재: ${currentTokens})</span><span class="access-lbl expert">토큰 부족</span></div>`;
+        }
         const ok=canAccess(doc.access||'expert');
         const label={member:'전체',expert:'Expert+',admin:'Admin+'}[doc.access||'expert'];
         return ok
@@ -1841,6 +1903,44 @@
     function updateMemberCount(){
       const a=document.getElementById('member-count');if(a)a.textContent=members.length;
       const b=document.getElementById('login-member-count');if(b)b.textContent=members.length;
+    }
+    function loadTokens(){try{const s=localStorage.getItem('dcd_tokens');tokenStore=s?JSON.parse(s):{};}catch(e){tokenStore={};}}
+    function saveTokens(){localStorage.setItem('dcd_tokens',JSON.stringify(tokenStore));}
+    function grantTokens(email,amount){tokenStore[email]=(tokenStore[email]||0)+amount;saveTokens();if(currentUser===email){currentTokens=tokenStore[email];updateTokenBadge();}}
+    function deductTokens(email,amount){const bal=tokenStore[email]||0;if(bal<amount)return false;tokenStore[email]=bal-amount;saveTokens();if(currentUser===email){currentTokens=tokenStore[email];updateTokenBadge();}return true;}
+    function updateTokenBadge(){const b=document.getElementById('token-badge');if(!b)return;if(currentUser&&currentRole!=='guest'){b.textContent='🪙 '+currentTokens;b.style.display='';}else{b.style.display='none';}}
+    function tryDownloadDoc(url,name,cost){
+      if(!currentUser){showNotif('로그인이 필요합니다.',true);return;}
+      if(isAdmin){const a=document.createElement('a');a.href=url;a.download=name;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();document.body.removeChild(a);return;}
+      if(currentTokens<cost){showNotif('토큰이 부족합니다. (현재: '+currentTokens+' 🪙 / 필요: '+cost+' 🪙)',true);return;}
+      pendingTokenDownload={url,name,cost};
+      document.getElementById('tm-fname').textContent=name;
+      document.getElementById('tm-cost').textContent=cost;
+      document.getElementById('tm-balance').textContent=currentTokens;
+      document.getElementById('tm-after').textContent=currentTokens-cost;
+      document.getElementById('token-modal').style.display='flex';
+    }
+    function closeTokenModal(){document.getElementById('token-modal').style.display='none';pendingTokenDownload=null;}
+    function confirmTokenDownload(){
+      if(!pendingTokenDownload)return;
+      if(!deductTokens(currentUser,pendingTokenDownload.cost)){showNotif('토큰이 부족합니다.',true);closeTokenModal();return;}
+      const {url,name}=pendingTokenDownload;
+      closeTokenModal();
+      const a=document.createElement('a');a.href=url;a.download=name;a.target='_blank';a.rel='noopener';
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+      showNotif('다운로드 시작 | 잔여 토큰: '+currentTokens+' 🪙');
+    }
+    function addGithubPdf(){
+      const folder=document.getElementById('gh-folder').value;
+      const filename=document.getElementById('gh-filename').value.trim();
+      const cost=parseInt(document.getElementById('gh-token-cost').value||'0')||0;
+      if(!filename){showNotif('파일명을 입력하세요.',true);return;}
+      const url=GH_BASE+folder+encodeURIComponent(filename);
+      pendingAttachments.push({type:'document',name:filename,size:'',url,tokenCost:cost});
+      document.getElementById('gh-filename').value='';
+      document.getElementById('gh-token-cost').value='';
+      renderDocPreview();updateAttachBadge();
+      showNotif('GitHub PDF 등록: '+filename+(cost?' (🪙 '+cost+')':' (무료)'));
     }
     function showNotif(msg,isErr=false){const el=document.getElementById('notif');el.textContent=msg;el.className='notif'+(isErr?' error':'');el.style.display='block';setTimeout(()=>el.style.display='none',3000)}
 
