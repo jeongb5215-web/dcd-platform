@@ -5,17 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Interceptor UAV Engagement Paradigms – Taxonomy</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;600;700;800&display=swap');
 
   :root {
-    --bg:       #0b0e13;
-    --surface:  #131820;
-    --border:   #1e2a38;
-    --accent1:  #00c8ff;   /* ODE – sensor blue */
-    --accent2:  #ff6b35;   /* ECE – cue orange  */
-    --muted:    #4a5a6e;
-    --text:     #d4dde8;
-    --label:    #7a92a8;
+    --bg:       #f0f4f8;
+    --surface:  #ffffff;
+    --border:   #cbd5e1;
+    --accent1:  #0077cc;   /* ODE – blue */
+    --accent2:  #d94f00;   /* ECE – orange */
+    --muted:    #64748b;
+    --text:     #0f172a;
+    --label:    #334155;
     --mono:     'Share Tech Mono', monospace;
     --sans:     'Inter', sans-serif;
   }
@@ -30,34 +30,34 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 48px 24px 64px;
+    padding: 56px 28px 80px;
   }
 
   /* ── Header ── */
   .fig-label {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 13px;
     letter-spacing: .18em;
     color: var(--muted);
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
   h1 {
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: .04em;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: .02em;
     text-align: center;
-    color: #e8f1fa;
-    margin-bottom: 4px;
+    color: var(--text);
+    margin-bottom: 6px;
   }
 
   .subtitle {
-    font-size: 12px;
-    color: var(--label);
+    font-size: 15px;
+    color: var(--muted);
     text-align: center;
-    letter-spacing: .06em;
-    margin-bottom: 40px;
+    letter-spacing: .04em;
+    margin-bottom: 48px;
   }
 
   /* ── Root node ── */
@@ -66,35 +66,36 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 860px;
+    max-width: 920px;
   }
 
   .root-node {
     background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 6px;
-    padding: 14px 36px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 48px;
     text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
   }
 
   .root-node .tag {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 12px;
     color: var(--muted);
     letter-spacing: .14em;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
 
   .root-node .title {
-    font-size: 15px;
-    font-weight: 700;
-    color: #e8f1fa;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
   }
 
   /* ── Connector lines ── */
   .connector-down {
-    width: 1.5px;
-    height: 28px;
+    width: 2px;
+    height: 32px;
     background: var(--border);
   }
 
@@ -114,125 +115,96 @@
     left: 50%;
     transform: translateX(-50%);
     width: calc(50% - 60px);
-    height: 1.5px;
-    background: var(--border);
-  }
-
-  .branch-left, .branch-right {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex: 1;
-    max-width: 400px;
-  }
-
-  .branch-left { padding-right: 30px; }
-  .branch-right { padding-left: 30px; }
-
-  .branch-line-left {
-    width: 50%;
-    height: 1.5px;
-    align-self: flex-end;
-    background: var(--border);
-  }
-
-  .branch-line-right {
-    width: 50%;
-    height: 1.5px;
-    align-self: flex-start;
+    height: 2px;
     background: var(--border);
   }
 
   /* ── Type cards ── */
   .type-card {
-    border-radius: 8px;
-    border: 1.5px solid;
-    padding: 20px 22px;
+    border-radius: 10px;
+    border: 2px solid;
+    padding: 26px 26px;
     width: 100%;
     position: relative;
+    background: var(--surface);
+    box-shadow: 0 2px 12px rgba(0,0,0,.07);
   }
 
-  .type-card.ode {
-    border-color: var(--accent1);
-    background: rgba(0,200,255,.04);
-  }
-
-  .type-card.ece {
-    border-color: var(--accent2);
-    background: rgba(255,107,53,.04);
-  }
+  .type-card.ode { border-color: var(--accent1); }
+  .type-card.ece { border-color: var(--accent2); }
 
   .type-badge {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: .14em;
-    padding: 3px 8px;
-    border-radius: 3px;
+    padding: 4px 10px;
+    border-radius: 4px;
     display: inline-block;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    font-weight: 700;
   }
 
-  .ode .type-badge { background: rgba(0,200,255,.12); color: var(--accent1); }
-  .ece .type-badge { background: rgba(255,107,53,.12); color: var(--accent2); }
+  .ode .type-badge { background: rgba(0,119,204,.1); color: var(--accent1); }
+  .ece .type-badge { background: rgba(217,79,0,.1);  color: var(--accent2); }
 
   .type-card h2 {
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 2px;
-    color: #e8f1fa;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    color: var(--text);
   }
 
   .type-card .korean {
-    font-size: 11px;
-    color: var(--label);
-    margin-bottom: 14px;
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 18px;
   }
 
   .attr-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 10px;
   }
 
   .attr-list li {
     display: flex;
     align-items: flex-start;
-    gap: 8px;
-    font-size: 12px;
+    gap: 10px;
+    font-size: 14px;
     color: var(--text);
     line-height: 1.5;
   }
 
   .attr-list li .attr-key {
     font-family: var(--mono);
-    font-size: 10px;
-    color: var(--label);
+    font-size: 11px;
+    color: var(--muted);
     white-space: nowrap;
     padding-top: 2px;
-    min-width: 72px;
+    min-width: 80px;
   }
 
   /* ── Example tag ── */
   .example-tag {
-    margin-top: 16px;
-    padding-top: 14px;
+    margin-top: 20px;
+    padding-top: 16px;
     border-top: 1px solid var(--border);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
   }
 
   .ex-label {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 11px;
     color: var(--muted);
     letter-spacing: .1em;
   }
 
   .ex-name {
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 700;
   }
 
   .ode .ex-name { color: var(--accent1); }
@@ -241,46 +213,53 @@
   /* ── Criterion divider ── */
   .criterion {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 12px;
     color: var(--muted);
-    letter-spacing: .12em;
+    letter-spacing: .1em;
     text-align: center;
-    margin: 10px 0;
+    margin: 12px 0;
   }
 
   /* ── Comparison table ── */
   .compare-wrap {
     width: 100%;
-    max-width: 860px;
-    margin-top: 44px;
+    max-width: 920px;
+    margin-top: 52px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
   }
 
   .compare-title {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: .16em;
     color: var(--muted);
     text-transform: uppercase;
-    margin-bottom: 12px;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--border);
     text-align: center;
   }
 
   table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 12px;
+    font-size: 14px;
   }
 
   thead tr {
-    border-bottom: 1.5px solid var(--border);
+    border-bottom: 2px solid var(--border);
+    background: #f8fafc;
   }
 
   thead th {
-    padding: 10px 14px;
+    padding: 13px 18px;
     text-align: left;
     font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: .12em;
+    font-size: 12px;
+    letter-spacing: .1em;
     color: var(--muted);
     text-transform: uppercase;
   }
@@ -293,98 +272,102 @@
   }
 
   tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f8fafc; }
 
   tbody td {
-    padding: 9px 14px;
+    padding: 12px 18px;
     vertical-align: top;
-    line-height: 1.5;
+    line-height: 1.6;
     color: var(--text);
   }
 
   tbody td:first-child {
     font-family: var(--mono);
-    font-size: 10px;
-    color: var(--label);
-    letter-spacing: .08em;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: .06em;
     white-space: nowrap;
   }
 
-  tbody td.val-ode { color: var(--accent1); }
-  tbody td.val-ece { color: var(--accent2); }
+  tbody td.val-ode { color: var(--accent1); font-weight: 700; }
+  tbody td.val-ece { color: var(--accent2); font-weight: 700; }
 
   /* ── Definition box ── */
   .def-wrap {
     width: 100%;
-    max-width: 860px;
-    margin-top: 36px;
+    max-width: 920px;
+    margin-top: 40px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 20px 24px;
+    border-radius: 10px;
+    padding: 26px 30px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
   }
 
   .def-wrap .def-label {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: .14em;
     color: var(--muted);
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     text-transform: uppercase;
   }
 
   .def-wrap p {
-    font-size: 12.5px;
-    line-height: 1.75;
+    font-size: 14px;
+    line-height: 1.85;
     color: var(--label);
   }
 
   .def-wrap p em {
     font-style: normal;
-    color: #e8f1fa;
-    font-weight: 600;
+    color: var(--text);
+    font-weight: 700;
   }
 
   /* ── LOAC Level cards ── */
   .loac-wrap {
     width: 100%;
-    max-width: 860px;
-    margin-top: 36px;
+    max-width: 920px;
+    margin-top: 40px;
   }
 
   .loac-title {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: .16em;
     color: var(--muted);
     text-transform: uppercase;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     text-align: center;
   }
 
   .loac-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 20px;
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 640px) {
     .loac-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 20px; }
   }
 
   .loac-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 20px 22px;
+    border-radius: 10px;
+    padding: 26px 26px;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
   }
 
   .loac-card::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 2px;
+    height: 4px;
   }
 
   .loac-card.lvl3::before { background: var(--accent1); }
@@ -392,80 +375,82 @@
 
   .loac-level-badge {
     font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: .14em;
-    padding: 3px 8px;
-    border-radius: 3px;
+    font-size: 12px;
+    letter-spacing: .12em;
+    padding: 4px 10px;
+    border-radius: 4px;
     display: inline-block;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    font-weight: 700;
   }
 
-  .lvl3 .loac-level-badge { background: rgba(0,200,255,.12); color: var(--accent1); }
-  .lvl2 .loac-level-badge { background: rgba(255,107,53,.12); color: var(--accent2); }
+  .lvl3 .loac-level-badge { background: rgba(0,119,204,.1); color: var(--accent1); }
+  .lvl2 .loac-level-badge { background: rgba(217,79,0,.1);  color: var(--accent2); }
 
   .loac-card h3 {
-    font-size: 13px;
-    font-weight: 700;
-    color: #e8f1fa;
-    margin-bottom: 3px;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 4px;
   }
 
   .loac-card .loac-korean {
-    font-size: 11px;
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .loac-card p {
+    font-size: 14px;
+    line-height: 1.8;
     color: var(--label);
     margin-bottom: 14px;
   }
 
-  .loac-card p {
-    font-size: 12px;
-    line-height: 1.75;
-    color: var(--label);
-    margin-bottom: 12px;
-  }
-
   .loac-card p em {
     font-style: normal;
-    color: #e8f1fa;
-    font-weight: 600;
+    color: var(--text);
+    font-weight: 700;
   }
 
   .loac-attr {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
     border-top: 1px solid var(--border);
-    padding-top: 12px;
+    padding-top: 14px;
   }
 
   .loac-attr-row {
     display: flex;
-    gap: 10px;
-    font-size: 11.5px;
+    gap: 12px;
+    font-size: 13px;
     line-height: 1.5;
   }
 
   .loac-attr-key {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 11px;
     color: var(--muted);
     white-space: nowrap;
     padding-top: 2px;
-    min-width: 68px;
+    min-width: 72px;
   }
 
   .loac-attr-val { color: var(--text); }
 
   .loac-example {
-    margin-top: 14px;
-    padding-top: 12px;
+    margin-top: 16px;
+    padding-top: 14px;
     border-top: 1px solid var(--border);
-    font-size: 11px;
+    font-size: 13px;
     color: var(--muted);
+    line-height: 1.7;
   }
 
   .loac-example span {
-    font-weight: 700;
-    font-size: 12px;
+    font-weight: 800;
+    font-size: 14px;
   }
 
   .lvl3 .loac-example span { color: var(--accent1); }
@@ -493,8 +478,8 @@
   <div class="branch-row">
     <!-- Left branch line -->
     <div style="flex:1; display:flex; flex-direction:column; align-items:flex-end; max-width:400px; padding-right:30px;">
-      <div style="width:50%; height:1.5px; background:#1e2a38;"></div>
-      <div style="width:1.5px; height:24px; background:#1e2a38; margin-right: calc(50% - 0.75px);"></div>
+      <div style="width:50%; height:1.5px; background:#cbd5e1;"></div>
+      <div style="width:1.5px; height:24px; background:#cbd5e1; margin-right: calc(50% - 0.75px);"></div>
 
       <!-- ODE Card -->
       <div class="type-card ode" style="width:100%;">
@@ -517,8 +502,8 @@
 
     <!-- Right branch -->
     <div style="flex:1; display:flex; flex-direction:column; align-items:flex-start; max-width:400px; padding-left:30px;">
-      <div style="width:50%; height:1.5px; background:#1e2a38;"></div>
-      <div style="width:1.5px; height:24px; background:#1e2a38; margin-left: calc(50% - 0.75px);"></div>
+      <div style="width:50%; height:1.5px; background:#cbd5e1;"></div>
+      <div style="width:1.5px; height:24px; background:#cbd5e1; margin-left: calc(50% - 0.75px);"></div>
 
       <!-- ECE Card -->
       <div class="type-card ece" style="width:100%;">
