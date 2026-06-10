@@ -343,6 +343,133 @@
     color: #e8f1fa;
     font-weight: 600;
   }
+
+  /* ── LOAC Level cards ── */
+  .loac-wrap {
+    width: 100%;
+    max-width: 860px;
+    margin-top: 36px;
+  }
+
+  .loac-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .16em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+
+  .loac-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .loac-grid { grid-template-columns: 1fr; }
+  }
+
+  .loac-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .loac-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .loac-card.lvl3::before { background: var(--accent1); }
+  .loac-card.lvl2::before { background: var(--accent2); }
+
+  .loac-level-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    padding: 3px 8px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  .lvl3 .loac-level-badge { background: rgba(0,200,255,.12); color: var(--accent1); }
+  .lvl2 .loac-level-badge { background: rgba(255,107,53,.12); color: var(--accent2); }
+
+  .loac-card h3 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #e8f1fa;
+    margin-bottom: 3px;
+  }
+
+  .loac-card .loac-korean {
+    font-size: 11px;
+    color: var(--label);
+    margin-bottom: 14px;
+  }
+
+  .loac-card p {
+    font-size: 12px;
+    line-height: 1.75;
+    color: var(--label);
+    margin-bottom: 12px;
+  }
+
+  .loac-card p em {
+    font-style: normal;
+    color: #e8f1fa;
+    font-weight: 600;
+  }
+
+  .loac-attr {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+
+  .loac-attr-row {
+    display: flex;
+    gap: 10px;
+    font-size: 11.5px;
+    line-height: 1.5;
+  }
+
+  .loac-attr-key {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    white-space: nowrap;
+    padding-top: 2px;
+    min-width: 68px;
+  }
+
+  .loac-attr-val { color: var(--text); }
+
+  .loac-example {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .loac-example span {
+    font-weight: 700;
+    font-size: 12px;
+  }
+
+  .lvl3 .loac-example span { color: var(--accent1); }
+  .lvl2 .loac-example span { color: var(--accent2); }
 </style>
 </head>
 <body>
@@ -475,6 +602,78 @@
       is performed by off-board sensor networks, with the interceptor assuming autonomous control
       only upon receiving an external cue and achieving proximity to the target.
     </p>
+  </div>
+
+  <!-- LOAC Level explanation -->
+  <div class="loac-wrap">
+    <div class="loac-title">Level of Autonomous Control (LOAC) — Definition</div>
+    <div class="loac-grid">
+
+      <!-- Lvl 3 -->
+      <div class="loac-card lvl3">
+        <div class="loac-level-badge">LOAC LVL 3 · ODE</div>
+        <h3>Fully Autonomous</h3>
+        <div class="loac-korean">완전 자율 교전</div>
+        <p>
+          <em>탐지→추적→교전</em> 전 단계가 기체 내에서 완결된다.
+          외부 C2 링크나 지상 센서의 큐 없이 탑재 EO 카메라만으로
+          표적을 인식하고 독자적으로 충돌·교전을 결정한다.
+          Sensor-to-Shooter 루프가 플랫폼 내부에서 닫힌다.
+        </p>
+        <div class="loac-attr">
+          <div class="loac-attr-row">
+            <span class="loac-attr-key">인간 개입</span>
+            <span class="loac-attr-val">없음 — 기계가 전 과정 단독 결정</span>
+          </div>
+          <div class="loac-attr-row">
+            <span class="loac-attr-key">외부 의존</span>
+            <span class="loac-attr-val">불필요 (링크 두절 시에도 작동)</span>
+          </div>
+          <div class="loac-attr-row">
+            <span class="loac-attr-key">재밍 내성</span>
+            <span class="loac-attr-val">높음 — RF 링크 불필요</span>
+          </div>
+          <div class="loac-attr-row">
+            <span class="loac-attr-key">법적 쟁점</span>
+            <span class="loac-attr-val">LOAC/IHL상 인간 책임 귀속 불명확</span>
+          </div>
+        </div>
+        <div class="loac-example">EXAMPLE ▸ <span>Yolka (Ёлка) — Russia</span><br>EO 카메라로 표적 포착 후 자율 충돌</div>
+      </div>
+
+      <!-- Lvl 2 -->
+      <div class="loac-card lvl2">
+        <div class="loac-level-badge">LOAC LVL 2 · ECE</div>
+        <h3>Human-on-the-Loop</h3>
+        <div class="loac-korean">루프 상위 인간 감독</div>
+        <p>
+          <em>탐지·식별</em>은 지상 레이더·C2 네트워크가 수행하고,
+          그 큐(cue)를 수신한 요격기가 최종 교전 단계만 자율 실행한다.
+          외부 체계가 "언제·어디를 공격할지"를 결정하는 구조이므로
+          인간(또는 감독 시스템)이 루프 상위에 존재한다.
+        </p>
+        <div class="loac-attr">
+          <div class="loac-attr-row">
+            <span class="loac-attr-key">인간 개입</span>
+            <span class="loac-attr-val">큐 발송 단계에서 개입 가능</span>
+          </div>
+          <div class="loac-attr-row">
+            <span class="loac-attr-key">외부 의존</span>
+            <span class="loac-attr-val">필수 — 큐 없으면 교전 시작 불가</span>
+          </div>
+          <div class="loac-attr-row">
+            <span class="loac-attr-key">재밍 내성</span>
+            <span class="loac-attr-val">낮음 — C2 링크 두절 시 무력화</span>
+          </div>
+          <div class="loac-attr-row">
+            <span class="loac-attr-key">법적 쟁점</span>
+            <span class="loac-attr-val">큐 발송자에 책임 귀속 가능</span>
+          </div>
+        </div>
+        <div class="loac-example">EXAMPLE ▸ <span>Sting — Ukraine</span><br>지상 레이더 큐 수신 후 근접 기폭</div>
+      </div>
+
+    </div>
   </div>
 
 </div>
