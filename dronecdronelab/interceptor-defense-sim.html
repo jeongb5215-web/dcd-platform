@@ -90,8 +90,12 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .swarm-cell.terminal{border-color:rgba(249,115,22,.5);color:var(--orange)}
 .swarm-cell.struck{border-color:rgba(255,92,92,.3);color:rgba(255,92,92,.5);text-decoration:line-through}
 .swarm-cell.idle{color:var(--muted)}
+.swarm-cell.missed{border-color:rgba(249,115,22,.6);color:var(--orange)}
+.swarm-cell.exhausted{border-color:rgba(139,92,246,.4);color:rgba(139,92,246,.7)}
+.swarm-cell.breach{border-color:rgba(255,0,0,.6);color:#ff3333;animation:pulse-danger .5s infinite alternate}
 .kill-bar{width:100%;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:4px 0}
 .kill-fill{height:100%;background:var(--green);border-radius:4px;transition:width .5s}
+.breach-bar{height:100%;background:var(--red);border-radius:4px;transition:width .5s}
 </style>
 </head>
 <body>
@@ -187,6 +191,7 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
         <div class="tele-row"><span class="tele-k">선두 거리</span><span class="tele-v" id="t-dist">15.0 km</span></div>
         <div class="tele-row"><span class="tele-k">속도</span><span class="tele-v" id="t-speed">300 km/h</span></div>
         <div class="tele-row"><span class="tele-k">탐지상태</span><span class="tele-v" id="t-det" style="color:var(--muted)">미탐지</span></div>
+        <div class="tele-row"><span class="tele-k">돌파</span><span class="tele-v" id="t-breach" style="color:var(--muted)">—</span></div>
         <div style="margin-top:6px">
           <div style="font-size:8px;color:var(--muted);margin-bottom:2px">격추 현황</div>
           <div class="kill-bar"><div class="kill-fill" id="kill-bar-fill" style="width:0%"></div></div>
@@ -201,6 +206,8 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
       <div class="sect-bd">
         <div class="tele-row"><span class="tele-k">교전 중</span><span class="tele-v" id="i-active-cnt" style="color:var(--green)">—</span></div>
         <div class="tele-row"><span class="tele-k">종말유도 중</span><span class="tele-v" id="i-terminal-cnt" style="color:var(--orange)">—</span></div>
+        <div class="tele-row"><span class="tele-k">재교전 시도</span><span class="tele-v" id="i-retry-cnt" style="color:var(--orange)">—</span></div>
+        <div class="tele-row"><span class="tele-k">요격 확률 Pk</span><span class="tele-v" style="color:var(--purple)">80%</span></div>
         <div class="tele-row"><span class="tele-k">속도</span><span class="tele-v" id="i-speed">—</span></div>
         <div id="swarm-grid" class="swarm-grid" style="margin-top:4px"></div>
       </div>
@@ -284,6 +291,9 @@ let simSpeed = 2;
 let droneCount = 3;
 let shahedSpeedKmh = 300;
 
+const PK          = 0.80; // probability of kill per engagement attempt
+const MAX_ATTEMPTS = 2;   // max re-engagement attempts per interceptor
+
 // ══════════════════════════════════════════════
 //  STATE
 // ══════════════════════════════════════════════
@@ -298,6 +308,8 @@ const S = {
   },
   radar: {angle:0,active:false,pulse:0},
   explosions: [],    // array of explosion objects
+  missEffects: [],   // floating MISS indicators
+  assetHits: 0,      // number of Shadeds that breached to asset
 };
 
 // ══════════════════════════════════════════════
@@ -363,7 +375,7 @@ function getShadedFormation(){
 
 function initState(){
   S.phaseIdx=0; S.phaseTimer=0; S.elapsed=0;
-  S.explosions=[];
+  S.explosions=[]; S.missEffects=[]; S.assetHits=0;
 
   // Shadeds
   const A  = assetPos();
@@ -383,11 +395,13 @@ function initState(){
     y:IB2.y+(i-(droneCount-1)/2)*7,
     angle:0, active:false, trail:[],
     wp:[], wpIdx:0, speed:0,
-    state:'idle',   // idle→launch_wait→launching→approach→terminal→struck
+    state:'idle',   // idle→launch_wait→launching→approach→terminal→missed→exhausted / struck
     launchDelay:i*0.32,
     launchTimer:0,
     postLaunchTimer:0,
     targetIdx:i,
+    attempts:0,     // engagement attempts (Pk rolls)
+    missTimer:0,    // timer in 'missed' state before re-engage
   }));
 
   // Loiterer
@@ -488,9 +502,18 @@ function updateInterceptors(dt){
         const dx=target.x-ic.x, dy=target.y-ic.y;
         const dist=Math.hypot(dx,dy);
         if(dist<10){
-          addExplosion(target.x,target.y);
-          target.alive=false;
-          ic.state='struck';
+          ic.attempts++;
+          if(Math.random()<PK){
+            // Pk 성공 — 격추
+            addExplosion(target.x,target.y);
+            target.alive=false;
+            ic.state='struck';
+          } else {
+            // Pk 실패 — 미스, 통과 후 재교전 판단
+            addMissEffect(ic.x,ic.y,ic.attempts);
+            ic.missTimer=0;
+            ic.state='missed';
+          }
         } else {
           const spd=interceptorTerminalSpd();
           ic.x+=(dx/dist)*spd*dt;
@@ -501,9 +524,102 @@ function updateInterceptors(dt){
         return;
       }
 
+      case 'missed': {
+        // 미스 후 관성으로 통과, 재교전 여부 결정
+        ic.missTimer+=dt;
+        ic.x+=Math.cos(ic.angle)*interceptorTerminalSpd()*dt*0.65;
+        ic.y+=Math.sin(ic.angle)*interceptorTerminalSpd()*dt*0.65;
+        pushTrail(ic);
+        if(ic.missTimer>0.55){
+          const target=S.shadeds[ic.targetIdx];
+          if(target&&target.alive&&ic.attempts<MAX_ATTEMPTS){
+            // 재교전: 다시 후방 루프 계획
+            ic.speed=interceptorApproachSpd();
+            planBehindPathFor(ic);
+            ic.state='approach';
+          } else {
+            ic.state='exhausted';
+          }
+        }
+        return;
+      }
+
+      case 'exhausted': {
+        // 재교전 포기, 드리프트
+        ic.x+=Math.cos(ic.angle)*shahedSpeed()*dt*0.3;
+        ic.y+=Math.sin(ic.angle)*shahedSpeed()*dt*0.3;
+        pushTrail(ic);
+        return;
+      }
+
       case 'struck': return;
     }
   });
+}
+
+// ══════════════════════════════════════════════
+//  MISS EFFECTS
+// ══════════════════════════════════════════════
+function addMissEffect(x,y,attempt){
+  S.missEffects.push({x,y,t:0,active:true,attempt});
+}
+
+function tickMissEffects(dt){
+  S.missEffects.forEach(m=>{ m.t+=dt; if(m.t>2.0) m.active=false; });
+  S.missEffects=S.missEffects.filter(m=>m.active);
+}
+
+function drawMissEffects(){
+  S.missEffects.forEach(m=>{
+    const alpha=Math.max(0,1-m.t/2.0);
+    const rise=m.t*28;
+    // MISS 텍스트
+    ctx.fillStyle=`rgba(249,115,22,${alpha*0.95})`;
+    ctx.font='bold 12px monospace';
+    ctx.fillText('MISS',m.x-16,m.y-14-rise);
+    if(m.attempt<MAX_ATTEMPTS){
+      ctx.font='9px monospace';
+      ctx.fillStyle=`rgba(249,115,22,${alpha*0.7})`;
+      ctx.fillText('→ 재교전',m.x-18,m.y-2-rise);
+    } else {
+      ctx.font='9px monospace';
+      ctx.fillStyle=`rgba(255,0,0,${alpha*0.8})`;
+      ctx.fillText('교전 포기',m.x-18,m.y-2-rise);
+    }
+    // 스파크 링
+    ctx.beginPath(); ctx.arc(m.x,m.y,8+m.t*18,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(249,115,22,${alpha*0.35})`; ctx.lineWidth=1.5; ctx.stroke();
+  });
+}
+
+// ══════════════════════════════════════════════
+//  ASSET HIT DETECTION
+// ══════════════════════════════════════════════
+function checkAssetHits(){
+  const A=assetPos();
+  S.shadeds.forEach(s=>{
+    if(!s.alive) return;
+    if(Math.hypot(s.x-A.x,s.y-A.y)<28){
+      s.alive=false;
+      s.hitAsset=true;
+      S.assetHits++;
+      addAssetImpact(A.x,A.y);
+    }
+  });
+}
+
+function addAssetImpact(x,y){
+  const exp={active:true,x,y,t:0,isImpact:true,particles:[]};
+  for(let i=0;i<60;i++){
+    const a=(Math.PI*2/60)*i+(Math.random()-.5)*0.5;
+    const sp=30+Math.random()*140;
+    exp.particles.push({
+      x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,
+      sz:2+Math.random()*5,
+      col:['#ff0000','#ff5c5c','#f97316','#fff','#ff3333'][Math.floor(Math.random()*5)],
+    });
+  }
+  S.explosions.push(exp);
 }
 
 // ══════════════════════════════════════════════
@@ -612,12 +728,15 @@ function update(dt){
 
     case 'engage':
       updateInterceptors(dt);
+      checkAssetHits();
+      // 종료: 모든 Shahed가 격추되거나 돌파됨 (alive=false)
       if(S.shadeds.every(s=>!s.alive)) setPhase('result');
       break;
   }
 
   updateLoiterer(dt);
   tickExplosions(dt);
+  tickMissEffects(dt);
   updateUI();
 }
 
@@ -634,6 +753,7 @@ function drawFrame(){
   drawShadedSwarm();
   drawInterceptorSwarm();
   drawExplosions();
+  drawMissEffects();
   drawCornerHUD();
   if(phase()==='result') drawResultScreen();
 }
@@ -693,9 +813,12 @@ function drawRadar(){
 
 function drawAsset(){
   const A=assetPos();
-  const gl=ctx.createRadialGradient(A.x,A.y,0,A.x,A.y,36);
-  gl.addColorStop(0,'rgba(56,230,155,0.18)'); gl.addColorStop(1,'rgba(56,230,155,0)');
-  ctx.fillStyle=gl; ctx.beginPath(); ctx.arc(A.x,A.y,36,0,Math.PI*2); ctx.fill();
+  // 돌파 발생 시 빨간 글로우로 전환
+  const breached=S.assetHits>0;
+  const glowCol=breached?`rgba(255,0,0,${0.15+0.1*Math.sin(Date.now()/200)})`:'rgba(56,230,155,0.18)';
+  const gl=ctx.createRadialGradient(A.x,A.y,0,A.x,A.y,breached?50:36);
+  gl.addColorStop(0,glowCol); gl.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=gl; ctx.beginPath(); ctx.arc(A.x,A.y,breached?50:36,0,Math.PI*2); ctx.fill();
   ctx.save(); ctx.translate(A.x,A.y);
   ctx.fillStyle='#38e69b'; ctx.fillRect(-13,-17,26,22);
   ctx.fillStyle='#0a0c10';
@@ -879,19 +1002,21 @@ function drawExplosions(){
 
 function drawSingleExplosion(e){
   const ex=e.x,ey=e.y,t=e.t;
+  const scale=e.isImpact?1.7:1.0;
+  const ringCol=e.isImpact?'255,0,0':'249,115,22';
   [0.22,0.48,0.85].forEach((mT,i)=>{
     const rt=Math.min(1,t/mT); if(rt>=1) return;
-    const r=rt*(32+i*24), alpha=(1-rt)*(0.7-i*0.18);
+    const r=rt*(32+i*24)*scale, alpha=(1-rt)*(0.7-i*0.18);
     ctx.beginPath(); ctx.arc(ex,ey,r,0,Math.PI*2);
-    ctx.strokeStyle=`rgba(249,115,22,${alpha})`; ctx.lineWidth=2.5; ctx.stroke();
+    ctx.strokeStyle=`rgba(${ringCol},${alpha})`; ctx.lineWidth=2.5; ctx.stroke();
   });
   if(t<0.22){
     const fa=1-t/0.22;
-    const fg=ctx.createRadialGradient(ex,ey,0,ex,ey,60*fa);
-    fg.addColorStop(0,`rgba(255,255,200,${fa*0.95})`);
-    fg.addColorStop(0.35,`rgba(255,160,50,${fa*0.75})`);
-    fg.addColorStop(1,'rgba(255,80,0,0)');
-    ctx.fillStyle=fg; ctx.beginPath(); ctx.arc(ex,ey,75,0,Math.PI*2); ctx.fill();
+    const c1=e.isImpact?`rgba(255,200,200,${fa*0.95})`:`rgba(255,255,200,${fa*0.95})`;
+    const c2=e.isImpact?`rgba(255,60,60,${fa*0.75})`:`rgba(255,160,50,${fa*0.75})`;
+    const fg=ctx.createRadialGradient(ex,ey,0,ex,ey,60*fa*scale);
+    fg.addColorStop(0,c1); fg.addColorStop(0.35,c2); fg.addColorStop(1,'rgba(255,80,0,0)');
+    ctx.fillStyle=fg; ctx.beginPath(); ctx.arc(ex,ey,75*scale,0,Math.PI*2); ctx.fill();
   }
   e.particles.forEach(p=>{
     ctx.beginPath(); ctx.arc(p.x,p.y,p.sz*p.life,0,Math.PI*2);
@@ -900,8 +1025,13 @@ function drawSingleExplosion(e){
   });
   if(t>0.3){
     const fa=Math.max(0,1-(t-0.3)/2.2);
-    ctx.fillStyle=`rgba(255,92,92,${fa*0.9})`; ctx.font='bold 10px monospace';
-    ctx.fillText('✕ KILL',ex-18,ey-26);
+    if(e.isImpact){
+      ctx.fillStyle=`rgba(255,0,0,${fa*0.95})`; ctx.font='bold 11px monospace';
+      ctx.fillText('⚠ BREACHED',ex-36,ey-32);
+    } else {
+      ctx.fillStyle=`rgba(255,92,92,${fa*0.9})`; ctx.font='bold 10px monospace';
+      ctx.fillText('✕ KILL',ex-18,ey-26);
+    }
   }
 }
 
@@ -918,14 +1048,20 @@ function drawCornerHUD(){
   ctx.fillStyle='rgba(90,100,120,0.7)'; ctx.font='8px monospace';
   ctx.fillText('T+'+S.elapsed.toFixed(1)+'s',14,H-4);
 
-  // Kill count HUD
-  const dead=S.shadeds.filter(s=>!s.alive).length;
+  // Kill / Breach HUD
+  const killed=S.shadeds.filter(s=>!s.alive&&!s.hitAsset).length;
   const total=S.shadeds.length;
   if(total>0&&phase()!=='detect'){
-    ctx.fillStyle='rgba(0,0,0,0.5)'; ctx.fillRect(W/2-52,8,104,22);
-    ctx.fillStyle=dead===total?'#38e69b':'#f4b942'; ctx.font='bold 11px monospace';
-    const kt=`KILLS: ${dead} / ${total}`;
-    ctx.fillText(kt,W/2-ctx.measureText(kt).width/2,24);
+    const w=S.assetHits>0?140:110;
+    ctx.fillStyle='rgba(0,0,0,0.55)'; ctx.fillRect(W/2-w/2,7,w,22);
+    ctx.fillStyle='#38e69b'; ctx.font='bold 11px monospace';
+    const kt=`KILLS: ${killed}/${total}`;
+    ctx.fillText(kt,W/2-(S.assetHits>0?w/2-6:ctx.measureText(kt).width/2),23);
+    if(S.assetHits>0){
+      ctx.fillStyle='#ff3333'; ctx.font='bold 11px monospace';
+      const bt=`  BREACH: ${S.assetHits}`;
+      ctx.fillText(bt,W/2-w/2+ctx.measureText(kt).width+4,23);
+    }
   }
 
   // Scale bar
@@ -939,21 +1075,51 @@ function drawCornerHUD(){
 }
 
 function drawResultScreen(){
-  const dead=S.shadeds.filter(s=>!s.alive).length;
   const total=S.shadeds.length;
-  ctx.fillStyle='rgba(0,0,0,0.65)'; ctx.fillRect(0,0,W,H);
-  ctx.fillStyle='#38e69b'; ctx.font='bold 26px monospace';
-  const t1='// MISSION COMPLETE';
-  ctx.fillText(t1,W/2-ctx.measureText(t1).width/2,H/2-30);
-  ctx.fillStyle='rgba(56,230,155,0.75)'; ctx.font='14px monospace';
-  const t2=`SHAHED-238 ${dead}/${total}대 요격 성공`;
-  ctx.fillText(t2,W/2-ctx.measureText(t2).width/2,H/2+8);
-  ctx.fillStyle='rgba(56,230,155,0.5)'; ctx.font='12px monospace';
-  const t3='보호목표 방어 완료';
-  ctx.fillText(t3,W/2-ctx.measureText(t3).width/2,H/2+28);
+  const killed=S.shadeds.filter(s=>!s.alive&&!s.hitAsset).length;
+  const retries=S.interceptors.reduce((n,ic)=>n+ic.attempts,0)-killed; // missed rolls
+  ctx.fillStyle='rgba(0,0,0,0.7)'; ctx.fillRect(0,0,W,H);
+
+  if(S.assetHits===0){
+    // 완전 성공
+    ctx.fillStyle='#38e69b'; ctx.font='bold 26px monospace';
+    const t1='// MISSION COMPLETE';
+    ctx.fillText(t1,W/2-ctx.measureText(t1).width/2,H/2-38);
+    ctx.fillStyle='rgba(56,230,155,0.8)'; ctx.font='14px monospace';
+    const t2=`SHAHED-238 ${killed}/${total}대 요격 — 보호목표 방어 완료`;
+    ctx.fillText(t2,W/2-ctx.measureText(t2).width/2,H/2+2);
+    if(retries>0){
+      ctx.fillStyle='rgba(249,115,22,0.7)'; ctx.font='11px monospace';
+      const t3=`Pk 미스 ${retries}회 → 재교전으로 전 위협 제거`;
+      ctx.fillText(t3,W/2-ctx.measureText(t3).width/2,H/2+22);
+    }
+  } else if(S.assetHits<total){
+    // 부분 실패
+    ctx.fillStyle='#f97316'; ctx.font='bold 24px monospace';
+    const t1='// PARTIAL FAILURE';
+    ctx.fillText(t1,W/2-ctx.measureText(t1).width/2,H/2-38);
+    ctx.fillStyle='rgba(249,115,22,0.8)'; ctx.font='13px monospace';
+    const t2=`요격 ${killed}대 / 돌파 ${S.assetHits}대 — 방어 불완전`;
+    ctx.fillText(t2,W/2-ctx.measureText(t2).width/2,H/2+2);
+    ctx.fillStyle='rgba(255,92,92,0.6)'; ctx.font='11px monospace';
+    const t3=`Pk ${Math.round(PK*100)}% 요격 실패 → 재교전 소진 → 돌파 허용`;
+    ctx.fillText(t3,W/2-ctx.measureText(t3).width/2,H/2+22);
+  } else {
+    // 완전 실패
+    ctx.fillStyle='#ff3333'; ctx.font='bold 24px monospace';
+    const t1='// MISSION FAILED';
+    ctx.fillText(t1,W/2-ctx.measureText(t1).width/2,H/2-38);
+    ctx.fillStyle='rgba(255,50,50,0.8)'; ctx.font='13px monospace';
+    const t2=`전 ${total}대 돌파 — 보호목표 피격`;
+    ctx.fillText(t2,W/2-ctx.measureText(t2).width/2,H/2+2);
+    ctx.fillStyle='rgba(255,92,92,0.6)'; ctx.font='11px monospace';
+    const t3='방어체계 포화 — 추가 요격 자산 투입 필요';
+    ctx.fillText(t3,W/2-ctx.measureText(t3).width/2,H/2+22);
+  }
+
   ctx.fillStyle='#5a6478'; ctx.font='9px monospace';
-  const t4='교전시간: '+S.elapsed.toFixed(1)+'s  ·  리셋 후 재시뮬레이션 가능';
-  ctx.fillText(t4,W/2-ctx.measureText(t4).width/2,H/2+52);
+  const t4=`교전시간: ${S.elapsed.toFixed(1)}s  ·  Pk 80%  ·  재교전 최대 ${MAX_ATTEMPTS}회  ·  리셋 후 재시뮬레이션`;
+  ctx.fillText(t4,W/2-ctx.measureText(t4).width/2,H/2+50);
 }
 
 // ══════════════════════════════════════════════
@@ -969,11 +1135,21 @@ function updateUI(){
   const ph=phase();
   const activeIcs=S.interceptors.filter(ic=>ic.state==='approach'||ic.state==='launching').length;
   const termIcs  =S.interceptors.filter(ic=>ic.state==='terminal').length;
+  const missIcs=S.interceptors.filter(ic=>ic.state==='missed').length;
+  const retryIcs=S.interceptors.filter(ic=>ic.attempts>0&&(ic.state==='approach'||ic.state==='terminal')).length;
+  let engageAlert;
+  if(S.assetHits>0) engageAlert={c:'danger',t:`⚠  돌파 발생 — ${S.assetHits}대 보호목표 접근!`};
+  else if(missIcs>0) engageAlert={c:'danger',t:`⚡  Pk 미스 ${missIcs}기 — 재교전 판단 중`};
+  else if(termIcs>0) engageAlert={c:'danger',t:`🎯  AI 종말유도 활성 — ${termIcs}기 추격 중`};
+  else              engageAlert={c:'warn',   t:'↗  후방 루프 기동 중'};
+  const resultAlert=S.assetHits===0?{c:'success',t:'✓  임무 완료 — 보호목표 방어 성공'}
+                   :S.assetHits<S.shadeds.length?{c:'danger',t:`⚠  부분 실패 — ${S.assetHits}대 돌파`}
+                   :{c:'danger',t:'✗  임무 실패 — 보호목표 피격'};
   const aMap={
     detect:{c:'warn',   t:`⚠  레이다 탐지 — SHAHED ${droneCount}기 비행 개시`},
     launch:{c:'warn',   t:`🚀  요격 드론 순차 발사 — ${droneCount}기 교전 준비`},
-    engage:{c:'danger', t:termIcs>0?`🎯  AI 종말유도 활성 — ${termIcs}기 추격 중`:`↗  후방 루프 기동 중`},
-    result:{c:'success',t:'✓  임무 완료 — 보호목표 방어 성공'},
+    engage:engageAlert,
+    result:resultAlert,
   };
   const a=aMap[ph]||{c:'idle',t:'// STANDBY'};
   aEl.className='alert-box '+a.c; aEl.textContent=a.t;
@@ -981,7 +1157,7 @@ function updateUI(){
   // Threat telemetry
   const A=assetPos();
   const aliveShadeds=S.shadeds.filter(s=>s.alive);
-  const dead=S.shadeds.length-aliveShadeds.length;
+  const killed=S.shadeds.filter(s=>!s.alive&&!s.hitAsset).length;
   const total=S.shadeds.length;
   document.getElementById('t-alive').textContent=total>0?`${aliveShadeds.length} / ${total}`:'—';
   document.getElementById('t-alive').style.color=aliveShadeds.length===0?'var(--green)':'var(--red)';
@@ -994,27 +1170,37 @@ function updateUI(){
   }
   document.getElementById('t-det').textContent=S.radar.active?'탐지됨':'미탐지';
   document.getElementById('t-det').style.color=S.radar.active?'#f4b942':'var(--muted)';
+  const bEl=document.getElementById('t-breach');
+  bEl.textContent=S.assetHits>0?S.assetHits+'대 돌파':'—';
+  bEl.style.color=S.assetHits>0?'#ff3333':'var(--muted)';
 
   // Kill bar
-  const killPct=total>0?(dead/total*100).toFixed(0):0;
+  const killPct=total>0?(killed/total*100).toFixed(0):0;
   document.getElementById('kill-bar-fill').style.width=killPct+'%';
-  document.getElementById('kill-count-txt').textContent=`${dead} / ${total} 격추`;
-  document.getElementById('kill-count-txt').style.color=dead===total&&total>0?'#38e69b':'#4fa3ff';
+  document.getElementById('kill-count-txt').textContent=
+    S.assetHits>0?`격추 ${killed} / 돌파 ${S.assetHits} (전체 ${total})`:`${killed} / ${total} 격추`;
+  document.getElementById('kill-count-txt').style.color=S.assetHits>0?'#f97316':killed===total&&total>0?'#38e69b':'#4fa3ff';
 
   // Interceptor swarm status
   const anyActive=S.interceptors.some(ic=>ic.active);
-  document.getElementById('i-active-cnt').textContent=anyActive?activeIcs+termIcs+' 기 비행중':'—';
+  const totalRetries=S.interceptors.reduce((n,ic)=>n+Math.max(0,ic.attempts-1),0);
+  document.getElementById('i-active-cnt').textContent=anyActive?activeIcs+termIcs+missIcs+' 기 비행중':'—';
   document.getElementById('i-terminal-cnt').textContent=termIcs>0?termIcs+' 기':'—';
   document.getElementById('i-terminal-cnt').style.color=termIcs>0?'#f97316':'var(--muted)';
+  const rEl=document.getElementById('i-retry-cnt');
+  rEl.textContent=totalRetries>0?totalRetries+' 회':'—';
+  rEl.style.color=totalRetries>0?'#f97316':'var(--muted)';
   document.getElementById('i-speed').textContent=anyActive?Math.round(shahedSpeedKmh*1.5)+' km/h':'—';
 
   // Swarm grid
-  const stateLabel={idle:'대기',launch_wait:'준비',launching:'발사↑',approach:'접근→',terminal:'추격🎯',struck:'격추✕'};
-  const stateClass={idle:'idle',launch_wait:'idle',launching:'active',approach:'active',terminal:'terminal',struck:'struck'};
-  document.getElementById('swarm-grid').innerHTML=S.interceptors.map(ic=>`
-    <div class="swarm-cell ${stateClass[ic.state]||'idle'}">
-      I${ic.id+1}→S${ic.targetIdx+1}<br>${stateLabel[ic.state]||'—'}
-    </div>`).join('');
+  const stateLabel={idle:'대기',launch_wait:'준비',launching:'발사↑',approach:ic=>(ic.attempts>0?'재접근↗':'접근→'),terminal:'추격🎯',struck:'격추✕',missed:'미스⚡',exhausted:'포기',breach:'돌파⚠'};
+  const stateClass={idle:'idle',launch_wait:'idle',launching:'active',approach:'active',terminal:'terminal',struck:'struck',missed:'missed',exhausted:'exhausted'};
+  document.getElementById('swarm-grid').innerHTML=S.interceptors.map(ic=>{
+    const lbl=typeof stateLabel[ic.state]==='function'?stateLabel[ic.state](ic):stateLabel[ic.state]||'—';
+    const retryMark=ic.attempts>1?` ×${ic.attempts}`:'';
+    const cls=S.shadeds[ic.targetIdx]&&S.shadeds[ic.targetIdx].hitAsset?'breach':(stateClass[ic.state]||'idle');
+    return`<div class="swarm-cell ${cls}">I${ic.id+1}→S${ic.targetIdx+1}${retryMark}<br>${lbl}</div>`;
+  }).join('');
 
   // Loiterer
   const lp=S.loiterer.phase;
