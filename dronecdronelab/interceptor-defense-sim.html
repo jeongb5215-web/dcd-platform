@@ -261,7 +261,7 @@ const PHASES = [
   {id:'engage', label:'③ Last Mile — AI 종말유도',              short:'③ Last Mile',      sub:'AI Detection · Tracking · Terminal Guidance', color:'#f97316'},
   {id:'result', label:'④ 임무 완료 — 전 위협 제거',             short:'④ 임무 완료',      sub:'Mission Complete',                color:'#38e69b'},
 ];
-const BAR_H = 54; // 상단 페이즈 바 높이 (px)
+const BAR_H = 72; // 상단 페이즈 바 높이 (px)
 
 // ══════════════════════════════════════════════
 //  CANVAS
@@ -1184,7 +1184,7 @@ function drawPhaseBar(){
   const ARROW=22;
   const STATS_W=110; // 오른쪽 킬/브리치 통계 영역
   const boxW=(W-PAD*2-STATS_W-(n-1)*ARROW)/n;
-  const boxH=42;
+  const boxH=58;
   const y0=(BAR_H-boxH)/2;
 
   // 배경 스트립
@@ -1254,8 +1254,8 @@ function drawPhaseBar(){
 
     // 완료 체크
     if(isDone){
-      ctx.fillStyle='#0a0c10'; ctx.font='bold 7px monospace';
-      ctx.fillText('✓',dotX-3.5,dotY+2.5);
+      ctx.fillStyle='#0a0c10'; ctx.font='bold 9px monospace';
+      ctx.fillText('✓',dotX-3.5,dotY+3);
     }
 
     // 레이블 텍스트 (활성: 3줄 / 그 외: 2줄)
@@ -1267,33 +1267,33 @@ function drawPhaseBar(){
 
     if(isActive){
       // 3줄: 번호 / 주제목 / sub 설명
-      ctx.fillStyle=p.color; ctx.font='bold 7px monospace';
-      ctx.fillText(numCh,tx,cy2-9,boxW-28);
-      ctx.fillStyle='#ffffff'; ctx.font='bold 10px monospace';
+      ctx.fillStyle=p.color; ctx.font='bold 10px monospace';
+      ctx.fillText(numCh,tx,cy2-14,boxW-28);
+      ctx.fillStyle='#ffffff'; ctx.font='bold 14px monospace';
       ctx.fillText(rest,tx,cy2+2,boxW-28);
       if(sub){
-        ctx.fillStyle=`rgba(${rgb},0.65)`; ctx.font='7px monospace';
-        ctx.fillText(sub,tx,cy2+12,boxW-28);
+        ctx.fillStyle=`rgba(${rgb},0.7)`; ctx.font='9px monospace';
+        ctx.fillText(sub,tx,cy2+16,boxW-28);
       }
     } else if(isDone){
-      ctx.fillStyle='rgba(56,230,155,0.5)'; ctx.font='8px monospace';
-      ctx.fillText(numCh,tx,cy2-4,boxW-28);
-      ctx.fillStyle='rgba(56,230,155,0.45)'; ctx.font='8px monospace';
-      ctx.fillText(rest,tx,cy2+6,boxW-28);
+      ctx.fillStyle='rgba(56,230,155,0.55)'; ctx.font='10px monospace';
+      ctx.fillText(numCh,tx,cy2-6,boxW-28);
+      ctx.fillStyle='rgba(56,230,155,0.5)'; ctx.font='10px monospace';
+      ctx.fillText(rest,tx,cy2+7,boxW-28);
     } else {
-      ctx.fillStyle='rgba(60,75,100,0.7)'; ctx.font='8px monospace';
-      ctx.fillText(numCh,tx,cy2-4,boxW-28);
-      ctx.fillStyle='rgba(60,75,100,0.5)'; ctx.font='8px monospace';
-      ctx.fillText(rest,tx,cy2+6,boxW-28);
+      ctx.fillStyle='rgba(60,75,100,0.75)'; ctx.font='10px monospace';
+      ctx.fillText(numCh,tx,cy2-6,boxW-28);
+      ctx.fillStyle='rgba(60,75,100,0.55)'; ctx.font='10px monospace';
+      ctx.fillText(rest,tx,cy2+7,boxW-28);
     }
 
     // 화살표 연결
     if(i<n-1){
       const ax=x0+boxW+ARROW/2-4;
       const cy2=y0+boxH/2;
-      ctx.fillStyle=isDone?'rgba(56,230,155,0.55)':'rgba(30,40,60,0.8)';
-      ctx.font='bold 13px monospace';
-      ctx.fillText('›',ax,cy2+4.5);
+      ctx.fillStyle=isDone?'rgba(56,230,155,0.6)':'rgba(30,40,60,0.8)';
+      ctx.font='bold 17px monospace';
+      ctx.fillText('›',ax,cy2+6);
     }
   });
 
@@ -1309,22 +1309,22 @@ function drawPhaseBar(){
     ctx.beginPath(); ctx.moveTo(W-STATS_W,y0+4); ctx.lineTo(W-STATS_W,y0+boxH-4); ctx.stroke();
 
     // KILLS
-    ctx.fillStyle='rgba(56,230,155,0.5)'; ctx.font='7px monospace';
-    ctx.fillText('KILLS',sx,cy-5);
-    ctx.fillStyle=killed===total?'#38e69b':'#c8d0e0'; ctx.font='bold 13px monospace';
+    ctx.fillStyle='rgba(56,230,155,0.55)'; ctx.font='9px monospace';
+    ctx.fillText('KILLS',sx,cy-7);
+    ctx.fillStyle=killed===total?'#38e69b':'#c8d0e0'; ctx.font='bold 15px monospace';
     ctx.fillText(`${killed}/${total}`,sx,cy+8);
 
     // BREACH
     if(S.assetHits>0){
-      ctx.fillStyle='rgba(255,50,50,0.7)'; ctx.font='7px monospace';
-      ctx.fillText('BREACH',sx+42,cy-5);
-      ctx.fillStyle='#ff3333'; ctx.font='bold 13px monospace';
-      ctx.fillText(`${S.assetHits}`,sx+52,cy+8);
+      ctx.fillStyle='rgba(255,50,50,0.75)'; ctx.font='9px monospace';
+      ctx.fillText('BREACH',sx+42,cy-7);
+      ctx.fillStyle='#ff3333'; ctx.font='bold 15px monospace';
+      ctx.fillText(`${S.assetHits}`,sx+54,cy+8);
     }
 
     // T+ 경과 시간
-    ctx.fillStyle='rgba(90,100,120,0.5)'; ctx.font='8px monospace';
-    ctx.fillText('T+'+S.elapsed.toFixed(1)+'s',sx,y0+boxH+10<BAR_H?y0+boxH+10:cy+8);
+    ctx.fillStyle='rgba(90,100,120,0.55)'; ctx.font='9px monospace';
+    ctx.fillText('T+'+S.elapsed.toFixed(1)+'s',sx,cy+22);
   }
 }
 
