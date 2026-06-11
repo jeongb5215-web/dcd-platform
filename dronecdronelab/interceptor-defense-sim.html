@@ -507,10 +507,11 @@ function updateInterceptors(dt){
             target.alive=false;
             ic.state='struck';
           } else {
-            // Pk 실패 — 미스, 통과 후 재교전 판단
+            // Pk 실패 — 즉시 배회 드론 임무 부여, 인터셉터는 재교전 판단
             addMissEffect(ic.x,ic.y,ic.attempts);
             ic.missTimer=0;
             ic.state='missed';
+            taskLoiterer(ic.targetIdx);
           }
         } else {
           const spd=interceptorTerminalSpd();
@@ -537,8 +538,6 @@ function updateInterceptors(dt){
             ic.state='approach';
           } else {
             ic.state='exhausted';
-            // 배회 드론에 2차 교전 임무 부여
-            taskLoiterer(ic.targetIdx);
           }
         }
         return;
