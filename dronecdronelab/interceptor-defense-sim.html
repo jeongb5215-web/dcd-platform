@@ -153,13 +153,21 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
       </div>
     </div>
     <div class="sect">
-      <div class="sect-hd"><span style="color:var(--green)">◈</span> INTERCEPTOR — ODE</div>
+      <div class="sect-hd"><span style="color:var(--green)">◈</span> 요격 드론 — 발진기지②</div>
       <div class="sect-bd">
         <div class="tele-row"><span class="tele-k">상태</span><span class="tele-v" id="i-stat" style="color:var(--muted)">대기중</span></div>
         <div class="tele-row"><span class="tele-k">속도</span><span class="tele-v" id="i-speed">—</span></div>
         <div class="tele-row"><span class="tele-k">교전거리</span><span class="tele-v" id="i-dist">—</span></div>
         <div class="tele-row"><span class="tele-k">유도방식</span><span class="tele-v" id="i-mode" style="color:var(--muted)">—</span></div>
         <div class="tele-row"><span class="tele-k">종말유도</span><span class="tele-v" id="i-terminal" style="color:var(--muted)">대기</span></div>
+      </div>
+    </div>
+    <div class="sect">
+      <div class="sect-hd"><span style="color:var(--gold)">◉</span> 배회 드론 — 발진기지①</div>
+      <div class="sect-bd">
+        <div class="tele-row"><span class="tele-k">상태</span><span class="tele-v" id="l-stat" style="color:var(--muted)">대기중</span></div>
+        <div class="tele-row"><span class="tele-k">임무</span><span class="tele-v" style="color:var(--gold)">선회 대기</span></div>
+        <div class="tele-row"><span class="tele-k">모드</span><span class="tele-v" id="l-mode" style="color:var(--muted)">—</span></div>
       </div>
     </div>
     <div class="sect">
@@ -233,7 +241,15 @@ let simSpeed = 2;
 const S = {
   phaseIdx: 0, phaseTimer: 0, elapsed: 0,
   shahed: { x:0, y:0, vx:0, vy:0, alive:true, trail:[] },
+  // 요격 드론: 발진기지② (레이다 옆) — 탐지 즉시 발사 → 후방 교전
   interceptor: { x:0, y:0, angle:0, active:false, trail:[], wp:[], wpIdx:0, speed:0 },
+  // 배회 드론: 발진기지① (보호목표 옆) — 탐지 즉시 이륙 → 선회 대기
+  loiterer: {
+    x:0, y:0, angle:0, active:false, trail:[],
+    phase:'idle',   // idle → takeoff → transit → orbit
+    transitTimer:0,
+    orbitCenter:{x:0,y:0}, orbitRadius:0, orbitAngle:0, orbitAngSpd:0, speed:0,
+  },
   radar: { angle:0, active:false, pulse:0 },
   explosion: { active:false, x:0, y:0, t:0, particles:[] },
 };
@@ -301,9 +317,20 @@ function initState(){
     x:SS.x, y:SS.y, vx:dx/len*spd, vy:dy/len*spd, alive:true, trail:[]
   });
 
-  const IB = interceptorBase();
+  // 요격기 → 발진기지② (레이다 옆)
+  const IB2 = interceptorBase2();
   Object.assign(S.interceptor, {
-    x:IB.x, y:IB.y, angle:0, active:false, trail:[], wp:[], wpIdx:0, speed:0
+    x:IB2.x, y:IB2.y, angle:0, active:false, trail:[], wp:[], wpIdx:0, speed:0
+  });
+
+  // 배회기 → 발진기지① (보호목표 옆)
+  const IB1 = interceptorBase();
+  const orbitCenter = { x: A.x + W*0.11, y: A.y - H*0.20 };
+  const orbitRadius = W * 0.055;
+  Object.assign(S.loiterer, {
+    x:IB1.x, y:IB1.y, angle:0, active:false, trail:[],
+    phase:'idle', transitTimer:0,
+    orbitCenter, orbitRadius, orbitAngle:0, orbitAngSpd:0, speed:0,
   });
 
   const R = radarPos();
@@ -374,6 +401,13 @@ function update(dt){
     // ① 탐지: 시뮬 시작 즉시 — 짧은 레이다 핑 후 발사 전환
     case 'detect': {
       S.radar.active = true;
+      // 탐지와 동시에 배회 드론도 발진기지①에서 이륙
+      if(!S.loiterer.active){
+        S.loiterer.active   = true;
+        S.loiterer.phase    = 'takeoff';
+        S.loiterer.speed    = shahedSpeed() * 1.0;
+        S.loiterer.orbitAngSpd = S.loiterer.speed / S.loiterer.orbitRadius;
+      }
       if(S.phaseTimer > 1.2) setPhase('launch');
       break;
     }
@@ -428,8 +462,50 @@ function update(dt){
     }
   }
 
+  updateLoiterer(dt);
   tickExplosion(dt);
   updateUI();
+}
+
+// ── 배회 드론 업데이트 ────────────────────────
+function updateLoiterer(dt){
+  if(!S.loiterer.active) return;
+  const L = S.loiterer;
+
+  switch(L.phase){
+    case 'takeoff':
+      L.y -= L.speed*dt*0.32;
+      L.angle = -Math.PI/2;
+      L.transitTimer += dt;
+      if(L.transitTimer > 0.6) L.phase = 'transit';
+      break;
+
+    case 'transit': {
+      const oc=L.orbitCenter;
+      const tdx=oc.x-L.x, tdy=oc.y-L.y;
+      const d=Math.hypot(tdx,tdy);
+      if(d<14){
+        L.phase='orbit';
+        L.orbitAngle=Math.atan2(L.y-oc.y, L.x-oc.x);
+      } else {
+        L.x+=(tdx/d)*L.speed*dt; L.y+=(tdy/d)*L.speed*dt;
+        L.angle=Math.atan2(tdy,tdx);
+      }
+      break;
+    }
+
+    case 'orbit': {
+      const oc=L.orbitCenter;
+      L.orbitAngle += L.orbitAngSpd*dt;
+      L.x = oc.x + Math.cos(L.orbitAngle)*L.orbitRadius;
+      L.y = oc.y + Math.sin(L.orbitAngle)*L.orbitRadius;
+      L.angle = L.orbitAngle + Math.PI/2; // 진행방향 = 궤도 접선
+      break;
+    }
+  }
+
+  L.trail.push({x:L.x,y:L.y});
+  if(L.trail.length>400) L.trail.shift();
 }
 
 function pushTrail(e){
@@ -484,12 +560,63 @@ function drawFrame(){
   drawAsset();
   drawTrailShahed();
   drawTrailInterceptor();
+  drawLoiterer();
   drawShahed();
   drawInterceptor();
   drawExplosionFx();
   drawWaypointPreview();
   drawCornerHUD();
   if(phase()==='result') drawResultScreen();
+}
+
+function drawLoiterer(){
+  if(!S.loiterer.active) return;
+  const L=S.loiterer;
+
+  // 선회 궤도 원 (transit 시작 후부터 표시)
+  if(L.phase==='transit'||L.phase==='orbit'){
+    const oc=L.orbitCenter;
+    ctx.beginPath(); ctx.arc(oc.x,oc.y,L.orbitRadius,0,Math.PI*2);
+    ctx.strokeStyle='rgba(244,185,66,0.22)'; ctx.lineWidth=1.5;
+    ctx.setLineDash([4,7]); ctx.stroke(); ctx.setLineDash([]);
+    // 중심 점
+    ctx.beginPath(); ctx.arc(oc.x,oc.y,3,0,Math.PI*2);
+    ctx.fillStyle='rgba(244,185,66,0.35)'; ctx.fill();
+    // 레이블
+    ctx.fillStyle='rgba(244,185,66,0.45)'; ctx.font='8px monospace';
+    ctx.fillText('LOITER ORBIT', oc.x-26, oc.y+L.orbitRadius+12);
+  }
+
+  // 궤적
+  if(L.trail.length>1){
+    ctx.beginPath(); ctx.setLineDash([3,7]);
+    ctx.strokeStyle='rgba(244,185,66,0.18)'; ctx.lineWidth=1;
+    L.trail.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  // 글로우
+  const gl=ctx.createRadialGradient(L.x,L.y,0,L.x,L.y,16);
+  gl.addColorStop(0,'rgba(244,185,66,0.22)'); gl.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=gl; ctx.beginPath(); ctx.arc(L.x,L.y,16,0,Math.PI*2); ctx.fill();
+
+  // 드론 바디 (금색)
+  ctx.save(); ctx.translate(L.x,L.y); ctx.rotate(L.angle);
+  ctx.fillStyle='#f4b942';
+  ctx.beginPath(); ctx.moveTo(8,0); ctx.lineTo(-4,-5); ctx.lineTo(-2,0); ctx.lineTo(-4,5); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle='#f4b942'; ctx.lineWidth=1.5;
+  [[-1,-7],[-1,7]].forEach(([ox,oy])=>{
+    ctx.beginPath(); ctx.moveTo(-2,0); ctx.lineTo(ox,oy); ctx.stroke();
+    ctx.beginPath(); ctx.arc(ox,oy,2,0,Math.PI*2); ctx.fillStyle='#f4b942'; ctx.fill();
+  });
+  ctx.restore();
+
+  // 레이블
+  ctx.fillStyle='#f4b942'; ctx.font='bold 9px monospace';
+  ctx.fillText('배회 드론', L.x+12, L.y-8);
+  ctx.fillStyle='rgba(244,185,66,0.6)'; ctx.font='8px monospace';
+  const stLbl=L.phase==='orbit'?'◌ LOITERING':L.phase==='transit'?'→ TRANSIT':'↑ LAUNCH';
+  ctx.fillText(stLbl, L.x+12, L.y+3);
 }
 
 function drawBg(){
@@ -801,6 +928,15 @@ function updateUI(){
   } else {
     document.getElementById('i-dist').textContent='—';
   }
+
+  // 배회 드론 상태
+  const lPhaseMap={idle:'대기중',takeoff:'이륙 중',transit:'이동 중',orbit:'선회 중'};
+  const lModeMap ={idle:'—',takeoff:'↑ LAUNCH',transit:'→ TRANSIT',orbit:'◌ LOITERING'};
+  const lp=S.loiterer.phase;
+  document.getElementById('l-stat').textContent=lPhaseMap[lp]||'—';
+  document.getElementById('l-stat').style.color=lp==='orbit'?'#f4b942':lp==='idle'?'var(--muted)':'#f4b942';
+  document.getElementById('l-mode').textContent=lModeMap[lp]||'—';
+  document.getElementById('l-mode').style.color=lp==='orbit'?'#f4b942':'var(--muted)';
 
   document.getElementById('status-txt').textContent='// T+'+S.elapsed.toFixed(1)+'s  |  '+PHASES[S.phaseIdx].label;
 }
