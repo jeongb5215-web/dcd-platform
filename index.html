@@ -128,6 +128,14 @@
     .token-modal-cost{color:#f4b942;font-size:32px;font-weight:900;margin:12px 0 4px}
     .token-modal-bal{color:#94a3b8;font-size:12px;margin-bottom:22px}
     .token-modal-actions{display:flex;gap:10px;justify-content:center}
+    .pdf-preview-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);flex-direction:column;align-items:center;justify-content:flex-start;z-index:10000;padding:16px 20px}
+    .pdf-preview-header{width:100%;max-width:960px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .pdf-preview-title{color:#e2e8f0;font-size:12px;font-weight:900;letter-spacing:1px;font-family:var(--mono)}
+    .pdf-preview-close{background:none;border:1px solid rgba(255,255,255,.25);color:#94a3b8;padding:5px 16px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.5px}
+    .pdf-preview-close:hover{border-color:var(--red);color:var(--red)}
+    .pdf-preview-frame{width:100%;max-width:960px;height:calc(100vh - 80px);border:none;background:#fff}
+    .btn-preview{background:none;border:1px solid rgba(79,163,255,.4);color:#4fa3ff;padding:2px 10px;font-size:10px;font-weight:700;cursor:pointer;letter-spacing:.5px;margin-left:6px}
+    .btn-preview:hover{background:rgba(79,163,255,.1)}
     .logout-btn{background:none;border:1px solid #dde3ec;color:#6b7280;padding:6px 16px;font-size:12px;font-weight:600}
     .logout-btn:hover{border-color:var(--red);color:var(--red)}
     .app-content{flex:1;overflow:auto}
@@ -679,6 +687,14 @@
     </div>
   </footer>
 
+  <div id="pdf-preview-modal" class="pdf-preview-overlay" style="display:none" onclick="if(event.target===this)closePdfPreview()">
+    <div class="pdf-preview-header">
+      <span class="pdf-preview-title" id="pdf-preview-title">// PDF PREVIEW</span>
+      <button class="pdf-preview-close" onclick="closePdfPreview()">✕ 닫기</button>
+    </div>
+    <iframe id="pdf-preview-frame" class="pdf-preview-frame" src="" title="PDF Preview"></iframe>
+  </div>
+
   <div id="token-modal" class="token-modal-overlay" style="display:none" onclick="if(event.target===this)closeTokenModal()">
     <div class="token-modal-card">
       <div class="token-modal-title">// 문서 다운로드</div>
@@ -763,6 +779,14 @@
     ];
 
     let labItems=[
+      {
+        id: 10007,
+        title: '요격 드론 방어체계 시뮬레이션',
+        desc: 'Shahed-238이 15km 외곽에서 접근하는 상황에서 레이다 탐지 → EO/IR 카메라 식별 → 요격 드론 발사 → 후방 루프 기동 → AI 종말유도(Detection·Tracking·Terminal Guidance) → 최종 타격까지 전 교전 단계를 실시간 2D 캔버스 시뮬레이션. ODE 요격 패러다임 기반.',
+        url: 'https://jeongb5215-web.github.io/dcd-platform/dronecdronelab/interceptor-defense-sim.html',
+        thumb: '',
+        date: '2026-06-11'
+      },
       {
         id: 10006,
         title: 'Interceptor UAV Engagement Paradigms – Taxonomy',
@@ -1858,20 +1882,21 @@
       function canAccess(acc){const need={member:1,expert:2,admin:3}[acc]||1;return myRank>=need;}
       const imgHtml=images.length?`<div class="article-img-wrap">${images.map(img=>`<img class="article-img-thumb" src="${img.dataUrl||img.url}" alt="${img.name||''}" title="클릭하면 원본 보기" onclick="window.open(this.src,'_blank')">`).join('')}</div>`:'';
       const docHtml=docs.length?`<div class="article-docs">${docs.map(doc=>{
+        const previewUrl=(doc.dataUrl||doc.url||'').replace(/'/g,'%27');
+        const safeName=doc.name.replace(/'/g,'&#39;');
+        const previewBtn=previewUrl?`<button class="btn-preview" onclick="openPdfPreview('${previewUrl}','${safeName}')">미리보기</button>`:'';
         if(doc.tokenCost>0){
-          if(isAdmin)return`<a class="article-doc-item" href="${doc.dataUrl||doc.url}" download="${doc.name}" target="_blank" rel="noopener"><span>📄</span><span style="flex:1">${doc.name}</span><span style="color:#c8952a;font-size:11px">🪙 ${doc.tokenCost}</span><span class="access-lbl open">무료 (관리자)</span></a>`;
+          if(isAdmin)return`<div class="article-doc-item"><span>📄</span><span style="flex:1">${doc.name}</span><span style="color:#c8952a;font-size:11px">🪙 ${doc.tokenCost}</span>${previewBtn}<a class="access-lbl open" href="${doc.dataUrl||doc.url}" download="${doc.name}" target="_blank" rel="noopener" style="text-decoration:none">무료 (관리자)</a></div>`;
           if(!currentUser)return`<div class="article-doc-locked"><span>🔒</span><span style="flex:1">${doc.name}</span><span class="access-lbl expert">로그인 필요</span></div>`;
           const canAfford=currentTokens>=doc.tokenCost;
-          const safeUrl=(doc.dataUrl||doc.url||'').replace(/'/g,'%27');
-          const safeName=doc.name.replace(/'/g,'&#39;');
           return canAfford
-            ?`<div class="article-doc-item" style="cursor:pointer" onclick="tryDownloadDoc('${safeUrl}','${safeName}',${doc.tokenCost})"><span>📄</span><span style="flex:1">${doc.name}</span><span style="color:#c8952a;font-size:11px">🪙 ${doc.tokenCost}</span><span class="access-lbl open">다운로드</span></div>`
-            :`<div class="article-doc-locked"><span>🪙</span><span style="flex:1">${doc.name}</span><span style="color:#c8952a;font-size:11px">${doc.tokenCost} 토큰 필요 (현재: ${currentTokens})</span><span class="access-lbl expert">토큰 부족</span></div>`;
+            ?`<div class="article-doc-item" style="cursor:pointer"><span>📄</span><span style="flex:1">${doc.name}</span><span style="color:#c8952a;font-size:11px">🪙 ${doc.tokenCost}</span>${previewBtn}<span class="access-lbl open" onclick="tryDownloadDoc('${previewUrl}','${safeName}',${doc.tokenCost})" style="cursor:pointer">다운로드</span></div>`
+            :`<div class="article-doc-locked"><span>🪙</span><span style="flex:1">${doc.name}</span><span style="color:#c8952a;font-size:11px">${doc.tokenCost} 토큰 필요 (현재: ${currentTokens})</span>${previewBtn}<span class="access-lbl expert">토큰 부족</span></div>`;
         }
         const ok=canAccess(doc.access||'expert');
         const label={member:'전체',expert:'Expert+',admin:'Admin+'}[doc.access||'expert'];
         return ok
-          ?`<a class="article-doc-item" href="${doc.dataUrl||doc.url}" download="${doc.name}" target="_blank" rel="noopener"><span>📄</span><span style="flex:1">${doc.name}</span><span style="color:var(--dim);font-size:11px;font-family:var(--mono)">${doc.size||''}</span><span class="access-lbl open">다운로드</span></a>`
+          ?`<div class="article-doc-item"><span>📄</span><span style="flex:1">${doc.name}</span><span style="color:var(--dim);font-size:11px;font-family:var(--mono)">${doc.size||''}</span>${previewBtn}<a class="access-lbl open" href="${doc.dataUrl||doc.url}" download="${doc.name}" target="_blank" rel="noopener" style="text-decoration:none">다운로드</a></div>`
           :`<div class="article-doc-locked"><span>🔒</span><span style="flex:1">${doc.name}</span><span class="access-lbl expert">${label} 전용</span></div>`;
       }).join('')}</div>`:'';
       const linkHtml=links.length?`<div class="article-links">${links.map(lnk=>`<a class="article-link-item" href="${lnk.url}" target="_blank" rel="noopener">🔗 ${lnk.label||lnk.url}</a>`).join('')}</div>`:'';
@@ -1929,6 +1954,16 @@
       document.getElementById('token-modal').style.display='flex';
     }
     function closeTokenModal(){document.getElementById('token-modal').style.display='none';pendingTokenDownload=null;}
+    function openPdfPreview(url,name){
+      if(!url){showNotif('미리보기 URL이 없습니다.',true);return;}
+      document.getElementById('pdf-preview-title').textContent='// '+name;
+      document.getElementById('pdf-preview-frame').src=url;
+      document.getElementById('pdf-preview-modal').style.display='flex';
+    }
+    function closePdfPreview(){
+      document.getElementById('pdf-preview-modal').style.display='none';
+      document.getElementById('pdf-preview-frame').src='';
+    }
     function confirmTokenDownload(){
       if(!pendingTokenDownload)return;
       if(!deductTokens(currentUser,pendingTokenDownload.cost)){showNotif('토큰이 부족합니다.',true);closeTokenModal();return;}
