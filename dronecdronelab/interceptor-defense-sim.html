@@ -256,12 +256,12 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 //  PHASES
 // ══════════════════════════════════════════════
 const PHASES = [
-  {id:'detect', label:'① 레이다 탐지 — 군집 비행 감지', short:'① 레이다 탐지',  color:'#f4b942'},
-  {id:'launch', label:'② 요격 드론 군집 발사',           short:'② 요격 발사',    color:'#38e69b'},
-  {id:'engage', label:'③ AI 종말유도 — 1:1 교전',       short:'③ AI 종말유도', color:'#f97316'},
-  {id:'result', label:'④ 임무 완료 — 전 위협 제거',      short:'④ 임무 완료',   color:'#38e69b'},
+  {id:'detect', label:'① 레이다 탐지 + EO/IR — 군집 감지·식별', short:'① 레이다 + EO/IR', sub:'Radar Detection · EO/IR Identify', color:'#f4b942'},
+  {id:'launch', label:'② 요격 드론 군집 발사',                  short:'② 요격 발사',      sub:'Swarm Launch · Waypoint Nav',     color:'#38e69b'},
+  {id:'engage', label:'③ Last Mile — AI 종말유도',              short:'③ Last Mile',      sub:'AI Detection · Tracking · Terminal Guidance', color:'#f97316'},
+  {id:'result', label:'④ 임무 완료 — 전 위협 제거',             short:'④ 임무 완료',      sub:'Mission Complete',                color:'#38e69b'},
 ];
-const BAR_H = 48; // 상단 페이즈 바 높이 (px)
+const BAR_H = 54; // 상단 페이즈 바 높이 (px)
 
 // ══════════════════════════════════════════════
 //  CANVAS
@@ -314,7 +314,7 @@ const S = {
 // ══════════════════════════════════════════════
 function assetPos()         { return {x:W*0.08,  y:H*0.52}; }
 function radarPos()         { return {x:W*0.50,  y:H*0.50}; }
-function radarRange()       { return W*0.82; }
+function radarRange()       { return W*0.58; } // 10km (15km = W*0.87)
 function shahedStart()      { return {x:W*0.93,  y:H*0.10}; }
 function interceptorBase()  { const a=assetPos(); return {x:a.x+W*0.04,y:a.y-H*0.08}; }
 function interceptorBase2() { const r=radarPos(); return {x:r.x+28,    y:r.y-28}; }
@@ -789,7 +789,7 @@ function drawRadar(){
   });
   ctx.setLineDash([]);
   ctx.fillStyle='rgba(79,163,255,0.45)'; ctx.font='9px monospace';
-  ctx.fillText('20km',R.x+8,R.y-RR+12);
+  ctx.fillText('10km',R.x+8,R.y-RR+12);
   ctx.beginPath(); ctx.arc(R.x,R.y,5,0,Math.PI*2);
   ctx.fillStyle=S.radar.active?'rgba(79,163,255,0.7)':'rgba(79,163,255,0.3)'; ctx.fill();
   ctx.fillStyle='rgba(79,163,255,0.55)'; ctx.font='9px monospace';
@@ -1060,7 +1060,7 @@ function drawPhaseBar(){
   const ARROW=22;
   const STATS_W=110; // 오른쪽 킬/브리치 통계 영역
   const boxW=(W-PAD*2-STATS_W-(n-1)*ARROW)/n;
-  const boxH=34;
+  const boxH=42;
   const y0=(BAR_H-boxH)/2;
 
   // 배경 스트립
@@ -1134,28 +1134,33 @@ function drawPhaseBar(){
       ctx.fillText('✓',dotX-3.5,dotY+2.5);
     }
 
-    // 레이블 텍스트 (2줄: 숫자 + 내용)
+    // 레이블 텍스트 (활성: 3줄 / 그 외: 2줄)
     const fullShort=p.short||p.label;
-    // 첫 번째 문자(①②③④) 분리
-    const numCh=fullShort.slice(0,1);
-    const rest=fullShort.slice(2); // '① ' 이후
-    const tx=dotX+10, ty=y0+boxH/2;
+    const numCh=fullShort.slice(0,1);          // ①②③④
+    const rest=fullShort.slice(2);              // 주제목
+    const sub=p.sub||'';
+    const tx=dotX+10, cy2=y0+boxH/2;
 
     if(isActive){
-      ctx.fillStyle=p.color; ctx.font='bold 8px monospace';
-      ctx.fillText(numCh,tx,ty-4,boxW-30);
-      ctx.fillStyle='#ffffff'; ctx.font='bold 9px monospace';
-      ctx.fillText(rest,tx,ty+6,boxW-30);
+      // 3줄: 번호 / 주제목 / sub 설명
+      ctx.fillStyle=p.color; ctx.font='bold 7px monospace';
+      ctx.fillText(numCh,tx,cy2-9,boxW-28);
+      ctx.fillStyle='#ffffff'; ctx.font='bold 10px monospace';
+      ctx.fillText(rest,tx,cy2+2,boxW-28);
+      if(sub){
+        ctx.fillStyle=`rgba(${rgb},0.65)`; ctx.font='7px monospace';
+        ctx.fillText(sub,tx,cy2+12,boxW-28);
+      }
     } else if(isDone){
       ctx.fillStyle='rgba(56,230,155,0.5)'; ctx.font='8px monospace';
-      ctx.fillText(numCh,tx,ty-4,boxW-30);
+      ctx.fillText(numCh,tx,cy2-4,boxW-28);
       ctx.fillStyle='rgba(56,230,155,0.45)'; ctx.font='8px monospace';
-      ctx.fillText(rest,tx,ty+6,boxW-30);
+      ctx.fillText(rest,tx,cy2+6,boxW-28);
     } else {
       ctx.fillStyle='rgba(60,75,100,0.7)'; ctx.font='8px monospace';
-      ctx.fillText(numCh,tx,ty-4,boxW-30);
+      ctx.fillText(numCh,tx,cy2-4,boxW-28);
       ctx.fillStyle='rgba(60,75,100,0.5)'; ctx.font='8px monospace';
-      ctx.fillText(rest,tx,ty+6,boxW-30);
+      ctx.fillText(rest,tx,cy2+6,boxW-28);
     }
 
     // 화살표 연결
