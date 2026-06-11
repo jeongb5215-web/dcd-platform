@@ -42,8 +42,6 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .nav-btn:hover{color:var(--text)}
 .nav-btn.lab{color:var(--purple);border-color:rgba(139,92,246,.4);background:rgba(139,92,246,.08)}
 .wrap{flex:1;display:flex;overflow:hidden}
-
-/* ── 왼쪽 패널 (폰트 크게) ── */
 .ctrl{width:300px;min-width:300px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;flex-shrink:0}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 .sect{border:1px solid var(--border);border-radius:6px;overflow:hidden}
@@ -86,13 +84,21 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .spd-bar-label{font-size:9px;color:var(--muted);width:30px;text-align:right;flex-shrink:0}
 .spd-bar-track{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
 .spd-bar-fill{height:100%;border-radius:2px;transition:width .3s}
+.swarm-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:4px}
+.swarm-cell{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:3px;padding:3px 6px;font-size:10px;font-family:monospace;text-align:center;transition:all .3s}
+.swarm-cell.active{border-color:rgba(56,230,155,.5);color:var(--green)}
+.swarm-cell.terminal{border-color:rgba(249,115,22,.5);color:var(--orange)}
+.swarm-cell.struck{border-color:rgba(255,92,92,.3);color:rgba(255,92,92,.5);text-decoration:line-through}
+.swarm-cell.idle{color:var(--muted)}
+.kill-bar{width:100%;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:4px 0}
+.kill-fill{height:100%;background:var(--green);border-radius:4px;transition:width .5s}
 </style>
 </head>
 <body>
 <header>
   <div class="logo">Dc<span>D</span></div>
   <div style="width:1px;height:18px;background:var(--border)"></div>
-  <div class="hdr-t">INTERCEPTOR UAV DEFENSE SIM v1.1</div>
+  <div class="hdr-t">INTERCEPTOR UAV SWARM DEFENSE SIM v2.0</div>
   <div class="hdr-b">● LIVE SIM</div>
   <div class="hdr-btns">
     <a class="nav-btn" href="https://jeongb5215-web.github.io/dcd-platform/">← HOME</a>
@@ -106,7 +112,36 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
       <div class="sect-bd" id="phase-list"></div>
     </div>
     <div id="alert-box" class="alert-box idle">// STANDBY — 위협 감시중</div>
-    <!-- 속도 범례 + 슬라이더 -->
+
+    <!-- 군집 편대 설정 -->
+    <div class="sect">
+      <div class="sect-hd"><span style="color:var(--purple)">⬡</span> SWARM CONFIG</div>
+      <div class="sect-bd">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+          <span style="font-size:11px;color:var(--muted)">편대 규모</span>
+          <span class="tele-v" id="dc-val" style="color:var(--purple)">3 대</span>
+        </div>
+        <input type="range" class="spd-slider" id="drone-count" min="1" max="5" value="3" step="1"
+               style="accent-color:var(--purple)"
+               oninput="updateDroneCount(this.value)">
+        <div style="display:flex;justify-content:space-between">
+          <span style="font-size:9px;color:var(--border)">1 대</span>
+          <span style="font-size:9px;color:var(--border)">5 대</span>
+        </div>
+        <div style="margin-top:6px;display:flex;gap:6px">
+          <div style="flex:1;padding:5px;background:rgba(255,92,92,.06);border:1px solid rgba(255,92,92,.2);border-radius:3px;text-align:center">
+            <div style="font-size:9px;color:var(--muted)">공격</div>
+            <div style="font-size:13px;font-family:monospace;font-weight:700;color:var(--red)" id="dc-atk">3 대</div>
+          </div>
+          <div style="flex:1;padding:5px;background:rgba(56,230,155,.06);border:1px solid rgba(56,230,155,.2);border-radius:3px;text-align:center">
+            <div style="font-size:9px;color:var(--muted)">요격</div>
+            <div style="font-size:13px;font-family:monospace;font-weight:700;color:var(--green)" id="dc-int">3 대</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 속도 제어 -->
     <div class="sect">
       <div class="sect-hd"><span style="color:var(--gold)">⚡</span> SPEED CONTROL</div>
       <div class="sect-bd">
@@ -127,14 +162,14 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
           <div class="spd-bar-wrap">
             <span class="spd-bar-label" style="color:var(--red)">Shahed</span>
             <div class="spd-bar-track">
-              <div class="spd-bar-fill" id="legend-shahed-bar" style="background:var(--red);width:100%"></div>
+              <div class="spd-bar-fill" id="legend-shahed-bar" style="background:var(--red);width:67%"></div>
             </div>
             <span style="font-size:10px;font-family:monospace;color:var(--red);width:56px" id="legend-shahed-txt">300 km/h</span>
           </div>
           <div class="spd-bar-wrap">
             <span class="spd-bar-label" style="color:var(--green)">ODE</span>
             <div class="spd-bar-track">
-              <div class="spd-bar-fill" id="legend-ode-bar" style="background:var(--green);width:150%"></div>
+              <div class="spd-bar-fill" id="legend-ode-bar" style="background:var(--green);width:100%"></div>
             </div>
             <span style="font-size:10px;font-family:monospace;color:var(--green);width:56px" id="legend-ode-txt">450 km/h</span>
           </div>
@@ -142,26 +177,36 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
         </div>
       </div>
     </div>
+
+    <!-- 위협 군집 -->
     <div class="sect">
-      <div class="sect-hd"><span style="color:var(--red)">▲</span> THREAT — SHAHED-238</div>
+      <div class="sect-hd"><span style="color:var(--red)">▲</span> THREAT — SHAHED 군집</div>
       <div class="sect-bd">
         <div class="tele-row"><span class="tele-k">TYPE</span><span class="tele-v" style="color:var(--red)">SHAHED-238</span></div>
-        <div class="tele-row"><span class="tele-k">거리</span><span class="tele-v" id="t-dist">15.0 km</span></div>
+        <div class="tele-row"><span class="tele-k">생존 / 전체</span><span class="tele-v" id="t-alive" style="color:var(--red)">—</span></div>
+        <div class="tele-row"><span class="tele-k">선두 거리</span><span class="tele-v" id="t-dist">15.0 km</span></div>
         <div class="tele-row"><span class="tele-k">속도</span><span class="tele-v" id="t-speed">300 km/h</span></div>
-        <div class="tele-row"><span class="tele-k">고도</span><span class="tele-v" id="t-alt">120 m AGL</span></div>
         <div class="tele-row"><span class="tele-k">탐지상태</span><span class="tele-v" id="t-det" style="color:var(--muted)">미탐지</span></div>
+        <div style="margin-top:6px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">격추 현황</div>
+          <div class="kill-bar"><div class="kill-fill" id="kill-bar-fill" style="width:0%"></div></div>
+          <div style="font-size:10px;font-family:monospace;color:var(--green)" id="kill-count-txt">0 / 0 격추</div>
+        </div>
       </div>
     </div>
+
+    <!-- 요격 드론 군집 -->
     <div class="sect">
       <div class="sect-hd"><span style="color:var(--green)">◈</span> 요격 드론 — 발진기지②</div>
       <div class="sect-bd">
-        <div class="tele-row"><span class="tele-k">상태</span><span class="tele-v" id="i-stat" style="color:var(--muted)">대기중</span></div>
+        <div class="tele-row"><span class="tele-k">교전 중</span><span class="tele-v" id="i-active-cnt" style="color:var(--green)">—</span></div>
+        <div class="tele-row"><span class="tele-k">종말유도 중</span><span class="tele-v" id="i-terminal-cnt" style="color:var(--orange)">—</span></div>
         <div class="tele-row"><span class="tele-k">속도</span><span class="tele-v" id="i-speed">—</span></div>
-        <div class="tele-row"><span class="tele-k">교전거리</span><span class="tele-v" id="i-dist">—</span></div>
-        <div class="tele-row"><span class="tele-k">유도방식</span><span class="tele-v" id="i-mode" style="color:var(--muted)">—</span></div>
-        <div class="tele-row"><span class="tele-k">종말유도</span><span class="tele-v" id="i-terminal" style="color:var(--muted)">대기</span></div>
+        <div id="swarm-grid" class="swarm-grid" style="margin-top:4px"></div>
       </div>
     </div>
+
+    <!-- 배회 드론 -->
     <div class="sect">
       <div class="sect-hd"><span style="color:var(--gold)">◉</span> 배회 드론 — 발진기지①</div>
       <div class="sect-bd">
@@ -170,17 +215,18 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
         <div class="tele-row"><span class="tele-k">모드</span><span class="tele-v" id="l-mode" style="color:var(--muted)">—</span></div>
       </div>
     </div>
+
     <div class="sect">
       <div class="sect-hd" onclick="toggleInfo(this)"><span style="color:var(--purple)">ℹ</span> SCENARIO INFO <span style="margin-left:auto;font-size:9px">▼</span></div>
       <div class="sect-bd" id="info-bd" style="display:none">
         <div style="font-size:11px;color:var(--muted);line-height:1.9">
-          <b style="color:var(--text)">공격체:</b> Shahed-238 날개형 UCAV<br>
+          <b style="color:var(--text)">공격체:</b> Shahed-238 UCAV × 1~5대<br>
           <b style="color:var(--text)">탐지:</b> 중앙 레이다 — 비행 즉시 탐지<br>
-          <b style="color:var(--text)">요격:</b> 탐지 즉시 ODE 드론 발사<br>
-          <b style="color:var(--text)">기동:</b> 후방 루프 — Shahed 6시 접근<br>
+          <b style="color:var(--text)">요격:</b> ODE 드론 × 1~5대 순차 발사<br>
+          <b style="color:var(--text)">기동:</b> 후방 루프 — 1:1 매칭 교전<br>
           <b style="color:var(--text)">종말유도:</b> AI Detection · Tracking<br>
           <b style="color:var(--text)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> Terminal Guidance<br>
-          <b style="color:var(--text)">타격:</b> 후방 폭발구역 직격
+          <b style="color:var(--text)">배회:</b> 발진기지① → 선회 대기
         </div>
       </div>
     </div>
@@ -204,15 +250,13 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 
 <script>
 // ══════════════════════════════════════════════
-//  PHASES  (EO/IR 식별 제거, 탐지→발사→후방접근→종말→타격)
+//  PHASES
 // ══════════════════════════════════════════════
 const PHASES = [
-  {id:'detect',   label:'① 레이다 탐지 — 비행 즉시',     color:'#f4b942'},
-  {id:'launch',   label:'② 요격 드론 즉시 발사',          color:'#38e69b'},
-  {id:'approach', label:'③ 후방 루프 기동',               color:'#8b5cf6'},
-  {id:'terminal', label:'④ AI 종말유도 — 후방 추격',      color:'#f97316'},
-  {id:'strike',   label:'⑤ 최종 타격 — 폭발구역 직격',   color:'#ff5c5c'},
-  {id:'result',   label:'⑥ 임무 완료',                   color:'#38e69b'},
+  {id:'detect', label:'① 레이다 탐지 — 군집 비행 감지',  color:'#f4b942'},
+  {id:'launch', label:'② 요격 드론 군집 발사',            color:'#38e69b'},
+  {id:'engage', label:'③ AI 종말유도 — 1:1 교전',        color:'#f97316'},
+  {id:'result', label:'④ 임무 완료 — 전 위협 제거',       color:'#38e69b'},
 ];
 
 // ══════════════════════════════════════════════
@@ -231,115 +275,135 @@ window.addEventListener('resize', ()=>{ resize(); if(!running) drawFrame(); });
 resize();
 
 // ══════════════════════════════════════════════
-//  STATE
+//  GLOBALS
 // ══════════════════════════════════════════════
 let running  = false;
 let animId   = null;
 let lastTs   = null;
 let simSpeed = 2;
+let droneCount = 3;
+let shahedSpeedKmh = 300;
 
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
 const S = {
-  phaseIdx: 0, phaseTimer: 0, elapsed: 0,
-  shahed: { x:0, y:0, vx:0, vy:0, alive:true, trail:[] },
-  // 요격 드론: 발진기지② (레이다 옆) — 탐지 즉시 발사 → 후방 교전
-  interceptor: { x:0, y:0, angle:0, active:false, trail:[], wp:[], wpIdx:0, speed:0 },
-  // 배회 드론: 발진기지① (보호목표 옆) — 탐지 즉시 이륙 → 선회 대기
+  phaseIdx:0, phaseTimer:0, elapsed:0,
+  shadeds: [],       // array of shahed objects
+  interceptors: [],  // array of interceptor objects
   loiterer: {
-    x:0, y:0, angle:0, active:false, trail:[],
-    phase:'idle',   // idle → takeoff → transit → orbit
-    transitTimer:0,
-    orbitCenter:{x:0,y:0}, orbitRadius:0, orbitAngle:0, orbitAngSpd:0, speed:0,
+    x:0,y:0,angle:0,active:false,trail:[],
+    phase:'idle',transitTimer:0,
+    orbitCenter:{x:0,y:0},orbitRadius:0,orbitAngle:0,orbitAngSpd:0,speed:0,
   },
-  radar: { angle:0, active:false, pulse:0 },
-  explosion: { active:false, x:0, y:0, t:0, particles:[] },
+  radar: {angle:0,active:false,pulse:0},
+  explosions: [],    // array of explosion objects
 };
 
-// ── 속도 설정 (180~300 km/h) ────────────────
-let shahedSpeedKmh = 300; // 기본값
+// ══════════════════════════════════════════════
+//  GEOMETRY
+// ══════════════════════════════════════════════
+function assetPos()         { return {x:W*0.08,  y:H*0.52}; }
+function radarPos()         { return {x:W*0.50,  y:H*0.50}; }
+function radarRange()       { return W*0.82; }
+function shahedStart()      { return {x:W*0.93,  y:H*0.10}; }
+function interceptorBase()  { const a=assetPos(); return {x:a.x+W*0.04,y:a.y-H*0.08}; }
+function interceptorBase2() { const r=radarPos(); return {x:r.x+28,    y:r.y-28}; }
+
+// ══════════════════════════════════════════════
+//  SPEED
+// ══════════════════════════════════════════════
+function shahedSpeed()           { return (W*0.85/9)*(shahedSpeedKmh/300); }
+function interceptorApproachSpd(){ return shahedSpeed()*2.2; }
+function interceptorTerminalSpd(){ return shahedSpeed()*2.8; }
 
 function updateShahedSpeed(v){
   shahedSpeedKmh = parseInt(v);
-  const odeKmh = Math.round(shahedSpeedKmh * 1.5);
-  document.getElementById('s-spd-v').textContent = shahedSpeedKmh + ' km/h';
-  document.getElementById('legend-shahed-txt').textContent = shahedSpeedKmh + ' km/h';
-  document.getElementById('legend-ode-txt').textContent    = odeKmh + ' km/h';
-  document.getElementById('t-speed').textContent = shahedSpeedKmh + ' km/h';
-  // 범례 바 너비: Shahed = 기준, ODE = 1.5배
-  const maxKmh = 300 * 1.5; // 450 = 100%
-  const sw = (shahedSpeedKmh / maxKmh * 100).toFixed(0) + '%';
-  const ow = (odeKmh / maxKmh * 100).toFixed(0) + '%';
-  document.getElementById('legend-shahed-bar').style.width = sw;
-  document.getElementById('legend-ode-bar').style.width    = ow;
-  // 실행 중이면 현재 Shahed 속도도 갱신
+  const odeKmh = Math.round(shahedSpeedKmh*1.5);
+  document.getElementById('s-spd-v').textContent       = shahedSpeedKmh+' km/h';
+  document.getElementById('legend-shahed-txt').textContent = shahedSpeedKmh+' km/h';
+  document.getElementById('legend-ode-txt').textContent    = odeKmh+' km/h';
+  document.getElementById('t-speed').textContent           = shahedSpeedKmh+' km/h';
+  const maxKmh=450;
+  document.getElementById('legend-shahed-bar').style.width=(shahedSpeedKmh/maxKmh*100).toFixed(0)+'%';
+  document.getElementById('legend-ode-bar').style.width   =(odeKmh/maxKmh*100).toFixed(0)+'%';
   if(running){
-    const len=Math.hypot(S.shahed.vx,S.shahed.vy);
-    if(len>0){
-      const nx=S.shahed.vx/len, ny=S.shahed.vy/len;
-      const spd=shahedSpeed();
-      S.shahed.vx=nx*spd; S.shahed.vy=ny*spd;
-    }
-    S.interceptor.speed=interceptorApproachSpd();
+    S.shadeds.forEach(s=>{
+      if(!s.alive) return;
+      const len=Math.hypot(s.vx,s.vy);
+      if(len>0){ const spd=shahedSpeed(); s.vx=(s.vx/len)*spd; s.vy=(s.vy/len)*spd; }
+    });
   }
 }
 
-// ── Geometry ──────────────────────────────────
-function assetPos()        { return { x: W*0.08, y: H*0.52 }; }
-function radarPos()        { return { x: W*0.50, y: H*0.50 }; }
-// 20km 탐지거리: 15km=W*0.87 → 20km=W*1.16 → 캔버스 넘어감, 시각적으로 W*0.82 사용 (20km 레이블)
-function radarRange()      { return W * 0.82; }
-function shahedStart()     { return { x: W*0.93, y: H*0.10 }; }
-function interceptorBase() { const a=assetPos(); return { x:a.x+W*0.04, y:a.y-H*0.08 }; }
-// 레이다 옆 발진기지 (중앙 레이다 우측 상단)
-function interceptorBase2(){ const r=radarPos(); return { x:r.x+28, y:r.y-28 }; }
-
-// Visual speeds (px/s at ×1)  — shahedSpeedKmh 비율 적용
-// 300km/h 기준: cross W*0.85 in 9s → 기본 px/s
-function shahedSpeed(){
-  const base=(W*0.85)/9;
-  return base*(shahedSpeedKmh/300);
+function updateDroneCount(v){
+  droneCount = parseInt(v);
+  document.getElementById('dc-val').textContent  = droneCount+' 대';
+  document.getElementById('dc-atk').textContent  = droneCount+' 대';
+  document.getElementById('dc-int').textContent  = droneCount+' 대';
+  if(!running) initState();
 }
-function interceptorApproachSpd(){ return shahedSpeed()*2.2; }
-function interceptorTerminalSpd(){ return shahedSpeed()*2.8; }
 
 // ══════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════
-function initState(){
-  const A  = assetPos();
+function getShadedFormation(){
   const SS = shahedStart();
-  const dx = A.x - SS.x, dy = (A.y+H*0.04) - SS.y;
+  const A  = assetPos();
+  const dx = A.x-SS.x, dy=(A.y+H*0.04)-SS.y;
   const len = Math.hypot(dx,dy);
-  const spd = shahedSpeed();
+  const nx=dx/len, ny=dy/len;
+  const px=-ny, py=nx; // perpendicular to heading
+  const spacing=42;
+  return Array.from({length:droneCount},(_,i)=>{
+    const t=i-(droneCount-1)/2;
+    return {x:SS.x+px*t*spacing, y:SS.y+py*t*spacing};
+  });
+}
 
+function initState(){
   S.phaseIdx=0; S.phaseTimer=0; S.elapsed=0;
+  S.explosions=[];
 
-  Object.assign(S.shahed, {
-    x:SS.x, y:SS.y, vx:dx/len*spd, vy:dy/len*spd, alive:true, trail:[]
+  // Shadeds
+  const A  = assetPos();
+  const positions = getShadedFormation();
+  S.shadeds = positions.map((pos,i)=>{
+    const dx=A.x-pos.x, dy=(A.y+H*0.04)-pos.y;
+    const len=Math.hypot(dx,dy);
+    const spd=shahedSpeed();
+    return {id:i, x:pos.x, y:pos.y, vx:dx/len*spd, vy:dy/len*spd, alive:true, trail:[]};
   });
 
-  // 요격기 → 발진기지② (레이다 옆)
-  const IB2 = interceptorBase2();
-  Object.assign(S.interceptor, {
-    x:IB2.x, y:IB2.y, angle:0, active:false, trail:[], wp:[], wpIdx:0, speed:0
+  // Interceptors (all from base2, staggered launch)
+  const IB2=interceptorBase2();
+  S.interceptors = Array.from({length:droneCount},(_,i)=>({
+    id:i,
+    x:IB2.x+(i-(droneCount-1)/2)*10,
+    y:IB2.y+(i-(droneCount-1)/2)*7,
+    angle:0, active:false, trail:[],
+    wp:[], wpIdx:0, speed:0,
+    state:'idle',   // idle→launch_wait→launching→approach→terminal→struck
+    launchDelay:i*0.32,
+    launchTimer:0,
+    postLaunchTimer:0,
+    targetIdx:i,
+  }));
+
+  // Loiterer
+  const IB1=interceptorBase();
+  const orbitCenter={x:A.x+W*0.11, y:A.y-H*0.20};
+  const orbitRadius=W*0.055;
+  Object.assign(S.loiterer,{
+    x:IB1.x,y:IB1.y,angle:0,active:false,trail:[],
+    phase:'idle',transitTimer:0,
+    orbitCenter,orbitRadius,orbitAngle:0,orbitAngSpd:0,speed:0,
   });
 
-  // 배회기 → 발진기지① (보호목표 옆)
-  const IB1 = interceptorBase();
-  const orbitCenter = { x: A.x + W*0.11, y: A.y - H*0.20 };
-  const orbitRadius = W * 0.055;
-  Object.assign(S.loiterer, {
-    x:IB1.x, y:IB1.y, angle:0, active:false, trail:[],
-    phase:'idle', transitTimer:0,
-    orbitCenter, orbitRadius, orbitAngle:0, orbitAngSpd:0, speed:0,
-  });
-
-  const R = radarPos();
-  S.radar.angle  = Math.atan2(SS.y-R.y, SS.x-R.x);
-  S.radar.active = false;
-  S.radar.pulse  = 0;
-
-  S.explosion.active = false;
-  S.explosion.particles = [];
+  const R=radarPos();
+  const SS=shahedStart();
+  S.radar.angle=Math.atan2(SS.y-R.y,SS.x-R.x);
+  S.radar.active=false; S.radar.pulse=0;
 
   updateUI(); drawFrame();
 }
@@ -349,161 +413,156 @@ function initState(){
 // ══════════════════════════════════════════════
 function phase(){ return PHASES[S.phaseIdx].id; }
 function setPhase(id){
-  const idx = PHASES.findIndex(p=>p.id===id);
+  const idx=PHASES.findIndex(p=>p.id===id);
   if(idx<0) return;
   S.phaseIdx=idx; S.phaseTimer=0; updateUI();
 }
 
 // ══════════════════════════════════════════════
-//  PATH: 후방 루프 경유점
-//  Shahed가 좌하단으로 이동 → 후방(우상단)으로 접근
+//  WAYPOINTS: plan behind approach for one interceptor
 // ══════════════════════════════════════════════
-function planBehindPath(){
-  const len = Math.hypot(S.shahed.vx, S.shahed.vy);
-  const fnx = S.shahed.vx/len, fny = S.shahed.vy/len; // Shahed 진행 방향
-  const bx  = -fnx, by = -fny;                         // Shahed 후방 방향
-  const rx  = -fny, ry = fnx;                          // 오른쪽 수직
+function planBehindPathFor(ic){
+  const target=S.shadeds[ic.targetIdx];
+  if(!target||!target.alive) return;
+  const len=Math.hypot(target.vx,target.vy);
+  const fnx=target.vx/len, fny=target.vy/len;
+  const bx=-fnx, by=-fny;
+  const rx=-fny, ry=fnx;
+  const sx=target.x, sy=target.y;
+  const wp1={x:sx+bx*W*0.06+rx*W*0.07, y:sy+by*W*0.06+ry*W*0.07};
+  const wp2={x:sx+bx*W*0.14,           y:sy+by*W*0.14};
+  ic.wp=[wp1,wp2]; ic.wpIdx=0;
+}
 
-  const sx = S.shahed.x, sy = S.shahed.y;
-
-  // WP1: Shahed 옆쪽 상공 → 충돌 없이 우회
-  const wp1 = { x: sx + bx*W*0.06 + rx*W*0.07, y: sy + by*W*0.06 + ry*W*0.07 };
-  // WP2: Shahed 후방 (6시 위치) → 여기서 추격 전환
-  const wp2 = { x: sx + bx*W*0.14, y: sy + by*W*0.14 };
-
-  S.interceptor.wp    = [wp1, wp2];
-  S.interceptor.wpIdx = 0;
+function moveWaypointsFor(ic,dt){
+  if(ic.wpIdx>=ic.wp.length) return true;
+  const wp=ic.wp[ic.wpIdx];
+  const dx=wp.x-ic.x, dy=wp.y-ic.y;
+  const dist=Math.hypot(dx,dy);
+  if(dist<10){ ic.wpIdx++; return false; }
+  const move=ic.speed*dt;
+  ic.x+=(dx/dist)*move; ic.y+=(dy/dist)*move;
+  ic.angle=Math.atan2(dy,dx);
+  return false;
 }
 
 // ══════════════════════════════════════════════
-//  UPDATE
+//  INTERCEPTORS STATE MACHINE
 // ══════════════════════════════════════════════
-function update(dt){
-  S.elapsed    += dt;
-  S.phaseTimer += dt;
-  const ph = phase();
+function updateInterceptors(dt){
+  S.interceptors.forEach(ic=>{
+    switch(ic.state){
+      case 'idle': return;
 
-  // Shahed 이동 (detect 이후)
-  if(S.shahed.alive && ph!=='result'){
-    pushTrail(S.shahed);
-    S.shahed.x += S.shahed.vx*dt;
-    S.shahed.y += S.shahed.vy*dt;
-  }
+      case 'launch_wait':
+        ic.launchTimer+=dt;
+        if(ic.launchTimer>=ic.launchDelay){
+          ic.active=true;
+          ic.speed=interceptorApproachSpd();
+          ic.state='launching';
+          ic.postLaunchTimer=0;
+        }
+        return;
 
-  // 레이다 스윕
-  if(S.radar.active){
-    S.radar.angle += dt*1.6;
-    S.radar.pulse   = (S.radar.pulse+dt*2.8)%1;
-  }
+      case 'launching':
+        ic.postLaunchTimer+=dt;
+        ic.y-=ic.speed*dt*0.28;
+        ic.angle=-Math.PI/2;
+        pushTrail(ic);
+        if(ic.postLaunchTimer>0.7){
+          planBehindPathFor(ic);
+          ic.state='approach';
+        }
+        return;
 
-  switch(ph){
-
-    // ① 탐지: 시뮬 시작 즉시 — 짧은 레이다 핑 후 발사 전환
-    case 'detect': {
-      S.radar.active = true;
-      // 탐지와 동시에 배회 드론도 발진기지①에서 이륙
-      if(!S.loiterer.active){
-        S.loiterer.active   = true;
-        S.loiterer.phase    = 'takeoff';
-        S.loiterer.speed    = shahedSpeed() * 1.0;
-        S.loiterer.orbitAngSpd = S.loiterer.speed / S.loiterer.orbitRadius;
+      case 'approach': {
+        const done=moveWaypointsFor(ic,dt);
+        pushTrail(ic);
+        if(done) ic.state='terminal';
+        return;
       }
-      if(S.phaseTimer > 1.2) setPhase('launch');
-      break;
-    }
 
-    // ② 발사: 탐지와 동시 이륙
-    case 'launch': {
-      if(!S.interceptor.active){
-        S.interceptor.active = true;
-        S.interceptor.speed  = interceptorApproachSpd();
+      case 'terminal': {
+        const target=S.shadeds[ic.targetIdx];
+        if(!target||!target.alive){ ic.state='struck'; return; }
+        const dx=target.x-ic.x, dy=target.y-ic.y;
+        const dist=Math.hypot(dx,dy);
+        if(dist<10){
+          addExplosion(target.x,target.y);
+          target.alive=false;
+          ic.state='struck';
+        } else {
+          const spd=interceptorTerminalSpd();
+          ic.x+=(dx/dist)*spd*dt;
+          ic.y+=(dy/dist)*spd*dt;
+          ic.angle=Math.atan2(dy,dx);
+        }
+        pushTrail(ic);
+        return;
       }
-      pushTrail(S.interceptor);
-      S.interceptor.y  -= S.interceptor.speed*dt*0.28;
-      S.interceptor.angle = -Math.PI/2;
-      if(S.phaseTimer > 0.7){
-        planBehindPath();
-        setPhase('approach');
-      }
-      break;
-    }
 
-    // ③ 후방 루프 기동
-    case 'approach': {
-      const done = moveWaypoints(dt, S.interceptor.speed);
-      pushTrail(S.interceptor);
-      if(done) setPhase('terminal');
-      break;
+      case 'struck': return;
     }
-
-    // ④ AI 종말유도 — 후방 순수 추격
-    case 'terminal': {
-      const tx=S.shahed.x, ty=S.shahed.y;
-      const dx=tx-S.interceptor.x, dy=ty-S.interceptor.y;
-      const dist=Math.hypot(dx,dy);
-      const spd=interceptorTerminalSpd();
-      if(dist<10){
-        triggerExplosion(S.shahed.x, S.shahed.y);
-        S.shahed.alive=false;
-        setPhase('strike');
-      } else {
-        S.interceptor.x += (dx/dist)*spd*dt;
-        S.interceptor.y += (dy/dist)*spd*dt;
-        S.interceptor.angle = Math.atan2(dy,dx);
-      }
-      pushTrail(S.interceptor);
-      break;
-    }
-
-    case 'strike': {
-      tickExplosion(dt);
-      if(S.phaseTimer>3.0) setPhase('result');
-      break;
-    }
-  }
-
-  updateLoiterer(dt);
-  tickExplosion(dt);
-  updateUI();
+  });
 }
 
-// ── 배회 드론 업데이트 ────────────────────────
+// ══════════════════════════════════════════════
+//  EXPLOSIONS
+// ══════════════════════════════════════════════
+function addExplosion(x,y){
+  const exp={active:true,x,y,t:0,particles:[]};
+  for(let i=0;i<40;i++){
+    const a=(Math.PI*2/40)*i+(Math.random()-.5)*0.4;
+    const sp=20+Math.random()*100;
+    exp.particles.push({
+      x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,
+      sz:1.5+Math.random()*4.5,
+      col:['#ff5c5c','#f4b942','#f97316','#fff','#ffcc44'][Math.floor(Math.random()*5)],
+    });
+  }
+  S.explosions.push(exp);
+}
+
+function tickExplosions(dt){
+  S.explosions.forEach(e=>{
+    if(!e.active) return;
+    e.t+=dt;
+    e.particles.forEach(p=>{ p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=28*dt; p.life-=dt; });
+    e.particles=e.particles.filter(p=>p.life>0);
+    if(e.t>3.5) e.active=false;
+  });
+  S.explosions=S.explosions.filter(e=>e.active);
+}
+
+// ══════════════════════════════════════════════
+//  LOITERER
+// ══════════════════════════════════════════════
 function updateLoiterer(dt){
   if(!S.loiterer.active) return;
-  const L = S.loiterer;
-
+  const L=S.loiterer;
   switch(L.phase){
     case 'takeoff':
-      L.y -= L.speed*dt*0.32;
-      L.angle = -Math.PI/2;
-      L.transitTimer += dt;
-      if(L.transitTimer > 0.6) L.phase = 'transit';
+      L.y-=L.speed*dt*0.32; L.angle=-Math.PI/2;
+      L.transitTimer+=dt;
+      if(L.transitTimer>0.6) L.phase='transit';
       break;
-
-    case 'transit': {
+    case 'transit':{
       const oc=L.orbitCenter;
       const tdx=oc.x-L.x, tdy=oc.y-L.y;
       const d=Math.hypot(tdx,tdy);
-      if(d<14){
-        L.phase='orbit';
-        L.orbitAngle=Math.atan2(L.y-oc.y, L.x-oc.x);
-      } else {
-        L.x+=(tdx/d)*L.speed*dt; L.y+=(tdy/d)*L.speed*dt;
-        L.angle=Math.atan2(tdy,tdx);
-      }
+      if(d<14){ L.phase='orbit'; L.orbitAngle=Math.atan2(L.y-oc.y,L.x-oc.x); }
+      else { L.x+=(tdx/d)*L.speed*dt; L.y+=(tdy/d)*L.speed*dt; L.angle=Math.atan2(tdy,tdx); }
       break;
     }
-
-    case 'orbit': {
+    case 'orbit':{
       const oc=L.orbitCenter;
-      L.orbitAngle += L.orbitAngSpd*dt;
-      L.x = oc.x + Math.cos(L.orbitAngle)*L.orbitRadius;
-      L.y = oc.y + Math.sin(L.orbitAngle)*L.orbitRadius;
-      L.angle = L.orbitAngle + Math.PI/2; // 진행방향 = 궤도 접선
+      L.orbitAngle+=L.orbitAngSpd*dt;
+      L.x=oc.x+Math.cos(L.orbitAngle)*L.orbitRadius;
+      L.y=oc.y+Math.sin(L.orbitAngle)*L.orbitRadius;
+      L.angle=L.orbitAngle+Math.PI/2;
       break;
     }
   }
-
   L.trail.push({x:L.x,y:L.y});
   if(L.trail.length>400) L.trail.shift();
 }
@@ -513,40 +572,53 @@ function pushTrail(e){
   if(e.trail.length>200) e.trail.shift();
 }
 
-function moveWaypoints(dt, speed){
-  if(S.interceptor.wpIdx >= S.interceptor.wp.length) return true;
-  const wp=S.interceptor.wp[S.interceptor.wpIdx];
-  const dx=wp.x-S.interceptor.x, dy=wp.y-S.interceptor.y;
-  const dist=Math.hypot(dx,dy);
-  if(dist<10){ S.interceptor.wpIdx++; return false; }
-  const move=speed*dt;
-  S.interceptor.x += (dx/dist)*move;
-  S.interceptor.y += (dy/dist)*move;
-  S.interceptor.angle = Math.atan2(dy,dx);
-  return false;
-}
+// ══════════════════════════════════════════════
+//  UPDATE
+// ══════════════════════════════════════════════
+function update(dt){
+  S.elapsed+=dt; S.phaseTimer+=dt;
+  const ph=phase();
 
-// ══════════════════════════════════════════════
-//  EXPLOSION
-// ══════════════════════════════════════════════
-function triggerExplosion(x,y){
-  S.explosion.active=true; S.explosion.x=x; S.explosion.y=y; S.explosion.t=0;
-  S.explosion.particles=[];
-  for(let i=0;i<40;i++){
-    const a=(Math.PI*2/40)*i+(Math.random()-.5)*0.4;
-    const sp=20+Math.random()*100;
-    S.explosion.particles.push({
-      x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,
-      sz:1.5+Math.random()*4.5,
-      col:['#ff5c5c','#f4b942','#f97316','#fff','#ffcc44'][Math.floor(Math.random()*5)],
-    });
+  // Move all alive shadeds
+  S.shadeds.forEach(s=>{
+    if(!s.alive) return;
+    pushTrail(s);
+    s.x+=s.vx*dt; s.y+=s.vy*dt;
+  });
+
+  // Radar sweep
+  if(S.radar.active){
+    S.radar.angle+=dt*1.6;
+    S.radar.pulse=(S.radar.pulse+dt*2.8)%1;
   }
-}
-function tickExplosion(dt){
-  if(!S.explosion.active) return;
-  S.explosion.t+=dt;
-  S.explosion.particles.forEach(p=>{ p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=28*dt; p.life-=dt*1.0; });
-  S.explosion.particles=S.explosion.particles.filter(p=>p.life>0);
+
+  switch(ph){
+    case 'detect':
+      S.radar.active=true;
+      if(!S.loiterer.active){
+        S.loiterer.active=true; S.loiterer.phase='takeoff';
+        S.loiterer.speed=shahedSpeed()*1.0;
+        S.loiterer.orbitAngSpd=S.loiterer.speed/S.loiterer.orbitRadius;
+      }
+      if(S.phaseTimer>1.2) setPhase('launch');
+      break;
+
+    case 'launch':
+      S.interceptors.forEach(ic=>{ if(ic.state==='idle') ic.state='launch_wait'; });
+      updateInterceptors(dt);
+      // Transition once all interceptors are past launch_wait
+      if(S.phaseTimer>(droneCount*0.35+1.2)) setPhase('engage');
+      break;
+
+    case 'engage':
+      updateInterceptors(dt);
+      if(S.shadeds.every(s=>!s.alive)) setPhase('result');
+      break;
+  }
+
+  updateLoiterer(dt);
+  tickExplosions(dt);
+  updateUI();
 }
 
 // ══════════════════════════════════════════════
@@ -558,65 +630,12 @@ function drawFrame(){
   drawKmGrid();
   drawRadar();
   drawAsset();
-  drawTrailShahed();
-  drawTrailInterceptor();
   drawLoiterer();
-  drawShahed();
-  drawInterceptor();
-  drawExplosionFx();
-  drawWaypointPreview();
+  drawShadedSwarm();
+  drawInterceptorSwarm();
+  drawExplosions();
   drawCornerHUD();
   if(phase()==='result') drawResultScreen();
-}
-
-function drawLoiterer(){
-  if(!S.loiterer.active) return;
-  const L=S.loiterer;
-
-  // 선회 궤도 원 (transit 시작 후부터 표시)
-  if(L.phase==='transit'||L.phase==='orbit'){
-    const oc=L.orbitCenter;
-    ctx.beginPath(); ctx.arc(oc.x,oc.y,L.orbitRadius,0,Math.PI*2);
-    ctx.strokeStyle='rgba(244,185,66,0.22)'; ctx.lineWidth=1.5;
-    ctx.setLineDash([4,7]); ctx.stroke(); ctx.setLineDash([]);
-    // 중심 점
-    ctx.beginPath(); ctx.arc(oc.x,oc.y,3,0,Math.PI*2);
-    ctx.fillStyle='rgba(244,185,66,0.35)'; ctx.fill();
-    // 레이블
-    ctx.fillStyle='rgba(244,185,66,0.45)'; ctx.font='8px monospace';
-    ctx.fillText('LOITER ORBIT', oc.x-26, oc.y+L.orbitRadius+12);
-  }
-
-  // 궤적
-  if(L.trail.length>1){
-    ctx.beginPath(); ctx.setLineDash([3,7]);
-    ctx.strokeStyle='rgba(244,185,66,0.18)'; ctx.lineWidth=1;
-    L.trail.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
-    ctx.stroke(); ctx.setLineDash([]);
-  }
-
-  // 글로우
-  const gl=ctx.createRadialGradient(L.x,L.y,0,L.x,L.y,16);
-  gl.addColorStop(0,'rgba(244,185,66,0.22)'); gl.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=gl; ctx.beginPath(); ctx.arc(L.x,L.y,16,0,Math.PI*2); ctx.fill();
-
-  // 드론 바디 (금색)
-  ctx.save(); ctx.translate(L.x,L.y); ctx.rotate(L.angle);
-  ctx.fillStyle='#f4b942';
-  ctx.beginPath(); ctx.moveTo(8,0); ctx.lineTo(-4,-5); ctx.lineTo(-2,0); ctx.lineTo(-4,5); ctx.closePath(); ctx.fill();
-  ctx.strokeStyle='#f4b942'; ctx.lineWidth=1.5;
-  [[-1,-7],[-1,7]].forEach(([ox,oy])=>{
-    ctx.beginPath(); ctx.moveTo(-2,0); ctx.lineTo(ox,oy); ctx.stroke();
-    ctx.beginPath(); ctx.arc(ox,oy,2,0,Math.PI*2); ctx.fillStyle='#f4b942'; ctx.fill();
-  });
-  ctx.restore();
-
-  // 레이블
-  ctx.fillStyle='#f4b942'; ctx.font='bold 9px monospace';
-  ctx.fillText('배회 드론', L.x+12, L.y-8);
-  ctx.fillStyle='rgba(244,185,66,0.6)'; ctx.font='8px monospace';
-  const stLbl=L.phase==='orbit'?'◌ LOITERING':L.phase==='transit'?'→ TRANSIT':'↑ LAUNCH';
-  ctx.fillText(stLbl, L.x+12, L.y+3);
 }
 
 function drawBg(){
@@ -638,48 +657,35 @@ function drawKmGrid(){
     ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H);
     ctx.strokeStyle='rgba(40,55,80,0.55)'; ctx.lineWidth=1; ctx.stroke();
     ctx.fillStyle='rgba(70,90,120,0.5)'; ctx.font='9px monospace';
-    ctx.fillText(km+'km', x-10, 14);
+    ctx.fillText(km+'km',x-10,14);
   });
   ctx.setLineDash([]);
 }
 
 function drawRadar(){
-  const R = radarPos();       // 중앙 레이다
-  const RR = radarRange();
-
-  // 탐지 범위 링 3개
+  const R=radarPos(), RR=radarRange();
   ctx.setLineDash([4,7]); ctx.lineWidth=1;
   [[RR,0.13],[RR*0.66,0.08],[RR*0.33,0.05]].forEach(([r,a])=>{
     ctx.beginPath(); ctx.arc(R.x,R.y,r,0,Math.PI*2);
     ctx.strokeStyle=`rgba(79,163,255,${a})`; ctx.stroke();
   });
   ctx.setLineDash([]);
-
-  // 20km 레이블 (최외곽 링)
   ctx.fillStyle='rgba(79,163,255,0.45)'; ctx.font='9px monospace';
-  ctx.fillText('20km', R.x+8, R.y-RR+12);
-  // 레이다 마커 (중앙 점)
+  ctx.fillText('20km',R.x+8,R.y-RR+12);
   ctx.beginPath(); ctx.arc(R.x,R.y,5,0,Math.PI*2);
   ctx.fillStyle=S.radar.active?'rgba(79,163,255,0.7)':'rgba(79,163,255,0.3)'; ctx.fill();
   ctx.fillStyle='rgba(79,163,255,0.55)'; ctx.font='9px monospace';
-  ctx.fillText('RADAR', R.x+8, R.y-8);
-
+  ctx.fillText('RADAR',R.x+8,R.y-8);
   if(!S.radar.active) return;
-
-  // 스윕 부채꼴
   ctx.save();
   ctx.beginPath(); ctx.moveTo(R.x,R.y);
   ctx.arc(R.x,R.y,RR,S.radar.angle-0.45,S.radar.angle);
   ctx.closePath();
   ctx.fillStyle='rgba(79,163,255,0.07)'; ctx.fill();
   ctx.restore();
-
-  // 스윕 라인
   ctx.beginPath(); ctx.moveTo(R.x,R.y);
-  ctx.lineTo(R.x+Math.cos(S.radar.angle)*RR, R.y+Math.sin(S.radar.angle)*RR);
+  ctx.lineTo(R.x+Math.cos(S.radar.angle)*RR,R.y+Math.sin(S.radar.angle)*RR);
   ctx.strokeStyle='rgba(79,163,255,0.55)'; ctx.lineWidth=1.5; ctx.stroke();
-
-  // 펄스 링
   const pr=S.radar.pulse*RR;
   ctx.beginPath(); ctx.arc(R.x,R.y,pr,0,Math.PI*2);
   ctx.strokeStyle=`rgba(79,163,255,${0.4*(1-S.radar.pulse)})`; ctx.lineWidth=2; ctx.stroke();
@@ -687,11 +693,9 @@ function drawRadar(){
 
 function drawAsset(){
   const A=assetPos();
-  // glow
   const gl=ctx.createRadialGradient(A.x,A.y,0,A.x,A.y,36);
   gl.addColorStop(0,'rgba(56,230,155,0.18)'); gl.addColorStop(1,'rgba(56,230,155,0)');
   ctx.fillStyle=gl; ctx.beginPath(); ctx.arc(A.x,A.y,36,0,Math.PI*2); ctx.fill();
-  // building
   ctx.save(); ctx.translate(A.x,A.y);
   ctx.fillStyle='#38e69b'; ctx.fillRect(-13,-17,26,22);
   ctx.fillStyle='#0a0c10';
@@ -699,114 +703,182 @@ function drawAsset(){
   ctx.fillStyle='#38e69b'; ctx.fillRect(-5,-22,10,7);
   ctx.restore();
   ctx.fillStyle='#38e69b'; ctx.font='bold 10px monospace';
-  ctx.fillText('보호목표', A.x+16, A.y+3);
+  ctx.fillText('보호목표',A.x+16,A.y+3);
 
-  // 발진기지 ① (보호목표 옆)
+  const anyIcActive=S.interceptors.some(ic=>ic.active);
+
+  // 발진기지①
   const IB=interceptorBase();
   ctx.beginPath(); ctx.arc(IB.x,IB.y,5,0,Math.PI*2);
-  ctx.fillStyle=S.interceptor.active?'rgba(56,230,155,0.2)':'rgba(56,230,155,0.55)'; ctx.fill();
+  ctx.fillStyle='rgba(56,230,155,0.55)'; ctx.fill();
   ctx.strokeStyle='#38e69b'; ctx.lineWidth=1.5; ctx.stroke();
   ctx.fillStyle='rgba(56,230,155,0.65)'; ctx.font='9px monospace';
-  ctx.fillText('발진기지①', IB.x+8, IB.y+3);
+  ctx.fillText('발진기지①',IB.x+8,IB.y+3);
 
-  // 발진기지 ② (레이다 옆)
+  // 발진기지②
   const IB2=interceptorBase2();
   ctx.beginPath(); ctx.arc(IB2.x,IB2.y,5,0,Math.PI*2);
-  ctx.fillStyle=S.interceptor.active?'rgba(56,230,155,0.2)':'rgba(56,230,155,0.55)'; ctx.fill();
+  ctx.fillStyle=anyIcActive?'rgba(56,230,155,0.2)':'rgba(56,230,155,0.55)'; ctx.fill();
   ctx.strokeStyle='#38e69b'; ctx.lineWidth=1.5; ctx.stroke();
   ctx.fillStyle='rgba(56,230,155,0.65)'; ctx.font='9px monospace';
-  ctx.fillText('발진기지②', IB2.x+8, IB2.y+3);
+  ctx.fillText('발진기지②',IB2.x+8,IB2.y+3);
 }
 
-function drawTrailShahed(){
-  if(S.shahed.trail.length<2) return;
-  ctx.beginPath(); ctx.setLineDash([4,5]);
-  ctx.strokeStyle='rgba(255,92,92,0.3)'; ctx.lineWidth=1.5;
-  S.shahed.trail.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
-  ctx.stroke(); ctx.setLineDash([]);
-}
-
-function drawTrailInterceptor(){
-  if(S.interceptor.trail.length<2) return;
-  ctx.beginPath(); ctx.setLineDash([3,6]);
-  ctx.strokeStyle='rgba(56,230,155,0.25)'; ctx.lineWidth=1;
-  S.interceptor.trail.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
-  ctx.stroke(); ctx.setLineDash([]);
-}
-
-function drawShahed(){
-  if(!S.shahed.alive) return;
-  const sx=S.shahed.x, sy=S.shahed.y;
-  const ang=Math.atan2(S.shahed.vy,S.shahed.vx);
-
-  const gl=ctx.createRadialGradient(sx,sy,0,sx,sy,22);
-  gl.addColorStop(0,'rgba(255,92,92,0.22)'); gl.addColorStop(1,'rgba(255,92,92,0)');
-  ctx.fillStyle=gl; ctx.beginPath(); ctx.arc(sx,sy,22,0,Math.PI*2); ctx.fill();
-
-  ctx.save(); ctx.translate(sx,sy); ctx.rotate(ang);
-  ctx.fillStyle='#ff5c5c';
-  ctx.beginPath(); ctx.moveTo(12,0); ctx.lineTo(-10,-10); ctx.lineTo(-6,0); ctx.lineTo(-10,10); ctx.closePath(); ctx.fill();
-  ctx.fillStyle='rgba(255,160,50,0.9)';
-  ctx.beginPath(); ctx.arc(-5,0,3,0,Math.PI*2); ctx.fill();
-  ctx.restore();
-
-  ctx.fillStyle='#ff5c5c'; ctx.font='bold 10px monospace';
-  ctx.fillText('SHAHED-238', sx+14, sy-12);
-  ctx.fillStyle='rgba(255,92,92,0.55)'; ctx.font='8px monospace';
-  ctx.fillText('▲ HOSTILE', sx+14, sy);
-}
-
-function drawInterceptor(){
-  if(!S.interceptor.active) return;
-  const ix=S.interceptor.x, iy=S.interceptor.y;
-  const ang=S.interceptor.angle;
-  const isTerminal=phase()==='terminal';
-  const col=isTerminal?'#f97316':'#38e69b';
-
-  const gl=ctx.createRadialGradient(ix,iy,0,ix,iy,18);
-  gl.addColorStop(0,isTerminal?'rgba(249,115,22,0.28)':'rgba(56,230,155,0.22)');
-  gl.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=gl; ctx.beginPath(); ctx.arc(ix,iy,18,0,Math.PI*2); ctx.fill();
-
-  ctx.save(); ctx.translate(ix,iy); ctx.rotate(ang);
-  ctx.fillStyle=col;
-  ctx.beginPath(); ctx.moveTo(10,0); ctx.lineTo(-4,-6); ctx.lineTo(-2,0); ctx.lineTo(-4,6); ctx.closePath(); ctx.fill();
-  ctx.strokeStyle=col; ctx.lineWidth=2;
-  [[-1,-9],[-1,9]].forEach(([ox,oy])=>{
+function drawLoiterer(){
+  if(!S.loiterer.active) return;
+  const L=S.loiterer;
+  if(L.phase==='transit'||L.phase==='orbit'){
+    const oc=L.orbitCenter;
+    ctx.beginPath(); ctx.arc(oc.x,oc.y,L.orbitRadius,0,Math.PI*2);
+    ctx.strokeStyle='rgba(244,185,66,0.22)'; ctx.lineWidth=1.5;
+    ctx.setLineDash([4,7]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(oc.x,oc.y,3,0,Math.PI*2);
+    ctx.fillStyle='rgba(244,185,66,0.35)'; ctx.fill();
+    ctx.fillStyle='rgba(244,185,66,0.45)'; ctx.font='8px monospace';
+    ctx.fillText('LOITER ORBIT',oc.x-26,oc.y+L.orbitRadius+12);
+  }
+  if(L.trail.length>1){
+    ctx.beginPath(); ctx.setLineDash([3,7]);
+    ctx.strokeStyle='rgba(244,185,66,0.18)'; ctx.lineWidth=1;
+    L.trail.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+  const gl=ctx.createRadialGradient(L.x,L.y,0,L.x,L.y,16);
+  gl.addColorStop(0,'rgba(244,185,66,0.22)'); gl.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=gl; ctx.beginPath(); ctx.arc(L.x,L.y,16,0,Math.PI*2); ctx.fill();
+  ctx.save(); ctx.translate(L.x,L.y); ctx.rotate(L.angle);
+  ctx.fillStyle='#f4b942';
+  ctx.beginPath(); ctx.moveTo(8,0); ctx.lineTo(-4,-5); ctx.lineTo(-2,0); ctx.lineTo(-4,5); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle='#f4b942'; ctx.lineWidth=1.5;
+  [[-1,-7],[-1,7]].forEach(([ox,oy])=>{
     ctx.beginPath(); ctx.moveTo(-2,0); ctx.lineTo(ox,oy); ctx.stroke();
-    ctx.beginPath(); ctx.arc(ox,oy,2.5,0,Math.PI*2); ctx.fillStyle=col; ctx.fill();
+    ctx.beginPath(); ctx.arc(ox,oy,2,0,Math.PI*2); ctx.fillStyle='#f4b942'; ctx.fill();
   });
   ctx.restore();
-
-  ctx.fillStyle=col; ctx.font='bold 10px monospace';
-  ctx.fillText('ODE 요격드론', ix+12, iy-10);
-
-  if(isTerminal && S.shahed.alive){
-    // 추격 링
-    const r=10+2*Math.sin(Date.now()/300);
-    ctx.beginPath(); ctx.arc(ix,iy,r,0,Math.PI*2);
-    ctx.strokeStyle='rgba(249,115,22,0.9)'; ctx.lineWidth=1.5;
-    ctx.setLineDash([2,3]); ctx.stroke(); ctx.setLineDash([]);
-
-    // 추격 조준선
-    ctx.beginPath(); ctx.moveTo(ix,iy); ctx.lineTo(S.shahed.x,S.shahed.y);
-    ctx.strokeStyle='rgba(249,115,22,0.35)'; ctx.lineWidth=1;
-    ctx.setLineDash([2,5]); ctx.stroke(); ctx.setLineDash([]);
-
-    // 교전거리 표시
-    const midX=(ix+S.shahed.x)/2, midY=(iy+S.shahed.y)/2;
-    const d=Math.hypot(S.shahed.x-ix,S.shahed.y-iy);
-    ctx.fillStyle='rgba(249,115,22,0.85)'; ctx.font='8px monospace';
-    ctx.fillText((d*0.02).toFixed(0)+'m', midX-10, midY-4);
-
-    ctx.fillStyle='#f97316'; ctx.font='bold 9px monospace';
-    ctx.fillText('AI TERMINAL GUIDANCE', ix+12, iy+16);
-  }
+  ctx.fillStyle='#f4b942'; ctx.font='bold 9px monospace';
+  ctx.fillText('배회 드론',L.x+12,L.y-8);
+  ctx.fillStyle='rgba(244,185,66,0.6)'; ctx.font='8px monospace';
+  ctx.fillText(L.phase==='orbit'?'◌ LOITERING':L.phase==='transit'?'→ TRANSIT':'↑ LAUNCH',L.x+12,L.y+3);
 }
 
-function drawExplosionFx(){
-  if(!S.explosion.active && phase()!=='strike') return;
-  const ex=S.explosion.x, ey=S.explosion.y, t=S.explosion.t;
+// ── 샤헤드 군집 ────────────────────────────────
+function drawShadedSwarm(){
+  // Formation line between alive shadeds
+  const alive=S.shadeds.filter(s=>s.alive);
+  if(alive.length>1){
+    ctx.beginPath();
+    alive.forEach((s,i)=>i===0?ctx.moveTo(s.x,s.y):ctx.lineTo(s.x,s.y));
+    ctx.strokeStyle='rgba(255,92,92,0.15)'; ctx.lineWidth=1;
+    ctx.setLineDash([3,6]); ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  S.shadeds.forEach(s=>{
+    // Trail (even if dead)
+    if(s.trail.length>1){
+      ctx.beginPath(); ctx.setLineDash([4,5]);
+      ctx.strokeStyle='rgba(255,92,92,0.2)'; ctx.lineWidth=1.2;
+      s.trail.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    if(!s.alive) return;
+
+    const ang=Math.atan2(s.vy,s.vx);
+    const gl=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,20);
+    gl.addColorStop(0,'rgba(255,92,92,0.2)'); gl.addColorStop(1,'rgba(255,92,92,0)');
+    ctx.fillStyle=gl; ctx.beginPath(); ctx.arc(s.x,s.y,20,0,Math.PI*2); ctx.fill();
+
+    ctx.save(); ctx.translate(s.x,s.y); ctx.rotate(ang);
+    ctx.fillStyle='#ff5c5c';
+    ctx.beginPath(); ctx.moveTo(12,0); ctx.lineTo(-10,-10); ctx.lineTo(-6,0); ctx.lineTo(-10,10); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='rgba(255,160,50,0.9)';
+    ctx.beginPath(); ctx.arc(-5,0,3,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+
+    ctx.fillStyle='#ff5c5c'; ctx.font='bold 9px monospace';
+    ctx.fillText('S'+(s.id+1),s.x+13,s.y-10);
+    if(droneCount===1){
+      ctx.fillText('SHAHED-238',s.x+13,s.y+2);
+    }
+  });
+}
+
+// ── 요격 드론 군집 ─────────────────────────────
+function drawInterceptorSwarm(){
+  S.interceptors.forEach(ic=>{
+    if(!ic.active) return;
+
+    const isTerminal=ic.state==='terminal';
+    const col=isTerminal?'#f97316':'#38e69b';
+
+    // Trail
+    if(ic.trail.length>1){
+      ctx.beginPath(); ctx.setLineDash([3,6]);
+      ctx.strokeStyle='rgba(56,230,155,0.18)'; ctx.lineWidth=1;
+      ic.trail.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+
+    // Glow
+    const gl=ctx.createRadialGradient(ic.x,ic.y,0,ic.x,ic.y,14);
+    gl.addColorStop(0,isTerminal?'rgba(249,115,22,0.25)':'rgba(56,230,155,0.2)');
+    gl.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=gl; ctx.beginPath(); ctx.arc(ic.x,ic.y,14,0,Math.PI*2); ctx.fill();
+
+    // Body
+    ctx.save(); ctx.translate(ic.x,ic.y); ctx.rotate(ic.angle);
+    ctx.fillStyle=col;
+    ctx.beginPath(); ctx.moveTo(10,0); ctx.lineTo(-4,-6); ctx.lineTo(-2,0); ctx.lineTo(-4,6); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle=col; ctx.lineWidth=2;
+    [[-1,-9],[-1,9]].forEach(([ox,oy])=>{
+      ctx.beginPath(); ctx.moveTo(-2,0); ctx.lineTo(ox,oy); ctx.stroke();
+      ctx.beginPath(); ctx.arc(ox,oy,2.5,0,Math.PI*2); ctx.fillStyle=col; ctx.fill();
+    });
+    ctx.restore();
+
+    // ID label
+    ctx.fillStyle=col; ctx.font='bold 9px monospace';
+    ctx.fillText('I'+(ic.id+1),ic.x+11,ic.y-8);
+
+    // Terminal guidance visuals
+    if(isTerminal){
+      const target=S.shadeds[ic.targetIdx];
+      if(target&&target.alive){
+        const r=8+1.5*Math.sin(Date.now()/280);
+        ctx.beginPath(); ctx.arc(ic.x,ic.y,r,0,Math.PI*2);
+        ctx.strokeStyle='rgba(249,115,22,0.85)'; ctx.lineWidth=1.5;
+        ctx.setLineDash([2,3]); ctx.stroke(); ctx.setLineDash([]);
+        ctx.beginPath(); ctx.moveTo(ic.x,ic.y); ctx.lineTo(target.x,target.y);
+        ctx.strokeStyle='rgba(249,115,22,0.28)'; ctx.lineWidth=1;
+        ctx.setLineDash([2,5]); ctx.stroke(); ctx.setLineDash([]);
+        const d=Math.hypot(target.x-ic.x,target.y-ic.y);
+        const mx=(ic.x+target.x)/2, my=(ic.y+target.y)/2;
+        ctx.fillStyle='rgba(249,115,22,0.8)'; ctx.font='8px monospace';
+        ctx.fillText((d*0.02).toFixed(0)+'m',mx-8,my-4);
+      }
+      ctx.fillStyle='#f97316'; ctx.font='bold 8px monospace';
+      ctx.fillText('AI TERMINAL',ic.x+11,ic.y+4);
+    }
+
+    // Approach waypoint preview
+    if(ic.state==='approach'&&ic.wp.length){
+      const wps=ic.wp.slice(ic.wpIdx);
+      if(wps.length){
+        ctx.beginPath(); ctx.moveTo(ic.x,ic.y);
+        wps.forEach(wp=>ctx.lineTo(wp.x,wp.y));
+        ctx.strokeStyle='rgba(139,92,246,0.18)'; ctx.lineWidth=1;
+        ctx.setLineDash([3,7]); ctx.stroke(); ctx.setLineDash([]);
+      }
+    }
+  });
+}
+
+// ── 폭발 ─────────────────────────────────────
+function drawExplosions(){
+  S.explosions.forEach(e=>drawSingleExplosion(e));
+}
+
+function drawSingleExplosion(e){
+  const ex=e.x,ey=e.y,t=e.t;
   [0.22,0.48,0.85].forEach((mT,i)=>{
     const rt=Math.min(1,t/mT); if(rt>=1) return;
     const r=rt*(32+i*24), alpha=(1-rt)*(0.7-i*0.18);
@@ -814,22 +886,22 @@ function drawExplosionFx(){
     ctx.strokeStyle=`rgba(249,115,22,${alpha})`; ctx.lineWidth=2.5; ctx.stroke();
   });
   if(t<0.22){
-    const fa=(1-t/0.22);
+    const fa=1-t/0.22;
     const fg=ctx.createRadialGradient(ex,ey,0,ex,ey,60*fa);
     fg.addColorStop(0,`rgba(255,255,200,${fa*0.95})`);
     fg.addColorStop(0.35,`rgba(255,160,50,${fa*0.75})`);
     fg.addColorStop(1,'rgba(255,80,0,0)');
     ctx.fillStyle=fg; ctx.beginPath(); ctx.arc(ex,ey,75,0,Math.PI*2); ctx.fill();
   }
-  S.explosion.particles.forEach(p=>{
+  e.particles.forEach(p=>{
     ctx.beginPath(); ctx.arc(p.x,p.y,p.sz*p.life,0,Math.PI*2);
     const rgb=hexToRgb(p.col);
     ctx.fillStyle=`rgba(${rgb},${p.life})`; ctx.fill();
   });
   if(t>0.3){
     const fa=Math.max(0,1-(t-0.3)/2.2);
-    ctx.fillStyle=`rgba(255,92,92,${fa*0.9})`; ctx.font='bold 12px monospace';
-    ctx.fillText('✕  NEUTRALIZED', ex-52, ey-32);
+    ctx.fillStyle=`rgba(255,92,92,${fa*0.9})`; ctx.font='bold 10px monospace';
+    ctx.fillText('✕ KILL',ex-18,ey-26);
   }
 }
 
@@ -839,43 +911,49 @@ function hexToRgb(h){
   return _hex[h]=`${parseInt(h.slice(1,3),16)},${parseInt(h.slice(3,5),16)},${parseInt(h.slice(5,7),16)}`;
 }
 
-function drawWaypointPreview(){
-  if(phase()!=='approach') return;
-  const wps=S.interceptor.wp.slice(S.interceptor.wpIdx);
-  if(!wps.length) return;
-  ctx.beginPath(); ctx.moveTo(S.interceptor.x,S.interceptor.y);
-  wps.forEach(wp=>ctx.lineTo(wp.x,wp.y));
-  ctx.strokeStyle='rgba(139,92,246,0.22)'; ctx.lineWidth=1;
-  ctx.setLineDash([3,7]); ctx.stroke(); ctx.setLineDash([]);
-}
-
 function drawCornerHUD(){
   const ph=PHASES[S.phaseIdx];
   ctx.fillStyle=ph.color; ctx.font='bold 11px monospace';
-  ctx.fillText(ph.label, 14, H-15);
+  ctx.fillText(ph.label,14,H-15);
   ctx.fillStyle='rgba(90,100,120,0.7)'; ctx.font='8px monospace';
-  ctx.fillText('T+'+S.elapsed.toFixed(1)+'s', 14, H-4);
-  // 스케일 바
-  const bx=W-105, by=H-10, sl=80;
+  ctx.fillText('T+'+S.elapsed.toFixed(1)+'s',14,H-4);
+
+  // Kill count HUD
+  const dead=S.shadeds.filter(s=>!s.alive).length;
+  const total=S.shadeds.length;
+  if(total>0&&phase()!=='detect'){
+    ctx.fillStyle='rgba(0,0,0,0.5)'; ctx.fillRect(W/2-52,8,104,22);
+    ctx.fillStyle=dead===total?'#38e69b':'#f4b942'; ctx.font='bold 11px monospace';
+    const kt=`KILLS: ${dead} / ${total}`;
+    ctx.fillText(kt,W/2-ctx.measureText(kt).width/2,24);
+  }
+
+  // Scale bar
+  const bx=W-105,by=H-10,sl=80;
   ctx.strokeStyle='rgba(70,90,120,0.6)'; ctx.lineWidth=1.5;
   ctx.beginPath(); ctx.moveTo(bx,by); ctx.lineTo(bx+sl,by);
   ctx.moveTo(bx,by-3); ctx.lineTo(bx,by+3);
   ctx.moveTo(bx+sl,by-3); ctx.lineTo(bx+sl,by+3); ctx.stroke();
   ctx.fillStyle='rgba(70,90,120,0.8)'; ctx.font='7px monospace';
-  ctx.fillText(((sl/(W*0.87))*15).toFixed(1)+'km', bx+sl/2-10, by-5);
+  ctx.fillText(((sl/(W*0.87))*15).toFixed(1)+'km',bx+sl/2-10,by-5);
 }
 
 function drawResultScreen(){
+  const dead=S.shadeds.filter(s=>!s.alive).length;
+  const total=S.shadeds.length;
   ctx.fillStyle='rgba(0,0,0,0.65)'; ctx.fillRect(0,0,W,H);
   ctx.fillStyle='#38e69b'; ctx.font='bold 26px monospace';
   const t1='// MISSION COMPLETE';
-  ctx.fillText(t1, W/2-ctx.measureText(t1).width/2, H/2-22);
-  ctx.fillStyle='rgba(56,230,155,0.65)'; ctx.font='13px monospace';
-  const t2='SHAHED-238 요격 성공 — 보호목표 방어 완료';
-  ctx.fillText(t2, W/2-ctx.measureText(t2).width/2, H/2+14);
+  ctx.fillText(t1,W/2-ctx.measureText(t1).width/2,H/2-30);
+  ctx.fillStyle='rgba(56,230,155,0.75)'; ctx.font='14px monospace';
+  const t2=`SHAHED-238 ${dead}/${total}대 요격 성공`;
+  ctx.fillText(t2,W/2-ctx.measureText(t2).width/2,H/2+8);
+  ctx.fillStyle='rgba(56,230,155,0.5)'; ctx.font='12px monospace';
+  const t3='보호목표 방어 완료';
+  ctx.fillText(t3,W/2-ctx.measureText(t3).width/2,H/2+28);
   ctx.fillStyle='#5a6478'; ctx.font='9px monospace';
-  const t3='교전시간: '+S.elapsed.toFixed(1)+'s  ·  리셋 후 재시뮬레이션 가능';
-  ctx.fillText(t3, W/2-ctx.measureText(t3).width/2, H/2+38);
+  const t4='교전시간: '+S.elapsed.toFixed(1)+'s  ·  리셋 후 재시뮬레이션 가능';
+  ctx.fillText(t4,W/2-ctx.measureText(t4).width/2,H/2+52);
 }
 
 // ══════════════════════════════════════════════
@@ -888,51 +966,60 @@ function updateUI(){
   }).join('');
 
   const aEl=document.getElementById('alert-box');
+  const ph=phase();
+  const activeIcs=S.interceptors.filter(ic=>ic.state==='approach'||ic.state==='launching').length;
+  const termIcs  =S.interceptors.filter(ic=>ic.state==='terminal').length;
   const aMap={
-    detect: {c:'warn',  t:'⚠  레이다 탐지 — SHAHED-238 비행 개시'},
-    launch: {c:'warn',  t:'🚀  요격 드론 즉시 발사!'},
-    approach:{c:'warn', t:'↗  후방 루프 기동 중 — 6시 접근'},
-    terminal:{c:'danger',t:'🎯  AI 종말유도 — 후방 추격 활성'},
-    strike: {c:'danger',t:'💥  타격 완료 — 위협 제거'},
-    result: {c:'success',t:'✓  임무 완료 — 보호목표 방어 성공'},
+    detect:{c:'warn',   t:`⚠  레이다 탐지 — SHAHED ${droneCount}기 비행 개시`},
+    launch:{c:'warn',   t:`🚀  요격 드론 순차 발사 — ${droneCount}기 교전 준비`},
+    engage:{c:'danger', t:termIcs>0?`🎯  AI 종말유도 활성 — ${termIcs}기 추격 중`:`↗  후방 루프 기동 중`},
+    result:{c:'success',t:'✓  임무 완료 — 보호목표 방어 성공'},
   };
-  const a=aMap[phase()]||{c:'idle',t:'// STANDBY'};
+  const a=aMap[ph]||{c:'idle',t:'// STANDBY'};
   aEl.className='alert-box '+a.c; aEl.textContent=a.t;
 
-  // 위협 텔레메트리
+  // Threat telemetry
   const A=assetPos();
-  const d=Math.hypot(S.shahed.x-A.x,S.shahed.y-A.y);
-  document.getElementById('t-dist').textContent=S.shahed.alive?(d/W*0.87*15).toFixed(1)+' km':'—';
-  document.getElementById('t-det').textContent=S.phaseIdx>=0?'탐지됨':'미탐지';
+  const aliveShadeds=S.shadeds.filter(s=>s.alive);
+  const dead=S.shadeds.length-aliveShadeds.length;
+  const total=S.shadeds.length;
+  document.getElementById('t-alive').textContent=total>0?`${aliveShadeds.length} / ${total}`:'—';
+  document.getElementById('t-alive').style.color=aliveShadeds.length===0?'var(--green)':'var(--red)';
+
+  if(aliveShadeds.length>0){
+    const ld=aliveShadeds.reduce((mn,s)=>{ const d=Math.hypot(s.x-A.x,s.y-A.y); return d<mn?d:mn; },Infinity);
+    document.getElementById('t-dist').textContent=(ld/W*0.87*15).toFixed(1)+' km';
+  } else {
+    document.getElementById('t-dist').textContent='—';
+  }
+  document.getElementById('t-det').textContent=S.radar.active?'탐지됨':'미탐지';
   document.getElementById('t-det').style.color=S.radar.active?'#f4b942':'var(--muted)';
 
-  // 요격기 텔레메트리
-  const iA=S.interceptor.active;
-  const stMap={detect:'대기중',launch:'발사 중',approach:'후방 접근',terminal:'종말유도',strike:'타격 완료',result:'임무 완료'};
-  document.getElementById('i-stat').textContent=stMap[phase()]||'대기중';
-  document.getElementById('i-stat').style.color=iA?'#38e69b':'var(--muted)';
-  document.getElementById('i-speed').textContent=iA?(Math.round(shahedSpeedKmh*1.5)+' km/h'):'—';
-  document.getElementById('i-mode').textContent=
-    phase()==='terminal'?'AI Terminal Guidance':
-    phase()==='approach'?'Waypoint Navigation':
-    phase()==='launch'  ?'Launch Sequence':'—';
-  document.getElementById('i-mode').style.color=phase()==='terminal'?'#f97316':'#4fa3ff';
+  // Kill bar
+  const killPct=total>0?(dead/total*100).toFixed(0):0;
+  document.getElementById('kill-bar-fill').style.width=killPct+'%';
+  document.getElementById('kill-count-txt').textContent=`${dead} / ${total} 격추`;
+  document.getElementById('kill-count-txt').style.color=dead===total&&total>0?'#38e69b':'#4fa3ff';
 
-  const tA=phase()==='terminal';
-  document.getElementById('i-terminal').textContent=tA?'활성':'대기';
-  document.getElementById('i-terminal').style.color=tA?'#f97316':'var(--muted)';
+  // Interceptor swarm status
+  const anyActive=S.interceptors.some(ic=>ic.active);
+  document.getElementById('i-active-cnt').textContent=anyActive?activeIcs+termIcs+' 기 비행중':'—';
+  document.getElementById('i-terminal-cnt').textContent=termIcs>0?termIcs+' 기':'—';
+  document.getElementById('i-terminal-cnt').style.color=termIcs>0?'#f97316':'var(--muted)';
+  document.getElementById('i-speed').textContent=anyActive?Math.round(shahedSpeedKmh*1.5)+' km/h':'—';
 
-  if(iA&&S.shahed.alive){
-    const id=Math.hypot(S.interceptor.x-S.shahed.x,S.interceptor.y-S.shahed.y);
-    document.getElementById('i-dist').textContent=(id/W*0.87*15).toFixed(2)+' km';
-  } else {
-    document.getElementById('i-dist').textContent='—';
-  }
+  // Swarm grid
+  const stateLabel={idle:'대기',launch_wait:'준비',launching:'발사↑',approach:'접근→',terminal:'추격🎯',struck:'격추✕'};
+  const stateClass={idle:'idle',launch_wait:'idle',launching:'active',approach:'active',terminal:'terminal',struck:'struck'};
+  document.getElementById('swarm-grid').innerHTML=S.interceptors.map(ic=>`
+    <div class="swarm-cell ${stateClass[ic.state]||'idle'}">
+      I${ic.id+1}→S${ic.targetIdx+1}<br>${stateLabel[ic.state]||'—'}
+    </div>`).join('');
 
-  // 배회 드론 상태
+  // Loiterer
+  const lp=S.loiterer.phase;
   const lPhaseMap={idle:'대기중',takeoff:'이륙 중',transit:'이동 중',orbit:'선회 중'};
   const lModeMap ={idle:'—',takeoff:'↑ LAUNCH',transit:'→ TRANSIT',orbit:'◌ LOITERING'};
-  const lp=S.loiterer.phase;
   document.getElementById('l-stat').textContent=lPhaseMap[lp]||'—';
   document.getElementById('l-stat').style.color=lp==='orbit'?'#f4b942':lp==='idle'?'var(--muted)':'#f4b942';
   document.getElementById('l-mode').textContent=lModeMap[lp]||'—';
