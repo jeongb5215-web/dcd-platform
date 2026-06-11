@@ -81,6 +81,11 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .speed-lbl{font-size:10px;color:var(--muted);letter-spacing:1px}
 .speed-sel{background:var(--surface);border:1px solid var(--border);color:var(--text);font-size:11px;padding:3px 8px;border-radius:3px}
 .status-txt{margin-left:auto;font-size:10px;color:var(--muted);font-family:monospace}
+.spd-slider{width:100%;accent-color:var(--gold);height:3px;cursor:pointer;margin:6px 0 2px}
+.spd-bar-wrap{display:flex;gap:4px;align-items:center;margin-top:4px}
+.spd-bar-label{font-size:9px;color:var(--muted);width:30px;text-align:right;flex-shrink:0}
+.spd-bar-track{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.spd-bar-fill{height:100%;border-radius:2px;transition:width .3s}
 </style>
 </head>
 <body>
@@ -101,6 +106,42 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
       <div class="sect-bd" id="phase-list"></div>
     </div>
     <div id="alert-box" class="alert-box idle">// STANDBY — 위협 감시중</div>
+    <!-- 속도 범례 + 슬라이더 -->
+    <div class="sect">
+      <div class="sect-hd"><span style="color:var(--gold)">⚡</span> SPEED CONTROL</div>
+      <div class="sect-bd">
+        <div style="margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+            <span style="font-size:11px;color:var(--muted)">Shahed-238 속도</span>
+            <span class="tele-v" id="s-spd-v" style="color:var(--red)">300 km/h</span>
+          </div>
+          <input type="range" class="spd-slider" id="s-spd" min="180" max="300" value="300" step="10"
+                 oninput="updateShahedSpeed(this.value)">
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:9px;color:var(--border)">180 km/h</span>
+            <span style="font-size:9px;color:var(--border)">300 km/h</span>
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:8px">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:6px">SPEED LEGEND</div>
+          <div class="spd-bar-wrap">
+            <span class="spd-bar-label" style="color:var(--red)">Shahed</span>
+            <div class="spd-bar-track">
+              <div class="spd-bar-fill" id="legend-shahed-bar" style="background:var(--red);width:100%"></div>
+            </div>
+            <span style="font-size:10px;font-family:monospace;color:var(--red);width:56px" id="legend-shahed-txt">300 km/h</span>
+          </div>
+          <div class="spd-bar-wrap">
+            <span class="spd-bar-label" style="color:var(--green)">ODE</span>
+            <div class="spd-bar-track">
+              <div class="spd-bar-fill" id="legend-ode-bar" style="background:var(--green);width:150%"></div>
+            </div>
+            <span style="font-size:10px;font-family:monospace;color:var(--green);width:56px" id="legend-ode-txt">450 km/h</span>
+          </div>
+          <div style="font-size:9px;color:var(--muted);margin-top:4px">ODE = Shahed × 1.5배속</div>
+        </div>
+      </div>
+    </div>
     <div class="sect">
       <div class="sect-hd"><span style="color:var(--red)">▲</span> THREAT — SHAHED-238</div>
       <div class="sect-bd">
@@ -197,15 +238,50 @@ const S = {
   explosion: { active:false, x:0, y:0, t:0, particles:[] },
 };
 
+// ── 속도 설정 (180~300 km/h) ────────────────
+let shahedSpeedKmh = 300; // 기본값
+
+function updateShahedSpeed(v){
+  shahedSpeedKmh = parseInt(v);
+  const odeKmh = Math.round(shahedSpeedKmh * 1.5);
+  document.getElementById('s-spd-v').textContent = shahedSpeedKmh + ' km/h';
+  document.getElementById('legend-shahed-txt').textContent = shahedSpeedKmh + ' km/h';
+  document.getElementById('legend-ode-txt').textContent    = odeKmh + ' km/h';
+  document.getElementById('t-speed').textContent = shahedSpeedKmh + ' km/h';
+  // 범례 바 너비: Shahed = 기준, ODE = 1.5배
+  const maxKmh = 300 * 1.5; // 450 = 100%
+  const sw = (shahedSpeedKmh / maxKmh * 100).toFixed(0) + '%';
+  const ow = (odeKmh / maxKmh * 100).toFixed(0) + '%';
+  document.getElementById('legend-shahed-bar').style.width = sw;
+  document.getElementById('legend-ode-bar').style.width    = ow;
+  // 실행 중이면 현재 Shahed 속도도 갱신
+  if(running){
+    const len=Math.hypot(S.shahed.vx,S.shahed.vy);
+    if(len>0){
+      const nx=S.shahed.vx/len, ny=S.shahed.vy/len;
+      const spd=shahedSpeed();
+      S.shahed.vx=nx*spd; S.shahed.vy=ny*spd;
+    }
+    S.interceptor.speed=interceptorApproachSpd();
+  }
+}
+
 // ── Geometry ──────────────────────────────────
 function assetPos()        { return { x: W*0.08, y: H*0.52 }; }
-function radarPos()        { return { x: W*0.50, y: H*0.50 }; } // 레이다 → 중앙
-function radarRange()      { return Math.min(W, H) * 0.52; }    // 전체 커버
+function radarPos()        { return { x: W*0.50, y: H*0.50 }; }
+// 20km 탐지거리: 15km=W*0.87 → 20km=W*1.16 → 캔버스 넘어감, 시각적으로 W*0.82 사용 (20km 레이블)
+function radarRange()      { return W * 0.82; }
 function shahedStart()     { return { x: W*0.93, y: H*0.10 }; }
 function interceptorBase() { const a=assetPos(); return { x:a.x+W*0.04, y:a.y-H*0.08 }; }
+// 레이다 옆 발진기지 (중앙 레이다 우측 상단)
+function interceptorBase2(){ const r=radarPos(); return { x:r.x+28, y:r.y-28 }; }
 
-// Visual speeds (px/s at ×1)
-function shahedSpeed()           { return (W*0.85)/9; }
+// Visual speeds (px/s at ×1)  — shahedSpeedKmh 비율 적용
+// 300km/h 기준: cross W*0.85 in 9s → 기본 px/s
+function shahedSpeed(){
+  const base=(W*0.85)/9;
+  return base*(shahedSpeedKmh/300);
+}
 function interceptorApproachSpd(){ return shahedSpeed()*2.2; }
 function interceptorTerminalSpd(){ return shahedSpeed()*2.8; }
 
@@ -452,6 +528,9 @@ function drawRadar(){
   });
   ctx.setLineDash([]);
 
+  // 20km 레이블 (최외곽 링)
+  ctx.fillStyle='rgba(79,163,255,0.45)'; ctx.font='9px monospace';
+  ctx.fillText('20km', R.x+8, R.y-RR+12);
   // 레이다 마커 (중앙 점)
   ctx.beginPath(); ctx.arc(R.x,R.y,5,0,Math.PI*2);
   ctx.fillStyle=S.radar.active?'rgba(79,163,255,0.7)':'rgba(79,163,255,0.3)'; ctx.fill();
@@ -495,13 +574,21 @@ function drawAsset(){
   ctx.fillStyle='#38e69b'; ctx.font='bold 10px monospace';
   ctx.fillText('보호목표', A.x+16, A.y+3);
 
-  // 발진기지 마커
+  // 발진기지 ① (보호목표 옆)
   const IB=interceptorBase();
   ctx.beginPath(); ctx.arc(IB.x,IB.y,5,0,Math.PI*2);
   ctx.fillStyle=S.interceptor.active?'rgba(56,230,155,0.2)':'rgba(56,230,155,0.55)'; ctx.fill();
   ctx.strokeStyle='#38e69b'; ctx.lineWidth=1.5; ctx.stroke();
   ctx.fillStyle='rgba(56,230,155,0.65)'; ctx.font='9px monospace';
-  ctx.fillText('발진기지', IB.x+8, IB.y+3);
+  ctx.fillText('발진기지①', IB.x+8, IB.y+3);
+
+  // 발진기지 ② (레이다 옆)
+  const IB2=interceptorBase2();
+  ctx.beginPath(); ctx.arc(IB2.x,IB2.y,5,0,Math.PI*2);
+  ctx.fillStyle=S.interceptor.active?'rgba(56,230,155,0.2)':'rgba(56,230,155,0.55)'; ctx.fill();
+  ctx.strokeStyle='#38e69b'; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle='rgba(56,230,155,0.65)'; ctx.font='9px monospace';
+  ctx.fillText('발진기지②', IB2.x+8, IB2.y+3);
 }
 
 function drawTrailShahed(){
@@ -697,7 +784,7 @@ function updateUI(){
   const stMap={detect:'대기중',launch:'발사 중',approach:'후방 접근',terminal:'종말유도',strike:'타격 완료',result:'임무 완료'};
   document.getElementById('i-stat').textContent=stMap[phase()]||'대기중';
   document.getElementById('i-stat').style.color=iA?'#38e69b':'var(--muted)';
-  document.getElementById('i-speed').textContent=iA?'~450 km/h':'—';
+  document.getElementById('i-speed').textContent=iA?(Math.round(shahedSpeedKmh*1.5)+' km/h'):'—';
   document.getElementById('i-mode').textContent=
     phase()==='terminal'?'AI Terminal Guidance':
     phase()==='approach'?'Waypoint Navigation':
