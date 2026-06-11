@@ -367,9 +367,9 @@ function planBehindPath(){
   const sx = S.shahed.x, sy = S.shahed.y;
 
   // WP1: Shahed 옆쪽 상공 → 충돌 없이 우회
-  const wp1 = { x: sx + bx*W*0.10 + rx*W*0.12, y: sy + by*W*0.10 + ry*W*0.12 };
+  const wp1 = { x: sx + bx*W*0.06 + rx*W*0.07, y: sy + by*W*0.06 + ry*W*0.07 };
   // WP2: Shahed 후방 (6시 위치) → 여기서 추격 전환
-  const wp2 = { x: sx + bx*W*0.28, y: sy + by*W*0.28 };
+  const wp2 = { x: sx + bx*W*0.14, y: sy + by*W*0.14 };
 
   S.interceptor.wp    = [wp1, wp2];
   S.interceptor.wpIdx = 0;
