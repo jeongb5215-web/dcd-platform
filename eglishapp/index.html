@@ -1075,7 +1075,7 @@ function showToast(msg) {
 }
 
 // ── Seed / Migrate Default Decks ───────────────────────────
-const DECK_VERSION = 6; // 단어장 버전 — 올리면 기존 기본 단어장 자동 교체
+const DECK_VERSION = 7; // 단어장 버전 — 올리면 기존 기본 단어장 자동 교체
 const ALL_DEFAULT_WORDS = [
   ['Adaptation Loop', '적응 순환 구조(적응 루프)'],
   ['AI Pilot', 'AI 조종'],
@@ -1165,6 +1165,13 @@ const ALL_DEFAULT_WORDS = [
   ['Visual Positioning System', '시각 위치 시스템'],
   ['Simultaneous Localization and Mapping', '현실 공간 실시간 맵 생성'],
   ['Depth Perception', '깊이, 공간 인식'],
+  ['Drone Dominance', '드론 지배력'],
+  ['Controlled Reception Pattern Antennas', '제어 수신 패턴 안테나'],
+  ['Probability of Kill (Pk)', '목표 파괴확률'],
+  ['Probability of Hit (Ph)', '명중확률'],
+  ['Single Shot Kill Probability (SSKP)', '단발 격파확률'],
+  ['Probability of Detection (Pd)', '탐지 확률'],
+  ['Probability of Track (Pt)', '추적 확률'],
 ];
 
 function seedDefaultDecks() {
