@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>현대 전술 EW · C-UAS 통합 운용 아키텍처 — DcD</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root{
+    --bg:#060810;--surface:#0d1117;--border:#1e2535;
+    --green:#38e69b;--blue:#4fa3ff;--red:#ff5c5c;
+    --orange:#f97316;--gold:#f4b942;--purple:#a78bfa;
+    --text:#c8d0e0;--muted:#5a6478;--mono:'Courier New',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh}
+
+  /* ── 헤더 ── */
+  .header{
+    background:rgba(5,7,14,0.97);
+    border-bottom:1px solid var(--border);
+    padding:14px 28px;
+    display:flex;align-items:center;gap:16px;
+    position:sticky;top:0;z-index:100;
+  }
+  .header-logo{color:var(--green);font-size:13px;font-weight:900;letter-spacing:2px}
+  .header-div{width:1px;height:18px;background:var(--border)}
+  .header-title{color:var(--text);font-size:11px;letter-spacing:1px}
+  .header-back{
+    margin-left:auto;
+    background:none;border:1px solid var(--border);color:var(--muted);
+    font-family:var(--mono);font-size:10px;padding:5px 14px;cursor:pointer;letter-spacing:.5px;
+    transition:border-color .2s,color .2s;
+  }
+  .header-back:hover{border-color:var(--green);color:var(--green)}
+
+  /* ── 히어로 ── */
+  .hero{
+    padding:48px 28px 32px;
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(135deg,rgba(56,230,155,.04) 0%,rgba(167,139,250,.03) 100%);
+  }
+  .hero-tag{
+    display:inline-block;font-size:9px;font-weight:900;letter-spacing:2px;
+    color:var(--purple);border:1px solid rgba(167,139,250,.35);
+    padding:3px 10px;margin-bottom:16px;
+  }
+  .hero h1{font-size:clamp(18px,3vw,28px);color:#fff;font-weight:900;letter-spacing:1px;line-height:1.3;margin-bottom:10px}
+  .hero-sub{font-size:12px;color:var(--muted);line-height:1.8;max-width:780px}
+  .meta-row{display:flex;gap:20px;margin-top:18px;flex-wrap:wrap}
+  .meta-chip{
+    font-size:9px;font-weight:700;letter-spacing:1.5px;padding:3px 10px;
+    border:1px solid;
+  }
+  .chip-cdrone{color:var(--red);border-color:rgba(255,92,92,.35)}
+  .chip-ew{color:var(--blue);border-color:rgba(79,163,255,.35)}
+  .chip-sw{color:var(--green);border-color:rgba(56,230,155,.35)}
+
+  /* ── 범례 ── */
+  .legend{
+    display:flex;gap:24px;flex-wrap:wrap;
+    padding:20px 28px;
+    border-bottom:1px solid var(--border);
+    background:rgba(13,17,23,.6);
+  }
+  .legend-item{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--muted)}
+  .legend-dot{width:10px;height:10px;border-radius:50%}
+
+  /* ── 다이어그램 영역 ── */
+  .diagram-wrap{
+    padding:40px 28px 60px;
+    display:flex;justify-content:center;
+  }
+  .mermaid{
+    background:rgba(13,17,23,.7);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:40px;
+    width:100%;max-width:1100px;
+    overflow-x:auto;
+  }
+
+  /* ── 계층 해설 카드 ── */
+  .breakdown{
+    padding:0 28px 60px;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;
+    max-width:1200px;margin:0 auto;
+  }
+  .card{
+    background:rgba(13,17,23,.8);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:20px 22px;
+  }
+  .card-num{font-size:9px;font-weight:900;letter-spacing:2px;margin-bottom:6px}
+  .card h3{font-size:13px;color:#fff;font-weight:700;margin-bottom:10px;line-height:1.4}
+  .card ul{list-style:none;padding:0}
+  .card ul li{
+    font-size:11px;color:var(--muted);line-height:1.8;
+    padding-left:14px;position:relative;
+  }
+  .card ul li::before{content:'›';position:absolute;left:0;color:inherit}
+  .card-a{border-top:2px solid var(--green)} .card-a .card-num{color:var(--green)}   .card-a ul li::before{color:var(--green)}
+  .card-b{border-top:2px solid var(--red)}   .card-b .card-num{color:var(--red)}     .card-b ul li::before{color:var(--red)}
+  .card-c{border-top:2px solid var(--purple)}.card-c .card-num{color:var(--purple)}  .card-c ul li::before{color:var(--purple)}
+
+  /* ── 푸터 ── */
+  .footer{
+    border-top:1px solid var(--border);
+    padding:16px 28px;
+    text-align:center;
+    font-size:9px;color:var(--muted);letter-spacing:1px;
+  }
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<div class="header">
+  <span class="header-logo">DcD</span>
+  <div class="header-div"></div>
+  <span class="header-title">// ELECTRONIC WARFARE · C-UAS ARCHITECTURE</span>
+  <button class="header-back" onclick="history.back()">← 돌아가기</button>
+</div>
+
+<!-- 히어로 -->
+<div class="hero">
+  <div class="hero-tag">TACTICS · EW</div>
+  <h1>현대 전술 전자전(EW) 및 C-UAS<br>통합 운용 아키텍처</h1>
+  <p class="hero-sub">
+    우크라이나 전장 사례를 중심으로, 전자기 스펙트럼 방어망 구조·신형 위협의 EW 데드존 돌파 메커니즘·
+    차세대 소프트웨어 정의 개방형 아키텍처(Open Architecture)의 계층별 구성 요소를 분석한다.
+  </p>
+  <div class="meta-row">
+    <span class="meta-chip chip-cdrone">C-UAS</span>
+    <span class="meta-chip chip-ew">ELECTRONIC WARFARE</span>
+    <span class="meta-chip chip-sw">SDR · OPEN ARCH</span>
+  </div>
+</div>
+
+<!-- 범례 -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#38e69b"></div>전자기 스펙트럼 방어망</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff5c5c"></div>EW 데드존 / 신형 위협</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div>차세대 개방형 아키텍처</div>
+</div>
+
+<!-- Mermaid 다이어그램 -->
+<div class="diagram-wrap">
+  <div class="mermaid">
+graph TD
+    A[적의 공습 기동] -->|주파수 도약 / 상용 로밍망 악용| B
+
+    subgraph B [전술적 전자기 스펙트럼 방어망]
+        direction TB
+        B1[무선 정찰 및 방향 탐지<br>Plastun RP-3000] -->|실시간 원점 추적| B2[C2 지휘통제 및 포병 연동<br>Grad MLRS 즉각 포격]
+        B3[저궤도 군집위성 Starlink] -->|SDR 기반 실시간 항재밍 패치| B1
+        B4[도심형 육각 셀룰러 Grid<br>NOTA 시스템 배치] -->|GNSS Fog 기만전술| B5[순항미사일 위성항법 교란<br>CEP 오차 100~200m 강제 이탈]
+    end
+
+    B -->|무선 재밍의 물리적 차단 한계 돌파| C
+
+    subgraph C [신형 위협 및 EW 데드존]
+        C1[광섬유 연결 드론<br>최대 50km 전파 차단 면역]
+        C2[AI 기반 자동 말단 유도<br>전파 단절 시 자체 락온 자율 돌입]
+        C3[LPI형 초소형 위성 단말기<br>Spirit-030 저피탐 전술 우회]
+    end
+
+    C -->|향후 국방 거버넌스 개선 소요| D
+
+    subgraph D [차세대 소프트웨어 정의 EW 아키텍처]
+        D1[SDR 기반 가변형 무선 제어<br>소프트웨어 정의 실시간 주파수 진화]
+        D2[플랫폼 일체형 내장 방호 설계<br>차세대 USV 등 하드웨어 통합]
+        D3[다층식 하드킬 융합 네트워크<br>레이저 / 대공포 물리 요격 연동]
+    end
+  </div>
+</div>
+
+<!-- 계층 해설 카드 -->
+<div class="breakdown">
+  <div class="card card-a">
+    <div class="card-num">LAYER 01 — 전자기 스펙트럼 방어망</div>
+    <h3>전술적 EW 다층 방어 지대</h3>
+    <ul>
+      <li>Plastun RP-3000 무선 정찰 + 방향탐지(DF) → C2 연동 즉각 포격</li>
+      <li>Starlink LEO 위성 기반 SDR 실시간 항재밍 펌웨어 패치</li>
+      <li>NOTA 도심 셀룰러 Grid → GNSS Fog 기만으로 순항미사일 CEP 100~200m 강제 이탈</li>
+    </ul>
+  </div>
+  <div class="card card-b">
+    <div class="card-num">LAYER 02 — 신형 위협 · EW 데드존</div>
+    <h3>무선 재밍의 물리적 한계 돌파</h3>
+    <ul>
+      <li>광섬유 연결 드론: 최대 50km, 전파 차단 완전 면역</li>
+      <li>AI 말단 자율 유도: 전파 단절 시 자체 락온 → 자율 돌입</li>
+      <li>Spirit-030 LPI 초소형 위성 단말기: 저피탐 전술 우회</li>
+    </ul>
+  </div>
+  <div class="card card-c">
+    <div class="card-num">LAYER 03 — 차세대 개방형 아키텍처</div>
+    <h3>소프트웨어 정의 EW Open Architecture</h3>
+    <ul>
+      <li>SDR 가변형 무선 제어: 실시간 주파수 재정의·진화</li>
+      <li>플랫폼 일체형 내장 방호 설계 (차세대 USV 등)</li>
+      <li>다층 하드킬 융합 네트워크: 레이저·대공포 물리 요격 연동</li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer">DcD DRONE INTELLIGENCE PLATFORM · EW &amp; C-UAS ARCHITECTURE ANALYSIS</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#0d1117',
+      primaryTextColor: '#c8d0e0',
+      primaryBorderColor: '#1e2535',
+      lineColor: '#38e69b',
+      secondaryColor: '#1a2236',
+      tertiaryColor: '#0d1117',
+      nodeBorder: '#1e2535',
+      clusterBkg: 'rgba(13,17,23,0.8)',
+      clusterBorder: '#38e69b',
+      edgeLabelBackground: '#060810',
+      fontFamily: 'Courier New, monospace',
+      fontSize: '13px',
+    },
+    flowchart:{ curve:'basis', padding:20 }
+  });
+</script>
+</body>
+</html>
