@@ -191,8 +191,8 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 110px)}
 <text x="78" y="22" text-anchor="middle" font-size="10" letter-spacing="2" fill="#ff5c5c" opacity=".95" font-weight="900">위협 식별</text>
 <text x="268" y="22" text-anchor="middle" font-size="10" letter-spacing="2" fill="#22d3ee" opacity=".95" font-weight="900">탐지층</text>
 <line x1="165" y1="28" x2="372" y2="28" stroke="#22d3ee" stroke-width=".5" opacity=".3"/>
-<text x="495" y="22" text-anchor="middle" font-size="10" letter-spacing="2" fill="#8b5cf6" opacity=".95" font-weight="900">국가 C2</text>
-<text x="730" y="22" text-anchor="middle" font-size="10" letter-spacing="2" fill="#f4b942" opacity=".95" font-weight="900">AI 분석</text>
+<text x="495" y="22" text-anchor="middle" font-size="10" letter-spacing="2" fill="#8b5cf6" opacity=".95" font-weight="900">국가방공 C2</text>
+<text x="730" y="22" text-anchor="middle" font-size="8.5" letter-spacing="1.5" fill="#8b5cf6" opacity=".65" font-weight="800">AI 보조분석 내재</text>
 <text x="948" y="22" text-anchor="middle" font-size="10" letter-spacing="2" fill="#ffffff" opacity=".75" font-weight="900">1차 대응</text>
 <text x="1168" y="22" text-anchor="middle" font-size="10" letter-spacing="2" fill="#ffffff" opacity=".75" font-weight="900">2차 대응</text>
 <text x="1388" y="22" text-anchor="middle" font-size="10" letter-spacing="2" fill="#f97316" opacity=".95" font-weight="900">FEEDBACK</text>
@@ -200,10 +200,18 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 110px)}
 <!-- ═══ COL SEPARATORS ═══ -->
 <line x1="158" y1="30" x2="158" y2="555" stroke="#1e2535" stroke-width="1" stroke-dasharray="4 6" opacity=".5"/>
 <line x1="384" y1="30" x2="384" y2="555" stroke="#1e2535" stroke-width="1" stroke-dasharray="4 6" opacity=".5"/>
-<line x1="614" y1="30" x2="614" y2="555" stroke="#1e2535" stroke-width="1" stroke-dasharray="4 6" opacity=".5"/>
+<line x1="614" y1="32" x2="614" y2="554" stroke="#8b5cf6" stroke-width=".6" stroke-dasharray="2 10" opacity=".18"/>
 <line x1="843" y1="30" x2="843" y2="555" stroke="#1e2535" stroke-width="1" stroke-dasharray="4 6" opacity=".5"/>
 <line x1="1066" y1="30" x2="1066" y2="555" stroke="#1e2535" stroke-width="1" stroke-dasharray="4 6" opacity=".5"/>
 <line x1="1288" y1="30" x2="1288" y2="555" stroke="#1e2535" stroke-width="1" stroke-dasharray="4 6" opacity=".5"/>
+
+<!-- 국가방공 C2 통합 시스템 외곽 경계 (AI 보조도구 내재) -->
+<rect x="385" y="30" width="453" height="524" rx="10"
+  fill="rgba(139,92,246,0.04)" stroke="#8b5cf6" stroke-width="1.5"
+  stroke-dasharray="10 5" opacity=".5"/>
+<!-- AI 보조도구 영역 표시 -->
+<rect x="620" y="34" width="214" height="14" rx="3" fill="rgba(139,92,246,0.22)" stroke="#8b5cf6" stroke-width=".8" opacity=".65"/>
+<text x="727" y="44" text-anchor="middle" font-size="7.5" fill="#8b5cf6" font-weight="800" letter-spacing="1.5" opacity=".9">AI 보조분석 도구 ▾</text>
 
 <!-- ═══════════════════════════════════════════════════
      [1] 위협 식별 — 5종 위협
@@ -306,8 +314,8 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 110px)}
   <text x="197" y="461" font-size="8.5" fill="#b0bac8">시민 신고·IoT 연계</text>
 </g>
 
-<!-- Sensor group → AI 의도·위협평가 (위로 올라가 AI 분석으로 진입) -->
-<path d="M370 265 L380 265 L380 120 L628 120" fill="none" stroke="#22d3ee" stroke-width="2.5"
+<!-- Sensor group → 국가방공 C2 (탐지 데이터 직접 입력) -->
+<line x1="370" y1="265" x2="392" y2="265" stroke="#22d3ee" stroke-width="2.5"
   stroke-dasharray="6 4" marker-end="url(#arr-cyan)" class="flow-line" opacity=".9"/>
 
 <!-- ═══════════════════════════════════════════════════
@@ -338,9 +346,13 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 110px)}
      [4] AI 분석 노드
 ════════════════════════════════════════════════════ -->
 
-<!-- AI 의도·위협평가 → C2 (AI분석 완료 후 C2로 합류, 역방향) -->
-<path d="M628 120 L622 120 L622 235 L607 235" fill="none" stroke="#8b5cf6" stroke-width="1.6"
-  stroke-dasharray="6 3" marker-end="url(#arr-purple)" class="flow-line" opacity=".85"/>
+<!-- C2 → AI 의도·위협평가 (분석 요청) -->
+<path d="M607 235 L622 235 L622 120 L628 120" fill="none" stroke="#f4b942" stroke-width="1.6"
+  stroke-dasharray="6 3" marker-end="url(#arr-gold)" class="flow-line" opacity=".85"/>
+<!-- AI 의도·위협평가 → C2 분석결과 피드백 (얇은 반환선) -->
+<path d="M628 162 L618 162 L618 258 L607 258" fill="none" stroke="#f4b942" stroke-width=".9"
+  stroke-dasharray="3 3" marker-end="url(#arr-gold)" opacity=".45"/>
+<text x="612" y="212" text-anchor="middle" font-size="6.5" fill="#f4b942" opacity=".55" transform="rotate(-90,612,212)">분석결과 반환</text>
 
 <!-- AI 의도·위협평가 box -->
 <g class="box-group" style="animation-delay:.26s">
@@ -353,7 +365,16 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 110px)}
   <text x="648" y="124" font-size="8.5" fill="#fff" opacity=".85">• 예상 목표물 분석</text>
   <text x="648" y="138" font-size="8.5" fill="#f4b942" opacity=".9" font-weight="600">• 위협 우선순위 결정</text>
   <text x="648" y="175" font-size="7.5" fill="#b0bac8" opacity=".7">Real-time Intent Analysis</text>
+  <!-- 보조도구 배지 -->
+  <rect x="782" y="57" width="52" height="14" rx="7" fill="rgba(139,92,246,0.55)" stroke="#8b5cf6" stroke-width=".8"/>
+  <text x="808" y="67" text-anchor="middle" font-size="7" fill="#fff" font-weight="800" letter-spacing=".5">보조도구</text>
 </g>
+
+<!-- ROE 교전권한 게이트 — 인간 지휘관 최종 결심 -->
+<rect x="626" y="212" width="208" height="38" rx="5"
+  fill="rgba(255,92,92,.10)" stroke="#ff5c5c" stroke-width="1" stroke-dasharray="5 3"/>
+<text x="730" y="227" text-anchor="middle" font-size="8" fill="#ff5c5c" font-weight="900">⚠ 교전권한 (ROE)</text>
+<text x="730" y="241" text-anchor="middle" font-size="7.5" fill="#ff5c5c" opacity=".85">인간 지휘관 최종 승인 필요</text>
 
 <!-- C2 → AI 대응능력 판단 (lower, orange) — 출구 y=315, AI대응 중심 y=392 -->
 <path d="M607 315 L622 315 L622 392 L628 392" fill="none" stroke="#f97316" stroke-width="1.6"
@@ -369,7 +390,15 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 110px)}
   <text x="648" y="400" font-size="8.5" fill="#fff" opacity=".85">• 타격 대상 매칭</text>
   <text x="648" y="414" font-size="8" fill="#b0bac8" opacity=".7">AI-based Asset Allocation</text>
   <text x="648" y="428" font-size="7.5" fill="#b0bac8" opacity=".65">보유자산 &amp; 타격대상 분석</text>
+  <!-- 보조도구 배지 -->
+  <rect x="782" y="347" width="52" height="14" rx="7" fill="rgba(139,92,246,0.55)" stroke="#8b5cf6" stroke-width=".8"/>
+  <text x="808" y="357" text-anchor="middle" font-size="7" fill="#fff" font-weight="800" letter-spacing=".5">보조도구</text>
 </g>
+
+<!-- AI 대응능력 판단 → C2 결과 피드백 (얇은 반환선) -->
+<path d="M628 392 L616 392 L616 330 L607 330" fill="none" stroke="#f97316" stroke-width=".9"
+  stroke-dasharray="3 3" marker-end="url(#arr-orange)" opacity=".45"/>
+<text x="610" y="360" text-anchor="middle" font-size="6.5" fill="#f97316" opacity=".5" transform="rotate(-90,610,360)">대응결과 반환</text>
 
 <!-- C2 → 전파/지휘보고 (bottom, muted) — 전파 중심 y=507 -->
 <path d="M499 348 L499 507 L628 507" fill="none" stroke="#b0bac8" stroke-width="1.3"
