@@ -314,8 +314,8 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 110px)}
   <text x="197" y="461" font-size="8.5" fill="#b0bac8">시민 신고·IoT 연계</text>
 </g>
 
-<!-- Sensor group → 국가방공 C2 (탐지 데이터 직접 입력) -->
-<line x1="370" y1="265" x2="392" y2="265" stroke="#22d3ee" stroke-width="2.5"
+<!-- Sensor group → AI 의도·위협평가 (위로 올라가 AI 분석 진입) -->
+<path d="M370 265 L380 265 L380 120 L628 120" fill="none" stroke="#22d3ee" stroke-width="2.5"
   stroke-dasharray="6 4" marker-end="url(#arr-cyan)" class="flow-line" opacity=".9"/>
 
 <!-- ═══════════════════════════════════════════════════
@@ -346,13 +346,9 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 110px)}
      [4] AI 분석 노드
 ════════════════════════════════════════════════════ -->
 
-<!-- C2 → AI 의도·위협평가 (분석 요청) -->
-<path d="M607 235 L622 235 L622 120 L628 120" fill="none" stroke="#f4b942" stroke-width="1.6"
-  stroke-dasharray="6 3" marker-end="url(#arr-gold)" class="flow-line" opacity=".85"/>
-<!-- AI 의도·위협평가 → C2 분석결과 피드백 (얇은 반환선) -->
-<path d="M628 162 L618 162 L618 258 L607 258" fill="none" stroke="#f4b942" stroke-width=".9"
-  stroke-dasharray="3 3" marker-end="url(#arr-gold)" opacity=".45"/>
-<text x="612" y="212" text-anchor="middle" font-size="6.5" fill="#f4b942" opacity=".55" transform="rotate(-90,612,212)">분석결과 반환</text>
+<!-- AI 의도·위협평가 → C2 (분석 완료 후 C2로 합류) -->
+<path d="M628 120 L622 120 L622 235 L607 235" fill="none" stroke="#8b5cf6" stroke-width="1.6"
+  stroke-dasharray="6 3" marker-end="url(#arr-purple)" class="flow-line" opacity=".85"/>
 
 <!-- AI 의도·위협평가 box -->
 <g class="box-group" style="animation-delay:.26s">
@@ -396,10 +392,6 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 110px)}
 </g>
 
 <!-- AI 대응능력 판단 → C2 결과 피드백 (얇은 반환선) -->
-<path d="M628 392 L616 392 L616 330 L607 330" fill="none" stroke="#f97316" stroke-width=".9"
-  stroke-dasharray="3 3" marker-end="url(#arr-orange)" opacity=".45"/>
-<text x="610" y="360" text-anchor="middle" font-size="6.5" fill="#f97316" opacity=".5" transform="rotate(-90,610,360)">대응결과 반환</text>
-
 <!-- C2 → 전파/지휘보고 (bottom, muted) — 전파 중심 y=507 -->
 <path d="M499 348 L499 507 L628 507" fill="none" stroke="#b0bac8" stroke-width="1.3"
   stroke-dasharray="5 4" marker-end="url(#arr-muted)" opacity=".6"/>
@@ -417,8 +409,8 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 110px)}
      [5] 1차 대응
 ════════════════════════════════════════════════════ -->
 
-<!-- AI 의도 → 민간 보호 조치 — 민간보호 중심 y=115 -->
-<line x1="838" y1="115" x2="853" y2="115" stroke="#38e69b" stroke-width="1.6"
+<!-- 요격자산배분 → 민간 보호 조치 (↑위로) — 요격자산 중심x=953 -->
+<line x1="953" y1="315" x2="953" y2="175" stroke="#38e69b" stroke-width="1.6"
   stroke-dasharray="6 3" marker-end="url(#arr-green)" class="flow-line" opacity=".85"/>
 
 <!-- 민간 보호 조치 box -->
@@ -451,8 +443,8 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 110px)}
   <text x="863" y="425" font-size="7.5" fill="#b0bac8" opacity=".65">Asset Allocation · C-UAS</text>
 </g>
 
-<!-- AI 의도 → 경보 전파 (down arrow) — 경보전파 중심 y=490 -->
-<path d="M733 185 L733 490 L853 490" fill="none" stroke="#4fa3ff" stroke-width="1.4"
+<!-- 요격자산배분 → 경보 전파 (↓아래로) — 요격자산 중심x=953 -->
+<line x1="953" y1="435" x2="953" y2="450" stroke="#4fa3ff" stroke-width="1.4"
   stroke-dasharray="5 4" marker-end="url(#arr-blue)" opacity=".7"/>
 
 <!-- 경보 전파 box -->
