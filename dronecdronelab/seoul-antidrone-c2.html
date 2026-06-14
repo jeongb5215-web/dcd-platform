@@ -306,8 +306,8 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 110px)}
   <text x="197" y="461" font-size="8.5" fill="#b0bac8">시민 신고·IoT 연계</text>
 </g>
 
-<!-- Sensor group → C2 arrow (thick animated) -->
-<line x1="370" y1="289" x2="392" y2="289" stroke="#22d3ee" stroke-width="2.5"
+<!-- Sensor group → AI 의도·위협평가 (위로 올라가 AI 분석으로 진입) -->
+<path d="M370 265 L380 265 L380 120 L628 120" fill="none" stroke="#22d3ee" stroke-width="2.5"
   stroke-dasharray="6 4" marker-end="url(#arr-cyan)" class="flow-line" opacity=".9"/>
 
 <!-- ═══════════════════════════════════════════════════
@@ -338,9 +338,9 @@ svg.c2{width:100%;height:100%;max-height:calc(100vh - 110px)}
      [4] AI 분석 노드
 ════════════════════════════════════════════════════ -->
 
-<!-- C2 → AI 의도·위협평가 (upper, gold) — 출구 y=235, AI의도 중심 y=120 -->
-<path d="M607 235 L622 235 L622 120 L628 120" fill="none" stroke="#f4b942" stroke-width="1.6"
-  stroke-dasharray="6 3" marker-end="url(#arr-gold)" class="flow-line" opacity=".85"/>
+<!-- AI 의도·위협평가 → C2 (AI분석 완료 후 C2로 합류, 역방향) -->
+<path d="M628 120 L622 120 L622 235 L607 235" fill="none" stroke="#8b5cf6" stroke-width="1.6"
+  stroke-dasharray="6 3" marker-end="url(#arr-purple)" class="flow-line" opacity=".85"/>
 
 <!-- AI 의도·위협평가 box -->
 <g class="box-group" style="animation-delay:.26s">
