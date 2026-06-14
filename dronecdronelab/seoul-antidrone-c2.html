@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>서울 지역 의도 기반 안티드론 통합체계 | DcD Lab</title>
+<script>
+(function(){
+  var params=new URLSearchParams(location.search);
+  var urlToken=params.get('dcd_token');
+  var granted=false;
+  if(urlToken){
+    try{
+      var stored=JSON.parse(localStorage.getItem('dcd_lab_token')||'null');
+      if(stored&&stored.token===urlToken&&stored.expiry>Date.now()){
+        granted=true;
+        localStorage.removeItem('dcd_lab_token');
+      }
+    }catch(e){}
+  }
+  if(!granted){
+    document.addEventListener('DOMContentLoaded',function(){
+      document.body.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#0a0c10;color:#c8d0e0;font-family:sans-serif;gap:20px;text-align:center;padding:20px">'
+        +'<div style="font-size:48px">🔒</div>'
+        +'<div style="font-size:18px;font-weight:700;color:#ff5c5c">접근이 차단되었습니다</div>'
+        +'<div style="font-size:13px;color:#5a6478;max-width:360px">이 시뮬레이션은 DcD 플랫폼 LAB 게시판을 통해서만 접근할 수 있습니다.</div>'
+        +'<a href="https://jeongb5215-web.github.io/dcd-platform/" style="margin-top:10px;padding:10px 24px;background:#1e3a6e;color:#fff;text-decoration:none;font-size:13px;font-weight:700">DcD 플랫폼으로 이동</a>'
+        +'</div>';
+    });
+  }
+})();
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0c10;--surface:#111520;--border:#1e2535;
+  --blue:#4fa3ff;--red:#ff5c5c;--green:#38e69b;
+  --gold:#f4b942;--purple:#8b5cf6;--orange:#f97316;
+  --cyan:#22d3ee;--text:#ffffff;--muted:#b0bac8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 18px;height:50px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.logo{font-family:'Dancing Script',cursive;font-size:20px;color:#fff}
+.logo span{color:var(--blue)}
+.hdr-t{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.hdr-b{background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.4);color:var(--purple);font-size:10px;padding:2px 8px;border-radius:20px}
+.nav-btn{font-size:11px;text-decoration:none;display:flex;align-items:center;gap:5px;padding:3px 12px;border-radius:20px;transition:all .2s;font-weight:600}
+.nav-btn.home{color:var(--muted);border:1px solid var(--border);background:transparent}
+.nav-btn.home:hover{color:var(--text);border-color:#5a6478}
+.nav-btn.lab{color:var(--purple);border:1px solid rgba(139,92,246,.4);background:rgba(139,92,246,.1)}
+.nav-btn.lab:hover{background:rgba(139,92,246,.22)}
+.divider{width:1px;height:16px;background:var(--border)}
+main{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:10px 14px;flex-direction:column;gap:10px}
+.chart-wrap{flex:1;width:100%;display:flex;align-items:center;justify-content:center;min-height:0}
+svg.c2{width:100%;height:100%;max-height:calc(100vh - 110px)}
+.note-bar{width:100%;max-width:1480px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.2);border-radius:8px;padding:9px 18px;display:flex;gap:12px;align-items:flex-start;flex-shrink:0}
+.note-icon{color:var(--purple);font-size:13px;font-weight:900;margin-top:1px;flex-shrink:0}
+.note-text{font-size:13.5px;line-height:1.6;color:var(--text)}
+.note-text strong{color:var(--purple)}
+
+@keyframes flowDash{to{stroke-dashoffset:-40}}
+@keyframes flowDashSlow{to{stroke-dashoffset:-60}}
+@keyframes pulseGlow{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.c2 .flow-line{animation:flowDash 1.2s linear infinite}
+.c2 .flow-slow{animation:flowDashSlow 2s linear infinite}
+.c2 .pulse{animation:pulseGlow 2s ease-in-out infinite}
+.c2 g.box-group{animation:fadeIn .5s ease both}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-btn home" href="https://jeongb5215-web.github.io/dcd-platform/">
+    <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M1 6l5-5 5 5M2.5 4.5V11h3V8h1v3h3V4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    홈
+  </a>
+  <a class="nav-btn lab" href="https://jeongb5215-web.github.io/dcd-platform/?goto=lab">
+    <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.3"/><path d="M4 6h4M6 4v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    LAB
+  </a>
+  <div class="divider"></div>
+  <span class="logo">D<span>c</span>D</span>
+  <span class="hdr-t">서울 지역 의도 기반 안티드론 통합체계(案)</span>
+  <span class="hdr-b">C-UAS DOCTRINE</span>
+</header>
+
+<main>
+<div class="chart-wrap">
+<svg class="c2" viewBox="0 0 1500 570" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L8,3 z" fill="#4fa3ff" opacity=".9"/>
+  </marker>
+  <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L8,3 z" fill="#ff5c5c" opacity=".9"/>
+  </marker>
+  <marker id="arr-gold" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L8,3 z" fill="#f4b942" opacity=".9"/>
+  </marker>
+  <marker id="arr-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L8,3 z" fill="#38e69b" opacity=".9"/>
+  </marker>
+  <marker id="arr-orange" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L8,3 z" fill="#f97316" opacity=".9"/>
+  </marker>
+  <marker id="arr-purple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L8,3 z" fill="#8b5cf6" opacity=".9"/>
+  </marker>
+  <marker id="arr-cyan" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L8,3 z" fill="#22d3ee" opacity=".9"/>
+  </marker>
+  <marker id="arr-muted" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L8,3 z" fill="#b0bac8" opacity=".9"/>
+  </marker>
+
+  <filter id="glow-blue" x="-30%" y="-30%" width="160%" height="160%">
+    <feGaussianBlur stdDeviation="3" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-red" x="-30%" y="-30%" width="160%" height="160%">
+    <feGaussianBlur stdDeviation="4" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-gold" x="-30%" y="-30%" width="160%" height="160%">
+    <feGaussianBlur stdDeviation="3" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-purple" x="-30%" y="-30%" width="160%" height="160%">
+    <feGaussianBlur stdDeviation="5" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-green" x="-30%" y="-30%" width="160%" height="160%">
+    <feGaussianBlur stdDeviation="3" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+
+  <linearGradient id="grad-red" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#ff5c5c" stop-opacity=".18"/>
+    <stop offset="100%" stop-color="#ff5c5c" stop-opacity=".06"/>
+  </linearGradient>
+  <linearGradient id="grad-blue" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#4fa3ff" stop-opacity=".18"/>
+    <stop offset="100%" stop-color="#4fa3ff" stop-opacity=".06"/>
+  </linearGradient>
+  <linearGradient id="grad-gold" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#f4b942" stop-opacity=".22"/>
+    <stop offset="100%" stop-color="#f4b942" stop-opacity=".07"/>
+  </linearGradient>
+  <linearGradient id="grad-green" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#38e69b" stop-opacity=".18"/>
+    <stop offset="100%" stop-color="#38e69b" stop-opacity=".06"/>
+  </linearGradient>
+  <linearGradient id="grad-orange" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#f97316" stop-opacity=".2"/>
+    <stop offset="100%" stop-color="#f97316" stop-opacity=".07"/>
+  </linearGradient>
+  <linearGradient id="grad-purple" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#8b5cf6" stop-opacity=".28"/>
+    <stop offset="100%" stop-color="#8b5cf6" stop-opacity=".10"/>
+  </linearGradient>
+  <linearGradient id="grad-cyan" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#22d3ee" stop-opacity=".15"/>
+    <stop offset="100%" stop-color="#22d3ee" stop-opacity=".05"/>
+  </linearGradient>
+  <linearGradient id="grad-surface" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#1e2535" stop-opacity=".7"/>
+    <stop offset="100%" stop-color="#111520" stop-opacity=".9"/>
+  </linearGradient>
+</defs>
+
+<!-- BACKGROUND GRID -->
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+  <path d="M40 0L0 0 0 40" fill="none" stroke="#1e2535" stroke-width=".4" opacity=".4"/>
+</pattern>
+<rect width="1500" height="570" fill="url(#grid)"/>
+
+<!-- ═══ SECTION LABELS ═══ -->
+<text x="78" y="22" text-anchor="middle" font-size="10" letter-spacing="2" fill="#ff5c5c" opacity=".95" font-weight="900">위협 식별</text>
+<text x="268" y="22" text-anchor="middle" font-size="10" letter-spacing="2" fill="#22d3ee" opacity=".95" font-weight="900">탐지층</text>
+<line x1="165" y1="28" x2="372" y2="28" stroke="#22d3ee" stroke-width=".5" opacity=".3"/>
+<text x="495" y="22" text-anchor="middle" font-size="10" letter-spacing="2" fill="#8b5cf6" opacity=".95" font-weight="900">국가 C2</text>
+<text x="730" y="22" text-anchor="middle" font-size="10" letter-spacing="2" fill="#f4b942" opacity=".95" font-weight="900">AI 분석</text>
+<text x="948" y="22" text-anchor="middle" font-size="10" letter-spacing="2" fill="#ffffff" opacity=".75" font-weight="900">1차 대응</text>
+<text x="1168" y="22" text-anchor="middle" font-size="10" letter-spacing="2" fill="#ffffff" opacity=".75" font-weight="900">2차 대응</text>
+<text x="1388" y="22" text-anchor="middle" font-size="10" letter-spacing="2" fill="#f97316" opacity=".95" font-weight="900">FEEDBACK</text>
+
+<!-- ═══ COL SEPARATORS ═══ -->
+<line x1="158" y1="30" x2="158" y2="555" stroke="#1e2535" stroke-width="1" stroke-dasharray="4 6" opacity=".5"/>
+<line x1="384" y1="30" x2="384" y2="555" stroke="#1e2535" stroke-width="1" stroke-dasharray="4 6" opacity=".5"/>
+<line x1="614" y1="30" x2="614" y2="555" stroke="#1e2535" stroke-width="1" stroke-dasharray="4 6" opacity=".5"/>
+<line x1="843" y1="30" x2="843" y2="555" stroke="#1e2535" stroke-width="1" stroke-dasharray="4 6" opacity=".5"/>
+<line x1="1066" y1="30" x2="1066" y2="555" stroke="#1e2535" stroke-width="1" stroke-dasharray="4 6" opacity=".5"/>
+<line x1="1288" y1="30" x2="1288" y2="555" stroke="#1e2535" stroke-width="1" stroke-dasharray="4 6" opacity=".5"/>
+
+<!-- ═══════════════════════════════════════════════════
+     [1] 위협 식별 — 5종 위협
+════════════════════════════════════════════════════ -->
+<g class="box-group" style="animation-delay:.00s">
+  <rect x="4" y="90" width="150" height="54" rx="5" fill="url(#grad-red)" stroke="#ff5c5c" stroke-width="1" filter="url(#glow-red)"/>
+  <rect x="4" y="90" width="150" height="3" rx="2" fill="#ff5c5c" opacity=".6"/>
+  <text x="14" y="108" font-size="8.5" fill="#ff5c5c" font-weight="700">① 저도고 위협드론</text>
+  <text x="14" y="122" font-size="8" fill="#ffffff" opacity=".8">소형·저피탐 드론 식별</text>
+  <text x="14" y="135" font-size="7.5" fill="#b0bac8" opacity=".7">ALT &lt; 300m</text>
+</g>
+<g class="box-group" style="animation-delay:.04s">
+  <rect x="4" y="153" width="150" height="54" rx="5" fill="url(#grad-red)" stroke="#ff5c5c" stroke-width="1"/>
+  <rect x="4" y="153" width="150" height="3" rx="2" fill="#ff5c5c" opacity=".5"/>
+  <text x="14" y="171" font-size="8.5" fill="#ff5c5c" font-weight="700">② 중·고도 위협드론</text>
+  <text x="14" y="185" font-size="8" fill="#ffffff" opacity=".8">중대형 UAV 식별</text>
+  <text x="14" y="198" font-size="7.5" fill="#b0bac8" opacity=".7">ALT 300m ~ 3,000m</text>
+</g>
+<g class="box-group" style="animation-delay:.08s">
+  <rect x="4" y="216" width="150" height="68" rx="5" fill="url(#grad-red)" stroke="#ff5c5c" stroke-width="1"/>
+  <rect x="4" y="216" width="150" height="3" rx="2" fill="#ff5c5c" opacity=".5"/>
+  <text x="14" y="234" font-size="8.5" fill="#ff5c5c" font-weight="700">③ 외곽→도심 진입</text>
+  <text x="14" y="248" font-size="8" fill="#ffffff" opacity=".8">위협드론 식별</text>
+  <text x="14" y="261" font-size="7.5" fill="#b0bac8" opacity=".7">도심 진입 경로 탐지</text>
+  <text x="14" y="274" font-size="7.5" fill="#b0bac8" opacity=".7">외곽 → 서울 도심</text>
+</g>
+<g class="box-group" style="animation-delay:.12s">
+  <rect x="4" y="294" width="150" height="54" rx="5" fill="url(#grad-red)" stroke="#ff5c5c" stroke-width="1"/>
+  <rect x="4" y="294" width="150" height="3" rx="2" fill="#ff5c5c" opacity=".5"/>
+  <text x="14" y="312" font-size="8.5" fill="#ff5c5c" font-weight="700">④ 위협 항공기</text>
+  <text x="14" y="326" font-size="8" fill="#ffffff" opacity=".8">유인기·순항미사일</text>
+  <text x="14" y="339" font-size="7.5" fill="#b0bac8" opacity=".7">식별 및 피아 구분</text>
+</g>
+<g class="box-group" style="animation-delay:.16s">
+  <rect x="4" y="357" width="150" height="54" rx="5" fill="url(#grad-red)" stroke="#ff5c5c" stroke-width="1"/>
+  <rect x="4" y="357" width="150" height="3" rx="2" fill="#ff5c5c" opacity=".5"/>
+  <text x="14" y="375" font-size="8.5" fill="#ff5c5c" font-weight="700">⑤ 위협 공중부유물</text>
+  <text x="14" y="389" font-size="8" fill="#ffffff" opacity=".8">풍선·부유체 식별</text>
+  <text x="14" y="402" font-size="7.5" fill="#b0bac8" opacity=".7">EMP·살포 위협 포함</text>
+</g>
+
+<!-- Threat → Sensor arrows -->
+<line x1="154" y1="117" x2="166" y2="117" stroke="#ff5c5c" stroke-width="1.2" marker-end="url(#arr-red)" opacity=".7"/>
+<line x1="154" y1="180" x2="166" y2="180" stroke="#ff5c5c" stroke-width="1.2" marker-end="url(#arr-red)" opacity=".7"/>
+<line x1="154" y1="250" x2="166" y2="250" stroke="#ff5c5c" stroke-width="1.2" marker-end="url(#arr-red)" opacity=".7"/>
+<line x1="154" y1="321" x2="166" y2="321" stroke="#ff5c5c" stroke-width="1.2" marker-end="url(#arr-red)" opacity=".7"/>
+<line x1="154" y1="384" x2="166" y2="384" stroke="#ff5c5c" stroke-width="1.2" marker-end="url(#arr-red)" opacity=".7"/>
+
+<!-- ═══════════════════════════════════════════════════
+     [2] 탐지층 — 8개 센서
+════════════════════════════════════════════════════ -->
+<rect x="163" y="75" width="214" height="430" rx="7" fill="#22d3ee" fill-opacity=".02" stroke="#22d3ee" stroke-width=".5" stroke-dasharray="4 4" opacity=".5"/>
+
+<g class="box-group" style="animation-delay:.06s">
+  <rect x="170" y="84" width="200" height="44" rx="5" fill="url(#grad-cyan)" stroke="#22d3ee" stroke-width="1"/>
+  <text x="183" y="102" font-size="9" fill="#22d3ee" opacity=".8" font-weight="700">◈</text>
+  <text x="197" y="102" font-size="10.5" font-weight="600" fill="#fff">① 레이다</text>
+  <text x="197" y="118" font-size="8.5" fill="#b0bac8">AESA/위상배열 탐지</text>
+</g>
+<g class="box-group" style="animation-delay:.08s">
+  <rect x="170" y="133" width="200" height="44" rx="5" fill="url(#grad-cyan)" stroke="#22d3ee" stroke-width="1"/>
+  <text x="183" y="151" font-size="9" fill="#22d3ee" opacity=".8" font-weight="700">◈</text>
+  <text x="197" y="151" font-size="10.5" font-weight="600" fill="#fff">② RF스캐너</text>
+  <text x="197" y="167" font-size="8.5" fill="#b0bac8">주파수 탐지·식별</text>
+</g>
+<g class="box-group" style="animation-delay:.10s">
+  <rect x="170" y="182" width="200" height="44" rx="5" fill="url(#grad-cyan)" stroke="#22d3ee" stroke-width="1"/>
+  <text x="183" y="200" font-size="9" fill="#22d3ee" opacity=".8" font-weight="700">◈</text>
+  <text x="197" y="200" font-size="10.5" font-weight="600" fill="#fff">③ EO/IR</text>
+  <text x="197" y="216" font-size="8.5" fill="#b0bac8">광학·적외선 카메라</text>
+</g>
+<g class="box-group" style="animation-delay:.12s">
+  <rect x="170" y="231" width="200" height="44" rx="5" fill="url(#grad-cyan)" stroke="#22d3ee" stroke-width="1"/>
+  <text x="183" y="249" font-size="9" fill="#22d3ee" opacity=".8" font-weight="700">◈</text>
+  <text x="197" y="249" font-size="10.5" font-weight="600" fill="#fff">④ SIGINT</text>
+  <text x="197" y="265" font-size="8.5" fill="#b0bac8">신호정보 수집</text>
+</g>
+<g class="box-group" style="animation-delay:.14s">
+  <rect x="170" y="280" width="200" height="44" rx="5" fill="url(#grad-cyan)" stroke="#22d3ee" stroke-width="1"/>
+  <text x="183" y="298" font-size="9" fill="#22d3ee" opacity=".8" font-weight="700">◈</text>
+  <text x="197" y="298" font-size="10.5" font-weight="600" fill="#fff">⑤ ELINT</text>
+  <text x="197" y="314" font-size="8.5" fill="#b0bac8">전자정보 탐지</text>
+</g>
+<g class="box-group" style="animation-delay:.16s">
+  <rect x="170" y="329" width="200" height="44" rx="5" fill="url(#grad-cyan)" stroke="#22d3ee" stroke-width="1"/>
+  <text x="183" y="347" font-size="9" fill="#22d3ee" opacity=".8" font-weight="700">◈</text>
+  <text x="197" y="347" font-size="10.5" font-weight="600" fill="#fff">⑥ OSINT</text>
+  <text x="197" y="363" font-size="8.5" fill="#b0bac8">공개출처 정보</text>
+</g>
+<g class="box-group" style="animation-delay:.18s">
+  <rect x="170" y="378" width="200" height="44" rx="5" fill="url(#grad-cyan)" stroke="#22d3ee" stroke-width="1"/>
+  <text x="183" y="396" font-size="9" fill="#22d3ee" opacity=".8" font-weight="700">◈</text>
+  <text x="197" y="396" font-size="10.5" font-weight="600" fill="#fff">⑦ 전방관측</text>
+  <text x="197" y="412" font-size="8.5" fill="#b0bac8">GOP·전방 감시초소</text>
+</g>
+<g class="box-group" style="animation-delay:.20s">
+  <rect x="170" y="427" width="200" height="44" rx="5" fill="url(#grad-cyan)" stroke="#22d3ee" stroke-width="1"/>
+  <text x="183" y="445" font-size="9" fill="#22d3ee" opacity=".8" font-weight="700">◈</text>
+  <text x="197" y="445" font-size="10.5" font-weight="600" fill="#fff">⑧ 민간관측</text>
+  <text x="197" y="461" font-size="8.5" fill="#b0bac8">시민 신고·IoT 연계</text>
+</g>
+
+<!-- Sensor group → C2 arrow (thick animated) -->
+<line x1="370" y1="289" x2="392" y2="289" stroke="#22d3ee" stroke-width="2.5"
+  stroke-dasharray="6 4" marker-end="url(#arr-cyan)" class="flow-line" opacity=".9"/>
+
+<!-- ═══════════════════════════════════════════════════
+     [3] 국가 방공 C2 — 중앙 허브
+════════════════════════════════════════════════════ -->
+<g class="box-group pulse" style="animation-delay:.22s">
+  <rect x="392" y="200" width="215" height="148" rx="8" fill="url(#grad-purple)" stroke="#8b5cf6" stroke-width="2" filter="url(#glow-purple)"/>
+  <rect x="392" y="200" width="215" height="4" rx="3" fill="#8b5cf6" opacity=".8"/>
+  <!-- Title -->
+  <text x="499" y="228" text-anchor="middle" font-size="15" font-weight="900" fill="#fff" letter-spacing="1">국가 방공 C2</text>
+  <!-- Separator -->
+  <line x1="410" y1="238" x2="589" y2="238" stroke="#8b5cf6" stroke-width=".5" opacity=".5"/>
+  <!-- 평시 -->
+  <rect x="410" y="247" width="90" height="36" rx="4" fill="rgba(79,163,255,.12)" stroke="#4fa3ff" stroke-width=".8"/>
+  <text x="455" y="261" text-anchor="middle" font-size="8" fill="#4fa3ff" font-weight="700">평시</text>
+  <text x="455" y="275" text-anchor="middle" font-size="8" fill="#b0bac8">정부기관</text>
+  <!-- 전시 -->
+  <rect x="508" y="247" width="90" height="36" rx="4" fill="rgba(255,92,92,.12)" stroke="#ff5c5c" stroke-width=".8"/>
+  <text x="553" y="261" text-anchor="middle" font-size="8" fill="#ff5c5c" font-weight="700">전시</text>
+  <text x="553" y="275" text-anchor="middle" font-size="8" fill="#b0bac8">통합방위</text>
+  <!-- AI 동시 루프 라벨 -->
+  <text x="499" y="308" text-anchor="middle" font-size="8" fill="#8b5cf6" opacity=".85">AI 동시 루프 운용</text>
+  <text x="499" y="322" text-anchor="middle" font-size="7.5" fill="#b0bac8" opacity=".7">자산배분 · 경보 · 요격 병렬처리</text>
+  <text x="499" y="336" text-anchor="middle" font-size="7.5" fill="#b0bac8" opacity=".7">평시/전시 이원화 지휘구조</text>
+</g>
+
+<!-- ═══════════════════════════════════════════════════
+     [4] AI 분석 노드
+════════════════════════════════════════════════════ -->
+
+<!-- C2 → AI 의도·위협평가 (upper, gold) -->
+<path d="M607 240 L622 240 L622 118 L628 118" fill="none" stroke="#f4b942" stroke-width="1.6"
+  stroke-dasharray="6 3" marker-end="url(#arr-gold)" class="flow-line" opacity=".85"/>
+
+<!-- AI 의도·위협평가 box -->
+<g class="box-group" style="animation-delay:.26s">
+  <rect x="628" y="55" width="210" height="130" rx="6" fill="url(#grad-gold)" stroke="#f4b942" stroke-width="1.5" filter="url(#glow-gold)"/>
+  <rect x="628" y="55" width="210" height="3" rx="2" fill="#f4b942" opacity=".7"/>
+  <text x="638" y="75" font-size="11" font-weight="800" fill="#f4b942">AI 의도·위협평가</text>
+  <line x1="638" y1="82" x2="828" y2="82" stroke="#f4b942" stroke-width=".4" opacity=".4"/>
+  <text x="648" y="96"  font-size="8.5" fill="#fff" opacity=".85">• 현위치 · 방향 · 속도</text>
+  <text x="648" y="110" font-size="8.5" fill="#fff" opacity=".85">• 고도 · 무장 종류</text>
+  <text x="648" y="124" font-size="8.5" fill="#fff" opacity=".85">• 예상 목표물 분석</text>
+  <text x="648" y="138" font-size="8.5" fill="#f4b942" opacity=".9" font-weight="600">• 위협 우선순위 결정</text>
+  <text x="648" y="175" font-size="7.5" fill="#b0bac8" opacity=".7">Real-time Intent Analysis</text>
+</g>
+
+<!-- C2 → AI 대응능력 판단 (lower, orange) -->
+<path d="M607 340 L622 340 L622 382 L628 382" fill="none" stroke="#f97316" stroke-width="1.6"
+  stroke-dasharray="6 3" marker-end="url(#arr-orange)" class="flow-line" opacity=".85"/>
+
+<!-- AI 대응능력 판단 box -->
+<g class="box-group" style="animation-delay:.28s">
+  <rect x="628" y="345" width="210" height="95" rx="6" fill="url(#grad-orange)" stroke="#f97316" stroke-width="1.5"/>
+  <rect x="628" y="345" width="210" height="3" rx="2" fill="#f97316" opacity=".7"/>
+  <text x="638" y="365" font-size="11" font-weight="800" fill="#f97316">AI 대응능력 판단</text>
+  <line x1="638" y1="372" x2="828" y2="372" stroke="#f97316" stroke-width=".4" opacity=".4"/>
+  <text x="648" y="386" font-size="8.5" fill="#fff" opacity=".85">• 보유 자산 현황 파악</text>
+  <text x="648" y="400" font-size="8.5" fill="#fff" opacity=".85">• 타격 대상 매칭</text>
+  <text x="648" y="414" font-size="8" fill="#b0bac8" opacity=".7">AI-based Asset Allocation</text>
+  <text x="648" y="428" font-size="7.5" fill="#b0bac8" opacity=".65">보유자산 &amp; 타격대상 분석</text>
+</g>
+
+<!-- C2 → 전파/지휘보고 (bottom, muted) -->
+<path d="M499 348 L499 490 L628 490" fill="none" stroke="#b0bac8" stroke-width="1.3"
+  stroke-dasharray="5 4" marker-end="url(#arr-muted)" opacity=".6"/>
+
+<!-- 전파/지휘보고 box -->
+<g class="box-group" style="animation-delay:.30s">
+  <rect x="628" y="475" width="210" height="65" rx="6" fill="url(#grad-surface)" stroke="#5a6478" stroke-width="1"/>
+  <text x="638" y="495" font-size="10.5" font-weight="700" fill="#b0bac8">전파 / 지휘보고</text>
+  <line x1="638" y1="501" x2="828" y2="501" stroke="#5a6478" stroke-width=".4" opacity=".4"/>
+  <text x="648" y="515" font-size="8.5" fill="#b0bac8" opacity=".8">BH · 정부 · 국방부</text>
+  <text x="648" y="528" font-size="8" fill="#b0bac8" opacity=".6">지휘계통 실시간 보고</text>
+</g>
+
+<!-- ═══════════════════════════════════════════════════
+     [5] 1차 대응
+════════════════════════════════════════════════════ -->
+
+<!-- AI 의도 → 민간 보호 조치 -->
+<line x1="838" y1="110" x2="853" y2="110" stroke="#38e69b" stroke-width="1.6"
+  stroke-dasharray="6 3" marker-end="url(#arr-green)" class="flow-line" opacity=".85"/>
+
+<!-- 민간 보호 조치 box -->
+<g class="box-group" style="animation-delay:.32s">
+  <rect x="853" y="55" width="200" height="120" rx="6" fill="url(#grad-green)" stroke="#38e69b" stroke-width="1.5" filter="url(#glow-green)"/>
+  <rect x="853" y="55" width="200" height="3" rx="2" fill="#38e69b" opacity=".6"/>
+  <text x="863" y="75" font-size="11" font-weight="800" fill="#38e69b">민간 보호 조치</text>
+  <line x1="863" y1="82" x2="1043" y2="82" stroke="#38e69b" stroke-width=".4" opacity=".4"/>
+  <text x="873" y="96"  font-size="8.5" fill="#fff" opacity=".85">• 대피 명령 발령</text>
+  <text x="873" y="110" font-size="8.5" fill="#fff" opacity=".85">• 전력망 보호 조치</text>
+  <text x="873" y="124" font-size="8.5" fill="#fff" opacity=".85">• 소방·복구대기</text>
+  <text x="873" y="138" font-size="8" fill="#38e69b" opacity=".75" font-weight="600">• 핵심 기반시설 방호</text>
+  <text x="863" y="165" font-size="7.5" fill="#b0bac8" opacity=".65">Civil Protection Measures</text>
+</g>
+
+<!-- AI 대응 → 요격자산배분 -->
+<line x1="838" y1="392" x2="853" y2="392" stroke="#f97316" stroke-width="1.6"
+  stroke-dasharray="6 3" marker-end="url(#arr-orange)" class="flow-line" opacity=".85"/>
+
+<!-- 요격자산배분 box -->
+<g class="box-group" style="animation-delay:.34s">
+  <rect x="853" y="315" width="200" height="120" rx="6" fill="url(#grad-orange)" stroke="#f97316" stroke-width="1.5"/>
+  <rect x="853" y="315" width="200" height="3" rx="2" fill="#f97316" opacity=".6"/>
+  <text x="863" y="335" font-size="11" font-weight="800" fill="#f97316">요격자산배분</text>
+  <line x1="863" y1="342" x2="1043" y2="342" stroke="#f97316" stroke-width=".4" opacity=".4"/>
+  <text x="873" y="356" font-size="8.5" fill="#fff" opacity=".85">• EW 전자전 체계</text>
+  <text x="873" y="370" font-size="8.5" fill="#fff" opacity=".85">• 요격 드론 투입</text>
+  <text x="873" y="384" font-size="8.5" fill="#fff" opacity=".85">• 기동대응 부대</text>
+  <text x="873" y="398" font-size="8.5" fill="#f97316" opacity=".85" font-weight="600">• 정찰드론 전개</text>
+  <text x="863" y="425" font-size="7.5" fill="#b0bac8" opacity=".65">Asset Allocation · C-UAS</text>
+</g>
+
+<!-- AI 의도 → 경보 전파 (down arrow) -->
+<path d="M733 185 L733 465 L853 465" fill="none" stroke="#4fa3ff" stroke-width="1.4"
+  stroke-dasharray="5 4" marker-end="url(#arr-blue)" opacity=".7"/>
+
+<!-- 경보 전파 box -->
+<g class="box-group" style="animation-delay:.36s">
+  <rect x="853" y="450" width="200" height="80" rx="6" fill="url(#grad-blue)" stroke="#4fa3ff" stroke-width="1.2"/>
+  <rect x="853" y="450" width="200" height="3" rx="2" fill="#4fa3ff" opacity=".5"/>
+  <text x="863" y="470" font-size="11" font-weight="800" fill="#4fa3ff">경보 전파</text>
+  <line x1="863" y1="477" x2="1043" y2="477" stroke="#4fa3ff" stroke-width=".4" opacity=".4"/>
+  <text x="873" y="491" font-size="8.5" fill="#fff" opacity=".85">• 전국 · 권역 · 지역 판단</text>
+  <text x="873" y="505" font-size="8.5" fill="#fff" opacity=".8">• 경보 등급 분류 발령</text>
+  <text x="873" y="520" font-size="7.5" fill="#b0bac8" opacity=".65">National Alert System</text>
+</g>
+
+<!-- ═══════════════════════════════════════════════════
+     [6] 2차 대응
+════════════════════════════════════════════════════ -->
+
+<!-- 민간보호 → 지자체·경찰·소방 -->
+<line x1="1053" y1="110" x2="1075" y2="110" stroke="#38e69b" stroke-width="1.5"
+  stroke-dasharray="5 3" marker-end="url(#arr-green)" class="flow-line" opacity=".8"/>
+
+<!-- 지자체·경찰·소방 box -->
+<g class="box-group" style="animation-delay:.38s">
+  <rect x="1075" y="55" width="200" height="110" rx="6" fill="url(#grad-green)" stroke="#38e69b" stroke-width="1.3"/>
+  <rect x="1075" y="55" width="200" height="3" rx="2" fill="#38e69b" opacity=".5"/>
+  <text x="1085" y="74" font-size="10" font-weight="800" fill="#38e69b">지자체·경찰·소방</text>
+  <text x="1085" y="87" font-size="9" font-weight="700" fill="#38e69b">기반시설 대응</text>
+  <line x1="1085" y1="93" x2="1265" y2="93" stroke="#38e69b" stroke-width=".4" opacity=".4"/>
+  <text x="1095" y="107" font-size="8.5" fill="#fff" opacity=".85">• 경찰 봉쇄·통제</text>
+  <text x="1095" y="121" font-size="8.5" fill="#fff" opacity=".85">• 소방 대기·출동</text>
+  <text x="1095" y="135" font-size="8.5" fill="#fff" opacity=".85">• 전력·통신 기반시설</text>
+  <text x="1085" y="156" font-size="7.5" fill="#b0bac8" opacity=".6">Civil Authority Response</text>
+</g>
+
+<!-- 요격자산배분 → 지역방공대응 -->
+<line x1="1053" y1="375" x2="1075" y2="375" stroke="#f97316" stroke-width="1.5"
+  stroke-dasharray="5 3" marker-end="url(#arr-orange)" class="flow-line" opacity=".8"/>
+
+<!-- 지역방공대응 box -->
+<g class="box-group" style="animation-delay:.40s">
+  <rect x="1075" y="315" width="200" height="100" rx="6" fill="url(#grad-orange)" stroke="#f97316" stroke-width="1.3"/>
+  <rect x="1075" y="315" width="200" height="3" rx="2" fill="#f97316" opacity=".5"/>
+  <text x="1085" y="335" font-size="11" font-weight="800" fill="#f97316">지역방공대응</text>
+  <line x1="1085" y1="342" x2="1265" y2="342" stroke="#f97316" stroke-width=".4" opacity=".4"/>
+  <text x="1095" y="357" font-size="8.5" fill="#fff" opacity=".85">• 지역 C-UAS 자산 가동</text>
+  <text x="1095" y="371" font-size="8.5" fill="#fff" opacity=".85">• 방공 구역 설정</text>
+  <text x="1095" y="385" font-size="8.5" fill="#fff" opacity=".85">• 요격·무력화 실행</text>
+  <text x="1085" y="406" font-size="7.5" fill="#b0bac8" opacity=".6">Regional Air Defense</text>
+</g>
+
+<!-- ═══════════════════════════════════════════════════
+     [7] FEEDBACK — 결과보고
+════════════════════════════════════════════════════ -->
+
+<!-- 지자체 → 피해·복구 보고 -->
+<line x1="1275" y1="105" x2="1297" y2="105" stroke="#b0bac8" stroke-width="1.3"
+  marker-end="url(#arr-muted)" opacity=".7"/>
+
+<!-- 피해·복구 보고 box -->
+<g class="box-group" style="animation-delay:.42s">
+  <rect x="1297" y="60" width="188" height="88" rx="6" fill="url(#grad-surface)" stroke="#5a6478" stroke-width="1"/>
+  <rect x="1297" y="60" width="188" height="3" rx="2" fill="#5a6478" opacity=".5"/>
+  <text x="1307" y="79" font-size="10.5" font-weight="800" fill="#b0bac8">피해 · 복구 보고</text>
+  <line x1="1307" y1="85" x2="1475" y2="85" stroke="#5a6478" stroke-width=".4" opacity=".4"/>
+  <text x="1317" y="99"  font-size="8.5" fill="#fff" opacity=".8">• 인명·재산 피해 집계</text>
+  <text x="1317" y="113" font-size="8.5" fill="#fff" opacity=".8">• 복구 자원 배분</text>
+  <text x="1307" y="140" font-size="7.5" fill="#b0bac8" opacity=".6">Damage &amp; Recovery Report</text>
+</g>
+
+<!-- 지역방공 → 요격·무력화 결과보고 -->
+<line x1="1275" y1="365" x2="1297" y2="365" stroke="#f97316" stroke-width="1.4"
+  marker-end="url(#arr-orange)" opacity=".8"/>
+
+<!-- 요격·무력화 결과보고 box -->
+<g class="box-group" style="animation-delay:.44s">
+  <rect x="1297" y="320" width="188" height="90" rx="6" fill="url(#grad-orange)" stroke="#f97316" stroke-width="1.2"/>
+  <rect x="1297" y="320" width="188" height="3" rx="2" fill="#f97316" opacity=".5"/>
+  <text x="1307" y="339" font-size="10.5" font-weight="800" fill="#f97316">요격 / 무력화</text>
+  <text x="1307" y="352" font-size="10.5" font-weight="800" fill="#f97316">결과보고</text>
+  <line x1="1307" y1="358" x2="1475" y2="358" stroke="#f97316" stroke-width=".4" opacity=".4"/>
+  <text x="1317" y="372" font-size="8.5" fill="#fff" opacity=".8">• 요격 성공률</text>
+  <text x="1317" y="386" font-size="8.5" fill="#fff" opacity=".8">• 잔여 위협 평가</text>
+  <text x="1307" y="402" font-size="7.5" fill="#b0bac8" opacity=".6">Engagement Result BDA</text>
+</g>
+
+<!-- ═══════════════════════════════════════════════════
+     피드백 루프 — 결과 → C2
+════════════════════════════════════════════════════ -->
+<path d="M1391 408 L1391 545 L499 545 L499 348"
+  fill="none" stroke="#f97316" stroke-width="1.8"
+  stroke-dasharray="8 4" marker-end="url(#arr-orange)"
+  class="flow-slow" opacity=".6"/>
+<text x="900" y="556" text-anchor="middle" font-size="8.5" fill="#f97316" opacity=".7" letter-spacing="1">전장 피드백 루프 — 교전 결과 → C2 재평가</text>
+
+<!-- 피해복구 → C2 feedback (상단) -->
+<path d="M1391 60 L1391 42 L499 42 L499 200"
+  fill="none" stroke="#38e69b" stroke-width="1.5"
+  stroke-dasharray="6 4" marker-end="url(#arr-green)"
+  class="flow-slow" opacity=".45"/>
+<text x="900" y="37" text-anchor="middle" font-size="8" fill="#38e69b" opacity=".55" letter-spacing="1">민간피해 보고 루프 → C2</text>
+
+</svg>
+</div>
+
+<!-- 하단 해설 바 -->
+<div class="note-bar">
+  <span class="note-icon">★</span>
+  <span class="note-text">
+    <strong>핵심 개념:</strong>
+    평시·전시 이원화 지휘구조 하에 <strong>국가 방공 C2</strong>가 복수 탐지 출처를 통합, <strong>AI 의도·위협평가 → 민간보호·지자체 대응</strong>과
+    <strong>AI 대응능력 판단 → 요격자산배분 → 지역방공</strong>을 동시 병렬 루프로 운용하며, 교전 결과를 C2에 피드백하는 자기완결형 동시 루프 구조.
+  </span>
+</div>
+</main>
+
+</body>
+</html>
