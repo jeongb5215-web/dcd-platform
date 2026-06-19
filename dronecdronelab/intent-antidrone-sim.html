@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>의도 기반 안티드론 시뮬레이터 | DcD Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0c10;--surface:#111520;--border:#1e2535;
+  --blue:#4fa3ff;--red:#ff5c5c;--green:#38e69b;
+  --gold:#f4b942;--purple:#8b5cf6;--orange:#f97316;
+  --cyan:#22d3ee;--text:#ffffff;--muted:#b0bac8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* ── Header ── */
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 18px;height:50px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.logo{font-family:'Dancing Script',cursive;font-size:20px;color:#fff}
+.logo span{color:var(--blue)}
+.hdr-t{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.hdr-b{background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.4);color:var(--purple);font-size:10px;padding:2px 8px;border-radius:20px}
+.nav-btn{font-size:11px;text-decoration:none;display:flex;align-items:center;gap:5px;padding:3px 12px;border-radius:20px;transition:all .2s;font-weight:600}
+.nav-btn.home{color:var(--muted);border:1px solid var(--border);background:transparent}
+.nav-btn.home:hover{color:var(--text);border-color:#5a6478}
+.nav-btn.lab{color:var(--purple);border:1px solid rgba(139,92,246,.4);background:rgba(139,92,246,.1)}
+.nav-btn.lab:hover{background:rgba(139,92,246,.22)}
+.hdr-div{width:1px;height:16px;background:var(--border)}
+
+/* ── Phase Bar ── */
+.phase-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;gap:5px;flex-shrink:0;flex-wrap:wrap}
+.ph{padding:5px 13px;border-radius:4px;font-size:11px;font-weight:700;border:1.5px solid #222;color:#3a4560;background:#0e1218;transition:all .35s ease;white-space:nowrap;cursor:default}
+.ph.gold{border-color:#2a2008}.ph.gold.active{background:rgba(244,185,66,.18);border-color:var(--gold);color:var(--gold);box-shadow:0 0 14px rgba(244,185,66,.4)}
+.ph.gold.done{background:rgba(244,185,66,.07);border-color:rgba(244,185,66,.3);color:rgba(244,185,66,.7)}
+.ph.blue{border-color:#0d1a2a}.ph.blue.active{background:rgba(79,163,255,.18);border-color:var(--blue);color:var(--blue);box-shadow:0 0 14px rgba(79,163,255,.4)}
+.ph.blue.done{background:rgba(79,163,255,.07);border-color:rgba(79,163,255,.3);color:rgba(79,163,255,.7)}
+.ph.red{border-color:#200808}.ph.red.active{background:rgba(255,92,92,.18);border-color:var(--red);color:var(--red);box-shadow:0 0 14px rgba(255,92,92,.4)}
+.ph.red.done{background:rgba(255,92,92,.07);border-color:rgba(255,92,92,.3);color:rgba(255,92,92,.7)}
+.ph.green{border-color:#081a0f}.ph.green.active{background:rgba(56,230,155,.18);border-color:var(--green);color:var(--green);box-shadow:0 0 14px rgba(56,230,155,.4)}
+.ph.green.done{background:rgba(56,230,155,.07);border-color:rgba(56,230,155,.3);color:rgba(56,230,155,.7)}
+.ph.orange{border-color:#201008}.ph.orange.active{background:rgba(249,115,22,.18);border-color:var(--orange);color:var(--orange);box-shadow:0 0 14px rgba(249,115,22,.4)}
+.ph.orange.done{background:rgba(249,115,22,.07);border-color:rgba(249,115,22,.3);color:rgba(249,115,22,.7)}
+.ph.purple{border-color:#14082a}.ph.purple.active{background:rgba(139,92,246,.18);border-color:var(--purple);color:var(--purple);box-shadow:0 0 14px rgba(139,92,246,.4)}
+.ph.purple.done{background:rgba(139,92,246,.07);border-color:rgba(139,92,246,.3);color:rgba(139,92,246,.7)}
+.ph-arrow{color:#252d40;font-size:12px;flex-shrink:0}
+.ph-branch{display:flex;flex-direction:column;gap:3px}
+.ph-status{margin-left:auto;padding:5px 14px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(79,163,255,.06);border:1px solid rgba(79,163,255,.2);color:var(--muted);transition:all .3s;white-space:nowrap}
+.ph-status.ok{background:rgba(56,230,155,.1);border-color:rgba(56,230,155,.35);color:var(--green)}
+.ph-status.alert{background:rgba(255,92,92,.1);border-color:rgba(255,92,92,.35);color:var(--red)}
+
+/* ── Main ── */
+main{flex:1;display:flex;flex-direction:column;padding:8px 14px;gap:8px;overflow:hidden;min-height:0}
+.map-wrap{flex:1;min-height:0}
+svg.sim{width:100%;height:100%}
+
+/* ── Flow Bar ── */
+.flow-bar{display:flex;align-items:stretch;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;flex-shrink:0;height:64px}
+.fn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-right:1px solid var(--border);padding:6px 10px;transition:background .35s}
+.fn:last-child{border-right:none;flex:1.8}
+.fn-lbl{font-size:9px;color:#3a4560;font-weight:700;letter-spacing:1px;text-transform:uppercase;transition:color .35s}
+.fn-title{font-size:12px;font-weight:700;color:#2a3550;transition:color .35s}
+.fn.active{background:rgba(79,163,255,.07)}
+.fn.active .fn-lbl{color:var(--blue)}
+.fn.active .fn-title{color:var(--text)}
+.fn-assets{display:flex;gap:6px;margin-top:2px}
+.asset{font-size:9px;padding:2px 7px;border-radius:10px;border:1px solid #1e2535;color:#2a3550;font-weight:700;transition:all .35s}
+.asset.on{border-color:var(--red);color:var(--red);background:rgba(255,92,92,.1);box-shadow:0 0 6px rgba(255,92,92,.25)}
+.fn-arrow{display:flex;align-items:center;justify-content:center;color:#1e2535;font-size:14px;padding:0 2px;flex-shrink:0}
+
+/* ── Controls ── */
+.controls{background:var(--surface);border-top:1px solid var(--border);padding:9px 16px;display:flex;gap:10px;align-items:center;flex-shrink:0}
+.ctrl-lbl{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:1px;white-space:nowrap}
+.btn{padding:7px 18px;border-radius:6px;font-size:11px;font-weight:700;border:1.5px solid;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-1{background:rgba(56,230,155,.1);border-color:rgba(56,230,155,.4);color:var(--green)}
+.btn-1:hover{background:rgba(56,230,155,.2)}
+.btn-1:disabled{opacity:.4;cursor:not-allowed}
+.btn-2{background:rgba(255,92,92,.1);border-color:rgba(255,92,92,.4);color:var(--red)}
+.btn-2:hover{background:rgba(255,92,92,.2)}
+.btn-2:disabled{opacity:.4;cursor:not-allowed}
+.btn-r{background:transparent;border-color:#2a3550;color:var(--muted);margin-left:auto}
+.btn-r:hover{border-color:var(--muted);color:var(--text)}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="nav-btn home" href="https://jeongb5215-web.github.io/dcd-platform/">
+    <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M1 6l5-5 5 5M2.5 4.5V11h3V8h1v3h3V4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>홈
+  </a>
+  <a class="nav-btn lab" href="https://jeongb5215-web.github.io/dcd-platform/?goto=lab">
+    <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.3"/><path d="M4 6h4M6 4v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>LAB
+  </a>
+  <div class="hdr-div"></div>
+  <span class="logo">D<span>c</span>D</span>
+  <span class="hdr-t">의도 기반 안티드론 체계 시뮬레이터</span>
+  <span class="hdr-b">INTENT-BASED C-UAS SIM</span>
+</header>
+
+<!-- Phase Bar -->
+<div class="phase-bar">
+  <div class="ph gold" id="ph-manage">관리</div>
+  <div class="ph-arrow">▶</div>
+  <div class="ph blue" id="ph-track">추적</div>
+  <div class="ph-arrow">▶</div>
+  <div class="ph-branch">
+    <div class="ph red" id="ph-deviate">이탈</div>
+    <div class="ph green" id="ph-normal">정상</div>
+  </div>
+  <div class="ph-arrow">▶</div>
+  <div class="ph orange" id="ph-warn">경고</div>
+  <div class="ph-arrow">▶</div>
+  <div class="ph red" id="ph-response">대응</div>
+  <div class="ph-arrow">▶</div>
+  <div class="ph purple" id="ph-after">사후관리</div>
+  <div class="ph-status" id="ph-status">시나리오를 선택하세요</div>
+</div>
+
+<main>
+  <div class="map-wrap">
+  <svg class="sim" viewBox="0 0 1400 370" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="ab" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#4fa3ff" opacity=".85"/></marker>
+    <marker id="ag" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#38e69b" opacity=".85"/></marker>
+    <marker id="ar" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#ff5c5c" opacity=".85"/></marker>
+    <marker id="ao" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#f97316" opacity=".85"/></marker>
+    <filter id="fb"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="fr"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="fg"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="fp"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <!-- ■ BACKGROUND -->
+  <rect width="1400" height="370" fill="#0a0c10"/>
+
+  <!-- 핵심 태그 -->
+  <text x="14" y="16" font-size="9" fill="#f4b942" font-weight="700">▷ 핵심 : 정부주도 + 5G-A + AI + 통합성</text>
+
+  <!-- ■ LEFT: SMALL TOWN -->
+  <ellipse cx="155" cy="220" rx="120" ry="72" fill="rgba(79,163,255,.03)" stroke="rgba(79,163,255,.12)" stroke-width="1" stroke-dasharray="4,3"/>
+  <g opacity=".45">
+    <rect x="65" y="188" width="16" height="52" rx="1" fill="#1a2535"/>
+    <rect x="84" y="198" width="12" height="42" rx="1" fill="#151d2e"/>
+    <rect x="99" y="184" width="18" height="56" rx="1" fill="#1a2535"/>
+    <rect x="120" y="193" width="14" height="47" rx="1" fill="#151d2e"/>
+    <rect x="137" y="202" width="13" height="38" rx="1" fill="#1a2535"/>
+    <rect x="153" y="188" width="16" height="52" rx="1" fill="#151d2e"/>
+    <rect x="172" y="196" width="13" height="44" rx="1" fill="#1a2535"/>
+    <rect x="188" y="190" width="15" height="50" rx="1" fill="#151d2e"/>
+    <rect x="206" y="200" width="11" height="40" rx="1" fill="#1a2535"/>
+  </g>
+  <text x="150" y="175" text-anchor="middle" font-size="10" fill="#4fa3ff" font-weight="700" letter-spacing="1">Small Town</text>
+
+  <!-- [5G-A] 설명 박스 -->
+  <rect x="6" y="28" width="86" height="85" rx="4" fill="rgba(79,163,255,.05)" stroke="rgba(79,163,255,.18)" stroke-width="1"/>
+  <text x="14" y="43" font-size="8.5" fill="#4fa3ff" font-weight="700">[5G-A]</text>
+  <text x="14" y="57" font-size="7" fill="#5a7a9a">대량 AI 데이터 지연 없이</text>
+  <text x="14" y="68" font-size="7" fill="#5a7a9a">전송, 네트워크 자체로</text>
+  <text x="14" y="79" font-size="7" fill="#5a7a9a">드론 탐지 고신뢰 전술</text>
+  <text x="14" y="90" font-size="7" fill="#5a7a9a">감지 인프라. 초지연성,</text>
+  <text x="14" y="101" font-size="7" fill="#5a7a9a">통합 감지/통신 체계</text>
+
+  <!-- LEFT Radar tower -->
+  <g id="radar-L">
+    <line x1="115" y1="303" x2="115" y2="270" stroke="#4fa3ff" stroke-width="2"/>
+    <line x1="103" y1="303" x2="127" y2="303" stroke="#4fa3ff" stroke-width="2"/>
+    <line x1="107" y1="303" x2="115" y2="288" stroke="#4fa3ff" stroke-width="1.5"/>
+    <line x1="123" y1="303" x2="115" y2="288" stroke="#4fa3ff" stroke-width="1.5"/>
+    <ellipse cx="115" cy="270" rx="13" ry="4.5" fill="none" stroke="#4fa3ff" stroke-width="1.5"/>
+    <line x1="115" y1="265.5" x2="115" y2="274.5" stroke="#4fa3ff" stroke-width="1"/>
+  </g>
+  <text x="115" y="320" text-anchor="middle" font-size="8.5" fill="#4fa3ff">Radar / EO/OR</text>
+  <text x="115" y="331" text-anchor="middle" font-size="8.5" fill="#4fa3ff">(5km)</text>
+  <!-- radar pulse rings L -->
+  <circle id="rl1" cx="115" cy="270" r="0" fill="none" stroke="#4fa3ff" stroke-width="1.2" opacity="0"/>
+  <circle id="rl2" cx="115" cy="270" r="0" fill="none" stroke="#4fa3ff" stroke-width="1.2" opacity="0"/>
+
+  <!-- RF Spoofing LEFT -->
+  <ellipse cx="160" cy="218" rx="26" ry="15" fill="rgba(255,92,92,.07)" stroke="rgba(255,92,92,.28)" stroke-width="1" stroke-dasharray="3,2" opacity=".65"/>
+  <text x="160" y="215" text-anchor="middle" font-size="7.5" fill="#ff5c5c" font-weight="700" opacity=".8">RF</text>
+  <text x="160" y="225" text-anchor="middle" font-size="7.5" fill="#ff5c5c" opacity=".8">Spoofing</text>
+
+  <!-- 5G-A line L→Center -->
+  <line x1="238" y1="222" x2="492" y2="248" stroke="#4fa3ff" stroke-width="1.5" stroke-dasharray="8,5" opacity=".28" marker-end="url(#ab)"/>
+  <text x="360" y="224" text-anchor="middle" font-size="8.5" fill="#4fa3ff" opacity=".6">5G-A</text>
+
+  <!-- ■ CENTER: MAJOR CITY -->
+  <ellipse cx="700" cy="215" rx="268" ry="130" fill="rgba(79,163,255,.025)" stroke="rgba(79,163,255,.07)" stroke-width="1"/>
+  <!-- buildings -->
+  <g id="city">
+    <rect x="488" y="152" width="20" height="88" rx="1" fill="#1b2840"/>
+    <rect x="511" y="138" width="17" height="102" rx="1" fill="#152030"/>
+    <rect x="531" y="155" width="23" height="85" rx="1" fill="#1b2840"/>
+    <rect x="557" y="132" width="18" height="108" rx="1" fill="#152030"/>
+    <rect x="578" y="146" width="22" height="94" rx="1" fill="#1b2840"/>
+    <rect x="603" y="126" width="20" height="114" rx="1" fill="#152030"/>
+    <rect x="626" y="140" width="25" height="100" rx="1" fill="#1b2840"/>
+    <rect x="654" y="122" width="18" height="118" rx="1" fill="#152030"/>
+    <rect x="675" y="136" width="24" height="104" rx="1" fill="#1b2840"/>
+    <rect x="702" y="128" width="20" height="112" rx="1" fill="#152030"/>
+    <rect x="725" y="144" width="25" height="96" rx="1" fill="#1b2840"/>
+    <rect x="753" y="134" width="18" height="106" rx="1" fill="#152030"/>
+    <rect x="774" y="148" width="22" height="92" rx="1" fill="#1b2840"/>
+    <rect x="799" y="136" width="20" height="104" rx="1" fill="#152030"/>
+    <rect x="822" y="152" width="17" height="88" rx="1" fill="#1b2840"/>
+    <rect x="842" y="140" width="24" height="100" rx="1" fill="#152030"/>
+    <rect x="869" y="154" width="18" height="86" rx="1" fill="#1b2840"/>
+    <rect x="890" y="144" width="22" height="96" rx="1" fill="#152030"/>
+    <rect x="915" y="154" width="16" height="86" rx="1" fill="#1b2840"/>
+  </g>
+  <text x="700" y="114" text-anchor="middle" font-size="13" fill="#c0d0e8" font-weight="700" letter-spacing="2">Major  CITY</text>
+
+  <!-- 중요시설 1 -->
+  <rect id="fac1" x="557" y="132" width="43" height="60" rx="2" fill="rgba(255,92,92,.14)" stroke="rgba(255,92,92,.5)" stroke-width="1.5"/>
+  <text x="578" y="160" text-anchor="middle" font-size="8" fill="#ff5c5c" font-weight="700">중요</text>
+  <text x="578" y="171" text-anchor="middle" font-size="8" fill="#ff5c5c">시설</text>
+  <!-- 중요시설 2 -->
+  <rect id="fac2" x="753" y="134" width="43" height="60" rx="2" fill="rgba(255,92,92,.14)" stroke="rgba(255,92,92,.5)" stroke-width="1.5"/>
+  <text x="774" y="162" text-anchor="middle" font-size="8" fill="#ff5c5c" font-weight="700">중요</text>
+  <text x="774" y="173" text-anchor="middle" font-size="8" fill="#ff5c5c">시설</text>
+
+  <!-- RF Spoofing CENTER -->
+  <ellipse cx="638" cy="170" rx="20" ry="12" fill="rgba(255,92,92,.06)" stroke="rgba(255,92,92,.22)" stroke-width="1" stroke-dasharray="3,2" opacity=".5"/>
+  <text x="638" y="167" text-anchor="middle" font-size="6.5" fill="#ff5c5c" opacity=".7">RF Spoofing</text>
+  <ellipse cx="765" cy="195" rx="19" ry="11" fill="rgba(255,92,92,.06)" stroke="rgba(255,92,92,.22)" stroke-width="1" stroke-dasharray="3,2" opacity=".5"/>
+  <text x="765" y="192" text-anchor="middle" font-size="6.5" fill="#ff5c5c" opacity=".7">RF Spoofing</text>
+
+  <!-- Intent-based label -->
+  <rect x="590" y="278" width="220" height="40" rx="20" fill="rgba(139,92,246,.14)" stroke="rgba(139,92,246,.45)" stroke-width="1.5"/>
+  <text x="700" y="295" text-anchor="middle" font-size="10.5" fill="#8b5cf6" font-weight="700">Intent-based</text>
+  <text x="700" y="310" text-anchor="middle" font-size="10.5" fill="#8b5cf6" font-weight="700">Anti-drone System</text>
+
+  <!-- 5G-A TOP line -->
+  <line x1="700" y1="56" x2="700" y2="112" stroke="#4fa3ff" stroke-width="1.5" stroke-dasharray="6,4" opacity=".35" marker-end="url(#ab)"/>
+  <text x="716" y="84" font-size="8.5" fill="#4fa3ff" opacity=".7">5G-A</text>
+
+  <!-- PATROL DRONE (static, background) -->
+  <g id="drone-patrol" transform="translate(678,34)" opacity=".55">
+    <rect x="8" y="6" width="24" height="11" rx="3" fill="#4fa3ff"/>
+    <line x1="4" y1="7" x2="12" y2="11" stroke="#4fa3ff" stroke-width="1.8"/>
+    <line x1="36" y1="7" x2="28" y2="11" stroke="#4fa3ff" stroke-width="1.8"/>
+    <line x1="4" y1="15" x2="12" y2="11" stroke="#4fa3ff" stroke-width="1.8"/>
+    <line x1="36" y1="15" x2="28" y2="11" stroke="#4fa3ff" stroke-width="1.8"/>
+    <ellipse cx="4" cy="11" rx="7" ry="2.5" fill="none" stroke="#4fa3ff" stroke-width="1.2" opacity=".7"/>
+    <ellipse cx="36" cy="11" rx="7" ry="2.5" fill="none" stroke="#4fa3ff" stroke-width="1.2" opacity=".7"/>
+    <circle cx="20" cy="17" r="2.5" fill="#22d3ee" opacity=".9"/>
+  </g>
+  <text x="700" y="28" text-anchor="middle" font-size="8.5" fill="#8090a8">순찰</text>
+
+  <!-- SIM DRONE (animated) — starts hidden -->
+  <g id="drone-sim" transform="translate(678,34)" opacity="0">
+    <rect id="ds-body" x="8" y="6" width="24" height="11" rx="3" fill="#38e69b"/>
+    <line id="ds-a1" x1="4" y1="7" x2="12" y2="11" stroke="#38e69b" stroke-width="1.8"/>
+    <line id="ds-a2" x1="36" y1="7" x2="28" y2="11" stroke="#38e69b" stroke-width="1.8"/>
+    <line id="ds-a3" x1="4" y1="15" x2="12" y2="11" stroke="#38e69b" stroke-width="1.8"/>
+    <line id="ds-a4" x1="36" y1="15" x2="28" y2="11" stroke="#38e69b" stroke-width="1.8"/>
+    <ellipse id="ds-r1" cx="4" cy="11" rx="7" ry="2.5" fill="none" stroke="#38e69b" stroke-width="1.2" opacity=".7"/>
+    <ellipse id="ds-r2" cx="36" cy="11" rx="7" ry="2.5" fill="none" stroke="#38e69b" stroke-width="1.2" opacity=".7"/>
+    <circle cx="20" cy="17" r="2.5" fill="#22d3ee"/>
+    <!-- 등록 tag -->
+    <rect x="1" y="-13" width="38" height="11" rx="3" fill="rgba(56,230,155,.18)" stroke="rgba(56,230,155,.5)" stroke-width="1"/>
+    <text x="20" y="-4" text-anchor="middle" font-size="7" fill="#38e69b" font-weight="700">등록</text>
+  </g>
+
+  <!-- DATA FLOW lines (hidden initially) -->
+  <line id="df1" x1="238" y1="222" x2="592" y2="290" stroke="#4fa3ff" stroke-width="1.8" stroke-dasharray="8,4" opacity="0" marker-end="url(#ab)"/>
+  <line id="df2" x1="700" y1="56" x2="700" y2="278" stroke="#4fa3ff" stroke-width="1.8" stroke-dasharray="8,4" opacity="0" marker-end="url(#ab)"/>
+  <line id="df3" x1="1058" y1="222" x2="808" y2="290" stroke="#4fa3ff" stroke-width="1.8" stroke-dasharray="8,4" opacity="0" marker-end="url(#ab)"/>
+
+  <!-- AI Decision badge (hidden) -->
+  <g id="ai-badge" opacity="0">
+    <rect x="628" y="274" width="144" height="20" rx="4" fill="rgba(139,92,246,.3)" stroke="#8b5cf6" stroke-width="1"/>
+    <text x="700" y="288" text-anchor="middle" font-size="9" fill="#c0a0ff" font-weight="700">AI 의도 판별 중…</text>
+  </g>
+
+  <!-- ALERT overlay (hidden) -->
+  <g id="alert-fac1" opacity="0">
+    <rect x="550" y="124" width="57" height="12" rx="2" fill="#ff5c5c"/>
+    <text x="578" y="133" text-anchor="middle" font-size="8" fill="#fff" font-weight="700">⚠ 침범</text>
+  </g>
+
+  <!-- ■ RIGHT: RADAR + SIGINT -->
+  <!-- right city buildings -->
+  <g opacity=".4">
+    <rect x="1048" y="172" width="16" height="68" rx="1" fill="#1a2535"/>
+    <rect x="1067" y="160" width="20" height="80" rx="1" fill="#152030"/>
+    <rect x="1090" y="168" width="16" height="72" rx="1" fill="#1a2535"/>
+    <rect x="1109" y="156" width="22" height="84" rx="1" fill="#152030"/>
+    <rect x="1134" y="165" width="16" height="75" rx="1" fill="#1a2535"/>
+    <rect x="1153" y="157" width="18" height="83" rx="1" fill="#152030"/>
+  </g>
+
+  <!-- RF Spoofing RIGHT -->
+  <ellipse cx="1058" cy="152" rx="24" ry="14" fill="rgba(255,92,92,.07)" stroke="rgba(255,92,92,.25)" stroke-width="1" stroke-dasharray="3,2" opacity=".55"/>
+  <text x="1058" y="149" text-anchor="middle" font-size="7.5" fill="#ff5c5c" opacity=".75">RF</text>
+  <text x="1058" y="159" text-anchor="middle" font-size="7.5" fill="#ff5c5c" opacity=".75">Spoofing</text>
+
+  <!-- RIGHT Radar tower -->
+  <g id="radar-R">
+    <line x1="1058" y1="248" x2="1058" y2="216" stroke="#4fa3ff" stroke-width="2"/>
+    <line x1="1046" y1="248" x2="1070" y2="248" stroke="#4fa3ff" stroke-width="2"/>
+    <line x1="1050" y1="248" x2="1058" y2="234" stroke="#4fa3ff" stroke-width="1.5"/>
+    <line x1="1066" y1="248" x2="1058" y2="234" stroke="#4fa3ff" stroke-width="1.5"/>
+    <ellipse cx="1058" cy="216" rx="13" ry="4.5" fill="none" stroke="#4fa3ff" stroke-width="1.5"/>
+    <line x1="1058" y1="211.5" x2="1058" y2="220.5" stroke="#4fa3ff" stroke-width="1"/>
+  </g>
+  <text x="1058" y="265" text-anchor="middle" font-size="8.5" fill="#4fa3ff">Radar / EO/IR</text>
+  <text x="1058" y="276" text-anchor="middle" font-size="8.5" fill="#4fa3ff">(5km)</text>
+  <!-- radar pulse rings R -->
+  <circle id="rr1" cx="1058" cy="216" r="0" fill="none" stroke="#4fa3ff" stroke-width="1.2" opacity="0"/>
+  <circle id="rr2" cx="1058" cy="216" r="0" fill="none" stroke="#4fa3ff" stroke-width="1.2" opacity="0"/>
+
+  <!-- 5G-A line R→Center -->
+  <line x1="1038" y1="224" x2="928" y2="258" stroke="#4fa3ff" stroke-width="1.5" stroke-dasharray="8,5" opacity=".28" marker-end="url(#ab)"/>
+  <text x="988" y="232" text-anchor="middle" font-size="8.5" fill="#4fa3ff" opacity=".6">5G-A</text>
+
+  <!-- SIGINT top right -->
+  <g transform="translate(1196,36)" opacity=".6">
+    <rect x="7" y="5" width="22" height="10" rx="2.5" fill="none" stroke="#b0bac8" stroke-width="1.3"/>
+    <line x1="3" y1="6" x2="9" y2="10" stroke="#b0bac8" stroke-width="1.3"/>
+    <line x1="32" y1="6" x2="26" y2="10" stroke="#b0bac8" stroke-width="1.3"/>
+    <line x1="3" y1="14" x2="9" y2="10" stroke="#b0bac8" stroke-width="1.3"/>
+    <line x1="32" y1="14" x2="26" y2="10" stroke="#b0bac8" stroke-width="1.3"/>
+    <ellipse cx="3" cy="10" rx="6" ry="2" fill="none" stroke="#b0bac8" stroke-width="1" opacity=".6"/>
+    <ellipse cx="32" cy="10" rx="6" ry="2" fill="none" stroke="#b0bac8" stroke-width="1" opacity=".6"/>
+  </g>
+  <text x="1218" y="29" text-anchor="middle" font-size="9" fill="#b0bac8">SIGINT</text>
+  <text x="1218" y="40" text-anchor="middle" font-size="7.5" fill="#6a7888">(신호정보)</text>
+
+  <!-- SIGINT bottom right -->
+  <g transform="translate(1196,298)" opacity=".6">
+    <rect x="7" y="5" width="22" height="10" rx="2.5" fill="none" stroke="#b0bac8" stroke-width="1.3"/>
+    <line x1="3" y1="6" x2="9" y2="10" stroke="#b0bac8" stroke-width="1.3"/>
+    <line x1="32" y1="6" x2="26" y2="10" stroke="#b0bac8" stroke-width="1.3"/>
+    <line x1="3" y1="14" x2="9" y2="10" stroke="#b0bac8" stroke-width="1.3"/>
+    <line x1="32" y1="14" x2="26" y2="10" stroke="#b0bac8" stroke-width="1.3"/>
+    <ellipse cx="3" cy="10" rx="6" ry="2" fill="none" stroke="#b0bac8" stroke-width="1" opacity=".6"/>
+    <ellipse cx="32" cy="10" rx="6" ry="2" fill="none" stroke="#b0bac8" stroke-width="1" opacity=".6"/>
+  </g>
+  <text x="1218" y="291" text-anchor="middle" font-size="9" fill="#b0bac8">SIGINT</text>
+  <text x="1218" y="302" text-anchor="middle" font-size="7.5" fill="#6a7888">(신호정보)</text>
+
+  </svg>
+  </div>
+
+  <!-- Bottom Flow Bar -->
+  <div class="flow-bar">
+    <div class="fn" id="fn-5ga">
+      <span class="fn-lbl">STEP 1</span>
+      <span class="fn-title">5G-A 데이터 수집·이송</span>
+    </div>
+    <div class="fn-arrow">▶</div>
+    <div class="fn" id="fn-ai">
+      <span class="fn-lbl">STEP 2</span>
+      <span class="fn-title">AI 의도 판별</span>
+    </div>
+    <div class="fn-arrow">▶</div>
+    <div class="fn" id="fn-asset">
+      <span class="fn-lbl">STEP 3</span>
+      <span class="fn-title">자산 분배·타격 수단 제어</span>
+    </div>
+    <div class="fn-arrow">▶</div>
+    <div class="fn" id="fn-res" style="flex:1.8">
+      <span class="fn-lbl">대응 체계</span>
+      <div class="fn-assets">
+        <span class="asset" id="as-jam">Jamming</span>
+        <span class="asset" id="as-int">요격드론</span>
+        <span class="asset" id="as-team">신속대응조</span>
+        <span class="asset" id="as-pol">Police Vehicle</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="controls">
+  <span class="ctrl-lbl">시나리오 선택 :</span>
+  <button class="btn btn-1" id="btn1" onclick="run(1)">① 등록 드론 단순 촬영 — 정상</button>
+  <button class="btn btn-2" id="btn2" onclick="run(2)">② 등록 드론 중요시설 접근 — 이탈</button>
+  <button class="btn btn-r" onclick="resetAll()">↺ 초기화</button>
+</div>
+
+<script>
+/* ─── state ─────────────────────────────────────────────── */
+let running = false;
+let cancelled = false;
+let rafIds = [];
+let timerIds = [];
+
+/* ─── helpers ────────────────────────────────────────────── */
+const $ = id => document.getElementById(id);
+
+function wait(ms) {
+  return new Promise(res => {
+    if (cancelled) { res(); return; }
+    timerIds.push(setTimeout(res, ms));
+  });
+}
+
+function setOpacity(id, v) { const e=$(id); if(e) e.setAttribute('opacity', v); }
+function setFill(id, v)    { const e=$(id); if(e) e.setAttribute('fill', v); }
+function setStroke(id, v)  { const e=$(id); if(e) e.setAttribute('stroke', v); }
+
+/* drone color */
+function droneColor(c) {
+  ['ds-body'].forEach(id => setFill(id, c));
+  ['ds-a1','ds-a2','ds-a3','ds-a4','ds-r1','ds-r2'].forEach(id => setStroke(id, c));
+}
+
+/* smooth drone move via rAF */
+function moveDrone(tx, ty, ms) {
+  return new Promise(res => {
+    if (cancelled) { res(); return; }
+    const el = $('drone-sim');
+    const tr = el.getAttribute('transform') || 'translate(678,34)';
+    const m  = tr.match(/translate\(([^,]+),([^)]+)\)/);
+    const sx = parseFloat(m ? m[1] : 678);
+    const sy = parseFloat(m ? m[2] : 34);
+    const t0 = performance.now();
+    function step(now) {
+      if (cancelled) { res(); return; }
+      const p  = Math.min((now - t0) / ms, 1);
+      const e  = p < .5 ? 2*p*p : -1+(4-2*p)*p;
+      el.setAttribute('transform', `translate(${sx+(tx-sx)*e},${sy+(ty-sy)*e})`);
+      if (p < 1) rafIds.push(requestAnimationFrame(step));
+      else res();
+    }
+    rafIds.push(requestAnimationFrame(step));
+  });
+}
+
+/* radar pulse */
+function startRadar(prefix) {
+  const cx  = prefix==='L' ? 115  : 1058;
+  const cy  = prefix==='L' ? 270  : 216;
+  const ids = prefix==='L' ? ['rl1','rl2'] : ['rr1','rr2'];
+  let idx = 0;
+  function pulse() {
+    if (cancelled) return;
+    const ring = $(ids[idx % 2]);
+    let r = 0, id;
+    function grow() {
+      if (cancelled) { clearInterval(id); return; }
+      r += 2.5;
+      ring.setAttribute('r', r);
+      ring.setAttribute('opacity', Math.max(0, .8 - r/72));
+      if (r >= 72) { clearInterval(id); ring.setAttribute('opacity',0); }
+    }
+    id = setInterval(grow, 25);
+    timerIds.push(id);
+    idx++;
+  }
+  const iv = setInterval(pulse, 650);
+  timerIds.push(iv);
+  return iv;
+}
+
+/* ─── phase bar ──────────────────────────────────────────── */
+const PH = ['manage','track','deviate','normal','warn','response','after'];
+function phSet(id, state) { // state: ''|'active'|'done'
+  const el = $('ph-'+id);
+  el.classList.remove('active','done');
+  if (state) el.classList.add(state);
+}
+function phAll(state) { PH.forEach(id => phSet(id, state)); }
+
+function setStatus(msg, cls='') {
+  const el = $('ph-status');
+  el.textContent = msg;
+  el.className = 'ph-status' + (cls ? ' '+cls : '');
+}
+
+/* ─── flow bar ───────────────────────────────────────────── */
+function flowReset() {
+  ['fn-5ga','fn-ai','fn-asset','fn-res'].forEach(id => $( id).classList.remove('active'));
+  ['as-jam','as-int','as-team','as-pol'].forEach(id => $(id).classList.remove('on'));
+}
+function flowOn(...ids) { ids.forEach(id => $(id).classList.add('active')); }
+function assetOn(...ids) { ids.forEach(id => $(id).classList.add('on')); }
+
+/* ─── reset ──────────────────────────────────────────────── */
+function resetAll() {
+  cancelled = true;
+  timerIds.forEach(t => { clearTimeout(t); clearInterval(t); });
+  rafIds.forEach(r => cancelAnimationFrame(r));
+  timerIds = []; rafIds = [];
+
+  setTimeout(() => {
+    cancelled = false;
+    running   = false;
+    $('btn1').disabled = false;
+    $('btn2').disabled = false;
+
+    phAll('');
+    flowReset();
+    setStatus('시나리오를 선택하세요');
+
+    setOpacity('drone-sim', 0);
+    $('drone-sim').setAttribute('transform','translate(678,34)');
+    droneColor('#38e69b');
+
+    ['df1','df2','df3','ai-badge','alert-fac1'].forEach(id => setOpacity(id, 0));
+    ['rl1','rl2','rr1','rr2'].forEach(id => { $( id).setAttribute('r',0); $( id).setAttribute('opacity',0); });
+
+    $('fac1').setAttribute('fill','rgba(255,92,92,.14)');
+    $('fac2').setAttribute('fill','rgba(255,92,92,.14)');
+    $('fac1').setAttribute('stroke','rgba(255,92,92,.5)');
+    $('fac2').setAttribute('stroke','rgba(255,92,92,.5)');
+  }, 80);
+}
+
+/* ─── Scenario 1: 단순 촬영 → 정상 ─────────────────────── */
+async function sc1() {
+  // 관리
+  phSet('manage','active');
+  setStatus('등록 드론 확인 — 비행 관리 시작');
+  setOpacity('drone-sim', 1);
+  await wait(1200);
+
+  // 추적
+  phSet('manage','done'); phSet('track','active');
+  setStatus('레이더 탐지 — 5G-A 데이터 수집 중');
+  startRadar('L'); startRadar('R');
+  await wait(400);
+  setOpacity('df2', .7); flowOn('fn-5ga');
+  await wait(400);
+  setOpacity('df1', .55); setOpacity('df3', .55);
+
+  // 드론이 도시 상공 순찰 (중요시설 접근 없음)
+  await moveDrone(800, 32, 1000);
+  if(cancelled)return;
+  await moveDrone(530, 32, 1000);
+  if(cancelled)return;
+  await moveDrone(678, 32, 800);
+  if(cancelled)return;
+
+  // AI 판별
+  setOpacity('ai-badge', 1); flowOn('fn-ai');
+  setStatus('AI 의도 판별 중 — 비행 패턴 정상');
+  await wait(1400);
+  if(cancelled)return;
+  setOpacity('ai-badge', 0);
+
+  // 정상
+  phSet('track','done'); phSet('normal','active');
+  setStatus('✓ 정상 비행 판정 — 이상 없음', 'ok');
+  await wait(1200);
+  if(cancelled)return;
+
+  // 복귀 & 사후관리
+  await moveDrone(678, 34, 800);
+  if(cancelled)return;
+  phSet('normal','done'); phSet('after','active');
+  setStatus('사후관리 — 비행 기록 저장 완료', 'ok');
+  await wait(1000);
+  if(cancelled)return;
+  setOpacity('drone-sim', 0);
+  setOpacity('df1',0); setOpacity('df2',0); setOpacity('df3',0);
+  done();
+}
+
+/* ─── Scenario 2: 중요시설 접근 → 이탈 ─────────────────── */
+async function sc2() {
+  // 관리
+  phSet('manage','active');
+  setStatus('등록 드론 확인 — 비행 관리 시작');
+  setOpacity('drone-sim', 1);
+  await wait(1200);
+  if(cancelled)return;
+
+  // 추적
+  phSet('manage','done'); phSet('track','active');
+  setStatus('레이더 탐지 — 5G-A 데이터 수집 중');
+  startRadar('L'); startRadar('R');
+  await wait(400);
+  setOpacity('df2',.7); flowOn('fn-5ga');
+  await wait(400);
+  setOpacity('df1',.55); setOpacity('df3',.55);
+
+  // 드론이 중요시설 방향으로 접근
+  await moveDrone(620, 60, 900);
+  if(cancelled)return;
+  await moveDrone(555, 108, 1000);
+  if(cancelled)return;
+
+  // 이탈 감지
+  phSet('track','done'); phSet('deviate','active');
+  setStatus('⚠ 비행 이탈 감지 — 중요시설 접근!', 'alert');
+  droneColor('#f4b942');
+  $('fac1').setAttribute('fill','rgba(255,92,92,.35)');
+  $('fac1').setAttribute('stroke','rgba(255,92,92,.9)');
+  setOpacity('alert-fac1', 1);
+  await wait(1200);
+  if(cancelled)return;
+
+  // AI 판별
+  setOpacity('ai-badge',1); flowOn('fn-ai');
+  setStatus('AI 의도 분석 — 위협 패턴 감지');
+  await wait(1400);
+  if(cancelled)return;
+  setOpacity('ai-badge',0);
+
+  // 경고
+  phSet('deviate','done'); phSet('warn','active');
+  setStatus('⚠ 경고 발령 — 드론 복귀 명령 송신', 'alert');
+  await wait(1200);
+  if(cancelled)return;
+
+  // 대응
+  phSet('warn','done'); phSet('response','active');
+  setStatus('대응 자산 투입 — 재밍·요격드론 출동', 'alert');
+  droneColor('#ff5c5c');
+  flowOn('fn-asset','fn-res');
+  assetOn('as-jam','as-int');
+  await wait(1000);
+  if(cancelled)return;
+
+  // 드론 제압
+  setStatus('대응 완료 — 드론 무력화', 'alert');
+  await wait(1200);
+  if(cancelled)return;
+
+  // 사후관리
+  phSet('response','done'); phSet('after','active');
+  setStatus('사후관리 — 사건 기록·분석 완료');
+  await wait(1000);
+  if(cancelled)return;
+  setOpacity('drone-sim',0);
+  setOpacity('df1',0); setOpacity('df2',0); setOpacity('df3',0);
+  done();
+}
+
+function done() {
+  running = false;
+  $('btn1').disabled = false;
+  $('btn2').disabled = false;
+}
+
+function run(n) {
+  if (running) return;
+  running = true;
+  $('btn1').disabled = true;
+  $('btn2').disabled = true;
+  resetAll();
+  setTimeout(() => { if(n===1) sc1(); else sc2(); }, 120);
+}
+</script>
+</body>
+</html>
