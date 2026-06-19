@@ -79,6 +79,9 @@ svg.sim{width:100%;height:100%}
 .btn-2{background:rgba(255,92,92,.1);border-color:rgba(255,92,92,.4);color:var(--red)}
 .btn-2:hover{background:rgba(255,92,92,.2)}
 .btn-2:disabled{opacity:.4;cursor:not-allowed}
+.btn-3{background:rgba(249,115,22,.1);border-color:rgba(249,115,22,.4);color:var(--orange)}
+.btn-3:hover{background:rgba(249,115,22,.2)}
+.btn-3:disabled{opacity:.4;cursor:not-allowed}
 .btn-r{background:transparent;border-color:#2a3550;color:var(--muted);margin-left:auto}
 .btn-r:hover{border-color:var(--muted);color:var(--text)}
 </style>
@@ -312,8 +315,8 @@ svg.sim{width:100%;height:100%}
     <ellipse id="ds-r2" cx="36" cy="11" rx="7" ry="2.5" fill="none" stroke="#38e69b" stroke-width="1.2" opacity=".7"/>
     <circle cx="20" cy="17" r="2.5" fill="#22d3ee"/>
     <!-- 등록 tag -->
-    <rect x="1" y="-13" width="38" height="11" rx="3" fill="rgba(56,230,155,.18)" stroke="rgba(56,230,155,.5)" stroke-width="1"/>
-    <text x="20" y="-4" text-anchor="middle" font-size="7" fill="#38e69b" font-weight="700">등록</text>
+    <rect id="ds-tag" x="1" y="-13" width="38" height="11" rx="3" fill="rgba(56,230,155,.18)" stroke="rgba(56,230,155,.5)" stroke-width="1"/>
+    <text id="ds-tag-text" x="20" y="-4" text-anchor="middle" font-size="7" fill="#38e69b" font-weight="700">등록</text>
   </g>
 
   <!-- DATA FLOW lines (hidden initially) -->
@@ -332,6 +335,48 @@ svg.sim{width:100%;height:100%}
     <rect x="550" y="124" width="57" height="12" rx="2" fill="#ff5c5c"/>
     <text x="578" y="133" text-anchor="middle" font-size="8" fill="#fff" font-weight="700">⚠ 침범</text>
   </g>
+  <g id="alert-fac2" opacity="0">
+    <rect x="746" y="124" width="57" height="12" rx="2" fill="#ff5c5c"/>
+    <text x="774" y="133" text-anchor="middle" font-size="8" fill="#fff" font-weight="700">⚠ 침범</text>
+  </g>
+
+  <!-- INTERCEPT DRONE (요격드론 — 대응 단계에서 출동) -->
+  <g id="drone-int" transform="translate(690,195)" opacity="0">
+    <rect x="5" y="4" width="16" height="8" rx="2" fill="#f97316"/>
+    <line x1="2" y1="5" x2="7" y2="8" stroke="#f97316" stroke-width="1.4"/>
+    <line x1="23" y1="5" x2="18" y2="8" stroke="#f97316" stroke-width="1.4"/>
+    <line x1="2" y1="11" x2="7" y2="8" stroke="#f97316" stroke-width="1.4"/>
+    <line x1="23" y1="11" x2="18" y2="8" stroke="#f97316" stroke-width="1.4"/>
+    <ellipse cx="2" cy="8" rx="4" ry="1.5" fill="none" stroke="#f97316" stroke-width="0.9" opacity=".7"/>
+    <ellipse cx="23" cy="8" rx="4" ry="1.5" fill="none" stroke="#f97316" stroke-width="0.9" opacity=".7"/>
+    <text x="13" y="-3" text-anchor="middle" font-size="7" fill="#f97316" font-weight="700">요격</text>
+  </g>
+
+  <!-- AI 분석 결과 배지 (hidden) -->
+  <g id="ai-result" opacity="0">
+    <rect x="590" y="248" width="220" height="60" rx="5" fill="rgba(10,12,16,.94)" stroke="#8b5cf6" stroke-width="1.5"/>
+    <text x="700" y="264" text-anchor="middle" font-size="9" fill="#c0a0ff" font-weight="700">AI 의도 분석 완료</text>
+    <text id="ai-type-text" x="700" y="280" text-anchor="middle" font-size="9" fill="#38e69b">▶ 의도: 단순 촬영</text>
+    <text id="ai-grade-text" x="648" y="296" text-anchor="middle" font-size="8.5" fill="#f4b942">위협 등급: LOW</text>
+    <text id="ai-conf-text"  x="762" y="296" text-anchor="middle" font-size="8.5" fill="#4fa3ff">신뢰도: 96%</text>
+  </g>
+
+  <!-- 재밍 반경 (hidden) -->
+  <circle id="jam-radius" cx="700" cy="200" r="0" fill="rgba(249,115,22,.07)" stroke="rgba(249,115,22,.45)" stroke-width="1.5" stroke-dasharray="6,3" opacity="0"/>
+
+  <!-- 5G-A 허브 노드 -->
+  <g opacity=".75">
+    <circle cx="492" cy="248" r="6" fill="rgba(79,163,255,.18)" stroke="#4fa3ff" stroke-width="1.2"/>
+    <text x="492" y="252" text-anchor="middle" font-size="5.5" fill="#4fa3ff" font-weight="700">HUB</text>
+    <circle cx="928" cy="258" r="6" fill="rgba(79,163,255,.18)" stroke="#4fa3ff" stroke-width="1.2"/>
+    <text x="928" y="262" text-anchor="middle" font-size="5.5" fill="#4fa3ff" font-weight="700">HUB</text>
+  </g>
+
+  <!-- 5G-A 데이터 패킷 (animated) -->
+  <circle id="pkt-L1" cx="85" cy="162" r="3.5" fill="#4fa3ff" opacity="0" filter="url(#fb)"/>
+  <circle id="pkt-L2" cx="85" cy="162" r="3.5" fill="#4fa3ff" opacity="0" filter="url(#fb)"/>
+  <circle id="pkt-R1" cx="1109" cy="132" r="3.5" fill="#4fa3ff" opacity="0" filter="url(#fb)"/>
+  <circle id="pkt-R2" cx="1109" cy="132" r="3.5" fill="#4fa3ff" opacity="0" filter="url(#fb)"/>
 
   <!-- ■ RIGHT: RADAR + SIGINT -->
   <!-- right city buildings -->
@@ -470,6 +515,7 @@ svg.sim{width:100%;height:100%}
   <span class="ctrl-lbl">시나리오 선택 :</span>
   <button class="btn btn-1" id="btn1" onclick="run(1)">① 등록 드론 단순 촬영 — 정상</button>
   <button class="btn btn-2" id="btn2" onclick="run(2)">② 등록 드론 중요시설 접근 — 이탈</button>
+  <button class="btn btn-3" id="btn3" onclick="run(3)">③ 미등록 드론 침투 — 전 자산 대응</button>
   <button class="btn btn-r" onclick="resetAll()">↺ 초기화</button>
 </div>
 
@@ -479,6 +525,8 @@ let running = false;
 let cancelled = false;
 let rafIds = [];
 let timerIds = [];
+let packetsActive = false;
+let jamActive = false;
 
 /* ─── helpers ────────────────────────────────────────────── */
 const $ = id => document.getElementById(id);
@@ -493,33 +541,120 @@ function wait(ms) {
 function setOpacity(id, v) { const e=$(id); if(e) e.setAttribute('opacity', v); }
 function setFill(id, v)    { const e=$(id); if(e) e.setAttribute('fill', v); }
 function setStroke(id, v)  { const e=$(id); if(e) e.setAttribute('stroke', v); }
+function setAttr(id, a, v) { const e=$(id); if(e) e.setAttribute(a, v); }
 
-/* drone color */
+/* drone sim color */
 function droneColor(c) {
-  ['ds-body'].forEach(id => setFill(id, c));
+  setFill('ds-body', c);
   ['ds-a1','ds-a2','ds-a3','ds-a4','ds-r1','ds-r2'].forEach(id => setStroke(id, c));
 }
 
-/* smooth drone move via rAF */
-function moveDrone(tx, ty, ms) {
+/* set drone-sim tag label */
+function setTag(label, fillColor, strokeColor) {
+  const t = $('ds-tag-text');
+  const r = $('ds-tag');
+  if (t) { t.textContent = label; t.setAttribute('fill', fillColor); }
+  if (r) {
+    r.setAttribute('fill', `${strokeColor}30`);
+    r.setAttribute('stroke', `${strokeColor}80`);
+  }
+}
+
+/* generic smooth element move via rAF */
+function moveEl(elId, tx, ty, ms, defaultX, defaultY) {
   return new Promise(res => {
     if (cancelled) { res(); return; }
-    const el = $('drone-sim');
-    const tr = el.getAttribute('transform') || 'translate(1390,34)';
+    const el = $(elId);
+    if (!el) { res(); return; }
+    const tr = el.getAttribute('transform') || `translate(${defaultX},${defaultY})`;
     const m  = tr.match(/translate\(([^,]+),([^)]+)\)/);
-    const sx = parseFloat(m ? m[1] : 678);
-    const sy = parseFloat(m ? m[2] : 34);
+    const sx = parseFloat(m ? m[1] : defaultX);
+    const sy = parseFloat(m ? m[2] : defaultY);
     const t0 = performance.now();
     function step(now) {
       if (cancelled) { res(); return; }
       const p  = Math.min((now - t0) / ms, 1);
       const e  = p < .5 ? 2*p*p : -1+(4-2*p)*p;
-      el.setAttribute('transform', `translate(${sx+(tx-sx)*e},${sy+(ty-sy)*e})`);
+      el.setAttribute('transform', `translate(${(sx+(tx-sx)*e).toFixed(1)},${(sy+(ty-sy)*e).toFixed(1)})`);
       if (p < 1) rafIds.push(requestAnimationFrame(step));
       else res();
     }
     rafIds.push(requestAnimationFrame(step));
   });
+}
+
+function moveDrone(tx, ty, ms) { return moveEl('drone-sim', tx, ty, ms, 1390, 34); }
+function moveIntercept(tx, ty, ms) { return moveEl('drone-int', tx, ty, ms, 690, 195); }
+
+/* ─── 5G-A 데이터 패킷 애니메이션 ──────────────────────── */
+const PKT_L = {x1:85,y1:162,x2:492,y2:248};
+const PKT_R = {x1:1109,y1:132,x2:928,y2:258};
+let pktT = 0;
+
+function startPackets() {
+  if (packetsActive) return;
+  packetsActive = true;
+  ['pkt-L1','pkt-L2','pkt-R1','pkt-R2'].forEach(id => setOpacity(id, 0.9));
+  function animPkt() {
+    if (cancelled || !packetsActive) {
+      ['pkt-L1','pkt-L2','pkt-R1','pkt-R2'].forEach(id => setOpacity(id, 0));
+      packetsActive = false;
+      return;
+    }
+    pktT = (pktT + 0.006) % 1;
+    const lerp = (line, t) => {
+      const tt = t % 1;
+      return { x: line.x1 + (line.x2-line.x1)*tt, y: line.y1 + (line.y2-line.y1)*tt };
+    };
+    const p = [pktT, (pktT+.5)%1, (pktT+.25)%1, (pktT+.75)%1];
+    ['pkt-L1','pkt-L2'].forEach((id,i) => {
+      const pt = lerp(PKT_L, p[i]);
+      setAttr(id,'cx',pt.x.toFixed(1)); setAttr(id,'cy',pt.y.toFixed(1));
+    });
+    ['pkt-R1','pkt-R2'].forEach((id,i) => {
+      const pt = lerp(PKT_R, p[i+2]);
+      setAttr(id,'cx',pt.x.toFixed(1)); setAttr(id,'cy',pt.y.toFixed(1));
+    });
+    rafIds.push(requestAnimationFrame(animPkt));
+  }
+  rafIds.push(requestAnimationFrame(animPkt));
+}
+
+function stopPackets() {
+  packetsActive = false;
+  ['pkt-L1','pkt-L2','pkt-R1','pkt-R2'].forEach(id => setOpacity(id, 0));
+}
+
+/* ─── AI 분석 결과 표시 ──────────────────────────────── */
+function showAIResult(intent, grade, conf, intentColor, gradeColor) {
+  setAttr('ai-type-text',  'fill', intentColor || '#38e69b');
+  setAttr('ai-grade-text', 'fill', gradeColor  || '#f4b942');
+  $('ai-type-text').textContent  = '▶ 의도: ' + intent;
+  $('ai-grade-text').textContent = '위협 등급: ' + grade;
+  $('ai-conf-text').textContent  = '신뢰도: '   + conf;
+  setOpacity('ai-result', 1);
+}
+
+/* ─── 재밍 반경 애니메이션 ──────────────────────────── */
+function startJam(cx, cy) {
+  jamActive = true;
+  setAttr('jam-radius','cx',cx); setAttr('jam-radius','cy',cy);
+  setOpacity('jam-radius', 1);
+  let r = 20, growing = true;
+  const iv = setInterval(() => {
+    if (cancelled || !jamActive) { clearInterval(iv); return; }
+    if (growing) r += 1.8; else r -= 0.6;
+    if (r >= 90) growing = false;
+    if (r <= 30) growing = true;
+    setAttr('jam-radius','r',r);
+  }, 30);
+  timerIds.push(iv);
+}
+
+function stopJam() {
+  jamActive = false;
+  setOpacity('jam-radius', 0);
+  setAttr('jam-radius','r',0);
 }
 
 /* radar pulse */
@@ -574,6 +709,8 @@ function assetOn(...ids) { ids.forEach(id => $(id).classList.add('on')); }
 /* ─── reset ──────────────────────────────────────────────── */
 function resetAll() {
   cancelled = true;
+  packetsActive = false;
+  jamActive = false;
   timerIds.forEach(t => { clearTimeout(t); clearInterval(t); });
   rafIds.forEach(r => cancelAnimationFrame(r));
   timerIds = []; rafIds = [];
@@ -581,8 +718,7 @@ function resetAll() {
   setTimeout(() => {
     cancelled = false;
     running   = false;
-    $('btn1').disabled = false;
-    $('btn2').disabled = false;
+    ['btn1','btn2','btn3'].forEach(id => { const b=$(id); if(b) b.disabled=false; });
 
     phAll('');
     flowReset();
@@ -591,9 +727,15 @@ function resetAll() {
     setOpacity('drone-sim', 0);
     $('drone-sim').setAttribute('transform','translate(1390,34)');
     droneColor('#38e69b');
+    setTag('등록','#38e69b','rgba(56,230,155');
 
-    ['df1','df2','df3','ai-badge','alert-fac1'].forEach(id => setOpacity(id, 0));
-    ['rl1','rl2','rr1','rr2','rc1','rc2'].forEach(id => { $( id).setAttribute('r',0); $( id).setAttribute('opacity',0); });
+    setOpacity('drone-int', 0);
+    $('drone-int').setAttribute('transform','translate(690,195)');
+
+    ['df1','df2','df3','ai-badge','alert-fac1','alert-fac2','ai-result'].forEach(id => setOpacity(id, 0));
+    ['rl1','rl2','rr1','rr2','rc1','rc2'].forEach(id => { $(id).setAttribute('r',0); $(id).setAttribute('opacity',0); });
+    stopPackets();
+    stopJam();
 
     $('fac1').setAttribute('fill','rgba(255,92,92,.14)');
     $('fac2').setAttribute('fill','rgba(255,92,92,.14)');
@@ -602,27 +744,24 @@ function resetAll() {
   }, 80);
 }
 
-/* ─── Scenario 1: 단순 촬영 → 정상 ─────────────────────── */
+/* ─── Scenario 1: 등록 드론 단순 촬영 → 정상 ───────────── */
 async function sc1() {
-  // 관리
   phSet('manage','active');
   setStatus('등록 드론 확인 — 비행 관리 시작');
   setOpacity('drone-sim', 1);
   await wait(1200);
 
-  // 추적
   phSet('manage','done'); phSet('track','active');
   setStatus('레이더 탐지 — 5G-A 데이터 수집 중');
   startRadar('L'); startRadar('R'); startRadar('C');
   await wait(400);
   setOpacity('df2', .7); flowOn('fn-5ga');
+  startPackets();
   await wait(400);
   setOpacity('df1', .55); setOpacity('df3', .55);
 
-  // 맨 우측에서 도시로 진입
   await moveDrone(900, 32, 900);
   if(cancelled)return;
-  // 도시 상공 단순 순찰 (촬영)
   await moveDrone(620, 32, 1200);
   if(cancelled)return;
   await moveDrone(850, 32, 1000);
@@ -630,20 +769,23 @@ async function sc1() {
   await moveDrone(700, 32, 900);
   if(cancelled)return;
 
-  // AI 판별
   setOpacity('ai-badge', 1); flowOn('fn-ai');
-  setStatus('AI 의도 판별 중 — 비행 패턴 정상');
-  await wait(1400);
+  setStatus('AI 의도 판별 중 — 비행 패턴 분석');
+  await wait(1000);
   if(cancelled)return;
   setOpacity('ai-badge', 0);
+  showAIResult('단순 촬영', 'LOW', '97%', '#38e69b', '#38e69b');
+  flowOn('fn-ai');
+  setStatus('AI 분석 완료 — 정상 비행 패턴 확인');
+  await wait(1400);
+  if(cancelled)return;
+  setOpacity('ai-result', 0);
 
-  // 정상
   phSet('track','done'); phSet('normal','active');
   setStatus('✓ 정상 비행 판정 — 이상 없음', 'ok');
   await wait(1200);
   if(cancelled)return;
 
-  // 우측으로 복귀 후 사후관리
   await moveDrone(1390, 34, 1200);
   if(cancelled)return;
   phSet('normal','done'); phSet('after','active');
@@ -652,96 +794,181 @@ async function sc1() {
   if(cancelled)return;
   setOpacity('drone-sim', 0);
   setOpacity('df1',0); setOpacity('df2',0); setOpacity('df3',0);
+  stopPackets();
   done();
 }
 
-/* ─── Scenario 2: 중요시설 접근 → 이탈 ─────────────────── */
+/* ─── Scenario 2: 등록 드론 중요시설 접근 → 이탈 ────────── */
 async function sc2() {
-  // 관리
   phSet('manage','active');
   setStatus('등록 드론 확인 — 비행 관리 시작');
   setOpacity('drone-sim', 1);
   await wait(1200);
   if(cancelled)return;
 
-  // 추적
   phSet('manage','done'); phSet('track','active');
   setStatus('레이더 탐지 — 5G-A 데이터 수집 중');
   startRadar('L'); startRadar('R'); startRadar('C');
   await wait(400);
   setOpacity('df2',.7); flowOn('fn-5ga');
+  startPackets();
   await wait(400);
   setOpacity('df1',.55); setOpacity('df3',.55);
 
-  // 맨 우측에서 도시로 진입
   await moveDrone(900, 32, 900);
   if(cancelled)return;
-  // 중요시설 방향으로 급격히 접근
   await moveDrone(620, 60, 900);
   if(cancelled)return;
   await moveDrone(555, 108, 1000);
   if(cancelled)return;
 
-  // 이탈 감지
   phSet('track','done'); phSet('deviate','active');
   setStatus('⚠ 비행 이탈 감지 — 중요시설 접근!', 'alert');
   droneColor('#f4b942');
   $('fac1').setAttribute('fill','rgba(255,92,92,.35)');
   $('fac1').setAttribute('stroke','rgba(255,92,92,.9)');
   setOpacity('alert-fac1', 1);
-  await wait(1200);
-  if(cancelled)return;
 
-  // AI 판별
   setOpacity('ai-badge',1); flowOn('fn-ai');
-  setStatus('AI 의도 분석 — 위협 패턴 감지');
-  await wait(1400);
+  setStatus('AI 의도 분석 중 — 이상 패턴 감지');
+  await wait(1000);
   if(cancelled)return;
   setOpacity('ai-badge',0);
+  showAIResult('중요시설 접근', 'HIGH', '94%', '#ff5c5c', '#ff5c5c');
+  setStatus('AI: 위협 의도 확인 — 경고 발령 개시', 'alert');
+  await wait(1400);
+  if(cancelled)return;
+  setOpacity('ai-result', 0);
 
-  // 경고
   phSet('deviate','done'); phSet('warn','active');
   setStatus('⚠ 경고 발령 — 드론 복귀 명령 송신', 'alert');
   await wait(1200);
   if(cancelled)return;
 
-  // 대응
   phSet('warn','done'); phSet('response','active');
   setStatus('대응 자산 투입 — 재밍·요격드론 출동', 'alert');
   droneColor('#ff5c5c');
   flowOn('fn-asset','fn-res');
   assetOn('as-jam','as-int');
+  startJam(578, 155);
+  setOpacity('drone-int', 1);
+  moveIntercept(555, 115, 1600);
   await wait(1000);
   if(cancelled)return;
 
-  // 드론 제압
   setStatus('대응 완료 — 드론 무력화', 'alert');
   await wait(1200);
   if(cancelled)return;
 
-  // 사후관리
   phSet('response','done'); phSet('after','active');
   setStatus('사후관리 — 사건 기록·분석 완료');
   await wait(1000);
   if(cancelled)return;
   setOpacity('drone-sim',0);
+  setOpacity('drone-int',0);
   setOpacity('df1',0); setOpacity('df2',0); setOpacity('df3',0);
+  stopPackets(); stopJam();
+  done();
+}
+
+/* ─── Scenario 3: 미등록 드론 침투 → 전 자산 대응 ────────── */
+async function sc3() {
+  // 드론 색상·태그 변경 (미등록, 주황)
+  droneColor('#f97316');
+  setTag('미등록','#f97316','rgba(249,115,22');
+  $('drone-sim').setAttribute('transform','translate(-50,34)');
+
+  phSet('manage','active');
+  setStatus('⚠ 미등록 드론 탐지 — 신원 확인 불가!', 'alert');
+  setOpacity('drone-sim', 1);
+  await wait(1200);
+  if(cancelled)return;
+
+  phSet('manage','done'); phSet('track','active');
+  setStatus('전 레이더 추적 개시 — 5G-A 긴급 전송');
+  startRadar('L'); startRadar('R'); startRadar('C');
+  await wait(400);
+  setOpacity('df2',.7); flowOn('fn-5ga');
+  startPackets();
+  await wait(400);
+  setOpacity('df1',.55); setOpacity('df3',.55);
+
+  // 좌측에서 도시 진입
+  await moveDrone(400, 34, 1000);
+  if(cancelled)return;
+  await moveDrone(700, 34, 1000);
+  if(cancelled)return;
+
+  // 중요시설 2 방향 급접근
+  await moveDrone(800, 80, 800);
+  if(cancelled)return;
+  await moveDrone(780, 130, 700);
+  if(cancelled)return;
+
+  phSet('track','done'); phSet('deviate','active');
+  setStatus('⚠ 미등록 드론 이탈 — 중요시설 접근 중!', 'alert');
+  $('fac2').setAttribute('fill','rgba(255,92,92,.35)');
+  $('fac2').setAttribute('stroke','rgba(255,92,92,.9)');
+  setOpacity('alert-fac2', 1);
+
+  setOpacity('ai-badge',1); flowOn('fn-ai');
+  setStatus('AI 긴급 분석 — 적대적 패턴 탐지');
+  await wait(1000);
+  if(cancelled)return;
+  setOpacity('ai-badge',0);
+  showAIResult('침투 / 공격 의심', 'CRITICAL', '98%', '#ff5c5c', '#ff5c5c');
+  setStatus('AI: 침투 의도 확정 — 즉각 경고 발령!', 'alert');
+  await wait(1400);
+  if(cancelled)return;
+  setOpacity('ai-result', 0);
+
+  phSet('deviate','done'); phSet('warn','active');
+  setStatus('⚠ 긴급 경고 발령 — 복귀 명령 무시!', 'alert');
+  await wait(1000);
+  if(cancelled)return;
+
+  // 경고 무시 — 계속 접근
+  await moveDrone(775, 145, 600);
+  if(cancelled)return;
+
+  // 전 자산 투입
+  phSet('warn','done'); phSet('response','active');
+  setStatus('전 대응 자산 투입 — 재밍·요격·신속대응·경찰', 'alert');
+  droneColor('#ff5c5c');
+  flowOn('fn-asset','fn-res');
+  assetOn('as-jam','as-int','as-team','as-pol');
+  startJam(774, 165);
+  setOpacity('drone-int', 1);
+  moveIntercept(775, 148, 1400);
+  await wait(1200);
+  if(cancelled)return;
+
+  setStatus('미등록 드론 제압 완료 — 전 자산 회수', 'alert');
+  await wait(1200);
+  if(cancelled)return;
+
+  phSet('response','done'); phSet('after','active');
+  setStatus('사후관리 — 사건 기록·수사 요청 완료');
+  await wait(1000);
+  if(cancelled)return;
+  setOpacity('drone-sim',0);
+  setOpacity('drone-int',0);
+  setOpacity('df1',0); setOpacity('df2',0); setOpacity('df3',0);
+  stopPackets(); stopJam();
   done();
 }
 
 function done() {
   running = false;
-  $('btn1').disabled = false;
-  $('btn2').disabled = false;
+  ['btn1','btn2','btn3'].forEach(id => { const b=$(id); if(b) b.disabled=false; });
 }
 
 function run(n) {
   if (running) return;
   running = true;
-  $('btn1').disabled = true;
-  $('btn2').disabled = true;
+  ['btn1','btn2','btn3'].forEach(id => { const b=$(id); if(b) b.disabled=true; });
   resetAll();
-  setTimeout(() => { if(n===1) sc1(); else sc2(); }, 120);
+  setTimeout(() => { if(n===1) sc1(); else if(n===2) sc2(); else sc3(); }, 140);
 }
 
 /* ─── 레이더 시계방향 회전 스윕 ──────────────────────── */
@@ -769,7 +996,7 @@ function run(n) {
 
 /* ─── SIGINT 신호 탐지 펄스 ─────────────────────────── */
 (function sigintPulse() {
-  [['sigL1','sigL2',358,46], ['sigR1','sigR2',1214,46]].forEach(([id1,id2]) => {
+  [['sigL1','sigL2',358,300], ['sigR1','sigR2',1214,46]].forEach(([id1,id2]) => {
     let idx = 0;
     function pulse() {
       const ring = document.getElementById([id1,id2][idx % 2]);
