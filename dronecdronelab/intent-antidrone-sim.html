@@ -29,8 +29,9 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .hdr-div{width:1px;height:16px;background:var(--border)}
 
 /* ── Phase Bar ── */
-.phase-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;gap:5px;flex-shrink:0;flex-wrap:wrap}
-.ph{padding:5px 13px;border-radius:4px;font-size:11px;font-weight:700;border:1.5px solid #222;color:#3a4560;background:#0e1218;transition:all .35s ease;white-space:nowrap;cursor:default}
+.phase-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;flex-shrink:0}
+.ph-center{flex:1;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}
+.ph{padding:8px 22px;border-radius:5px;font-size:14px;font-weight:700;border:1.5px solid #222;color:#3a4560;background:#0e1218;transition:all .35s ease;white-space:nowrap;cursor:default}
 .ph.gold{border-color:#2a2008}.ph.gold.active{background:rgba(244,185,66,.18);border-color:var(--gold);color:var(--gold);box-shadow:0 0 14px rgba(244,185,66,.4)}
 .ph.gold.done{background:rgba(244,185,66,.07);border-color:rgba(244,185,66,.3);color:rgba(244,185,66,.7)}
 .ph.blue{border-color:#0d1a2a}.ph.blue.active{background:rgba(79,163,255,.18);border-color:var(--blue);color:var(--blue);box-shadow:0 0 14px rgba(79,163,255,.4)}
@@ -43,9 +44,9 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .ph.orange.done{background:rgba(249,115,22,.07);border-color:rgba(249,115,22,.3);color:rgba(249,115,22,.7)}
 .ph.purple{border-color:#14082a}.ph.purple.active{background:rgba(139,92,246,.18);border-color:var(--purple);color:var(--purple);box-shadow:0 0 14px rgba(139,92,246,.4)}
 .ph.purple.done{background:rgba(139,92,246,.07);border-color:rgba(139,92,246,.3);color:rgba(139,92,246,.7)}
-.ph-arrow{color:#252d40;font-size:12px;flex-shrink:0}
-.ph-branch{display:flex;flex-direction:column;gap:3px}
-.ph-status{margin-left:auto;padding:5px 14px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(79,163,255,.06);border:1px solid rgba(79,163,255,.2);color:var(--muted);transition:all .3s;white-space:nowrap}
+.ph-arrow{color:#252d40;font-size:15px;flex-shrink:0}
+.ph-branch{display:flex;flex-direction:column;gap:4px}
+.ph-status{flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(79,163,255,.06);border:1px solid rgba(79,163,255,.2);color:var(--muted);transition:all .3s;white-space:nowrap}
 .ph-status.ok{background:rgba(56,230,155,.1);border-color:rgba(56,230,155,.35);color:var(--green)}
 .ph-status.alert{background:rgba(255,92,92,.1);border-color:rgba(255,92,92,.35);color:var(--red)}
 
@@ -99,20 +100,22 @@ svg.sim{width:100%;height:100%}
 
 <!-- Phase Bar -->
 <div class="phase-bar">
-  <div class="ph gold" id="ph-manage">관리</div>
-  <div class="ph-arrow">▶</div>
-  <div class="ph blue" id="ph-track">추적</div>
-  <div class="ph-arrow">▶</div>
-  <div class="ph-branch">
-    <div class="ph red" id="ph-deviate">이탈</div>
-    <div class="ph green" id="ph-normal">정상</div>
+  <div class="ph-center">
+    <div class="ph gold" id="ph-manage">관리</div>
+    <div class="ph-arrow">▶</div>
+    <div class="ph blue" id="ph-track">추적</div>
+    <div class="ph-arrow">▶</div>
+    <div class="ph-branch">
+      <div class="ph red" id="ph-deviate">이탈</div>
+      <div class="ph green" id="ph-normal">정상</div>
+    </div>
+    <div class="ph-arrow">▶</div>
+    <div class="ph orange" id="ph-warn">경고</div>
+    <div class="ph-arrow">▶</div>
+    <div class="ph red" id="ph-response">대응</div>
+    <div class="ph-arrow">▶</div>
+    <div class="ph purple" id="ph-after">사후관리</div>
   </div>
-  <div class="ph-arrow">▶</div>
-  <div class="ph orange" id="ph-warn">경고</div>
-  <div class="ph-arrow">▶</div>
-  <div class="ph red" id="ph-response">대응</div>
-  <div class="ph-arrow">▶</div>
-  <div class="ph purple" id="ph-after">사후관리</div>
   <div class="ph-status" id="ph-status">시나리오를 선택하세요</div>
 </div>
 
@@ -160,20 +163,20 @@ svg.sim{width:100%;height:100%}
   <text x="14" y="90" font-size="7" fill="#5a7a9a">감지 인프라. 초지연성,</text>
   <text x="14" y="101" font-size="7" fill="#5a7a9a">통합 감지/통신 체계</text>
 
-  <!-- LEFT Radar tower -->
+  <!-- LEFT Radar tower (rooftop) -->
   <g id="radar-L">
-    <line x1="115" y1="303" x2="115" y2="270" stroke="#4fa3ff" stroke-width="2"/>
-    <line x1="103" y1="303" x2="127" y2="303" stroke="#4fa3ff" stroke-width="2"/>
-    <line x1="107" y1="303" x2="115" y2="288" stroke="#4fa3ff" stroke-width="1.5"/>
-    <line x1="123" y1="303" x2="115" y2="288" stroke="#4fa3ff" stroke-width="1.5"/>
-    <ellipse cx="115" cy="270" rx="13" ry="4.5" fill="none" stroke="#4fa3ff" stroke-width="1.5"/>
-    <line x1="115" y1="265.5" x2="115" y2="274.5" stroke="#4fa3ff" stroke-width="1"/>
+    <line x1="85" y1="186" x2="85" y2="162" stroke="#4fa3ff" stroke-width="2"/>
+    <line x1="73" y1="186" x2="97" y2="186" stroke="#4fa3ff" stroke-width="2"/>
+    <line x1="73" y1="186" x2="85" y2="173" stroke="#4fa3ff" stroke-width="1.5"/>
+    <line x1="97" y1="186" x2="85" y2="173" stroke="#4fa3ff" stroke-width="1.5"/>
+    <ellipse cx="85" cy="162" rx="13" ry="4.5" fill="none" stroke="#4fa3ff" stroke-width="1.5"/>
+    <line x1="85" y1="157.5" x2="85" y2="166.5" stroke="#4fa3ff" stroke-width="1"/>
   </g>
-  <text x="115" y="320" text-anchor="middle" font-size="8.5" fill="#4fa3ff">Radar / EO/OR</text>
-  <text x="115" y="331" text-anchor="middle" font-size="8.5" fill="#4fa3ff">(5km)</text>
+  <text x="85" y="137" text-anchor="middle" font-size="8" fill="#4fa3ff">Radar / EO/OR</text>
+  <text x="85" y="147" text-anchor="middle" font-size="8" fill="#4fa3ff">(5km)</text>
   <!-- radar pulse rings L -->
-  <circle id="rl1" cx="115" cy="270" r="0" fill="none" stroke="#4fa3ff" stroke-width="1.2" opacity="0"/>
-  <circle id="rl2" cx="115" cy="270" r="0" fill="none" stroke="#4fa3ff" stroke-width="1.2" opacity="0"/>
+  <circle id="rl1" cx="85" cy="162" r="0" fill="none" stroke="#4fa3ff" stroke-width="1.2" opacity="0"/>
+  <circle id="rl2" cx="85" cy="162" r="0" fill="none" stroke="#4fa3ff" stroke-width="1.2" opacity="0"/>
 
   <!-- RF Spoofing LEFT -->
   <ellipse cx="160" cy="163" rx="26" ry="15" fill="rgba(255,92,92,.07)" stroke="rgba(255,92,92,.28)" stroke-width="1" stroke-dasharray="3,2" opacity=".65"/>
@@ -265,7 +268,7 @@ svg.sim{width:100%;height:100%}
   <!-- DATA FLOW lines (hidden initially) -->
   <line id="df1" x1="238" y1="222" x2="592" y2="290" stroke="#4fa3ff" stroke-width="1.8" stroke-dasharray="8,4" opacity="0" marker-end="url(#ab)"/>
   <line id="df2" x1="700" y1="56" x2="700" y2="278" stroke="#4fa3ff" stroke-width="1.8" stroke-dasharray="8,4" opacity="0" marker-end="url(#ab)"/>
-  <line id="df3" x1="1058" y1="222" x2="808" y2="290" stroke="#4fa3ff" stroke-width="1.8" stroke-dasharray="8,4" opacity="0" marker-end="url(#ab)"/>
+  <line id="df3" x1="1109" y1="156" x2="808" y2="290" stroke="#4fa3ff" stroke-width="1.8" stroke-dasharray="8,4" opacity="0" marker-end="url(#ab)"/>
 
   <!-- AI Decision badge (hidden) -->
   <g id="ai-badge" opacity="0">
@@ -295,20 +298,20 @@ svg.sim{width:100%;height:100%}
   <text x="1058" y="135" text-anchor="middle" font-size="7.5" fill="#ff5c5c" opacity=".75">RF</text>
   <text x="1058" y="145" text-anchor="middle" font-size="7.5" fill="#ff5c5c" opacity=".75">Spoofing</text>
 
-  <!-- RIGHT Radar tower -->
+  <!-- RIGHT Radar tower (rooftop) -->
   <g id="radar-R">
-    <line x1="1058" y1="248" x2="1058" y2="216" stroke="#4fa3ff" stroke-width="2"/>
-    <line x1="1046" y1="248" x2="1070" y2="248" stroke="#4fa3ff" stroke-width="2"/>
-    <line x1="1050" y1="248" x2="1058" y2="234" stroke="#4fa3ff" stroke-width="1.5"/>
-    <line x1="1066" y1="248" x2="1058" y2="234" stroke="#4fa3ff" stroke-width="1.5"/>
-    <ellipse cx="1058" cy="216" rx="13" ry="4.5" fill="none" stroke="#4fa3ff" stroke-width="1.5"/>
-    <line x1="1058" y1="211.5" x2="1058" y2="220.5" stroke="#4fa3ff" stroke-width="1"/>
+    <line x1="1109" y1="156" x2="1109" y2="132" stroke="#4fa3ff" stroke-width="2"/>
+    <line x1="1097" y1="156" x2="1121" y2="156" stroke="#4fa3ff" stroke-width="2"/>
+    <line x1="1097" y1="156" x2="1109" y2="143" stroke="#4fa3ff" stroke-width="1.5"/>
+    <line x1="1121" y1="156" x2="1109" y2="143" stroke="#4fa3ff" stroke-width="1.5"/>
+    <ellipse cx="1109" cy="132" rx="13" ry="4.5" fill="none" stroke="#4fa3ff" stroke-width="1.5"/>
+    <line x1="1109" y1="127.5" x2="1109" y2="136.5" stroke="#4fa3ff" stroke-width="1"/>
   </g>
-  <text x="1058" y="265" text-anchor="middle" font-size="8.5" fill="#4fa3ff">Radar / EO/IR</text>
-  <text x="1058" y="276" text-anchor="middle" font-size="8.5" fill="#4fa3ff">(5km)</text>
+  <text x="1109" y="111" text-anchor="middle" font-size="8" fill="#4fa3ff">Radar / EO/IR</text>
+  <text x="1109" y="121" text-anchor="middle" font-size="8" fill="#4fa3ff">(5km)</text>
   <!-- radar pulse rings R -->
-  <circle id="rr1" cx="1058" cy="216" r="0" fill="none" stroke="#4fa3ff" stroke-width="1.2" opacity="0"/>
-  <circle id="rr2" cx="1058" cy="216" r="0" fill="none" stroke="#4fa3ff" stroke-width="1.2" opacity="0"/>
+  <circle id="rr1" cx="1109" cy="132" r="0" fill="none" stroke="#4fa3ff" stroke-width="1.2" opacity="0"/>
+  <circle id="rr2" cx="1109" cy="132" r="0" fill="none" stroke="#4fa3ff" stroke-width="1.2" opacity="0"/>
 
   <!-- 5G-A line R→Center -->
   <line x1="1038" y1="224" x2="928" y2="258" stroke="#4fa3ff" stroke-width="1.5" stroke-dasharray="8,5" opacity=".28" marker-end="url(#ab)"/>
@@ -378,6 +381,28 @@ svg.sim{width:100%;height:100%}
   <rect x="1138" y="347" width="2" height="5" fill="rgba(79,163,255,.3)"/>
   <!-- 스펙트럼→SIGINT 연결선 -->
   <line x1="1148" y1="328" x2="1156" y2="307" stroke="rgba(34,211,238,.3)" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- ■ 센서 네트워크 점선 연결망 (Radar ↔ RF ↔ 5G-A ↔ SIGINT) -->
+  <g opacity="1">
+    <!-- 좌 레이더 ↔ 좌 RF Spoofing -->
+    <line x1="85" y1="162" x2="160" y2="163" stroke="#4fa3ff" stroke-width="0.8" stroke-dasharray="2,4" opacity=".35"/>
+    <!-- 좌 레이더 → 5G-A 전송 시작점 -->
+    <line x1="85" y1="162" x2="238" y2="222" stroke="#4fa3ff" stroke-width="0.8" stroke-dasharray="2,4" opacity=".3"/>
+    <!-- 우 레이더 ↔ 우 RF Spoofing -->
+    <line x1="1109" y1="132" x2="1058" y2="138" stroke="#4fa3ff" stroke-width="0.8" stroke-dasharray="2,4" opacity=".35"/>
+    <!-- 우 레이더 → 5G-A 전송 시작점 -->
+    <line x1="1109" y1="132" x2="1038" y2="224" stroke="#4fa3ff" stroke-width="0.8" stroke-dasharray="2,4" opacity=".3"/>
+    <!-- RF Spoofing 체인: 좌→센터1→센터2→우 -->
+    <line x1="160" y1="163" x2="638" y2="116" stroke="#ff5c5c" stroke-width="0.8" stroke-dasharray="2,4" opacity=".28"/>
+    <line x1="638" y1="116" x2="765" y2="122" stroke="#ff5c5c" stroke-width="0.8" stroke-dasharray="2,4" opacity=".28"/>
+    <line x1="765" y1="122" x2="1058" y2="138" stroke="#ff5c5c" stroke-width="0.8" stroke-dasharray="2,4" opacity=".28"/>
+    <!-- SIGINT 상단 ↔ 우 레이더 -->
+    <line x1="1214" y1="46" x2="1109" y2="132" stroke="#b0bac8" stroke-width="0.8" stroke-dasharray="2,4" opacity=".3"/>
+    <!-- SIGINT 상단 ↔ SIGINT 하단 (동일 네트워크) -->
+    <line x1="1214" y1="46" x2="1175" y2="296" stroke="#b0bac8" stroke-width="0.8" stroke-dasharray="2,4" opacity=".25"/>
+    <!-- SIGINT 하단 ↔ 우 레이더 베이스 -->
+    <line x1="1172" y1="306" x2="1109" y2="156" stroke="#b0bac8" stroke-width="0.8" stroke-dasharray="2,4" opacity=".28"/>
+  </g>
 
   </svg>
   </div>
@@ -469,8 +494,8 @@ function moveDrone(tx, ty, ms) {
 
 /* radar pulse */
 function startRadar(prefix) {
-  const cx  = prefix==='L' ? 115  : 1058;
-  const cy  = prefix==='L' ? 270  : 216;
+  const cx  = prefix==='L' ? 85   : 1109;
+  const cy  = prefix==='L' ? 162  : 132;
   const ids = prefix==='L' ? ['rl1','rl2'] : ['rr1','rr2'];
   let idx = 0;
   function pulse() {
