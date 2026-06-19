@@ -183,9 +183,13 @@ svg.sim{width:100%;height:100%}
   <text x="160" y="160" text-anchor="middle" font-size="7.5" fill="#ff5c5c" font-weight="700" opacity=".8">RF</text>
   <text x="160" y="170" text-anchor="middle" font-size="7.5" fill="#ff5c5c" opacity=".8">Spoofing</text>
 
-  <!-- 5G-A line L→Center -->
-  <line x1="238" y1="222" x2="492" y2="248" stroke="#4fa3ff" stroke-width="1.5" stroke-dasharray="8,5" opacity=".28" marker-end="url(#ab)"/>
-  <text x="360" y="224" text-anchor="middle" font-size="8.5" fill="#4fa3ff" opacity=".6">5G-A</text>
+  <!-- 5G-A line L→Center (좌 레이더에서 출발) -->
+  <line x1="85" y1="162" x2="492" y2="248" stroke="#4fa3ff" stroke-width="1.8" stroke-dasharray="8,5" opacity=".35" marker-end="url(#ab)"/>
+  <text x="270" y="196" text-anchor="middle" font-size="8.5" fill="#4fa3ff" opacity=".65">5G-A</text>
+  <!-- 좌 RF Spoofing → 5G-A 피드 -->
+  <line x1="160" y1="163" x2="238" y2="222" stroke="#4fa3ff" stroke-width="1.2" stroke-dasharray="5,4" opacity=".3" marker-end="url(#ab)"/>
+  <!-- SIGINT 하단 → 5G-A 피드 -->
+  <line x1="358" y1="285" x2="492" y2="248" stroke="#4fa3ff" stroke-width="1.2" stroke-dasharray="5,4" opacity=".3" marker-end="url(#ab)"/>
 
   <!-- ■ CENTER: MAJOR CITY -->
   <ellipse cx="700" cy="215" rx="268" ry="130" fill="rgba(79,163,255,.025)" stroke="rgba(79,163,255,.07)" stroke-width="1"/>
@@ -234,7 +238,7 @@ svg.sim{width:100%;height:100%}
   <text x="700" y="310" text-anchor="middle" font-size="10.5" fill="#8b5cf6" font-weight="700">Anti-drone System</text>
 
   <!-- 5G-A TOP line -->
-  <line x1="700" y1="56" x2="700" y2="112" stroke="#4fa3ff" stroke-width="1.5" stroke-dasharray="6,4" opacity=".35" marker-end="url(#ab)"/>
+  <line x1="700" y1="56" x2="700" y2="112" stroke="#4fa3ff" stroke-width="1.8" stroke-dasharray="8,5" opacity=".35" marker-end="url(#ab)"/>
   <text x="716" y="84" font-size="8.5" fill="#4fa3ff" opacity=".7">5G-A</text>
 
   <!-- PATROL DRONE (continuous patrol animation) -->
@@ -313,9 +317,13 @@ svg.sim{width:100%;height:100%}
   <circle id="rr1" cx="1109" cy="132" r="0" fill="none" stroke="#4fa3ff" stroke-width="1.2" opacity="0"/>
   <circle id="rr2" cx="1109" cy="132" r="0" fill="none" stroke="#4fa3ff" stroke-width="1.2" opacity="0"/>
 
-  <!-- 5G-A line R→Center -->
-  <line x1="1038" y1="224" x2="928" y2="258" stroke="#4fa3ff" stroke-width="1.5" stroke-dasharray="8,5" opacity=".28" marker-end="url(#ab)"/>
-  <text x="988" y="232" text-anchor="middle" font-size="8.5" fill="#4fa3ff" opacity=".6">5G-A</text>
+  <!-- 5G-A line R→Center (우 레이더에서 출발) -->
+  <line x1="1109" y1="132" x2="928" y2="258" stroke="#4fa3ff" stroke-width="1.8" stroke-dasharray="8,5" opacity=".35" marker-end="url(#ab)"/>
+  <text x="1025" y="183" text-anchor="middle" font-size="8.5" fill="#4fa3ff" opacity=".65">5G-A</text>
+  <!-- 우 RF Spoofing → 5G-A 피드 -->
+  <line x1="1058" y1="138" x2="1038" y2="224" stroke="#4fa3ff" stroke-width="1.2" stroke-dasharray="5,4" opacity=".3" marker-end="url(#ab)"/>
+  <!-- SIGINT 상단 → 5G-A 피드 -->
+  <line x1="1214" y1="46" x2="1109" y2="132" stroke="#4fa3ff" stroke-width="1.2" stroke-dasharray="5,4" opacity=".3" marker-end="url(#ab)"/>
 
   <!-- SIGINT top right -->
   <g transform="translate(1196,36)" opacity=".6">
@@ -386,12 +394,8 @@ svg.sim{width:100%;height:100%}
   <g opacity="1">
     <!-- 좌 레이더 ↔ 좌 RF Spoofing -->
     <line x1="85" y1="162" x2="160" y2="163" stroke="#4fa3ff" stroke-width="0.8" stroke-dasharray="2,4" opacity=".35"/>
-    <!-- 좌 레이더 → 5G-A 전송 시작점 -->
-    <line x1="85" y1="162" x2="238" y2="222" stroke="#4fa3ff" stroke-width="0.8" stroke-dasharray="2,4" opacity=".3"/>
     <!-- 우 레이더 ↔ 우 RF Spoofing -->
     <line x1="1109" y1="132" x2="1058" y2="138" stroke="#4fa3ff" stroke-width="0.8" stroke-dasharray="2,4" opacity=".35"/>
-    <!-- 우 레이더 → 5G-A 전송 시작점 -->
-    <line x1="1109" y1="132" x2="1038" y2="224" stroke="#4fa3ff" stroke-width="0.8" stroke-dasharray="2,4" opacity=".3"/>
     <!-- RF Spoofing 체인: 좌→센터1→센터2→우 -->
     <line x1="160" y1="163" x2="638" y2="116" stroke="#ff5c5c" stroke-width="0.8" stroke-dasharray="2,4" opacity=".28"/>
     <line x1="638" y1="116" x2="765" y2="122" stroke="#ff5c5c" stroke-width="0.8" stroke-dasharray="2,4" opacity=".28"/>
