@@ -583,9 +583,9 @@
     .total-folder-cnt{font-size:10px;font-weight:700;background:#f0f2f8;color:#888;padding:1px 7px;border-radius:10px}
     .total-folder-items{display:none;background:#fafbfd}
     .total-folder.open .total-folder-items{display:block}
-    .total-item{padding:7px 12px 7px 28px;font-size:12px;color:#4b5563;cursor:pointer;transition:.1s;line-height:1.4;border-left:3px solid transparent;display:flex;align-items:flex-start;gap:5px}
+    .total-item{padding:7px 12px 7px 28px;font-size:12px;color:#1f2937;font-weight:500;cursor:pointer;transition:.1s;line-height:1.4;border-left:3px solid transparent;display:flex;align-items:flex-start;gap:5px}
     .total-item:hover{background:#eef4ff;color:#1e3a6e}
-    .total-item.sel{background:#eff6ff;border-left-color:#4fa3ff;color:#1e3a6e;font-weight:700}
+    .total-item.sel{background:#eff6ff;border-left-color:#4fa3ff;color:#1e3a6e;font-weight:800}
     .total-item-ico{font-size:10px;margin-top:2px;flex-shrink:0;opacity:.45}
     .total-content{flex:1;overflow-y:auto}
     .total-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;color:#bbb}
@@ -1297,10 +1297,34 @@
       const el=document.getElementById('panel-total');
       if(!el)return;
       const cats=TOTAL_CATS;
-      const allItems=articles.filter(a=>cats.some(c=>c.id===a.cat));
+      const totalCount=articles.filter(a=>cats.some(c=>c.id===a.cat)).length+labItems.length;
       const sidebar=cats.map(cat=>{
+        let rows='';
+        if(cat.id==='lab'){
+          const simRows=labItems.map(i=>`
+            <div class="total-item" id="tl-${i.id}" onclick="selectTotalLabItem(${i.id})">
+              <span class="total-item-ico">⚗️</span>
+              <span class="total-item-title">${i.title}</span>
+            </div>`).join('');
+          const artRows=articles.filter(a=>a.cat==='lab').sort((a,b)=>b.date.localeCompare(a.date)).map(a=>`
+            <div class="total-item" id="ti-${a.id}" onclick="selectTotalItem(${a.id})">
+              <span class="total-item-ico">📄</span>
+              <span class="total-item-title">${a.title}</span>
+            </div>`).join('');
+          rows=simRows+artRows;
+          const cnt=labItems.length+articles.filter(a=>a.cat==='lab').length;
+          return`<div class="total-folder open" id="tf-${cat.id}">
+            <div class="total-folder-hd" onclick="toggleTotalFolder('${cat.id}')">
+              <span class="total-folder-arrow">▶</span>
+              <span class="total-folder-dot" style="background:${cat.color}"></span>
+              <span class="total-folder-label" style="color:${cat.color}">${cat.label}</span>
+              <span class="total-folder-cnt">${cnt}</span>
+            </div>
+            <div class="total-folder-items">${rows}</div>
+          </div>`;
+        }
         const items=articles.filter(a=>a.cat===cat.id).sort((a,b)=>b.date.localeCompare(a.date));
-        const rows=items.map(a=>`
+        rows=items.map(a=>`
           <div class="total-item" id="ti-${a.id}" onclick="selectTotalItem(${a.id})">
             <span class="total-item-ico">📄</span>
             <span class="total-item-title">${a.title}</span>
@@ -1320,7 +1344,7 @@
           <div class="total-sidebar-top">
             <div class="total-sidebar-hd">// TOTAL ARCHIVE</div>
             <input class="total-search" type="text" placeholder="제목 검색…" oninput="filterTotalItems(this.value)">
-            <div class="total-stats" id="total-stats-txt">전체 ${allItems.length}개 자료</div>
+            <div class="total-stats" id="total-stats-txt">전체 ${totalCount}개 자료</div>
           </div>
           <div class="total-folder-list">${sidebar}</div>
         </div>
@@ -1387,6 +1411,26 @@
         ${renderComments(a)}
       </div>`;
       renderDotDiagrams();
+    }
+    function selectTotalLabItem(id){
+      document.querySelectorAll('.total-item').forEach(e=>e.classList.remove('sel'));
+      const ti=document.getElementById('tl-'+id);
+      if(ti)ti.classList.add('sel');
+      const item=labItems.find(x=>x.id===id);
+      if(!item)return;
+      const area=document.getElementById('total-content');
+      if(!area)return;
+      area.innerHTML=`<div class="total-detail-wrap">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px">
+          <span style="font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase;padding:3px 10px;background:#8b5cf61a;color:#8b5cf6">LAB</span>
+          <span style="font-size:11px;color:#aaa">${item.date}</span>
+        </div>
+        <h1 class="ch-detail-title" style="margin-bottom:14px">${item.title}</h1>
+        <div class="ch-detail-body" style="margin-top:20px">${item.desc}</div>
+        <div class="ch-detail-actions" style="margin-top:24px">
+          <a href="${item.url}" target="_blank" style="display:inline-block;background:#8b5cf6;color:#fff;padding:10px 24px;font-size:13px;font-weight:800;letter-spacing:1px;text-decoration:none">▶ 열기</a>
+        </div>
+      </div>`;
     }
     function openDotModal(svg){
       svg.style.cssText='max-width:none;width:auto;height:auto;display:block';
