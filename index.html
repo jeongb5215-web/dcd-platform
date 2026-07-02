@@ -556,8 +556,14 @@
       .member-table{display:block;overflow-x:auto;white-space:nowrap}
     }
     .dot-src{display:none}
-    .dot-render{background:#fff;border:1px solid var(--line);border-radius:4px;padding:16px;overflow-x:auto;text-align:center;margin-top:8px}
+    .dot-render{background:#fff;border:1px solid var(--line);border-radius:4px;padding:16px;overflow-x:auto;text-align:center;margin-top:8px;cursor:zoom-in;position:relative}
+    .dot-render:after{content:"🔍 클릭하여 확대";position:absolute;bottom:8px;right:10px;font-size:10px;color:#999;pointer-events:none}
     .dot-render svg{max-width:100%;height:auto;display:block;margin:0 auto}
+    .dot-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;z-index:99999;cursor:zoom-out;padding:16px}
+    .dot-modal-inner{background:#fff;border-radius:6px;padding:24px;max-width:96vw;max-height:92vh;overflow:auto;position:relative;cursor:default}
+    .dot-modal-close{position:absolute;top:8px;right:10px;background:none;border:none;font-size:22px;color:#888;cursor:pointer;line-height:1;padding:2px 8px;z-index:1}
+    .dot-modal-close:hover{color:#000}
+    .dot-modal-inner svg{max-width:none;width:auto;height:auto;min-width:min(900px,80vw)}
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
@@ -1232,10 +1238,28 @@
         new Viz().renderSVGElement(dot).then(svg=>{
           svg.style.cssText='max-width:100%;height:auto;display:block;margin:0 auto';
           wrap.appendChild(svg);
+          wrap.addEventListener('click',()=>openDotModal(svg.cloneNode(true)));
         }).catch(err=>{
           wrap.innerHTML='<pre style="color:#ff5c5c;font-size:11px;padding:8px">'+err.message+'</pre>';
         });
       });
+    }
+    function openDotModal(svg){
+      svg.style.cssText='max-width:none;width:auto;height:auto;display:block';
+      const overlay=document.createElement('div');
+      overlay.className='dot-modal-overlay';
+      const inner=document.createElement('div');
+      inner.className='dot-modal-inner';
+      const closeBtn=document.createElement('button');
+      closeBtn.className='dot-modal-close';
+      closeBtn.textContent='✕';
+      closeBtn.onclick=()=>overlay.remove();
+      inner.appendChild(closeBtn);
+      inner.appendChild(svg);
+      overlay.appendChild(inner);
+      overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove();});
+      document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){overlay.remove();document.removeEventListener('keydown',esc);}});
+      document.body.appendChild(overlay);
     }
     function renderAdmin(){
       if(!isAdmin){document.getElementById('panel-admin').innerHTML='';return;}
