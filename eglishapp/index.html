@@ -1075,7 +1075,7 @@ function showToast(msg) {
 }
 
 // ── Seed / Migrate Default Decks ───────────────────────────
-const DECK_VERSION = 8; // 단어장 버전 — 올리면 기존 기본 단어장 자동 교체
+const DECK_VERSION = 9; // 단어장 버전 — 올리면 기존 기본 단어장 자동 교체
 const ALL_DEFAULT_WORDS = [
   ['Adaptation Loop', '적응 순환 구조(적응 루프)'],
   ['AI Pilot', 'AI 조종'],
@@ -1189,8 +1189,13 @@ const ALL_DEFAULT_WORDS = [
   ['Directed Infrared Countermeasures (DIRCM)', '지향성 적외선 방해장비'],
   ['Noise', '전파'],
   ['Noise Jamming', '적의 강력한 잡음 재밍'],
-  ['Frequency Hopping Spread Spectrum (FHSS)', '주파수 도약'],
+  ['Frequency Hopping Spread Spectrum (FHSS)', '주파수 도약 대역 확산'],
   ['Deception Jamming', '기만 재밍'],
+  ['Proximity Fuze', '근접 신관'],
+  ['Controlled Reception Pattern Antenna (CRPA)', '배열 제어 수신 패턴 안테나'],
+  ['Datum', '기준점'],
+  ['Electromagnetic Compatibility (EMC)', '전자기 호환성'],
+  ['Edge AI', '기기 자체 또는 가까운 위치에서 처리하는 AI'],
 ];
 
 function seedDefaultDecks() {
