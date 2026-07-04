@@ -1075,7 +1075,7 @@ function showToast(msg) {
 }
 
 // ── Seed / Migrate Default Decks ───────────────────────────
-const DECK_VERSION = 9; // 단어장 버전 — 올리면 기존 기본 단어장 자동 교체
+const DECK_VERSION = 10; // 단어장 버전 — 올리면 기존 기본 단어장 자동 교체
 const ALL_DEFAULT_WORDS = [
   ['Adaptation Loop', '적응 순환 구조(적응 루프)'],
   ['AI Pilot', 'AI 조종'],
@@ -1196,6 +1196,15 @@ const ALL_DEFAULT_WORDS = [
   ['Datum', '기준점'],
   ['Electromagnetic Compatibility (EMC)', '전자기 호환성'],
   ['Edge AI', '기기 자체 또는 가까운 위치에서 처리하는 AI'],
+  ['Decoy Drone', '기만용, 적 방공망 유인'],
+  ['Saturation Drone', '포화용, 대량 투입하여 방공망 과부하'],
+  ['Bait Drone', '미끼용, 레이다를 켜도록 유도'],
+  ['Strike Drone', '본타격, 실제 탄두 탑재 공격 (Shahed-136)'],
+  ['Main Attack Drone', '주공, 핵심 공격 수행 (Geran-2)'],
+  ['Advance Attack Drone', '선행공격, 본 공격 전 방공망 약화 (Harpy)'],
+  ['Battle Damage Assessment (BDA)', '공격 후 평가, 피해 확인 및 효과 평가 (DJI Mavic)'],
+  ['Relay Drone', '통신중계, 통신망 확장'],
+  ['Target Designation Drone', '표적지시, 레이저 표적지시 (TB2)'],
 ];
 
 function seedDefaultDecks() {
