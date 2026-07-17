@@ -583,10 +583,12 @@
     .total-folder-cnt{font-size:10px;font-weight:700;background:#f0f2f8;color:#888;padding:1px 7px;border-radius:10px}
     .total-folder-items{display:none;background:#fafbfd}
     .total-folder.open .total-folder-items{display:block}
-    .total-item{padding:7px 12px 7px 28px;font-size:12px;color:#111827;font-weight:700;cursor:pointer;transition:.1s;line-height:1.4;border-left:3px solid transparent;display:flex;align-items:flex-start;gap:5px}
+    .total-item{padding:8px 12px 8px 28px;font-size:13.5px;color:#111827;font-weight:700;cursor:pointer;transition:.1s;line-height:1.45;border-left:3px solid transparent;display:flex;align-items:flex-start;gap:6px}
     .total-item:hover{background:#eef4ff;color:#1e3a6e}
     .total-item.sel{background:#eff6ff;border-left-color:#4fa3ff;color:#1e3a6e;font-weight:800}
-    .total-item-ico{font-size:10px;margin-top:2px;flex-shrink:0;opacity:.45}
+    .total-item-ico{font-size:11px;margin-top:2px;flex-shrink:0;opacity:.45}
+    .total-resizer{width:5px;background:#dde3ec;cursor:col-resize;flex-shrink:0;transition:background .15s;position:relative;z-index:1}
+    .total-resizer:hover,.total-resizer.dragging{background:#4fa3ff}
     .total-content{flex:1;overflow-y:auto}
     .total-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;color:#bbb}
     .total-placeholder-icon{font-size:48px;opacity:.2}
@@ -1365,8 +1367,8 @@
           <div class="total-folder-items">${rows}</div>
         </div>`;
       }).join('');
-      el.innerHTML=`<div class="total-wrap">
-        <div class="total-sidebar">
+      el.innerHTML=`<div class="total-wrap" id="total-wrap">
+        <div class="total-sidebar" id="total-sidebar">
           <div class="total-sidebar-top">
             <div class="total-sidebar-hd">// TOTAL ARCHIVE</div>
             <input class="total-search" type="text" placeholder="제목 검색…" oninput="filterTotalItems(this.value)">
@@ -1374,6 +1376,7 @@
           </div>
           <div class="total-folder-list">${sidebar}</div>
         </div>
+        <div class="total-resizer" id="total-resizer"></div>
         <div class="total-content" id="total-content">
           <div class="total-placeholder">
             <div class="total-placeholder-icon">📂</div>
@@ -1381,10 +1384,35 @@
           </div>
         </div>
       </div>`;
+      initTotalResizer();
     }
     function toggleTotalFolder(cat){
       const f=document.getElementById('tf-'+cat);
       if(f)f.classList.toggle('open');
+    }
+    function initTotalResizer(){
+      const resizer=document.getElementById('total-resizer');
+      const sidebar=document.getElementById('total-sidebar');
+      if(!resizer||!sidebar)return;
+      let dragging=false,startX=0,startW=0;
+      resizer.addEventListener('mousedown',e=>{
+        dragging=true;startX=e.clientX;startW=sidebar.offsetWidth;
+        resizer.classList.add('dragging');
+        document.body.style.cursor='col-resize';
+        document.body.style.userSelect='none';
+      });
+      document.addEventListener('mousemove',e=>{
+        if(!dragging)return;
+        const newW=Math.min(Math.max(startW+(e.clientX-startX),150),600);
+        sidebar.style.width=newW+'px';
+      });
+      document.addEventListener('mouseup',()=>{
+        if(!dragging)return;
+        dragging=false;
+        resizer.classList.remove('dragging');
+        document.body.style.cursor='';
+        document.body.style.userSelect='';
+      });
     }
     function filterTotalItems(q){
       q=q.toLowerCase().trim();
