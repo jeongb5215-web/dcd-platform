@@ -653,7 +653,7 @@ function renderWordListUI() {
         <div class="word-en">${escHtml(w.en)}</div>
         <div class="word-ko">${escHtml(w.ko)}</div>
       </div>
-      <button class="btn-small" style="padding:2px 6px;flex-shrink:0;" onclick="speak('${escHtml(w.en).replace(/'/g,"\\'")}')">🔊</button>
+      <button class="btn-small" style="padding:2px 6px;flex-shrink:0;" onclick="speakEnKo('${escHtml(w.en).replace(/'/g,"\\'")}','${escHtml(w.ko).replace(/'/g,"\\'")}')">🔊</button>
       ${w.mastered ? '<span class="word-mastered-badge">✓ 암기</span>' : ''}
       <button class="btn-small danger" style="padding:2px 6px;flex-shrink:0;" onclick="removeWord(${i})">✕</button>
     </div>`).join('');
@@ -772,7 +772,7 @@ function renderCard() {
     </div>
     <div class="flashcard" id="flashcard">
       <div class="card-en">${escHtml(word.en)}</div>
-      <button class="btn-speak" onclick="event.stopPropagation();speak('${escHtml(word.en).replace(/'/g,"\\'")}')">🔊 발음 듣기</button>
+      <button class="btn-speak" onclick="event.stopPropagation();speakEnKo('${escHtml(word.en).replace(/'/g,"\\'")}','${escHtml(word.ko).replace(/'/g,"\\'")}')">🔊 발음 듣기</button>
       <div class="card-ko">${escHtml(word.ko)}</div>
     </div>
     `;
@@ -785,7 +785,7 @@ function goCard(dir) {
   if (next < 0 || next > queue.length) return;
   practiceState.idx = next;
   renderCard();
-  if (!AP.running && next < queue.length) speak(queue[next].en);
+  if (!AP.running && next < queue.length) speakEnKo(queue[next].en, queue[next].ko);
 }
 
 
@@ -887,7 +887,7 @@ function cleanTTS(text) {
     .trim();
 }
 
-// 자동재생 — 영어 발음 후 타이머로 다음 단어 이동 (콜백 없음)
+// 자동재생 — 영어 발음 후 한글 읽기, onend 콜백 기반으로 다음 단어 이동
 function runAutoStep() {
   if (!AP.running) return;
   const { queue, idx } = practiceState;
@@ -895,20 +895,19 @@ function runAutoStep() {
 
   const word = queue[idx];
   setupMediaSession(word.en);
-  autoPlaySpeak(word.en);
-
-  // 단어 길이에 비례한 간격 후 다음 단어로 이동
-  const delay = Math.max(3000, word.en.length * 200 + 1500);
-  AP.timer = setTimeout(function() {
+  autoPlayEnKo(word.en, word.ko, function() {
     if (!AP.running) return;
-    practiceState.idx = idx + 1;
-    renderCard();
-    runAutoStep();
-  }, delay);
+    AP.timer = setTimeout(function() {
+      if (!AP.running) return;
+      practiceState.idx = idx + 1;
+      renderCard();
+      runAutoStep();
+    }, 1000);
+  });
 }
 
-// 자동재생 전용 TTS — 발음만 재생, 콜백/시퀀스 없음
-function autoPlaySpeak(text) {
+// 자동재생 전용 TTS — 영어 발음 후 한글 읽기, onDone 콜백 지원
+function autoPlayEnKo(en, ko, onDone) {
   // 이전 발화·오디오 즉시 정지
   try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e) {}
   if (currentAudio) {
@@ -918,22 +917,59 @@ function autoPlaySpeak(text) {
     currentAudio = null;
   }
 
+  function speakKo() {
+    if (!AP.running) return;
+    if (!window.speechSynthesis) { if (onDone) onDone(); return; }
+    var koUtter = new SpeechSynthesisUtterance(cleanTTS(ko));
+    koUtter.lang = 'ko-KR';
+    koUtter.rate = 0.9;
+    koUtter.volume = 1;
+    if (cachedVoices.length) {
+      var kv = cachedVoices.find(function(x) { return x.lang === 'ko-KR'; })
+             || cachedVoices.find(function(x) { return x.lang.indexOf('ko') === 0; });
+      if (kv) koUtter.voice = kv;
+    }
+    koUtter.onend  = function() { if (onDone) onDone(); };
+    koUtter.onerror = function() { if (onDone) onDone(); };
+    try { window.speechSynthesis.speak(koUtter); } catch(e) { if (onDone) onDone(); }
+  }
+
   if (isSamsungBrowser) {
-    // 삼성 브라우저: Google TTS Audio — setTimeout에서도 재생 허용됨
+    // 삼성 브라우저: Google TTS Audio로 영어 재생, onended에서 한글 읽기
     var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=en-US&client=tw-ob&q='
-      + encodeURIComponent(text);
+      + encodeURIComponent(en);
     currentAudio = new Audio(url);
-    safePlay(currentAudio, function() {
-      currentAudio = null;
-      _wsSpeak(text, false); // 폴백: Web Speech API
-    });
+    currentAudio.onended = function() { currentAudio = null; speakKo(); };
+    currentAudio.onerror = function() { currentAudio = null; speakKo(); };
+    safePlay(currentAudio, function() { currentAudio = null; speakKo(); });
     return;
   }
 
   // iOS / Android Chrome / PC / macOS Safari: Web Speech API
-  // iOS는 setTimeout 없이 즉시 speak (setTimeout 사용 시 사용자 제스처 컨텍스트 단절)
-  // Android Chrome: Audio.play()가 setTimeout에서 차단되므로 Web Speech API 사용
-  _wsSpeak(text, isIOS);
+  var enUtter = new SpeechSynthesisUtterance(cleanTTS(en));
+  enUtter.lang = 'en-US';
+  enUtter.rate = 0.9;
+  enUtter.volume = 1;
+  if (cachedVoices.length) {
+    var maleNames = /david|mark|fred|alex|daniel|google uk english male|microsoft david|microsoft mark/i;
+    var v = cachedVoices.find(function(x) { return x.lang === 'en-US' && maleNames.test(x.name); })
+          || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0 && maleNames.test(x.name); })
+          || cachedVoices.find(function(x) { return x.lang === 'en-US'; })
+          || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0; });
+    if (v) enUtter.voice = v;
+  }
+  enUtter.onend  = function() { setTimeout(function() { if (AP.running) speakKo(); }, 300); };
+  enUtter.onerror = function() { if (onDone) onDone(); };
+
+  if (isIOS) {
+    if (!AP.running) return;
+    try { window.speechSynthesis.speak(enUtter); } catch(e) { if (onDone) onDone(); }
+  } else {
+    setTimeout(function() {
+      if (!AP.running) return;
+      try { window.speechSynthesis.speak(enUtter); } catch(e) { if (onDone) onDone(); }
+    }, 50);
+  }
 }
 
 function _wsSpeak(text, immediate) {
@@ -1039,6 +1075,43 @@ function speak(text) {
   } else {
     speakAudio(text);
   }
+}
+
+// 영어 발음 후 한글 읽기 — 수동 모드(카드 넘기기, 🔊 버튼)
+function speakEnKo(en, ko) {
+  try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e) {}
+  if (currentAudio) { try { currentAudio.pause(); } catch(e) {} currentAudio = null; }
+  if (!window.speechSynthesis) { speakAudio(en); return; }
+
+  var enUtter = new SpeechSynthesisUtterance(cleanTTS(en));
+  enUtter.lang = 'en-US';
+  enUtter.rate = 0.85;
+  enUtter.volume = 1;
+  if (cachedVoices.length) {
+    var maleNames = /david|mark|fred|alex|daniel|google uk english male|microsoft david|microsoft mark/i;
+    var v = cachedVoices.find(function(x) { return x.lang === 'en-US' && maleNames.test(x.name); })
+          || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0 && maleNames.test(x.name); })
+          || cachedVoices.find(function(x) { return x.lang === 'en-US'; })
+          || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0; });
+    if (v) enUtter.voice = v;
+  }
+  enUtter.onend = function() {
+    setTimeout(function() {
+      var koUtter = new SpeechSynthesisUtterance(cleanTTS(ko));
+      koUtter.lang = 'ko-KR';
+      koUtter.rate = 0.9;
+      koUtter.volume = 1;
+      if (cachedVoices.length) {
+        var kv = cachedVoices.find(function(x) { return x.lang === 'ko-KR'; })
+               || cachedVoices.find(function(x) { return x.lang.indexOf('ko') === 0; });
+        if (kv) koUtter.voice = kv;
+      }
+      try { window.speechSynthesis.speak(koUtter); } catch(e) {}
+    }, 300);
+  };
+  setTimeout(function() {
+    try { window.speechSynthesis.speak(enUtter); } catch(e) {}
+  }, 50);
 }
 
 // ── 강제 화이트 배경 (삼성 브라우저 다크모드 JS 차단) ──────
