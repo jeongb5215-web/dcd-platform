@@ -1321,7 +1321,7 @@
                   ${((featured.tags||featured.keywords||[]).length)?`<div style="display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap;margin-bottom:6px">${(featured.tags||featured.keywords).map(t=>`<span class="art-tag">${t.toUpperCase()}</span>`).join('')}</div>`:''}
                   <div class="ch-feat-title" style="margin-bottom:0">${featured.title}</div>
                 </div>
-                <div class="ch-feat-summary">${featured.summary.length>240?featured.summary.slice(0,240)+'…':featured.summary}</div>
+                <div class="ch-feat-summary">${(t=>t.length>240?t.slice(0,240)+'…':t)(featured.summary.replace(/<[^>]+>/g,' '))}</div>
               </div>
               <div class="ch-feat-meta">
                 <span class="ch-feat-source">${featured.source}</span>
