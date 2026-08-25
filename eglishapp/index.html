@@ -587,11 +587,32 @@ function renderDecks() {
         </button>
         <div class="deck-actions">
           <button class="btn-small" onclick="openEditDeckModal('${deck.id}')">✏️ 편집</button>
+          <button class="btn-small" onclick="downloadDeck('${deck.id}')">📥 다운로드</button>
           <button class="btn-small danger" onclick="deleteDeck('${deck.id}')">🗑️</button>
         </div>
       </div>
     </div>`;
   }).join('');
+}
+
+// ── Download ───────────────────────────────────────────────
+function downloadDeck(deckId) {
+  const deck = decks.find(d => d.id === deckId);
+  if (!deck) return;
+  const rows = [['English', 'Korean']].concat(deck.words.map(w => [
+    '"' + w.en.replace(/"/g, '""') + '"',
+    '"' + w.ko.replace(/"/g, '""') + '"'
+  ]));
+  const csv = '﻿' + rows.map(r => r.join(',')).join('\r\n'); // BOM: 엑셀 한글 깨짐 방지
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = deck.name + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 // ── Search ─────────────────────────────────────────────────
