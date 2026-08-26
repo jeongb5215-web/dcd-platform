@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>드론 탄두 폭풍압-피해거리 시뮬레이터</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    --bg:#f9f9f7;
+    --surface:#fcfcfb;
+    --border:#e1e0d9;
+    --border-strong:#c3c2b7;
+    --text:#0b0b0b;
+    --text-2:#52514e;
+    --muted:#898781;
+    --blue:#2a78d6;
+    --blue-d:#184f95;
+    --good:#0ca30c;
+    --warning:#fab219;
+    --serious:#ec835a;
+    --critical:#d03b3b;
+    --sans:'Inter',system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);color:var(--text);font-family:var(--sans);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;
+    padding:40px 20px 80px;
+  }
+  .wrap{width:100%;max-width:1080px}
+  .eyebrow{font-size:12px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;font-weight:600;margin-bottom:8px;text-align:center}
+  h1{font-size:26px;font-weight:800;text-align:center;margin-bottom:6px}
+  .subtitle{font-size:14px;color:var(--text-2);text-align:center;margin-bottom:6px}
+  .formula-box{
+    display:flex;align-items:center;justify-content:center;gap:18px;
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:14px 20px;margin:18px auto 28px;max-width:760px;flex-wrap:wrap;
+  }
+  .formula{font-size:20px;font-weight:700;color:var(--blue-d)}
+  .formula-legend{font-size:12px;color:var(--text-2);line-height:1.7}
+  .formula-legend b{color:var(--text)}
+
+  .panel{
+    background:var(--surface);border:1px solid var(--border);border-radius:12px;
+    padding:22px 24px;margin-bottom:20px;
+  }
+  .panel-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .panel-title .tag{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+
+  /* controls */
+  .control-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .control{display:flex;flex-direction:column;gap:8px;min-width:280px;flex:1}
+  .control label{font-size:13px;font-weight:600;color:var(--text)}
+  .control-inputs{display:flex;align-items:center;gap:12px}
+  .control-inputs input[type=range]{flex:1;accent-color:var(--blue)}
+  .control-inputs input[type=number]{
+    width:92px;padding:7px 8px;border:1px solid var(--border-strong);border-radius:6px;
+    font-family:var(--sans);font-size:14px;font-weight:600;color:var(--text);text-align:right;
+  }
+  .unit{font-size:13px;color:var(--muted);font-weight:600}
+  .preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+  .preset-btn{
+    font-size:12px;padding:5px 10px;border-radius:999px;border:1px solid var(--border-strong);
+    background:var(--surface);color:var(--text-2);cursor:pointer;font-family:var(--sans);font-weight:600;
+    transition:.12s;
+  }
+  .preset-btn:hover{border-color:var(--blue);color:var(--blue-d);background:#eef4fc}
+
+  /* stat tiles */
+  .stat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+  @media (max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+  .stat-tile{
+    border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;
+    background:var(--surface);position:relative;overflow:hidden;
+  }
+  .stat-tile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--tile-color,var(--blue))}
+  .stat-label{font-size:12px;color:var(--text-2);font-weight:600;margin-bottom:6px}
+  .stat-value{font-size:24px;font-weight:800;color:var(--text);line-height:1.1}
+  .stat-value .u{font-size:13px;font-weight:600;color:var(--muted);margin-left:3px}
+  .stat-sub{font-size:11px;color:var(--muted);margin-top:5px}
+
+  /* chart */
+  .chart-wrap{position:relative}
+  svg{width:100%;height:auto;display:block;overflow:visible}
+  .grid-line{stroke:var(--border);stroke-width:1}
+  .guide-line{stroke-width:1;stroke-dasharray:2 3;opacity:.6;fill:none}
+  .axis-line{stroke:var(--border-strong);stroke-width:1}
+  .axis-label{fill:var(--muted);font-size:11px;font-family:var(--sans)}
+  .curve{fill:none;stroke:var(--blue);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .thresh-line{stroke-width:1.5;stroke-dasharray:4 4;fill:none}
+  .thresh-label{font-size:11px;font-weight:700;font-family:var(--sans)}
+  .thresh-dot{stroke:var(--surface);stroke-width:2}
+  .chart-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+  .chart-caption{font-size:12px;color:var(--muted);margin-bottom:14px}
+
+  .tooltip{
+    position:absolute;pointer-events:none;background:var(--text);color:#fff;
+    padding:8px 11px;border-radius:8px;font-size:12px;line-height:1.6;
+    box-shadow:0 8px 24px rgba(0,0,0,.18);opacity:0;transition:opacity .1s;white-space:nowrap;z-index:5;
+  }
+  .tooltip b{font-size:13px}
+  .crosshair{stroke:var(--border-strong);stroke-width:1;opacity:0}
+
+  /* detail table */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--border)}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--text-2);font-weight:600;font-size:12px;border-bottom:1px solid var(--border-strong)}
+  td.name-cell{display:flex;align-items:center;gap:8px}
+  .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+  tr.highlight td{background:#eef4fc}
+  tr.current-row td{background:#fff7e6;font-weight:700}
+  td.num{font-variant-numeric:tabular-nums}
+
+  .footnote{font-size:11.5px;color:var(--muted);line-height:1.7;margin-top:10px}
+  .back-link{
+    display:inline-block;margin-bottom:18px;font-size:13px;color:var(--blue-d);
+    text-decoration:none;font-weight:600;
+  }
+  .back-link:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back-link" href="../index.html">&larr; DcD Platform</a>
+  <div class="eyebrow">Blast Overpressure Estimator</div>
+  <h1>드론 탄두중량별 폭풍압 · 피해거리 시뮬레이터</h1>
+  <div class="subtitle">Hopkinson-Cranz(홉킨슨-크랜즈) 환산거리 법칙 기반 폭풍압 감쇠 모델</div>
+
+  <div class="formula-box">
+    <div class="formula">p = 16.75 &times; (D / W<sup>1/3</sup>)<sup>&minus;1.575</sup></div>
+    <div class="formula-legend">
+      <b>p</b> : 폭풍압 (kgf/cm&sup2;) &nbsp;&middot;&nbsp; <b>D</b> : 폭발원으로부터 거리 (m) &nbsp;&middot;&nbsp; <b>W</b> : 폭약량 (kg, TNT 상당량)
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">입력 <span class="tag">Warhead Weight</span></div>
+    <div class="control-row">
+      <div class="control">
+        <label>폭약량 W (탄두중량 · 페이로드 전량을 TNT 상당량으로 가정)</label>
+        <div class="control-inputs">
+          <input type="range" id="wRange" min="0.1" max="150" step="0.1" value="2">
+          <input type="number" id="wNumber" min="0.1" max="500" step="0.1" value="2">
+          <span class="unit">kg</span>
+        </div>
+        <div class="preset-row" id="presetRow"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">결과 <span class="tag">Computed Radii &amp; Peak Pressure</span></div>
+    <div class="stat-grid" id="statGrid"></div>
+  </div>
+
+  <div class="panel chart-wrap">
+    <div class="chart-title">거리에 따른 폭풍압 감쇠 곡선 (Log-Log)</div>
+    <div class="chart-caption">곡선과 5단계 손상 임계선의 교차점이 각 단계의 피해반경입니다. 그래프 위에 마우스를 올리면 임의 거리의 압력값을 확인할 수 있습니다.</div>
+    <svg id="chart" viewBox="0 0 920 440" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="tooltip" id="tooltip"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">손상 단계별 상세 <span class="tag">5-Level Threshold Table</span></div>
+    <table>
+      <thead>
+        <tr><th>손상 정도</th><th>폭풍압 임계치 (kgf/cm&sup2;)</th><th>피해반경 (m)</th><th>영향면적 (m&sup2;)</th></tr>
+      </thead>
+      <tbody id="threshBody"></tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">참고 · 드론 기종별 피해거리 비교 <span class="tag">인체압력한계치(0.162 kgf/cm&sup2;) 기준</span></div>
+    <table>
+      <thead>
+        <tr><th>기종</th><th>페이로드 (kg)</th><th>피해거리 (m)</th></tr>
+      </thead>
+      <tbody id="droneBody"></tbody>
+    </table>
+    <div class="footnote">기종별 페이로드 값은 공개 제원 기준 참고치이며, 페이로드 전량을 폭약량(TNT 상당량)으로 가정한 추정입니다. 현재 입력값(W)은 노란색으로 표에 함께 표시됩니다.</div>
+  </div>
+
+  <div class="footnote" style="text-align:center;margin-top:8px">
+    본 시뮬레이터는 홉킨슨-크랜즈 환산거리 법칙에 기반한 자유공간 반구형 폭발 근사 모델이며, 실제 피해거리는 탄종·기폭고도·차폐물·지형 등에 따라 달라질 수 있습니다.
+  </div>
+</div>
+
+<script>
+(function(){
+  const THRESHOLDS = [
+    { key:'hearing',  name:'일시적 청력상실', p:0.014, color:'#0ca30c' },
+    { key:'limit',    name:'인체압력한계치',   p:0.162, color:'#fab219' },
+    { key:'injury',   name:'심각한 부상 발생', p:0.211, color:'#ec835a' },
+    { key:'critical', name:'치명상 발생',      p:0.352, color:'#d03b3b' },
+    { key:'death',    name:'대다수 사망',      p:0.703, color:'#d03b3b' },
+  ];
+
+  const DRONES = [
+    { name:'Mavic/Sting', payload:0.5 },
+    { name:'ANAFI/FPV',   payload:0.65 },
+    { name:'EVO',         payload:1 },
+    { name:'Rotem-L',     payload:1.5 },
+    { name:'M30',         payload:2 },
+    { name:'M300',        payload:2.7 },
+    { name:'SWITCHB',     payload:3 },
+    { name:'KYB',         payload:4 },
+    { name:'HERO-40',     payload:4.5 },
+    { name:'Shahed',      payload:40 },
+    { name:'TB2',         payload:150 },
+  ];
+
+  const K = 16.75, EXP = 1.575;
+  const cbrt = Math.cbrt;
+  function pressureAt(D, W){ return K * Math.pow(D / cbrt(W), -EXP); }
+  function radiusAt(p, W){ return cbrt(W) * Math.pow(K / p, 1/EXP); }
+  function area(r){ return Math.PI * r * r; }
+
+  function fmt(n, d=1){
+    if(n===undefined||n===null||isNaN(n)) return '-';
+    if(n>=1000) return Math.round(n).toLocaleString('ko-KR');
+    return n.toFixed(d);
+  }
+  function fmtP(p){
+    if(p>=10) return p.toFixed(1);
+    if(p>=1) return p.toFixed(2);
+    return p.toFixed(3);
+  }
+
+  const wRange = document.getElementById('wRange');
+  const wNumber = document.getElementById('wNumber');
+  const statGrid = document.getElementById('statGrid');
+  const threshBody = document.getElementById('threshBody');
+  const droneBody = document.getElementById('droneBody');
+  const presetRow = document.getElementById('presetRow');
+  const svg = document.getElementById('chart');
+  const tooltip = document.getElementById('tooltip');
+
+  const PRESETS = [0.5,1,2,4,20,40,150];
+  PRESETS.forEach(w=>{
+    const b=document.createElement('button');
+    b.className='preset-btn';
+    b.textContent=w+'kg';
+    b.onclick=()=>setW(w);
+    presetRow.appendChild(b);
+  });
+
+  function setW(w){
+    w = Math.max(0.1, Math.min(500, w));
+    wRange.value = Math.min(150, w);
+    wNumber.value = w;
+    render(w);
+  }
+  wRange.addEventListener('input', ()=>setW(parseFloat(wRange.value)));
+  wNumber.addEventListener('input', ()=>{
+    const v=parseFloat(wNumber.value);
+    if(!isNaN(v)) setW(v);
+  });
+
+  const XMIN=0.5, XMAX=300;
+  const M = {l:64, r:26, t:18, b:62};
+  const VBW=920, VBH=440;
+  const plotW = VBW - M.l - M.r;
+  const plotH = VBH - M.t - M.b;
+
+  function xToPx(D){
+    const t=(Math.log10(D)-Math.log10(XMIN))/(Math.log10(XMAX)-Math.log10(XMIN));
+    return M.l + t*plotW;
+  }
+  function pxToX(px){
+    const t=(px-M.l)/plotW;
+    return Math.pow(10, Math.log10(XMIN) + t*(Math.log10(XMAX)-Math.log10(XMIN)));
+  }
+  function yToPx(p, yMin, yMax){
+    const t=(Math.log10(p)-Math.log10(yMin))/(Math.log10(yMax)-Math.log10(yMin));
+    return M.t + plotH - t*plotH;
+  }
+
+  const NS='http://www.w3.org/2000/svg';
+  function el(tag, attrs){
+    const e=document.createElementNS(NS, tag);
+    for(const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  function render(W){
+    // ---- stats ----
+    const rHearing = radiusAt(THRESHOLDS[0].p, W);
+    const rInjury  = radiusAt(THRESHOLDS[2].p, W);
+    const rDeath   = radiusAt(THRESHOLDS[4].p, W);
+    const pMax     = pressureAt(1, W);
+    const safeArea = area(rHearing);
+
+    const stats = [
+      { label:'최대압력 (1m 기준)', value: fmtP(pMax), unit:'kgf/cm²', sub:'폭심 1m 근접 기준 폭풍압', color:'var(--blue)' },
+      { label:'치사반경', value: fmt(rDeath), unit:'m', sub:'대다수 사망 임계 (0.703 kgf/cm²)', color:THRESHOLDS[4].color },
+      { label:'부상반경', value: fmt(rInjury), unit:'m', sub:'심각한 부상 발생 임계 (0.211 kgf/cm²)', color:THRESHOLDS[2].color },
+      { label:'안전반경', value: fmt(rHearing), unit:'m', sub:'일시적 청력상실 임계 (0.014 kgf/cm²)', color:THRESHOLDS[0].color },
+      { label:'영향면적', value: fmt(safeArea,0), unit:'m²', sub:'안전반경(π r²) 기준 총 영향면적', color:'var(--blue)' },
+    ];
+    statGrid.innerHTML='';
+    stats.forEach(s=>{
+      const t=document.createElement('div');
+      t.className='stat-tile';
+      t.style.setProperty('--tile-color', s.color);
+      t.innerHTML = `<div class="stat-label">${s.label}</div>
+        <div class="stat-value">${s.value}<span class="u">${s.unit}</span></div>
+        <div class="stat-sub">${s.sub}</div>`;
+      statGrid.appendChild(t);
+    });
+
+    // ---- threshold table ----
+    threshBody.innerHTML='';
+    THRESHOLDS.forEach(th=>{
+      const r=radiusAt(th.p, W);
+      const a=area(r);
+      const tr=document.createElement('tr');
+      tr.innerHTML = `<td class="name-cell"><span class="dot" style="background:${th.color}"></span>${th.name}</td>
+        <td class="num">${th.p}</td><td class="num">${fmt(r)}</td><td class="num">${fmt(a,0)}</td>`;
+      threshBody.appendChild(tr);
+    });
+
+    // ---- drone reference table ----
+    const rows = DRONES.map(d=>({ name:d.name, payload:d.payload, isCurrent:false }));
+    rows.push({ name:'▶ 현재 입력값', payload:W, isCurrent:true });
+    rows.sort((a,b)=>a.payload-b.payload);
+    droneBody.innerHTML='';
+    rows.forEach(r=>{
+      const dmg = radiusAt(THRESHOLDS[1].p, r.payload);
+      const tr=document.createElement('tr');
+      if(r.isCurrent) tr.className='current-row';
+      tr.innerHTML = `<td>${r.name}</td><td class="num">${fmt(r.payload, r.payload<1?2:1)}</td><td class="num">${fmt(dmg)}</td>`;
+      droneBody.appendChild(tr);
+    });
+
+    drawChart(W, {rHearing, rInjury, rDeath});
+  }
+
+  function drawChart(W, radii){
+    svg.innerHTML='';
+    const yMin = 0.006;
+    const yMax = pressureAt(XMIN, W) * 1.2;
+
+    // gridlines - x (fixed decorative ticks)
+    const xTicks=[1,2,5,10,20,50,100,200,300].filter(v=>v>=XMIN&&v<=XMAX);
+    xTicks.forEach(v=>{
+      const px=xToPx(v);
+      svg.appendChild(el('line',{class:'grid-line',x1:px,x2:px,y1:M.t,y2:M.t+plotH}));
+      const lbl=el('text',{class:'axis-label',x:px,y:M.t+plotH+18,'text-anchor':'middle'});
+      lbl.textContent=v+'m';
+      svg.appendChild(lbl);
+    });
+    // y ticks - decades + 5x
+    const yTicksAll=[0.01,0.05,0.1,0.5,1,5,10,50,100,500,1000];
+    const yTicks = yTicksAll.filter(v=>v>=yMin && v<=yMax);
+    yTicks.forEach(v=>{
+      const py=yToPx(v, yMin, yMax);
+      svg.appendChild(el('line',{class:'grid-line',x1:M.l,x2:M.l+plotW,y1:py,y2:py}));
+      const lbl=el('text',{class:'axis-label',x:M.l-8,y:py+3,'text-anchor':'end'});
+      lbl.textContent=v>=1?v.toLocaleString('ko-KR'):v;
+      svg.appendChild(lbl);
+    });
+
+    // axes
+    svg.appendChild(el('line',{class:'axis-line',x1:M.l,x2:M.l,y1:M.t,y2:M.t+plotH}));
+    svg.appendChild(el('line',{class:'axis-line',x1:M.l,x2:M.l+plotW,y1:M.t+plotH,y2:M.t+plotH}));
+    const yAxisLabel=el('text',{class:'axis-label',x:16,y:M.t+plotH/2,'text-anchor':'middle',transform:`rotate(-90 16 ${M.t+plotH/2})`});
+    yAxisLabel.textContent='폭풍압 (kgf/cm²)';
+    svg.appendChild(yAxisLabel);
+    const xAxisLabel=el('text',{class:'axis-label',x:M.l+plotW/2,y:VBH-4,'text-anchor':'middle'});
+    xAxisLabel.textContent='거리 D (m)';
+    svg.appendChild(xAxisLabel);
+
+    // threshold lines + labels + dots at curve intersection
+    THRESHOLDS.forEach((th, thIdx)=>{
+      if(th.p<yMin||th.p>yMax) return;
+      const py=yToPx(th.p, yMin, yMax);
+      svg.appendChild(el('line',{class:'thresh-line',x1:M.l,x2:M.l+plotW,y1:py,y2:py,stroke:th.color}));
+      const lbl=el('text',{class:'thresh-label',x:M.l+plotW-4,y:py-5,'text-anchor':'end',fill:'#52514e'});
+      lbl.textContent=`${th.name} ${th.p}`;
+      svg.appendChild(lbl);
+
+      const r = radiusAt(th.p, W);
+      if(r>=XMIN && r<=XMAX){
+        const px=xToPx(r);
+        svg.appendChild(el('line',{class:'guide-line',x1:px,x2:px,y1:py,y2:M.t+plotH,stroke:th.color}));
+        const dot=el('circle',{class:'thresh-dot',cx:px,cy:py,r:5,fill:th.color});
+        svg.appendChild(dot);
+        const rowY = M.t+plotH+32 + (thIdx%2)*14;
+        const rLbl=el('text',{class:'thresh-label',x:px,y:rowY,'text-anchor':'middle',fill:'#52514e'});
+        rLbl.textContent=fmt(r)+'m';
+        svg.appendChild(rLbl);
+      }
+    });
+
+    // curve
+    const N=140;
+    let d='';
+    for(let i=0;i<=N;i++){
+      const t=i/N;
+      const D=Math.pow(10, Math.log10(XMIN)+t*(Math.log10(XMAX)-Math.log10(XMIN)));
+      let p=pressureAt(D,W);
+      p=Math.max(yMin, Math.min(yMax, p));
+      const px=xToPx(D), py=yToPx(p, yMin, yMax);
+      d += (i===0?'M':'L') + px.toFixed(2) + ' ' + py.toFixed(2) + ' ';
+    }
+    svg.appendChild(el('path',{class:'curve',d}));
+
+    // hover layer
+    const hitRect = el('rect',{x:M.l,y:M.t,width:plotW,height:plotH,fill:'transparent',style:'cursor:crosshair'});
+    const chLine = el('line',{class:'crosshair',x1:0,x2:0,y1:M.t,y2:M.t+plotH});
+    const chDot = el('circle',{r:5,fill:'var(--blue)',stroke:'var(--surface)','stroke-width':2,opacity:0});
+    svg.appendChild(chLine);
+    svg.appendChild(chDot);
+    svg.appendChild(hitRect);
+
+    hitRect.addEventListener('pointermove', (e)=>{
+      const rect=svg.getBoundingClientRect();
+      const scaleX = VBW/rect.width;
+      const px = (e.clientX-rect.left)*scaleX;
+      const D = Math.max(XMIN, Math.min(XMAX, pxToX(px)));
+      const p = pressureAt(D, W);
+      const clampedP = Math.max(yMin, Math.min(yMax, p));
+      const py = yToPx(clampedP, yMin, yMax);
+      const xPix = xToPx(D);
+      chLine.setAttribute('x1', xPix); chLine.setAttribute('x2', xPix);
+      chLine.style.opacity = 1;
+      chDot.setAttribute('cx', xPix); chDot.setAttribute('cy', py);
+      chDot.setAttribute('opacity', 1);
+
+      const scaleTip = rect.width/VBW;
+      tooltip.style.left = ((xPix)*scaleTip) + 'px';
+      tooltip.style.top = ((py)*scaleTip - 54) + 'px';
+      tooltip.innerHTML = `거리 <b>${fmt(D)}m</b> &nbsp;&rarr;&nbsp; 압력 <b>${fmtP(p)} kgf/cm²</b>`;
+      tooltip.style.opacity=1;
+    });
+    hitRect.addEventListener('pointerleave', ()=>{
+      chLine.style.opacity=0; chDot.setAttribute('opacity',0); tooltip.style.opacity=0;
+    });
+  }
+
+  render(2);
+})();
+</script>
+</body>
+</html>
