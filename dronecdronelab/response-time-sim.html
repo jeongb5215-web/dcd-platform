@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>드론 속도별 통과시간·방어 대응시간 시뮬레이터</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    --bg:#f9f9f7;
+    --surface:#fcfcfb;
+    --border:#e1e0d9;
+    --border-strong:#c3c2b7;
+    --text:#0b0b0b;
+    --text-2:#52514e;
+    --muted:#898781;
+    --blue:#2a78d6;
+    --blue-d:#184f95;
+    --good:#0ca30c;
+    --warning:#fab219;
+    --serious:#ec835a;
+    --critical:#d03b3b;
+    --sans:'Inter',system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);color:var(--text);font-family:var(--sans);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;
+    padding:40px 20px 80px;
+  }
+  .wrap{width:100%;max-width:1080px}
+  .eyebrow{font-size:12px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;font-weight:600;margin-bottom:8px;text-align:center}
+  h1{font-size:26px;font-weight:800;text-align:center;margin-bottom:6px}
+  .subtitle{font-size:14px;color:var(--text-2);text-align:center;margin-bottom:6px}
+  .formula-box{
+    display:flex;align-items:center;justify-content:center;gap:18px;
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:14px 20px;margin:18px auto 28px;max-width:760px;flex-wrap:wrap;
+  }
+  .formula{font-size:20px;font-weight:700;color:var(--blue-d)}
+  .formula-legend{font-size:12px;color:var(--text-2);line-height:1.7}
+  .formula-legend b{color:var(--text)}
+
+  .panel{
+    background:var(--surface);border:1px solid var(--border);border-radius:12px;
+    padding:22px 24px;margin-bottom:20px;
+  }
+  .panel-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .panel-title .tag{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+
+  /* controls */
+  .control-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 28px}
+  @media (max-width:760px){.control-grid{grid-template-columns:1fr}}
+  .control{display:flex;flex-direction:column;gap:8px}
+  .control label{font-size:13px;font-weight:600;color:var(--text)}
+  .control-inputs{display:flex;align-items:center;gap:12px}
+  .control-inputs input[type=range]{flex:1;accent-color:var(--blue)}
+  .control-inputs input[type=number]{
+    width:92px;padding:7px 8px;border:1px solid var(--border-strong);border-radius:6px;
+    font-family:var(--sans);font-size:14px;font-weight:600;color:var(--text);text-align:right;
+  }
+  .unit{font-size:13px;color:var(--muted);font-weight:600;white-space:nowrap}
+  .preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+  .preset-btn{
+    font-size:12px;padding:5px 10px;border-radius:999px;border:1px solid var(--border-strong);
+    background:var(--surface);color:var(--text-2);cursor:pointer;font-family:var(--sans);font-weight:600;
+    transition:.12s;
+  }
+  .preset-btn:hover{border-color:var(--blue);color:var(--blue-d);background:#eef4fc}
+
+  .stage-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .stage-item{display:flex;flex-direction:column;gap:6px;flex:1;min-width:140px}
+  .stage-item label{font-size:12px;font-weight:600;color:var(--text-2)}
+  .stage-item input{
+    padding:7px 8px;border:1px solid var(--border-strong);border-radius:6px;
+    font-family:var(--sans);font-size:14px;font-weight:600;color:var(--text);text-align:right;width:100%;
+  }
+  .stage-sum{font-size:12px;color:var(--muted);margin-top:6px}
+  .stage-sum b{color:var(--text);font-size:14px}
+
+  /* stat tiles */
+  .stat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+  @media (max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+  .stat-tile{
+    border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;
+    background:var(--surface);position:relative;overflow:hidden;
+  }
+  .stat-tile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--tile-color,var(--blue))}
+  .stat-label{font-size:12px;color:var(--text-2);font-weight:600;margin-bottom:6px}
+  .stat-value{font-size:22px;font-weight:800;color:var(--text);line-height:1.1}
+  .stat-value .u{font-size:12px;font-weight:600;color:var(--muted);margin-left:3px}
+  .stat-sub{font-size:11px;color:var(--muted);margin-top:5px}
+
+  /* chart */
+  .chart-wrap{position:relative}
+  svg{width:100%;height:auto;display:block;overflow:visible}
+  .grid-line{stroke:var(--border);stroke-width:1}
+  .guide-line{stroke-width:1;stroke-dasharray:2 3;opacity:.6;fill:none}
+  .axis-line{stroke:var(--border-strong);stroke-width:1}
+  .axis-label{fill:var(--muted);font-size:11px;font-family:var(--sans)}
+  .curve{fill:none;stroke:var(--blue);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .thresh-line{stroke-width:1.5;stroke-dasharray:4 4;fill:none}
+  .thresh-label{font-size:11px;font-weight:700;font-family:var(--sans)}
+  .ref-dot{stroke:var(--surface);stroke-width:2}
+  .chart-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+  .chart-caption{font-size:12px;color:var(--muted);margin-bottom:14px}
+
+  .tooltip{
+    position:absolute;pointer-events:none;background:var(--text);color:#fff;
+    padding:8px 11px;border-radius:8px;font-size:12px;line-height:1.6;
+    box-shadow:0 8px 24px rgba(0,0,0,.18);opacity:0;transition:opacity .1s;white-space:nowrap;z-index:5;
+  }
+  .tooltip b{font-size:13px}
+  .crosshair{stroke:var(--border-strong);stroke-width:1;opacity:0}
+
+  /* table */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--border)}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--text-2);font-weight:600;font-size:12px;border-bottom:1px solid var(--border-strong)}
+  td.name-cell{display:flex;align-items:center;gap:8px}
+  .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+  tr.current-row td{background:#eef4fc;font-weight:700}
+  td.num{font-variant-numeric:tabular-nums}
+  .dist-input{
+    width:76px;padding:5px 7px;border:1px solid var(--border-strong);border-radius:6px;
+    font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text);text-align:right;
+    font-variant-numeric:tabular-nums;
+  }
+  .dist-input:focus{outline:none;border-color:var(--blue)}
+  .status-badge{
+    display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;
+    padding:2px 8px;border-radius:999px;white-space:nowrap;
+  }
+
+  .footnote{font-size:11.5px;color:var(--muted);line-height:1.7;margin-top:10px}
+  .back-link{
+    display:inline-block;margin-bottom:18px;font-size:13px;color:var(--blue-d);
+    text-decoration:none;font-weight:600;
+  }
+  .back-link:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back-link" href="../index.html">&larr; DcD Platform</a>
+  <div class="eyebrow">Threat Speed &amp; Response-Time Estimator</div>
+  <h1>드론 속도별 통과시간 · 방어 대응시간 시뮬레이터</h1>
+  <div class="subtitle">비행속도와 탐지거리로 통과시간을 계산하고, 대응 단계별 소요시간과 비교해 방어측 여유시간(margin)을 분석합니다</div>
+
+  <div class="formula-box">
+    <div class="formula">t = D / V</div>
+    <div class="formula-legend">
+      <b>t</b> : 통과시간(도달까지 남은 시간) &nbsp;&middot;&nbsp; <b>D</b> : 탐지거리 (km) &nbsp;&middot;&nbsp; <b>V</b> : 드론 비행속도 (km/h)
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">입력 <span class="tag">Threat Speed &amp; Detection Range</span></div>
+    <div class="control-grid">
+      <div class="control">
+        <label>드론 비행속도 V</label>
+        <div class="control-inputs">
+          <input type="range" id="vRange" min="20" max="2000" step="1" value="491">
+          <input type="number" id="vNumber" min="1" max="5000" step="1" value="491">
+          <span class="unit">km/h</span>
+        </div>
+        <div class="preset-row" id="presetRow"></div>
+      </div>
+      <div class="control">
+        <label>기준 탐지거리 D<sub>ref</sub> (헤드라인 지표 계산용)</label>
+        <div class="control-inputs">
+          <input type="range" id="dRange" min="1" max="120" step="1" value="50">
+          <input type="number" id="dNumber" min="0.1" max="500" step="0.1" value="50">
+          <span class="unit">km</span>
+        </div>
+      </div>
+      <div class="control">
+        <label>항속거리(사거리) L (총 비행시간 계산용)</label>
+        <div class="control-inputs">
+          <input type="range" id="lRange" min="10" max="2000" step="10" value="900">
+          <input type="number" id="lNumber" min="1" max="5000" step="1" value="900">
+          <span class="unit">km</span>
+        </div>
+      </div>
+      <div class="control">
+        <label>대응 단계별 소요시간 (합산 = 총 필요 대응시간)</label>
+        <div class="stage-row">
+          <div class="stage-item">
+            <label>탐지&middot;식별</label>
+            <input type="number" id="stage1" min="0" step="1" value="15"><span class="unit">초</span>
+          </div>
+          <div class="stage-item">
+            <label>지휘결심(교전판단)</label>
+            <input type="number" id="stage2" min="0" step="1" value="10"><span class="unit">초</span>
+          </div>
+          <div class="stage-item">
+            <label>요격 발사&middot;교전 비행</label>
+            <input type="number" id="stage3" min="0" step="1" value="25"><span class="unit">초</span>
+          </div>
+        </div>
+        <div class="stage-sum">총 필요 대응시간: <b id="stageSumText">50초</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">결과 <span class="tag">Response-Time Margin</span></div>
+    <div class="stat-grid" id="statGrid"></div>
+  </div>
+
+  <div class="panel chart-wrap">
+    <div class="chart-title">거리에 따른 통과시간 곡선 (Linear)</div>
+    <div class="chart-caption">파란 실선이 통과시간(t=D/V), 붉은 점선이 총 필요 대응시간입니다. 두 선이 만나는 지점이 &quot;필요 최소 탐지거리&quot;이며, 그보다 먼 거리에서 탐지해야 대응 여유가 생깁니다.</div>
+    <svg id="chart" viewBox="0 0 920 440" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="tooltip" id="tooltip"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">탐지거리별 상세 <span class="tag">Editable Distance Table</span></div>
+    <table>
+      <thead>
+        <tr><th>탐지거리 (km)</th><th>통과시간</th><th>대응 여유시간</th><th>상태</th></tr>
+      </thead>
+      <tbody id="distBody"></tbody>
+    </table>
+    <div class="footnote">탐지거리 값을 직접 수정하면 통과시간과 대응 여유시간이 즉시 재계산됩니다. 대응 여유시간 = 통과시간 &minus; 총 필요 대응시간.</div>
+  </div>
+
+  <div class="footnote" style="text-align:center;margin-top:8px">
+    등속 직선 접근을 가정한 선형 모델이며, 실제로는 회피기동·고도변화·경로변경에 따라 통과시간이 달라질 수 있습니다.
+  </div>
+</div>
+
+<script>
+(function(){
+  const PRESETS = [
+    { name:'FPV 공격드론', v:150 },
+    { name:'Shahed-136', v:185 },
+    { name:'Lancet-3', v:300 },
+    { name:'Geran-4(제트)', v:491 },
+    { name:'순항미사일', v:900 },
+    { name:'Mach 1', v:1225 },
+  ];
+
+  const DEFAULT_DISTANCES = [100,70,50,30,20,10,5,3,1];
+
+  function fmtNum(n, d=1){
+    if(n===undefined||n===null||isNaN(n)) return '-';
+    return n.toFixed(d);
+  }
+
+  // t in minutes -> Korean military-style readout: minutes with ' , seconds with " for sub-minute
+  function fmtTime(minutes){
+    if(minutes===undefined||minutes===null||isNaN(minutes)) return '-';
+    if(minutes>=60){
+      const h=Math.floor(minutes/60);
+      const m=Math.round(minutes%60);
+      return `${h}시간 ${m}분`;
+    }
+    if(minutes>=1) return `${fmtNum(minutes,1)}′`;
+    return `${Math.round(minutes*60)}″`;
+  }
+  function fmtSigned(minutes){
+    if(minutes===undefined||minutes===null||isNaN(minutes)) return '-';
+    const sign = minutes<0 ? '-' : '+';
+    return sign + fmtTime(Math.abs(minutes));
+  }
+
+  function statusOf(marginMin){
+    if(marginMin<=0) return {key:'critical', label:'대응 불가', color:'#d03b3b'};
+    if(marginMin*60<=20) return {key:'serious', label:'매우 촉박', color:'#ec835a'};
+    if(marginMin*60<=60) return {key:'warning', label:'여유 부족', color:'#fab219'};
+    return {key:'good', label:'대응 가능', color:'#0ca30c'};
+  }
+
+  const vRange=document.getElementById('vRange'), vNumber=document.getElementById('vNumber');
+  const dRange=document.getElementById('dRange'), dNumber=document.getElementById('dNumber');
+  const lRange=document.getElementById('lRange'), lNumber=document.getElementById('lNumber');
+  const stage1=document.getElementById('stage1'), stage2=document.getElementById('stage2'), stage3=document.getElementById('stage3');
+  const stageSumText=document.getElementById('stageSumText');
+  const statGrid=document.getElementById('statGrid');
+  const distBody=document.getElementById('distBody');
+  const presetRow=document.getElementById('presetRow');
+  const svg=document.getElementById('chart');
+  const tooltip=document.getElementById('tooltip');
+
+  let state = { V:491, Dref:50, L:900 };
+  const distances = DEFAULT_DISTANCES.slice();
+
+  PRESETS.forEach(p=>{
+    const b=document.createElement('button');
+    b.className='preset-btn';
+    b.textContent=`${p.name} (${p.v}km/h)`;
+    b.onclick=()=>{ state.V=p.v; vRange.value=Math.min(2000,p.v); vNumber.value=p.v; renderAll(); };
+    presetRow.appendChild(b);
+  });
+
+  function getStageSumSec(){
+    const s1=parseFloat(stage1.value)||0, s2=parseFloat(stage2.value)||0, s3=parseFloat(stage3.value)||0;
+    return s1+s2+s3;
+  }
+
+  function syncControl(rangeEl, numberEl, key, min, max){
+    rangeEl.addEventListener('input', ()=>{
+      state[key]=parseFloat(rangeEl.value);
+      numberEl.value=state[key];
+      renderAll();
+    });
+    numberEl.addEventListener('input', ()=>{
+      const v=parseFloat(numberEl.value);
+      if(!isNaN(v)){
+        state[key]=v;
+        rangeEl.value=Math.max(min,Math.min(max,v));
+        renderAll();
+      }
+    });
+  }
+  syncControl(vRange, vNumber, 'V', 20, 2000);
+  syncControl(dRange, dNumber, 'Dref', 1, 120);
+  syncControl(lRange, lNumber, 'L', 10, 2000);
+  [stage1,stage2,stage3].forEach(el=>el.addEventListener('input', renderAll));
+
+  function timeMinFor(D, V){ return (D/V)*60; }
+
+  function renderAll(){
+    const V=state.V, Dref=state.Dref, L=state.L;
+    const stageSumSec = getStageSumSec();
+    const stageSumMin = stageSumSec/60;
+    stageSumText.textContent = stageSumSec>=60
+      ? `${Math.floor(stageSumSec/60)}분 ${Math.round(stageSumSec%60)}초 (${stageSumSec}초)`
+      : `${stageSumSec}초`;
+
+    const tRef = timeMinFor(Dref, V);
+    const marginRef = tRef - stageSumMin;
+    const dMin = V * (stageSumMin/60); // km needed so that time-to-arrive == required reaction time
+    const tFlightTotal = timeMinFor(L, V);
+    const refStatus = statusOf(marginRef);
+    const dMinStatus = Dref >= dMin ? {color:'#0ca30c'} : {color:'#d03b3b'};
+
+    const stats = [
+      { label:'총 필요 대응시간', value: fmtTime(stageSumMin), unit:'', sub:'탐지·식별+지휘결심+요격교전 합산', color:'var(--blue)' },
+      { label:`기준거리(${fmtNum(Dref,1)}km) 통과시간`, value: fmtTime(tRef), unit:'', sub:`${fmtNum(Dref,1)}km ÷ ${fmtNum(V,0)}km/h`, color:'var(--blue)' },
+      { label:'대응 여유시간', value: fmtSigned(marginRef), unit:'', sub: refStatus.label, color: refStatus.color },
+      { label:'필요 최소 탐지거리', value: fmtNum(dMin,1), unit:'km', sub: Dref>=dMin?'기준거리로 충분':'기준거리보다 멀리 탐지 필요', color: dMinStatus.color },
+      { label:'총 비행시간', value: fmtTime(tFlightTotal), unit:'', sub:`항속거리 ${fmtNum(L,0)}km 기준`, color:'var(--blue)' },
+    ];
+    statGrid.innerHTML='';
+    stats.forEach(s=>{
+      const t=document.createElement('div');
+      t.className='stat-tile';
+      t.style.setProperty('--tile-color', s.color);
+      t.innerHTML = `<div class="stat-label">${s.label}</div>
+        <div class="stat-value">${s.value}<span class="u">${s.unit}</span></div>
+        <div class="stat-sub">${s.sub}</div>`;
+      statGrid.appendChild(t);
+    });
+
+    drawChart(V, stageSumMin, Dref, dMin);
+  }
+
+  function buildDistTable(){
+    distBody.innerHTML='';
+    distances.forEach((dVal, idx)=>{
+      const tr=document.createElement('tr');
+      const tdDist=document.createElement('td');
+      const input=document.createElement('input');
+      input.type='number'; input.min='0.1'; input.step='0.1'; input.value=dVal;
+      input.className='dist-input';
+      tdDist.appendChild(input);
+
+      const tdTime=document.createElement('td'); tdTime.className='num time-cell';
+      const tdMargin=document.createElement('td'); tdMargin.className='num margin-cell';
+      const tdStatus=document.createElement('td'); tdStatus.className='status-cell';
+
+      function updateRow(){
+        const V=state.V;
+        const stageSumMin=getStageSumSec()/60;
+        const t=timeMinFor(parseFloat(input.value)||0, V);
+        const margin=t-stageSumMin;
+        const st=statusOf(margin);
+        tdTime.textContent=fmtTime(t);
+        tdMargin.textContent=fmtSigned(margin);
+        tdStatus.innerHTML=`<span class="status-badge" style="background:${st.color}1f;color:#3a3a38"><span class="dot" style="background:${st.color}"></span>${st.label}</span>`;
+      }
+
+      input.addEventListener('input', ()=>{
+        distances[idx]=parseFloat(input.value)||0;
+        updateRow();
+      });
+
+      tr.appendChild(tdDist); tr.appendChild(tdTime); tr.appendChild(tdMargin); tr.appendChild(tdStatus);
+      distBody.appendChild(tr);
+      tr._update = updateRow;
+    });
+  }
+
+  function refreshDistTable(){
+    Array.from(distBody.children).forEach(tr=>{ if(tr._update) tr._update(); });
+  }
+
+  const XMIN=0, XMAX=120;
+  const M={l:64,r:26,t:18,b:48};
+  const VBW=920, VBH=440;
+  const plotW=VBW-M.l-M.r, plotH=VBH-M.t-M.b;
+
+  function xToPx(D){ return M.l + (D-XMIN)/(XMAX-XMIN)*plotW; }
+  function pxToX(px){ return XMIN + (px-M.l)/plotW*(XMAX-XMIN); }
+  function yToPx(t, yMax){ return M.t + plotH - (t/yMax)*plotH; }
+
+  const NS='http://www.w3.org/2000/svg';
+  function el(tag, attrs){
+    const e=document.createElementNS(NS, tag);
+    for(const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  function drawChart(V, stageSumMin, Dref, dMin){
+    svg.innerHTML='';
+    const tAtXmax = timeMinFor(XMAX, V);
+    const yMax = Math.max(tAtXmax, stageSumMin) * 1.2;
+
+    // x gridlines
+    const xTicks=[0,20,40,60,80,100,120];
+    xTicks.forEach(v=>{
+      const px=xToPx(v);
+      svg.appendChild(el('line',{class:'grid-line',x1:px,x2:px,y1:M.t,y2:M.t+plotH}));
+      const lbl=el('text',{class:'axis-label',x:px,y:M.t+plotH+18,'text-anchor':'middle'});
+      lbl.textContent=v+'km';
+      svg.appendChild(lbl);
+    });
+    // y gridlines - choose ~5 nice ticks
+    const rawStep = yMax/5;
+    const mag = Math.pow(10, Math.floor(Math.log10(rawStep||1)));
+    const niceSteps=[1,2,5,10];
+    let step = mag;
+    for(const s of niceSteps){ if(rawStep <= s*mag){ step = s*mag; break; } }
+    const yTicks=[];
+    for(let v=0; v<=yMax; v+=step) yTicks.push(v);
+    yTicks.forEach(v=>{
+      const py=yToPx(v, yMax);
+      svg.appendChild(el('line',{class:'grid-line',x1:M.l,x2:M.l+plotW,y1:py,y2:py}));
+      const lbl=el('text',{class:'axis-label',x:M.l-8,y:py+3,'text-anchor':'end'});
+      lbl.textContent=fmtNum(v, v<1?2:(v<10?1:0));
+      svg.appendChild(lbl);
+    });
+
+    svg.appendChild(el('line',{class:'axis-line',x1:M.l,x2:M.l,y1:M.t,y2:M.t+plotH}));
+    svg.appendChild(el('line',{class:'axis-line',x1:M.l,x2:M.l+plotW,y1:M.t+plotH,y2:M.t+plotH}));
+    const yAxisLabel=el('text',{class:'axis-label',x:16,y:M.t+plotH/2,'text-anchor':'middle',transform:`rotate(-90 16 ${M.t+plotH/2})`});
+    yAxisLabel.textContent='통과시간 (분)';
+    svg.appendChild(yAxisLabel);
+    const xAxisLabel=el('text',{class:'axis-label',x:M.l+plotW/2,y:VBH-4,'text-anchor':'middle'});
+    xAxisLabel.textContent='탐지거리 D (km)';
+    svg.appendChild(xAxisLabel);
+
+    // required reaction time threshold line
+    if(stageSumMin<=yMax){
+      const py=yToPx(stageSumMin, yMax);
+      svg.appendChild(el('line',{class:'thresh-line',x1:M.l,x2:M.l+plotW,y1:py,y2:py,stroke:'#d03b3b'}));
+      const lbl=el('text',{class:'thresh-label',x:M.l+plotW-4,y:py-5,'text-anchor':'end',fill:'#52514e'});
+      lbl.textContent=`총 필요 대응시간 ${fmtTime(stageSumMin)}`;
+      svg.appendChild(lbl);
+    }
+    // minimum detection distance vertical guide
+    if(dMin>=XMIN && dMin<=XMAX){
+      const px=xToPx(dMin);
+      svg.appendChild(el('line',{class:'guide-line',x1:px,x2:px,y1:yToPx(stageSumMin,yMax),y2:M.t+plotH,stroke:'#d03b3b'}));
+      const rLbl=el('text',{class:'thresh-label',x:px,y:M.t+plotH+34,'text-anchor':'middle',fill:'#52514e'});
+      rLbl.textContent=fmtNum(dMin,1)+'km';
+      svg.appendChild(rLbl);
+      const dot=el('circle',{cx:px,cy:yToPx(stageSumMin,yMax),r:5,fill:'#d03b3b',class:'ref-dot'});
+      svg.appendChild(dot);
+    }
+
+    // curve t = D/V*60
+    const N=100;
+    let d='';
+    for(let i=0;i<=N;i++){
+      const D=XMIN+(XMAX-XMIN)*i/N;
+      const t=Math.min(yMax, timeMinFor(D,V));
+      const px=xToPx(D), py=yToPx(t,yMax);
+      d += (i===0?'M':'L')+px.toFixed(2)+' '+py.toFixed(2)+' ';
+    }
+    svg.appendChild(el('path',{class:'curve',d}));
+
+    // reference distance marker
+    if(Dref>=XMIN && Dref<=XMAX){
+      const px=xToPx(Dref);
+      const t=Math.min(yMax, timeMinFor(Dref,V));
+      const py=yToPx(t,yMax);
+      svg.appendChild(el('circle',{cx:px,cy:py,r:6,fill:'#2a78d6',class:'ref-dot'}));
+    }
+
+    // hover layer
+    const hitRect=el('rect',{x:M.l,y:M.t,width:plotW,height:plotH,fill:'transparent',style:'cursor:crosshair'});
+    const chLine=el('line',{class:'crosshair',x1:0,x2:0,y1:M.t,y2:M.t+plotH});
+    const chDot=el('circle',{r:5,fill:'var(--blue)',stroke:'var(--surface)','stroke-width':2,opacity:0});
+    svg.appendChild(chLine); svg.appendChild(chDot); svg.appendChild(hitRect);
+
+    hitRect.addEventListener('pointermove',(e)=>{
+      const rect=svg.getBoundingClientRect();
+      const scaleX=VBW/rect.width;
+      const px=(e.clientX-rect.left)*scaleX;
+      const D=Math.max(XMIN, Math.min(XMAX, pxToX(px)));
+      const t=timeMinFor(D, V);
+      const clampedT=Math.max(0, Math.min(yMax, t));
+      const py=yToPx(clampedT, yMax);
+      const xPix=xToPx(D);
+      chLine.setAttribute('x1',xPix); chLine.setAttribute('x2',xPix); chLine.style.opacity=1;
+      chDot.setAttribute('cx',xPix); chDot.setAttribute('cy',py); chDot.setAttribute('opacity',1);
+      const scaleTip=rect.width/VBW;
+      tooltip.style.left=(xPix*scaleTip)+'px';
+      tooltip.style.top=(py*scaleTip-54)+'px';
+      tooltip.innerHTML=`거리 <b>${fmtNum(D,1)}km</b> &nbsp;&rarr;&nbsp; 통과시간 <b>${fmtTime(t)}</b>`;
+      tooltip.style.opacity=1;
+    });
+    hitRect.addEventListener('pointerleave',()=>{
+      chLine.style.opacity=0; chDot.setAttribute('opacity',0); tooltip.style.opacity=0;
+    });
+  }
+
+  buildDistTable();
+  // keep distance table time/margin columns in sync whenever V or stage inputs change
+  const _origRenderAll = renderAll;
+  renderAll = function(){ _origRenderAll(); refreshDistTable(); };
+  renderAll();
+})();
+</script>
+</body>
+</html>
