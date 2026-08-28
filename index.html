@@ -113,7 +113,12 @@
     .nav-tab{
       position:relative;border:none;border-bottom:2px solid transparent;color:#111827;
       padding:0 22px;font-size:15px;font-weight:700;letter-spacing:1px;height:64px;cursor:pointer;
-      margin-bottom:-1px;background-color:transparent;
+      margin-bottom:-1px;background:none;transition:color .18s ease;
+    }
+    .nav-tab + .nav-tab{margin-left:10px}
+    .nav-tab::before{
+      content:'';position:absolute;top:14px;bottom:14px;left:5px;right:5px;z-index:0;
+      background-color:transparent;
       background-image:
         linear-gradient(currentColor,currentColor),linear-gradient(currentColor,currentColor),
         linear-gradient(currentColor,currentColor),linear-gradient(currentColor,currentColor),
@@ -122,20 +127,23 @@
       background-repeat:no-repeat;
       background-size:8px 2px,2px 8px, 8px 2px,2px 8px, 8px 2px,2px 8px, 8px 2px,2px 8px;
       background-position:
-        top 14px left 5px, top 14px left 5px,
-        top 14px right 5px, top 14px right 5px,
-        bottom 14px left 5px, bottom 14px left 5px,
-        bottom 14px right 5px, bottom 14px right 5px;
-      transition:background-color .18s ease,color .18s ease;
+        top left, top left,
+        top right, top right,
+        bottom left, bottom left,
+        bottom right, bottom right;
+      transition:background-color .18s ease;
     }
-    .nav-tab:hover{color:#fff;background-color:var(--bg)}
+    .nav-tab span{position:relative;z-index:1}
+    .nav-tab:hover::before{background-color:var(--bg)}
+    .nav-tab:hover{color:#fff}
     .nav-tab.active{color:#000;border-bottom-color:#4fa3ff}
     .nav-tab.active:hover{color:#fff}
     .nav-tab.admin-tab{color:rgba(220,38,38,.75);font-weight:800}
     .nav-tab.admin-tab.active{color:#dc2626;border-bottom-color:#dc2626}
     .nav-tab.lab-locked{color:#bbb!important;cursor:not-allowed!important}
-    .nav-tab.lab-locked:hover{background-color:transparent!important;color:#bbb!important}
-    .nav-tab.lab-locked::after{content:' 🔒';font-size:10px}
+    .nav-tab.lab-locked:hover::before{background-color:transparent!important}
+    .nav-tab.lab-locked:hover{color:#bbb!important}
+    .nav-tab.lab-locked::after{content:' 🔒';font-size:10px;position:relative;z-index:1}
     .top-right{margin-left:auto;display:flex;align-items:center;gap:14px}
     .ver-badge{background:#4fa3ff;color:#fff;font-size:10px;font-weight:900;padding:3px 8px;letter-spacing:1px;border-radius:2px}
     .user-badge{color:#1a1a2e;font-size:12px;font-weight:700;letter-spacing:.3px}
@@ -569,7 +577,7 @@
       .lp-main-title{font-size:64px}
       .lp-intel{bottom:28px}
       .form-row,.stats-grid{grid-template-columns:1fr}
-      .topbar{height:auto;min-height:56px;flex-wrap:wrap;padding:10px 20px;gap:4px}.top-right{width:100%;margin-left:0;padding-top:4px;border-top:1px solid #dde3ec}.nav-tab{height:40px;padding:0 10px;font-size:12px;background-image:none}
+      .topbar{height:auto;min-height:56px;flex-wrap:wrap;padding:10px 20px;gap:4px}.top-right{width:100%;margin-left:0;padding-top:4px;border-top:1px solid #dde3ec}.nav-tab{height:40px;padding:0 10px;font-size:12px}.nav-tab::before{display:none}
       .panel{padding:20px 14px}.article-header{grid-template-columns:auto 1fr auto auto auto}.article-source,.article-date{display:none}.like-count-inline{display:none}
       .admin-bar{align-items:flex-start;flex-direction:column}.admin-track{width:100%}
       .member-table{display:block;overflow-x:auto;white-space:nowrap}
@@ -724,14 +732,14 @@
   <section id="screen-app" class="screen">
     <nav class="topbar">
       <button class="top-logo" onclick="enterApp()">Drone <span class="sh-amp">&amp;</span> <span class="sh-cd">C-drone</span></button><div class="top-divider"></div>
-      <button class="nav-tab active" onclick="switchPanel('drone',this)">DRONE</button>
-      <button class="nav-tab" onclick="switchPanel('cdrone',this)">C-DRONE</button>
-      <button class="nav-tab" onclick="switchPanel('ew',this)">EW</button>
-      <button class="nav-tab" onclick="switchPanel('tactics',this)">TACTICS</button>
-      <button class="nav-tab" onclick="switchPanel('other',this)">OTHER</button>
-      <button class="nav-tab" id="lab-tab" onclick="switchLabPanel(this)">LAB</button>
-      <button class="nav-tab" id="total-tab" onclick="switchTotalPanel(this)" style="display:none">TOTAL</button>
-      <button id="admin-tab" class="nav-tab admin-tab" onclick="switchPanel('admin',this)" style="display:none">ADMIN</button>
+      <button class="nav-tab active" onclick="switchPanel('drone',this)"><span>DRONE</span></button>
+      <button class="nav-tab" onclick="switchPanel('cdrone',this)"><span>C-DRONE</span></button>
+      <button class="nav-tab" onclick="switchPanel('ew',this)"><span>EW</span></button>
+      <button class="nav-tab" onclick="switchPanel('tactics',this)"><span>TACTICS</span></button>
+      <button class="nav-tab" onclick="switchPanel('other',this)"><span>OTHER</span></button>
+      <button class="nav-tab" id="lab-tab" onclick="switchLabPanel(this)"><span>LAB</span></button>
+      <button class="nav-tab" id="total-tab" onclick="switchTotalPanel(this)" style="display:none"><span>TOTAL</span></button>
+      <button id="admin-tab" class="nav-tab admin-tab" onclick="switchPanel('admin',this)" style="display:none"><span>ADMIN</span></button>
       <div class="top-right"><span class="ver-badge">v5</span><span id="token-badge" class="token-badge">🪙 0</span><span id="user-badge" class="user-badge">GUEST</span><button class="logout-btn" onclick="doLogout()">로그아웃</button></div>
     </nav>
     <div class="app-content">
