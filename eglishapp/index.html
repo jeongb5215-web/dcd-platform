@@ -996,6 +996,7 @@ function autoPlayEnKo(en, ko, onDone) {
 
   function speakKo() {
     if (!AP.running) return;
+    if (!practiceOptions.showKo) { if (onDone) onDone(); return; }
     if (!window.speechSynthesis) { if (onDone) onDone(); return; }
     var koUtter = new SpeechSynthesisUtterance(cleanTTS(ko));
     koUtter.lang = 'ko-KR';
@@ -1182,6 +1183,7 @@ function speakEnKo(en, ko) {
   }
 
   function speakKoFinal() {
+    if (!practiceOptions.showKo) return;
     setTimeout(function() {
       var koUtter = new SpeechSynthesisUtterance(cleanTTS(ko));
       koUtter.lang = 'ko-KR'; koUtter.rate = 0.9; koUtter.volume = 1;
