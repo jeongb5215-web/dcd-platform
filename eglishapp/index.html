@@ -872,8 +872,10 @@ function startAudioKeepalive() {
       return;
     }
     _keepCtx = new AC();
-    // 2초짜리 무음 버퍼를 루프 재생 → OS가 미디어 세션으로 인식해 잠금 화면에서도 유지
+    // 극소음(near-silent) 버퍼 루프 — 완전 무음은 일부 브라우저가 미디어 세션으로 미인식
     const buf = _keepCtx.createBuffer(1, _keepCtx.sampleRate * 2, _keepCtx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.0001;
     _keepSrc = _keepCtx.createBufferSource();
     _keepSrc.buffer = buf;
     _keepSrc.loop = true;
@@ -896,9 +898,10 @@ function setupMediaSession(word) {
     if (window.MediaMetadata) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: word || '단어 자동재생',
-        artist: '토익 영어 단어장',
+        artist: '영어 단어장',
       });
     }
+    try { navigator.mediaSession.playbackState = 'playing'; } catch(e) {}
     var actions = {
       play:  function() { if (!AP.running) startAutoPlay(); },
       pause: function() { if (AP.running)  stopAutoPlay(); },
@@ -934,6 +937,7 @@ function stopAutoPlay() {
     currentAudio = null;
   }
   stopAudioKeepalive();
+  try { if (navigator.mediaSession) navigator.mediaSession.playbackState = 'paused'; } catch(e) {}
   const btn = document.getElementById('btnAutoPlay');
   if (btn) { btn.textContent = '▶ 자동재생'; btn.classList.remove('on'); }
 }
@@ -1224,14 +1228,26 @@ new MutationObserver(forceLight).observe(document.documentElement, { attributes:
 
 // ── iOS/macOS Safari: 화면 잠금 해제 후 AudioContext 재개 ──
 document.addEventListener('visibilitychange', function() {
-  if (document.visibilityState === 'visible') {
-    // AudioContext가 suspended 상태이면 재개
+  if (document.visibilityState === 'hidden') {
+    // 화면 잠금: AudioContext를 활성 상태로 유지
     if (_keepCtx && _keepCtx.state === 'suspended') {
       try { _keepCtx.resume(); } catch(e) {}
     }
-    // iOS Safari: speechSynthesis가 멈춘 경우 재개
+  } else {
+    // 화면 복귀: AudioContext 재개
+    if (_keepCtx && _keepCtx.state === 'suspended') {
+      try { _keepCtx.resume(); } catch(e) {}
+    }
     if (AP.running && window.speechSynthesis) {
       try { window.speechSynthesis.resume(); } catch(e) {}
+      // TTS가 완전히 멈춘 경우 현재 단계부터 재시작
+      setTimeout(function() {
+        if (AP.running && window.speechSynthesis &&
+            !window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
+          clearTimeout(AP.timer);
+          runAutoStep();
+        }
+      }, 600);
     }
   }
 });
