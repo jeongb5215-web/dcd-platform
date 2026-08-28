@@ -440,6 +440,22 @@
   }
   .btn-autoplay:hover { background: rgba(255,255,255,.35); }
   .btn-autoplay.on { background: #fff; color: var(--purple); border-color: #fff; }
+  .btn-option {
+    background: rgba(255,255,255,.15);
+    border: 1.5px solid rgba(255,255,255,.4);
+    color: #fff;
+    border-radius: 20px;
+    padding: 5px 10px;
+    font-size: .75rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .2s;
+  }
+  .btn-option:hover { background: rgba(255,255,255,.3); }
+  .btn-option.on { background: #fff; color: var(--purple); border-color: #fff; }
+  .card-ko.blur { filter: blur(8px); cursor: pointer; user-select: none; transition: filter .2s; }
+  .card-ko-hint { font-size: .75rem; color: #aaa; margin-top: 6px; }
 
   /* 자동재생 진행 바 */
   .autoplay-bar-wrap {
@@ -521,6 +537,8 @@
     <button class="btn-icon" onclick="closePractice()">←</button>
     <h2 id="practiceTitle"></h2>
     <button class="btn-autoplay" id="btnAutoPlay" onclick="toggleAutoPlay()">▶ 자동재생</button>
+    <button class="btn-option on" id="btnKoToggle" onclick="toggleShowKo()">한글 ON</button>
+    <button class="btn-option" id="btnRepeatEn" onclick="toggleRepeatEn()">영어 1회</button>
     <span class="practice-progress" id="practiceProgress"></span>
   </div>
   <div class="practice-content" id="practiceContent"></div>
@@ -755,6 +773,25 @@ function deleteDeck(deckId) {
 
 // ── Practice Mode ──────────────────────────────────────────
 let practiceState = {};
+const practiceOptions = { showKo: true, repeatEn: false };
+
+function toggleShowKo() {
+  practiceOptions.showKo = !practiceOptions.showKo;
+  const btn = document.getElementById('btnKoToggle');
+  if (btn) { btn.textContent = practiceOptions.showKo ? '한글 ON' : '한글 OFF'; btn.classList.toggle('on', practiceOptions.showKo); }
+  renderCard();
+}
+
+function toggleRepeatEn() {
+  practiceOptions.repeatEn = !practiceOptions.repeatEn;
+  const btn = document.getElementById('btnRepeatEn');
+  if (btn) { btn.textContent = practiceOptions.repeatEn ? '영어 2회' : '영어 1회'; btn.classList.toggle('on', practiceOptions.repeatEn); }
+}
+
+function revealKo() {
+  const el = document.querySelector('.card-ko.blur');
+  if (el) el.classList.remove('blur');
+}
 
 function startPractice(deckId) {
   const deck = decks.find(d => d.id === deckId);
@@ -785,16 +822,19 @@ function renderCard() {
 
   const word = queue[idx];
   const hasPrev = idx > 0;
+  const koBlur = practiceOptions.showKo ? '' : ' blur';
+  const koHint = practiceOptions.showKo ? '' : '<div class="card-ko-hint">탭하여 한글 보기</div>';
   content.innerHTML = `
     <div class="card-nav">
       <button class="btn-nav" ${hasPrev ? '' : 'disabled'} onclick="goCard(-1)">← 이전</button>
       <span class="card-nav-dots">${queue.map((_, i) => `<span class="dot ${i === idx ? 'active' : i < idx ? 'done' : ''}"></span>`).slice(Math.max(0, idx-3), idx+4).join('')}</span>
       <button class="btn-nav" onclick="goCard(1)">다음 →</button>
     </div>
-    <div class="flashcard" id="flashcard">
+    <div class="flashcard" id="flashcard" onclick="revealKo()">
       <div class="card-en">${escHtml(word.en)}</div>
       <button class="btn-speak" onclick="event.stopPropagation();speakEnKo('${escHtml(word.en).replace(/'/g,"\\'")}','${escHtml(word.ko).replace(/'/g,"\\'")}')">🔊 발음 듣기</button>
-      <div class="card-ko">${escHtml(word.ko)}</div>
+      <div class="card-ko${koBlur}">${escHtml(word.ko)}</div>
+      ${koHint}
     </div>
     `;
 }
@@ -927,7 +967,7 @@ function runAutoStep() {
   });
 }
 
-// 자동재생 전용 TTS — 영어 발음 후 한글 읽기, onDone 콜백 지원
+// 자동재생 전용 TTS — 영어 발음(1~2회) 후 한글 읽기, onDone 콜백 지원
 function autoPlayEnKo(en, ko, onDone) {
   // 이전 발화·오디오 즉시 정지
   try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e) {}
@@ -936,6 +976,22 @@ function autoPlayEnKo(en, ko, onDone) {
     currentAudio.onerror = null;
     try { currentAudio.pause(); } catch(e) {}
     currentAudio = null;
+  }
+
+  var repeat = practiceOptions.repeatEn ? 2 : 1;
+  var maleNames = /david|mark|fred|alex|daniel|google uk english male|microsoft david|microsoft mark/i;
+
+  function makeApEnUtter() {
+    var u = new SpeechSynthesisUtterance(cleanTTS(en));
+    u.lang = 'en-US'; u.rate = 0.9; u.volume = 1;
+    if (cachedVoices.length) {
+      var v = cachedVoices.find(function(x) { return x.lang === 'en-US' && maleNames.test(x.name); })
+            || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0 && maleNames.test(x.name); })
+            || cachedVoices.find(function(x) { return x.lang === 'en-US'; })
+            || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0; });
+      if (v) u.voice = v;
+    }
+    return u;
   }
 
   function speakKo() {
@@ -955,6 +1011,22 @@ function autoPlayEnKo(en, ko, onDone) {
     try { window.speechSynthesis.speak(koUtter); } catch(e) { if (onDone) onDone(); }
   }
 
+  var apCount = 0;
+  function apNext() {
+    apCount++;
+    if (apCount < repeat) {
+      setTimeout(function() {
+        if (!AP.running) return;
+        var u2 = makeApEnUtter();
+        u2.onend  = function() { setTimeout(function() { if (AP.running) apNext(); }, 300); };
+        u2.onerror = function() { if (onDone) onDone(); };
+        try { window.speechSynthesis.speak(u2); } catch(e) { if (onDone) onDone(); }
+      }, 400);
+    } else {
+      setTimeout(function() { if (AP.running) speakKo(); }, 300);
+    }
+  }
+
   if (isSamsungBrowser) {
     // 삼성 브라우저: Google TTS Audio로 영어 재생, onended에서 한글 읽기
     var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=en-US&client=tw-ob&q='
@@ -967,19 +1039,8 @@ function autoPlayEnKo(en, ko, onDone) {
   }
 
   // iOS / Android Chrome / PC / macOS Safari: Web Speech API
-  var enUtter = new SpeechSynthesisUtterance(cleanTTS(en));
-  enUtter.lang = 'en-US';
-  enUtter.rate = 0.9;
-  enUtter.volume = 1;
-  if (cachedVoices.length) {
-    var maleNames = /david|mark|fred|alex|daniel|google uk english male|microsoft david|microsoft mark/i;
-    var v = cachedVoices.find(function(x) { return x.lang === 'en-US' && maleNames.test(x.name); })
-          || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0 && maleNames.test(x.name); })
-          || cachedVoices.find(function(x) { return x.lang === 'en-US'; })
-          || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0; });
-    if (v) enUtter.voice = v;
-  }
-  enUtter.onend  = function() { setTimeout(function() { if (AP.running) speakKo(); }, 300); };
+  var enUtter = makeApEnUtter();
+  enUtter.onend  = function() { apNext(); };
   enUtter.onerror = function() { if (onDone) onDone(); };
 
   if (isIOS) {
@@ -1104,24 +1165,26 @@ function speakEnKo(en, ko) {
   if (currentAudio) { try { currentAudio.pause(); } catch(e) {} currentAudio = null; }
   if (!window.speechSynthesis) { speakAudio(en); return; }
 
-  var enUtter = new SpeechSynthesisUtterance(cleanTTS(en));
-  enUtter.lang = 'en-US';
-  enUtter.rate = 0.85;
-  enUtter.volume = 1;
-  if (cachedVoices.length) {
-    var maleNames = /david|mark|fred|alex|daniel|google uk english male|microsoft david|microsoft mark/i;
-    var v = cachedVoices.find(function(x) { return x.lang === 'en-US' && maleNames.test(x.name); })
-          || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0 && maleNames.test(x.name); })
-          || cachedVoices.find(function(x) { return x.lang === 'en-US'; })
-          || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0; });
-    if (v) enUtter.voice = v;
+  var repeat = practiceOptions.repeatEn ? 2 : 1;
+  var maleNames = /david|mark|fred|alex|daniel|google uk english male|microsoft david|microsoft mark/i;
+
+  function makeEnUtter() {
+    var u = new SpeechSynthesisUtterance(cleanTTS(en));
+    u.lang = 'en-US'; u.rate = 0.85; u.volume = 1;
+    if (cachedVoices.length) {
+      var v = cachedVoices.find(function(x) { return x.lang === 'en-US' && maleNames.test(x.name); })
+            || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0 && maleNames.test(x.name); })
+            || cachedVoices.find(function(x) { return x.lang === 'en-US'; })
+            || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0; });
+      if (v) u.voice = v;
+    }
+    return u;
   }
-  enUtter.onend = function() {
+
+  function speakKoFinal() {
     setTimeout(function() {
       var koUtter = new SpeechSynthesisUtterance(cleanTTS(ko));
-      koUtter.lang = 'ko-KR';
-      koUtter.rate = 0.9;
-      koUtter.volume = 1;
+      koUtter.lang = 'ko-KR'; koUtter.rate = 0.9; koUtter.volume = 1;
       if (cachedVoices.length) {
         var kv = cachedVoices.find(function(x) { return x.lang === 'ko-KR'; })
                || cachedVoices.find(function(x) { return x.lang.indexOf('ko') === 0; });
@@ -1129,10 +1192,23 @@ function speakEnKo(en, ko) {
       }
       try { window.speechSynthesis.speak(koUtter); } catch(e) {}
     }, 300);
-  };
-  setTimeout(function() {
-    try { window.speechSynthesis.speak(enUtter); } catch(e) {}
-  }, 50);
+  }
+
+  var count = 0;
+  function next() {
+    count++;
+    if (count < repeat) {
+      setTimeout(function() {
+        var u2 = makeEnUtter(); u2.onend = next;
+        try { window.speechSynthesis.speak(u2); } catch(e) { speakKoFinal(); }
+      }, 400);
+    } else {
+      speakKoFinal();
+    }
+  }
+
+  var u1 = makeEnUtter(); u1.onend = next;
+  setTimeout(function() { try { window.speechSynthesis.speak(u1); } catch(e) {} }, 50);
 }
 
 // ── 강제 화이트 배경 (삼성 브라우저 다크모드 JS 차단) ──────
