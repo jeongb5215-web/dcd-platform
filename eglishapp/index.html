@@ -312,9 +312,11 @@
     background: var(--purple);
     color: #fff;
     padding: 16px 20px;
-    display: flex; align-items: center; gap: 12px;
+    display: flex; align-items: center; gap: 8px;
+    flex-wrap: wrap;
+    row-gap: 8px;
   }
-  .practice-header h2 { font-size: 1rem; font-weight: 700; flex: 1; }
+  .practice-header h2 { font-size: 1rem; font-weight: 700; flex: 1; min-width: 60px; }
   .practice-progress { font-size: .85rem; opacity: .85; }
 
   .practice-content {
@@ -539,6 +541,8 @@
     <button class="btn-autoplay" id="btnAutoPlay" onclick="toggleAutoPlay()">▶ 자동재생</button>
     <button class="btn-option on" id="btnKoToggle" onclick="toggleShowKo()">한글 ON</button>
     <button class="btn-option" id="btnRepeatEn" onclick="toggleRepeatEn()">영어 1회</button>
+    <button class="btn-option" id="btnRate" onclick="cycleRate()">0.8x</button>
+    <button class="btn-option" id="btnAccent" onclick="toggleAccent()">🇺🇸 미국식</button>
     <span class="practice-progress" id="practiceProgress"></span>
   </div>
   <div class="practice-content" id="practiceContent"></div>
@@ -773,7 +777,8 @@ function deleteDeck(deckId) {
 
 // ── Practice Mode ──────────────────────────────────────────
 let practiceState = {};
-const practiceOptions = { showKo: true, repeatEn: false };
+const RATE_STEPS = [0.6, 0.8, 1.0, 1.2];
+const practiceOptions = { showKo: true, repeatEn: false, rate: 0.8, accent: 'US' };
 
 function toggleShowKo() {
   practiceOptions.showKo = !practiceOptions.showKo;
@@ -786,6 +791,33 @@ function toggleRepeatEn() {
   practiceOptions.repeatEn = !practiceOptions.repeatEn;
   const btn = document.getElementById('btnRepeatEn');
   if (btn) { btn.textContent = practiceOptions.repeatEn ? '영어 2회' : '영어 1회'; btn.classList.toggle('on', practiceOptions.repeatEn); }
+}
+
+// 발음 속도 순환 (0.6x → 0.8x → 1.0x → 1.2x)
+function cycleRate() {
+  const i = RATE_STEPS.indexOf(practiceOptions.rate);
+  practiceOptions.rate = RATE_STEPS[(i + 1) % RATE_STEPS.length];
+  const btn = document.getElementById('btnRate');
+  if (btn) btn.textContent = practiceOptions.rate.toFixed(1) + 'x';
+}
+
+// 발음 억양 전환 (미국식 ↔ 영국식)
+function toggleAccent() {
+  practiceOptions.accent = practiceOptions.accent === 'US' ? 'UK' : 'US';
+  const btn = document.getElementById('btnAccent');
+  if (btn) btn.textContent = practiceOptions.accent === 'US' ? '🇺🇸 미국식' : '🇬🇧 영국식';
+}
+
+function ttsLang() { return practiceOptions.accent === 'UK' ? 'en-GB' : 'en-US'; }
+
+// 영어 발음(미국식/영국식) 음성 선택 — 지정 억양 우선, 없으면 en-* 아무거나
+const MALE_NAME_RE = /\b(david|mark|fred|alex|daniel|george|ryan|male)\b/i;
+function pickEnVoice(lang) {
+  if (!cachedVoices.length) return null;
+  return cachedVoices.find(function(x) { return x.lang === lang && MALE_NAME_RE.test(x.name); })
+      || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0 && MALE_NAME_RE.test(x.name); })
+      || cachedVoices.find(function(x) { return x.lang === lang; })
+      || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0; });
 }
 
 function revealKo() {
@@ -983,18 +1015,12 @@ function autoPlayEnKo(en, ko, onDone) {
   }
 
   var repeat = practiceOptions.repeatEn ? 2 : 1;
-  var maleNames = /david|mark|fred|alex|daniel|google uk english male|microsoft david|microsoft mark/i;
 
   function makeApEnUtter() {
     var u = new SpeechSynthesisUtterance(cleanTTS(en));
-    u.lang = 'en-US'; u.rate = 0.9; u.volume = 1;
-    if (cachedVoices.length) {
-      var v = cachedVoices.find(function(x) { return x.lang === 'en-US' && maleNames.test(x.name); })
-            || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0 && maleNames.test(x.name); })
-            || cachedVoices.find(function(x) { return x.lang === 'en-US'; })
-            || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0; });
-      if (v) u.voice = v;
-    }
+    u.lang = ttsLang(); u.rate = practiceOptions.rate; u.volume = 1;
+    var v = pickEnVoice(u.lang);
+    if (v) u.voice = v;
     return u;
   }
 
@@ -1034,9 +1060,10 @@ function autoPlayEnKo(en, ko, onDone) {
 
   if (isSamsungBrowser) {
     // 삼성 브라우저: Google TTS Audio로 영어 재생, onended에서 한글 읽기
-    var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=en-US&client=tw-ob&q='
+    var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=' + (practiceOptions.accent === 'UK' ? 'en-GB' : 'en-US') + '&client=tw-ob&q='
       + encodeURIComponent(en);
     currentAudio = new Audio(url);
+    currentAudio.playbackRate = practiceOptions.rate;
     currentAudio.onended = function() { currentAudio = null; speakKo(); };
     currentAudio.onerror = function() { currentAudio = null; speakKo(); };
     safePlay(currentAudio, function() { currentAudio = null; speakKo(); });
@@ -1171,18 +1198,12 @@ function speakEnKo(en, ko) {
   if (!window.speechSynthesis) { speakAudio(en); return; }
 
   var repeat = practiceOptions.repeatEn ? 2 : 1;
-  var maleNames = /david|mark|fred|alex|daniel|google uk english male|microsoft david|microsoft mark/i;
 
   function makeEnUtter() {
     var u = new SpeechSynthesisUtterance(cleanTTS(en));
-    u.lang = 'en-US'; u.rate = 0.85; u.volume = 1;
-    if (cachedVoices.length) {
-      var v = cachedVoices.find(function(x) { return x.lang === 'en-US' && maleNames.test(x.name); })
-            || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0 && maleNames.test(x.name); })
-            || cachedVoices.find(function(x) { return x.lang === 'en-US'; })
-            || cachedVoices.find(function(x) { return x.lang.indexOf('en') === 0; });
-      if (v) u.voice = v;
-    }
+    u.lang = ttsLang(); u.rate = practiceOptions.rate; u.volume = 1;
+    var v = pickEnVoice(u.lang);
+    if (v) u.voice = v;
     return u;
   }
 
