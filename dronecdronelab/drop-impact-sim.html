@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>드론 투하물 낙하고도·충돌속도 시뮬레이터</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    --bg:#f9f9f7;
+    --surface:#fcfcfb;
+    --border:#e1e0d9;
+    --border-strong:#c3c2b7;
+    --text:#0b0b0b;
+    --text-2:#52514e;
+    --muted:#898781;
+    --blue:#2a78d6;
+    --blue-d:#184f95;
+    --good:#0ca30c;
+    --warning:#fab219;
+    --serious:#ec835a;
+    --critical:#d03b3b;
+    --sans:'Inter',system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);color:var(--text);font-family:var(--sans);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;
+    padding:40px 20px 80px;
+  }
+  .wrap{width:100%;max-width:1080px}
+  .eyebrow{font-size:12px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;font-weight:600;margin-bottom:8px;text-align:center}
+  h1{font-size:26px;font-weight:800;text-align:center;margin-bottom:6px}
+  .subtitle{font-size:14px;color:var(--text-2);text-align:center;margin-bottom:6px}
+
+  .formula-box{
+    display:flex;flex-direction:column;gap:10px;
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:16px 20px;margin:18px auto 28px;max-width:860px;
+  }
+  .formula-row{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+  .formula-sep{height:1px;background:var(--border);margin:0 8px}
+  .formula{font-size:19px;font-weight:700;color:var(--blue-d);white-space:nowrap}
+  .formula-sub{font-size:15px;font-weight:700;color:var(--text);white-space:normal;text-align:center;font-variant-numeric:tabular-nums}
+  .formula-legend{font-size:12px;color:var(--text-2);line-height:1.7}
+  .formula-legend b{color:var(--text)}
+  .param-chip{
+    display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;
+    background:#eef4fc;color:var(--blue-d);padding:3px 10px;border-radius:999px;
+    font-variant-numeric:tabular-nums;
+  }
+  .param-chip.fixed{background:#f1f0ec;color:var(--text-2)}
+
+  .panel{
+    background:var(--surface);border:1px solid var(--border);border-radius:12px;
+    padding:22px 24px;margin-bottom:20px;
+  }
+  .panel-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .panel-title .tag{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+
+  .control-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 28px}
+  @media (max-width:760px){.control-grid{grid-template-columns:1fr}}
+  .control{display:flex;flex-direction:column;gap:8px}
+  .control label{font-size:13px;font-weight:600;color:var(--text)}
+  .control-inputs{display:flex;align-items:center;gap:12px}
+  .control-inputs input[type=range]{flex:1;accent-color:var(--blue)}
+  .control-inputs input[type=number]{
+    width:92px;padding:7px 8px;border:1px solid var(--border-strong);border-radius:6px;
+    font-family:var(--sans);font-size:14px;font-weight:600;color:var(--text);text-align:right;
+  }
+  .unit{font-size:13px;color:var(--muted);font-weight:600;white-space:nowrap}
+  .preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+  .preset-btn{
+    font-size:12px;padding:5px 10px;border-radius:999px;border:1px solid var(--border-strong);
+    background:var(--surface);color:var(--text-2);cursor:pointer;font-family:var(--sans);font-weight:600;
+    transition:.12s;
+  }
+  .preset-btn:hover{border-color:var(--blue);color:var(--blue-d);background:#eef4fc}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+  @media (max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+  .stat-tile{
+    border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;
+    background:var(--surface);position:relative;overflow:hidden;
+  }
+  .stat-tile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--tile-color,var(--blue))}
+  .stat-label{font-size:12px;color:var(--text-2);font-weight:600;margin-bottom:6px}
+  .stat-value{font-size:22px;font-weight:800;color:var(--text);line-height:1.1}
+  .stat-value .u{font-size:12px;font-weight:600;color:var(--muted);margin-left:3px}
+  .stat-sub{font-size:11px;color:var(--muted);margin-top:5px}
+
+  .chart-wrap{position:relative}
+  svg{width:100%;height:auto;display:block;overflow:visible}
+  .grid-line{stroke:var(--border);stroke-width:1}
+  .axis-line{stroke:var(--border-strong);stroke-width:1}
+  .axis-label{fill:var(--muted);font-size:11px;font-family:var(--sans)}
+  .curve{fill:none;stroke:var(--blue);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .ref-dot{stroke:var(--surface);stroke-width:2}
+  .chart-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+  .chart-caption{font-size:12px;color:var(--muted);margin-bottom:14px}
+
+  .tooltip{
+    position:absolute;pointer-events:none;background:var(--text);color:#fff;
+    padding:8px 11px;border-radius:8px;font-size:12px;line-height:1.6;
+    box-shadow:0 8px 24px rgba(0,0,0,.18);opacity:0;transition:opacity .1s;white-space:nowrap;z-index:5;
+  }
+  .tooltip b{font-size:13px}
+  .crosshair{stroke:var(--border-strong);stroke-width:1;opacity:0}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--border)}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--text-2);font-weight:600;font-size:12px;border-bottom:1px solid var(--border-strong)}
+  td.num{font-variant-numeric:tabular-nums}
+
+  .caveat-list{display:flex;flex-direction:column;gap:10px}
+  .caveat-item{display:flex;gap:10px;font-size:13px;color:var(--text-2);line-height:1.6}
+  .caveat-item b{color:var(--text)}
+  .caveat-dot{flex-shrink:0;width:8px;height:8px;border-radius:50%;background:var(--warning);margin-top:6px}
+
+  .footnote{font-size:11.5px;color:var(--muted);line-height:1.7;margin-top:10px}
+  .back-link{
+    display:inline-block;margin-bottom:18px;font-size:13px;color:var(--blue-d);
+    text-decoration:none;font-weight:600;
+  }
+  .back-link:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back-link" href="../index.html">&larr; DcD Platform</a>
+  <div class="eyebrow">Drop-Time to Altitude &amp; Impact-Velocity Estimator</div>
+  <h1>드론 투하물 낙하고도 · 충돌속도 시뮬레이터</h1>
+  <div class="subtitle">공기저항을 무시한 자유낙하 가정 하에, 투하 후 낙하시간(t)만으로 드론의 투하 고도와 목표물 도달 속도를 역산합니다</div>
+
+  <div class="formula-box">
+    <div class="formula-row">
+      <div class="formula">h = &frac12; g t&sup2;</div>
+      <div class="formula-legend"><b>h</b>: 투하 고도(m) &middot; <b>g</b>: 중력가속도(9.8 m/s&sup2;) &middot; <b>t</b>: 낙하시간(s)</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula">v<sub>y</sub> = g t &nbsp;&nbsp; v = &radic;(v<sub>x</sub>&sup2; + v<sub>y</sub>&sup2;)</div>
+      <div class="formula-legend"><b>v<sub>y</sub></b>: 수직 최종속도 &middot; <b>v<sub>x</sub></b>: 드론 수평 비행속도(투하 순간 유지) &middot; <b>v</b>: 최종 충돌속도</div>
+    </div>
+    <div class="formula-sep"></div>
+    <div class="formula-row" id="paramChips"></div>
+    <div class="formula-row">
+      <div class="formula-sub" id="substitutedFormula"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">입력 <span class="tag">Drop Time &amp; Drone Speed</span></div>
+    <div class="control-grid">
+      <div class="control">
+        <label>투하 후 낙하시간 t (자유낙하 지속시간)</label>
+        <div class="control-inputs">
+          <input type="range" id="tRange" min="0.2" max="15" step="0.1" value="4">
+          <input type="number" id="tNumber" min="0.1" max="60" step="0.1" value="4">
+          <span class="unit">초</span>
+        </div>
+      </div>
+      <div class="control">
+        <label>드론 전진 비행속도 v<sub>x</sub> (투하 순간 수평속도, 호버링=0)</label>
+        <div class="control-inputs">
+          <input type="range" id="vRange" min="0" max="150" step="0.5" value="0">
+          <input type="number" id="vNumber" min="0" max="800" step="0.5" value="0">
+          <span class="unit">m/s</span>
+        </div>
+        <div class="preset-row" id="presetRow"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">결과 <span class="tag">Altitude &amp; Impact Velocity</span></div>
+    <div class="stat-grid" id="statGrid"></div>
+  </div>
+
+  <div class="panel chart-wrap">
+    <div class="chart-title">낙하 궤적 (수평거리 vs 잔여고도)</div>
+    <div class="chart-caption">호버링 투하(v<sub>x</sub>=0)는 수직 낙하선으로, 전진 비행 중 투하는 포물선 궤적으로 표시됩니다. 그래프 위에 마우스를 올리면 경과시간별 잔여고도·속도를 확인할 수 있습니다.</div>
+    <svg id="chart" viewBox="0 0 920 440" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="tooltip" id="tooltip"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">시간대별 낙하 상세 <span class="tag">0 ~ t, 10 Steps</span></div>
+    <table>
+      <thead>
+        <tr><th>경과시간 (s)</th><th>잔여고도 (m)</th><th>수직속도 (m/s)</th><th>합성속도 (m/s)</th><th>수평거리 (m)</th></tr>
+      </thead>
+      <tbody id="detailBody"></tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">실제 환경 고려 요인 <span class="tag">Error Sources (Not Modeled)</span></div>
+    <div class="caveat-list">
+      <div class="caveat-item"><span class="caveat-dot"></span><div><b>공기저항(항력):</b> 투하물의 형태(날개 유무, 핀 형상 등)와 중량에 따라 항력을 받으면 실제 낙하고도는 계산값보다 낮아지고, 도달 속도는 종단속도 영향으로 계산값보다 작아질 수 있습니다.</div></div>
+      <div class="caveat-item"><span class="caveat-dot"></span><div><b>풍향 및 풍속:</b> 측풍이나 상승·하강 기류가 낙하 궤적과 낙하시간에 영향을 줍니다.</div></div>
+      <div class="caveat-item"><span class="caveat-dot"></span><div><b>투하 초기 조건:</b> 드론 자체의 진동·자세변화나 투하 순간의 회전(spin)은 반영되지 않은 이상적 질점(point-mass) 모델입니다.</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const G = 9.8;
+
+  const PRESETS = [
+    { name:'호버링', v:0 },
+    { name:'멀티콥터', v:22.2 },
+    { name:'FPV 공격드론', v:41.7 },
+    { name:'Shahed-136', v:51.4 },
+    { name:'Lancet-3', v:83.3 },
+    { name:'Geran-4(제트)', v:136.4 },
+  ];
+
+  function fmt(n, d=1){
+    if(n===undefined||n===null||isNaN(n)) return '-';
+    return n.toFixed(d);
+  }
+  function kmh(ms){ return ms*3.6; }
+
+  const tRange=document.getElementById('tRange'), tNumber=document.getElementById('tNumber');
+  const vRange=document.getElementById('vRange'), vNumber=document.getElementById('vNumber');
+  const presetRow=document.getElementById('presetRow');
+  const statGrid=document.getElementById('statGrid');
+  const detailBody=document.getElementById('detailBody');
+  const paramChips=document.getElementById('paramChips');
+  const substitutedFormula=document.getElementById('substitutedFormula');
+  const svg=document.getElementById('chart');
+  const tooltip=document.getElementById('tooltip');
+
+  let state={ t:4, vx:0 };
+
+  PRESETS.forEach(p=>{
+    const b=document.createElement('button');
+    b.className='preset-btn';
+    b.textContent=`${p.name} (${fmt(p.v,1)}m/s)`;
+    b.onclick=()=>{ state.vx=p.v; vRange.value=Math.min(150,p.v); vNumber.value=p.v; renderAll(); };
+    presetRow.appendChild(b);
+  });
+
+  function syncControl(rangeEl, numberEl, key, min, max){
+    rangeEl.addEventListener('input', ()=>{
+      state[key]=parseFloat(rangeEl.value);
+      numberEl.value=state[key];
+      renderAll();
+    });
+    numberEl.addEventListener('input', ()=>{
+      const v=parseFloat(numberEl.value);
+      if(!isNaN(v)){
+        state[key]=v;
+        rangeEl.value=Math.max(min,Math.min(max,v));
+        renderAll();
+      }
+    });
+  }
+  syncControl(tRange, tNumber, 't', 0.2, 15);
+  syncControl(vRange, vNumber, 'vx', 0, 150);
+
+  function computeAt(tau, t, vx){
+    const h_t = 0.5*G*t*t;
+    const h_remain = h_t - 0.5*G*tau*tau;
+    const vy = G*tau;
+    const v = Math.sqrt(vx*vx+vy*vy);
+    const x = vx*tau;
+    return { h_remain, vy, v, x };
+  }
+
+  function renderAll(){
+    const t=state.t, vx=state.vx;
+    const h = 0.5*G*t*t;
+    const vy = G*t;
+    const v = Math.sqrt(vx*vx+vy*vy);
+    const xDist = vx*t;
+
+    paramChips.innerHTML = `
+      <span class="param-chip fixed">g = 9.8 m/s²</span>
+      <span class="param-chip">t = ${fmt(t,1)} s</span>
+      <span class="param-chip">v<sub>x</sub> = ${fmt(vx,1)} m/s</span>
+    `;
+    substitutedFormula.innerHTML =
+      `h = ½ × 9.8 × ${fmt(t,1)}² = <span style="color:var(--blue-d)">${fmt(h,1)} m</span>`+
+      `&nbsp;&nbsp;·&nbsp;&nbsp;`+
+      `v<sub>y</sub> = 9.8 × ${fmt(t,1)} = ${fmt(vy,1)} m/s`+
+      `&nbsp;&nbsp;·&nbsp;&nbsp;`+
+      `v = &radic;(${fmt(vx,1)}² + ${fmt(vy,1)}²) = <span style="color:var(--blue-d)">${fmt(v,1)} m/s</span>`;
+
+    const stats=[
+      { label:'투하 고도 (h)', value:fmt(h,1), unit:'m', sub:`h = ½×9.8×${fmt(t,1)}²`, color:'var(--blue)' },
+      { label:'수직 최종속도 (v_y)', value:fmt(vy,1), unit:'m/s', sub:`${fmt(kmh(vy),0)} km/h`, color:'#8b5cf6' },
+      { label:'수평속도 (v_x, 드론속도 유지)', value:fmt(vx,1), unit:'m/s', sub:`${fmt(kmh(vx),0)} km/h`, color:'#8b5cf6' },
+      { label:'최종 충돌속도 (v)', value:fmt(v,1), unit:'m/s', sub:`${fmt(kmh(v),0)} km/h`, color:'#d03b3b' },
+      { label:'수평 낙하거리 (투하점→낙하점)', value:fmt(xDist,1), unit:'m', sub:`v_x × t = ${fmt(vx,1)}×${fmt(t,1)}`, color:'var(--blue)' },
+    ];
+    statGrid.innerHTML='';
+    stats.forEach(s=>{
+      const el=document.createElement('div');
+      el.className='stat-tile';
+      el.style.setProperty('--tile-color', s.color);
+      el.innerHTML=`<div class="stat-label">${s.label}</div>
+        <div class="stat-value">${s.value}<span class="u">${s.unit}</span></div>
+        <div class="stat-sub">${s.sub}</div>`;
+      statGrid.appendChild(el);
+    });
+
+    detailBody.innerHTML='';
+    const STEPS=10;
+    for(let i=0;i<=STEPS;i++){
+      const tau=t*i/STEPS;
+      const r=computeAt(tau, t, vx);
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td class="num">${fmt(tau,2)}</td><td class="num">${fmt(Math.max(0,r.h_remain),1)}</td><td class="num">${fmt(r.vy,1)}</td><td class="num">${fmt(r.v,1)}</td><td class="num">${fmt(r.x,1)}</td>`;
+      detailBody.appendChild(tr);
+    }
+
+    drawChart(t, vx, h);
+  }
+
+  const M={l:64,r:26,t:18,b:44};
+  const VBW=920, VBH=440;
+  const plotW=VBW-M.l-M.r, plotH=VBH-M.t-M.b;
+
+  const NS='http://www.w3.org/2000/svg';
+  function el(tag, attrs){
+    const e=document.createElementNS(NS, tag);
+    for(const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  function drawChart(t, vx, h){
+    svg.innerHTML='';
+    const xMax = Math.max(vx*t, 5) * 1.15;
+    const yMax = h * 1.15 || 10;
+
+    function xToPx(x){ return M.l + (x/xMax)*plotW; }
+    function yToPx(y){ return M.t + plotH - (y/yMax)*plotH; }
+
+    const xTicks=6, yTicks=6;
+    for(let i=0;i<=xTicks;i++){
+      const xv=xMax*i/xTicks;
+      const px=xToPx(xv);
+      svg.appendChild(el('line',{class:'grid-line',x1:px,x2:px,y1:M.t,y2:M.t+plotH}));
+      const lbl=el('text',{class:'axis-label',x:px,y:M.t+plotH+18,'text-anchor':'middle'});
+      lbl.textContent=fmt(xv,0)+'m';
+      svg.appendChild(lbl);
+    }
+    for(let i=0;i<=yTicks;i++){
+      const yv=yMax*i/yTicks;
+      const py=yToPx(yv);
+      svg.appendChild(el('line',{class:'grid-line',x1:M.l,x2:M.l+plotW,y1:py,y2:py}));
+      const lbl=el('text',{class:'axis-label',x:M.l-8,y:py+3,'text-anchor':'end'});
+      lbl.textContent=fmt(yv,0);
+      svg.appendChild(lbl);
+    }
+    svg.appendChild(el('line',{class:'axis-line',x1:M.l,x2:M.l,y1:M.t,y2:M.t+plotH}));
+    svg.appendChild(el('line',{class:'axis-line',x1:M.l,x2:M.l+plotW,y1:M.t+plotH,y2:M.t+plotH}));
+    const yAxisLabel=el('text',{class:'axis-label',x:16,y:M.t+plotH/2,'text-anchor':'middle',transform:`rotate(-90 16 ${M.t+plotH/2})`});
+    yAxisLabel.textContent='잔여고도 (m)';
+    svg.appendChild(yAxisLabel);
+    const xAxisLabel=el('text',{class:'axis-label',x:M.l+plotW/2,y:VBH-4,'text-anchor':'middle'});
+    xAxisLabel.textContent='수평거리 (m)';
+    svg.appendChild(xAxisLabel);
+
+    const N=80;
+    let d='';
+    for(let i=0;i<=N;i++){
+      const tau=t*i/N;
+      const r=computeAt(tau, t, vx);
+      const px=xToPx(r.x), py=yToPx(Math.max(0,r.h_remain));
+      d += (i===0?'M':'L')+px.toFixed(2)+' '+py.toFixed(2)+' ';
+    }
+    svg.appendChild(el('path',{class:'curve',d}));
+
+    // start (release) and end (impact) markers
+    const startPx=xToPx(0), startPy=yToPx(h);
+    svg.appendChild(el('circle',{cx:startPx,cy:startPy,r:6,fill:'#8b5cf6',class:'ref-dot'}));
+    const endPx=xToPx(vx*t), endPy=yToPx(0);
+    svg.appendChild(el('circle',{cx:endPx,cy:endPy,r:6,fill:'#d03b3b',class:'ref-dot'}));
+
+    const hitRect=el('rect',{x:M.l,y:M.t,width:plotW,height:plotH,fill:'transparent',style:'cursor:crosshair'});
+    const chLine=el('line',{class:'crosshair',x1:0,x2:0,y1:M.t,y2:M.t+plotH});
+    const chDot=el('circle',{r:5,fill:'var(--blue)',stroke:'var(--surface)','stroke-width':2,opacity:0});
+    svg.appendChild(chLine); svg.appendChild(chDot); svg.appendChild(hitRect);
+
+    hitRect.addEventListener('pointermove',(e)=>{
+      const rect=svg.getBoundingClientRect();
+      const scaleX=VBW/rect.width;
+      const scaleY=VBH/rect.height;
+      let tau;
+      if(vx>0){
+        const px=(e.clientX-rect.left)*scaleX;
+        const xVal=Math.max(0, Math.min(xMax, (px-M.l)/plotW*xMax));
+        tau = Math.max(0, Math.min(t, xVal/vx));
+      }else{
+        const py=(e.clientY-rect.top)*scaleY;
+        const yVal=Math.max(0, Math.min(yMax, (M.t+plotH-py)/plotH*yMax));
+        tau = Math.max(0, Math.min(t, Math.sqrt(Math.max(0, 2*(h-yVal)/G))));
+      }
+      const r=computeAt(tau, t, vx);
+      const cx=xToPx(r.x), cy=yToPx(Math.max(0,r.h_remain));
+      chLine.setAttribute('x1',cx); chLine.setAttribute('x2',cx); chLine.style.opacity=1;
+      chDot.setAttribute('cx',cx); chDot.setAttribute('cy',cy); chDot.setAttribute('opacity',1);
+      const scaleTip=rect.width/VBW;
+      tooltip.style.left=(cx*scaleTip)+'px';
+      tooltip.style.top=(cy*scaleTip-60)+'px';
+      tooltip.innerHTML=`경과 <b>${fmt(tau,2)}s</b> &nbsp;잔여고도 <b>${fmt(Math.max(0,r.h_remain),1)}m</b><br>합성속도 <b>${fmt(r.v,1)}m/s</b>`;
+      tooltip.style.opacity=1;
+    });
+    hitRect.addEventListener('pointerleave',()=>{
+      chLine.style.opacity=0; chDot.setAttribute('opacity',0); tooltip.style.opacity=0;
+    });
+  }
+
+  renderAll();
+})();
+</script>
+</body>
+</html>
