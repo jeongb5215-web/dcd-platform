@@ -34,11 +34,14 @@
   h1{font-size:26px;font-weight:800;text-align:center;margin-bottom:6px}
   .subtitle{font-size:14px;color:var(--text-2);text-align:center;margin-bottom:6px}
   .formula-box{
-    display:flex;align-items:center;justify-content:center;gap:18px;
+    display:flex;flex-direction:column;gap:12px;
     background:var(--surface);border:1px solid var(--border);border-radius:10px;
-    padding:14px 20px;margin:18px auto 28px;max-width:760px;flex-wrap:wrap;
+    padding:16px 20px;margin:18px auto 28px;max-width:820px;
   }
-  .formula{font-size:20px;font-weight:700;color:var(--blue-d)}
+  .formula-row{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
+  .formula-sep{height:1px;background:var(--border);margin:0 8px}
+  .formula{font-size:20px;font-weight:700;color:var(--blue-d);white-space:nowrap}
+  .formula-sm{font-size:15px;white-space:normal;text-align:center}
   .formula-legend{font-size:12px;color:var(--text-2);line-height:1.7}
   .formula-legend b{color:var(--text)}
 
@@ -150,9 +153,22 @@
   <div class="subtitle">비행속도와 탐지거리로 통과시간을 계산하고, 대응 단계별 소요시간과 비교해 방어측 여유시간(margin)을 분석합니다</div>
 
   <div class="formula-box">
-    <div class="formula">t = D / V</div>
-    <div class="formula-legend">
-      <b>t</b> : 통과시간(도달까지 남은 시간) &nbsp;&middot;&nbsp; <b>D</b> : 탐지거리 (km) &nbsp;&middot;&nbsp; <b>V</b> : 드론 비행속도 (km/h)
+    <div class="formula-row">
+      <div class="formula">t = D / V</div>
+      <div class="formula-legend">
+        <b>t</b> : 통과시간(도달까지 남은 시간) &nbsp;&middot;&nbsp; <b>D</b> : 탐지거리 (km) &nbsp;&middot;&nbsp; <b>V</b> : 드론 비행속도 (km/h)
+      </div>
+    </div>
+    <div class="formula-sep"></div>
+    <div class="formula-row">
+      <div class="formula formula-sm">margin = (D / V &times; 3600) &minus; (t<sub>탐지&middot;식별</sub> + t<sub>지휘결심</sub> + t<sub>요격&middot;교전</sub>)</div>
+      <div class="formula-legend">
+        <b>margin</b> : 대응 여유시간(초, 통과시간&minus;총 필요 대응시간) &nbsp;&middot;&nbsp;
+        <b style="color:#d03b3b">margin&le;0</b> 대응불가 &nbsp;&middot;&nbsp;
+        <b style="color:#ec835a">0~20초</b> 매우촉박 &nbsp;&middot;&nbsp;
+        <b style="color:#c98500">20~60초</b> 여유부족 &nbsp;&middot;&nbsp;
+        <b style="color:#0ca30c">60초 초과</b> 대응가능
+      </div>
     </div>
   </div>
 
