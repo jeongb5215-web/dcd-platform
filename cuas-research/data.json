@@ -1,7 +1,7 @@
 {
   "meta": {
     "last_daily_run": null,
-    "last_weekly_run": null,
+    "last_weekly_run": "2026-09-06T02:03:41Z",
     "schema_version": 1
   },
   "geran_drones": {
@@ -13,9 +13,125 @@
     "monthly": []
   },
   "cuas_tech": {
-    "log": []
+    "log": [
+      {
+        "date": "2026-07-31",
+        "system": "델타체계",
+        "event_type": "체계 구축",
+        "detail": "우크라이나군이 DELTA 전장 지휘통제체계에 위성영상·드론 정사영상(오르소포토) 1,700여 장과 3D 지형 데이터를 추가해 점령지 포함 우크라이나 전역의 정밀 지형 정보를 실시간 제공하도록 확장. 2026년 상반기 동안 월평균 요격 기록 건수가 약 10.6만 건에서 20만 건으로 약 2배 증가.",
+        "source": "https://defence-industry.eu/ukraine-expands-delta-with-satellite-imagery-drone-orthophotos-and-3d-terrain-data-to-sharpen-battlefield-planning/",
+        "source_name": "Defence Industry Europe / Ukraine MoD",
+        "significance": "델타체계가 단순 요격 기록 시스템을 넘어 위성·드론 영상 융합 기반 전장 인식(C4ISR) 플랫폼으로 진화하고 있음을 보여줌 — 지역별 다층 방어 배치 계획 수립에 직접 활용 가능"
+      },
+      {
+        "date": "2026-06-25",
+        "system": "AI Vision",
+        "event_type": "실전 배치",
+        "detail": "우크라이나 국방부 산하 Defence AI Center(A1, 2026년 3월 설립)가 개발한 컴퓨터 비전 기반 '라스트마일 유도' 기술이 전자전(EW) 환경에서도 작동함을 확인. 자율 요격드론이 발사부터 명중까지 요격 과정의 약 95%를 자동화한 상태로 샤헤드(Shahed)류 드론을 격추하는 것이 실전에서 검증됨.",
+        "source": "https://united24media.com/war-in-ukraine/ukrainian-ai-interceptors-are-now-downing-russian-shahed-drones-autonomously-19054",
+        "source_name": "United24 Media / Ukraine MoD (Defence AI Center A1)",
+        "significance": "GPS 재밍/전파방해 환경에서도 작동하는 컴퓨터 비전 라스트마일 유도가 실전 검증됨 — RF 의존 요격체계의 전자전 취약성을 보완하는 자율 요격 전환점"
+      },
+      {
+        "date": "2026-07-07",
+        "system": "C4I",
+        "event_type": "체계 구축",
+        "detail": "NATO가 튀르키예 앙카라에서 향후 5년간 400억 달러 규모의 대드론 방어 투자 계획을 발표. 나토지원조달기구(NSPA)는 전술·이동형 C-UAS 체계를 위한 5개 기본계약(framework contract)을 체결해 회원국이 사전 검증된 대드론 체계를 신속 조달할 수 있는 '마켓플레이스' 방식을 구축.",
+        "source": "https://www.unmannedairspace.info/counter-uas-systems-and-policies/nato-to-create-c-uas-marketplace-as-allies-announce-usd-40-billion-investment/",
+        "source_name": "Unmanned Airspace",
+        "significance": "나토가 개별 회원국 산발적 조달 대신 공동 검증·공동 기금 방식의 대드론 조달 체계로 전환 — 서방 C-UAS 방어체계 구축의 표준화·규모의 경제 전환점"
+      },
+      {
+        "date": "2026-05-22",
+        "system": "C4I",
+        "event_type": "신규 시험",
+        "detail": "네덜란드에서 열린 나토 기술상호운용성훈련(TIE 26)에 11개 회원국과 우크라이나·호주 등 40개 기업 약 300명이 참가, 60개 이상의 상용 탐지·요격 체계와 40개 이상의 지휘통제(C2) 소프트웨어를 통합 시험. 라트비아 나토혁신레인지(NIR)에서도 2026년 3월·5월 등 5차례 시험 세션이 진행되어 우크라이나 기업 다수가 참가.",
+        "source": "https://www.defensenews.com/global/europe/2026/05/12/nato-to-cultivate-vetted-counter-drone-vendor-pool-for-nations-to-pick-and-choose/",
+        "source_name": "Defense News",
+        "significance": "탐지·요격 하드웨어뿐 아니라 C2 소프트웨어 간 상호운용성을 대규모로 검증 — 서방 다국적 통합 방어체계 구축의 실질적 시험 사례"
+      },
+      {
+        "date": "2026-08-11",
+        "system": "C4I",
+        "event_type": "기술 개선",
+        "detail": "록히드마틴이 육상·공중·해상에서 동시에 접근하는 다수의 자율 위협(드론 군집)을 탐지·우선순위화·격퇴하도록 센서, AI 기반 임무 소프트웨어, 지휘통제체계, 자율 플랫폼, 운동/비운동 효과기를 하나의 확장 가능한 방어망으로 연결하는 다층 대드론 아키텍처를 공개.",
+        "source": "https://www.armyrecognition.com/news/army-news/2026/lockheed-martin-builds-a-layered-counter-drone-architecture-for-the-age-of-autonomous-swarms",
+        "source_name": "Army Recognition",
+        "significance": "드론 군집(스웜) 위협을 전제로 한 통합 다층 방어 아키텍처 — 개별 요격체계가 아닌 시스템-오브-시스템 접근으로의 전환 사례"
+      },
+      {
+        "date": "2026-07-01",
+        "system": "AeroVironment 대드론체계",
+        "event_type": "체계 구축",
+        "detail": "미 육군이 에어로바이런먼트(AeroVironment)와 5억 달러 규모 계약을 체결, 향후 3년간 그룹 1~3급 드론에 대응하는 상용 다층 대드론 체계를 조달할 수 있는 경로를 확보.",
+        "source": "https://www.armyrecognition.com/news/army-news/2026/u-s-army-awards-aerovironment-500m-contract-for-layered-counter-drone-defense-systems",
+        "source_name": "Army Recognition",
+        "significance": "미군의 소형 상용 드론(Group 1-3) 대응 다층 방어체계 조달 규모를 보여주는 구체적 계약 사례"
+      }
+    ]
   },
   "research_papers": {
-    "log": []
+    "log": [
+      {
+        "date": "2026-03",
+        "title": "UAV-DETR: DETR for Anti-Drone Target Detection",
+        "authors": "Jun Yang, Dong Wang, Hongxu Yin, Hongpeng Li, Jianxiong Yu",
+        "venue": "arXiv",
+        "topic": "AI Vision",
+        "summary": "DETR(트랜스포머 기반 객체탐지) 아키텍처를 소형 드론 탐지에 특화 적용한 연구. 기존 CNN 기반 탐지기 대비 원거리·저해상도 표적에서의 탐지 성능 개선을 목표로 함.",
+        "link": "https://arxiv.org/pdf/2603.22841",
+        "significance": "트랜스포머 기반 객체탐지 구조를 대드론 탐지에 특화시킨 초기 사례 중 하나로, 향후 EO-IR 탐지 알고리즘 고도화 방향을 시사"
+      },
+      {
+        "date": "2026-06",
+        "title": "DroneShield-AI: A Multi-Modal Sensor Fusion Framework for Real-Time Autonomous Drone Threat Detection, Behavioral Intent Classification, and Swarm Intelligence in Contested Airspace",
+        "authors": "Marius Bayizere",
+        "venue": "arXiv",
+        "topic": "C-UAS 일반",
+        "summary": "레이더·RF·영상 등 다중 센서를 융합해 실시간으로 드론 위협을 탐지하고 행동 의도(정찰/공격 등)를 분류하며 군집(swarm) 위협까지 대응하는 프레임워크. 상용 CPU 환경에서 96.1% 탐지 정확도, 오경보율 3.2%, 종단간 지연시간 142ms를 보고.",
+        "link": "https://arxiv.org/pdf/2606.11687",
+        "significance": "단순 탐지를 넘어 위협 의도 분류와 군집 대응까지 통합한 프레임워크로, 상용 하드웨어 수준의 실시간 처리 성능(142ms)을 제시"
+      },
+      {
+        "date": "2025-11",
+        "title": "A Multimodal Transformer Approach for UAV Detection and Aerial Object Recognition Using Radar, Audio, and Video Data",
+        "authors": "Mauro Larrat, Claudomiro Sales",
+        "venue": "arXiv",
+        "topic": "C-UAS 일반",
+        "summary": "레이더·음향·영상 3종 센서 데이터를 트랜스포머 구조로 융합해 UAV를 탐지·분류하는 접근법. 단일 센서 대비 오탐지·미탐지 저감을 목표로 함.",
+        "link": "https://arxiv.org/pdf/2511.15312",
+        "significance": "레이더/음향/영상 3중 융합에 트랜스포머를 적용한 사례로, RF-Radar와 AI Vision·음향탐지 간 통합 연구 흐름을 보여줌"
+      },
+      {
+        "date": "2026-07",
+        "title": "Compact convolutional neural networks for AI-based drone detection system",
+        "authors": "Gábor Farkas, Gábor Fazekas, Patrik Karakai, András Németh",
+        "venue": "arXiv",
+        "topic": "AI Vision",
+        "summary": "경량 CNN 구조와 신규 데이터셋을 활용해 엣지 디바이스에서 구동 가능한 드론 탐지 모델을 제안. 저전력·저사양 하드웨어 배치를 염두에 둔 설계.",
+        "link": "https://arxiv.org/html/2607.16455v1",
+        "significance": "경량화된 모델로 야전 배치형 저전력 탐지 장비(엣지 컴퓨팅)에 적용 가능성을 제시"
+      },
+      {
+        "date": "2026-05",
+        "title": "Improving acoustic drone detection generalization through pretraining and data augmentation",
+        "authors": "Paul M. Reuter, Mattes Ohlenbusch, Christian Rollwage",
+        "venue": "arXiv",
+        "topic": "음향탐지",
+        "summary": "사전학습(pretraining)과 데이터 증강 기법을 활용해 음향 기반 드론 탐지 모델이 학습 환경과 다른 실제 배치 환경에서도 일반화 성능을 유지하도록 개선하는 연구.",
+        "link": "https://arxiv.org/pdf/2605.31329",
+        "significance": "음향탐지 모델의 고질적 문제인 '훈련 환경 과적합·실전 환경 성능 저하'를 완화하는 방법론을 제시"
+      },
+      {
+        "date": "2026-01",
+        "title": "Passive acoustic detection and localization of drones using MEMS microphones and machine learning",
+        "authors": "Z. Ghouli",
+        "venue": "Acta Acustica",
+        "topic": "음향탐지",
+        "summary": "저가형 MEMS 마이크로폰 분산 배열과 머신러닝을 결합해 레이더·적외선이 놓치기 쉬운 저고도·저신호 소형 드론을 실시간으로 탐지·위치추정하는 시스템을 제안.",
+        "link": "https://acta-acustica.edpsciences.org/articles/aacus/full_html/2026/01/aacus250134/aacus250134.html",
+        "significance": "저비용 MEMS 센서 배열만으로 저고도 소형 드론 위치추정까지 가능함을 학술지에 검증 게재 — 민간·저예산 지역방어용 음향탐지망 구축 가능성 시사"
+      }
+    ]
   }
 }
