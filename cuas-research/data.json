@@ -1,15 +1,50 @@
 {
   "meta": {
-    "last_daily_run": null,
+    "last_daily_run": "2026-09-06T02:06:06Z",
     "last_weekly_run": "2026-09-06T02:03:41Z",
     "schema_version": 1
   },
   "geran_drones": {
-    "baseline": {},
+    "baseline": {
+      "Shahed-136": {
+        "warhead_kg": { "value": 50, "source": "https://www.globalsecurity.org/military/world/iran/shahed-136.htm", "source_name": "GlobalSecurity.org", "date": "2026-09-06", "confidence": "중간", "note": "이란 기본형 탄두는 40~50kg 고폭탄으로 보고됨" },
+        "range_km": { "value": 2500, "source": "https://www.globalmilitary.net/aircraft/shahed-136/", "source_name": "GlobalMilitary.net", "date": "2026-09-06", "confidence": "낮음", "note": "출처별 항속거리 편차가 큼(1,000~2,500km 보고) — 교차검증 필요" },
+        "engine": { "value": "MD-550 계열 50마력 2행정 4기통 피스톤 엔진", "source": "https://www.globalsecurity.org/military/world/iran/shahed-136.htm", "source_name": "GlobalSecurity.org", "date": "2026-09-06", "confidence": "중간" }
+      },
+      "Geran-2": {
+        "warhead_kg": { "value": 50, "source": "https://www.rferl.org/a/32091316.html", "source_name": "RFE/RL", "date": "2026-09-06", "confidence": "중간", "note": "러시아 생산형은 열압력탄(thermobaric), 지르코늄 라이너 파편·소이탄 등으로 최대 90kg까지 보고됨" },
+        "range_km": { "value": 1800, "source": "https://www.globalmilitary.net/aircraft/shahed-136/", "source_name": "GlobalMilitary.net (Shahed-136 기반 추정)", "date": "2026-09-06", "confidence": "낮음", "note": "Geran-2 고유 수치의 1차 출처 미확보, Shahed-136 기반 추정치. 출처별 1,000~2,500km 편차 — 교차검증 필요" },
+        "engine": { "value": "MD-550 계열 피스톤 엔진 (Geran-2 표준형)", "source": "https://www.rferl.org/a/32091316.html", "source_name": "RFE/RL", "date": "2026-09-06", "confidence": "중간" }
+      },
+      "Geran-3": {
+        "engine": { "value": "Telefly JT80 터보젯 (중국산)", "source": "https://militarnyi.com/en/news/ukrainian-intelligence-releases-detailed-analysis-of-russian-geran-3-jet-powered-uav-series-u/", "source_name": "Militarnyi (우크라이나 국방정보국 DIU 분석 인용)", "date": "2025-09-16", "confidence": "중간" },
+        "range_km": { "value": 1000, "source": "https://militarnyi.com/en/news/ukrainian-intelligence-releases-detailed-analysis-of-russian-geran-3-jet-powered-uav-series-u/", "source_name": "Militarnyi (DIU)", "date": "2025-09-16", "confidence": "중간" },
+        "speed_kmh": { "value": "300~370 (DIU 추정치)", "source": "https://militarnyi.com/en/news/ukrainian-intelligence-releases-detailed-analysis-of-russian-geran-3-jet-powered-uav-series-u/", "source_name": "Militarnyi (DIU)", "date": "2025-09-16", "confidence": "낮음", "note": "일부 매체는 550~700km/h(강하 시 최대) 주장 — 상충, 검증 필요" },
+        "production_status": { "value": "2026년 8월 기준 생산 중단, Geran-4/5로 전환 (DIU 발표)", "source": "https://militarnyi.com/en/news/russia-halts-production-of-geran-3/", "source_name": "Militarnyi (DIU)", "date": "2026-08", "confidence": "중간", "note": "과도기 모델로 판단, 러시아는 개량형 Geran-4(중량형)로 이행 중이며 Geran-4/5 월 생산량 약 3,000기 보고" }
+      },
+      "Geran-5": {
+        "warhead_kg": { "value": 90, "source": "https://militarnyi.com/en/news/russia-unveils-geran-5-analog-peklo-drone/", "source_name": "Militarnyi / Defense Express", "date": "2026-05-09", "confidence": "중간", "note": "연료 탑재량 축소 시 탄두 120~130kg까지 증대 가능하다는 보고 있음" },
+        "range_km": { "value": 950, "source": "https://militarnyi.com/en/news/russia-unveils-geran-5-analog-peklo-drone/", "source_name": "Militarnyi / Defense Express", "date": "2026-05-09", "confidence": "중간", "note": "일부 출처는 공식 타격 사거리 최대 1,000km로 보고" },
+        "engine": { "value": "터보젯 (중국산 부품 다수 사용)", "source": "https://militarnyi.com/en/news/russia-unveils-geran-5-analog-peklo-drone/", "source_name": "Militarnyi / Defense Express", "date": "2026-05-09", "confidence": "중간" },
+        "speed_kmh": { "value": 600, "source": "https://militarnyi.com/en/news/russia-unveils-geran-5-analog-peklo-drone/", "source_name": "Militarnyi / Defense Express", "date": "2026-05-09", "confidence": "중간" }
+      }
+    },
     "log": []
   },
   "attack_stats": {
-    "daily": [],
+    "daily": [
+      {
+        "date": "2026-09-05",
+        "attacks_total": 167,
+        "by_type": {},
+        "launch_areas": ["Orel", "Millerovo", "Kursk", "Donetsk(점령지)", "Hvardiyske/Crimea(점령지)"],
+        "target_areas": [],
+        "intercepted": 128,
+        "intercept_rate": 0.77,
+        "sources": ["https://en.interfax.com.ua/news/general/1199161.html", "https://www.ukrinform.net/rubric-ato/4161075-air-defense-forces-down-128-drones-used-by-russia-to-attack-ukraine-overnight.html"],
+        "note": "2026-09-04 18:00~09-05 야간 공격 기준. Shahed계열/Gerbera/Parodiya 기만기 혼합 167기 중 약 절반이 제트추진형으로 보도(기종별 세부 수치 미확인). 탄도미사일(Iskander-M/KN-23)은 별도 집계, 본 통계에는 드론만 포함. 피격 23개 지점(구체 지역명 미확인)"
+      }
+    ],
     "monthly": []
   },
   "cuas_tech": {
