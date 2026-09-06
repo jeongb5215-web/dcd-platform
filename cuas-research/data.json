@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-06T02:06:06Z",
+    "last_daily_run": "2026-09-06T22:12:59Z",
     "last_weekly_run": "2026-09-06T22:05:50Z",
     "schema_version": 1
   },
@@ -27,9 +27,41 @@
         "range_km": { "value": 950, "source": "https://militarnyi.com/en/news/russia-unveils-geran-5-analog-peklo-drone/", "source_name": "Militarnyi / Defense Express", "date": "2026-05-09", "confidence": "중간", "note": "일부 출처는 공식 타격 사거리 최대 1,000km로 보고" },
         "engine": { "value": "터보젯 (중국산 부품 다수 사용)", "source": "https://militarnyi.com/en/news/russia-unveils-geran-5-analog-peklo-drone/", "source_name": "Militarnyi / Defense Express", "date": "2026-05-09", "confidence": "중간" },
         "speed_kmh": { "value": 600, "source": "https://militarnyi.com/en/news/russia-unveils-geran-5-analog-peklo-drone/", "source_name": "Militarnyi / Defense Express", "date": "2026-05-09", "confidence": "중간" }
+      },
+      "Geran-4": {
+        "warhead_kg": { "value": "50 (고폭/열압력) 또는 90 (대형 열압력)", "source": "https://militarnyi.com/en/news/russia-upgrades-geran-4-seeker-fuselage-for-optical-guidance/", "source_name": "Militarnyi (우크라이나 국방정보국 DIU 분석 인용)", "date": "2026-08-02", "confidence": "중간", "note": "탄두 2종 구성 확인 (경량 50kg / 대형 90kg 열압력)" },
+        "range_km": { "value": 450, "source": "https://militarnyi.com/en/news/russia-upgrades-geran-4-seeker-fuselage-for-optical-guidance/", "source_name": "Militarnyi (DIU)", "date": "2026-08-02", "confidence": "낮음", "note": "출처별 편차 큼 — 일부 보도(Militarnyi Seeker 세부형)는 최대 550km, 일부 2차 출처는 최대 850km까지 보고. 교차검증 필요" },
+        "speed_kmh": { "value": "최대 500 (기동 시 300~400 순항/선회)", "source": "https://militarnyi.com/en/news/russia-upgrades-geran-4-seeker-fuselage-for-optical-guidance/", "source_name": "Militarnyi (DIU)", "date": "2026-08-02", "confidence": "중간" },
+        "engine": { "value": "Telefly LX-WP-160 (추력 160kgf) 또는 TF-TJ2000A (추력 200kgf) 터보젯 (중국산)", "source": "https://militarnyi.com/en/news/russia-upgrades-geran-4-seeker-fuselage-for-optical-guidance/", "source_name": "Militarnyi (DIU)", "date": "2026-08-02", "confidence": "중간" },
+        "guidance": { "value": "'Seeker' 개량형 — 기수부에 전자광학(EO) 센서(중국산 Dahua TiOC 듀얼렌즈 180도 파노라마 카메라) 장착, 데이터링크 두절 시에도 종말 단계에서 자율 표적 획득·타격 가능", "source": "https://www.forbes.com/sites/vikrammittal/2026/08/09/russias-upgraded-geran-drones-are-targeting-ukraines-black-sea-ports/", "source_name": "Forbes / Militarnyi", "date": "2026-08-09", "confidence": "중간", "note": "2026년 7월 이후 오데사 등 흑해 항만·상선 타격에 실전 운용 중으로 보도됨" }
       }
     },
-    "log": []
+    "log": [
+      {
+        "date": "2026-08-02",
+        "variant": "Geran-4",
+        "field": "baseline_new",
+        "old_value": null,
+        "new_value": "신규 기종 최초 등재 (제트엔진 신규 설계 기체, MTOW 450kg, 2026년 5월부터 실전 투입)",
+        "new_source": "https://militarnyi.com/en/news/russia-upgrades-geran-4-seeker-fuselage-for-optical-guidance/",
+        "new_source_name": "Militarnyi (DIU)",
+        "confidence": "중간",
+        "status": "확인됨",
+        "note": "기존 Geran-3(재사용 프로펠러 기체+제트엔진)와 달리 처음부터 고속비행을 전제로 설계된 신규 강화 기체. 프리모르스크 드론포트·구 도네츠크 공항에서 시험발사 후 2026년 5월 실전 배치"
+      },
+      {
+        "date": "2026-08-09",
+        "variant": "Geran-4",
+        "field": "guidance",
+        "old_value": "무선 유도 (기존 Shahed/Geran 계열 표준)",
+        "new_value": "전자광학(EO) 시커 + 데이터링크 두절 시 자율 종말유도",
+        "new_source": "https://www.forbes.com/sites/vikrammittal/2026/08/09/russias-upgraded-geran-drones-are-targeting-ukraines-black-sea-ports/",
+        "new_source_name": "Forbes / Militarnyi",
+        "confidence": "중간",
+        "status": "확인됨",
+        "note": "전자전(EW)으로 통신 두절 시에도 종말 단계에서 자율 표적 획득이 가능해짐 — RF 재밍에 대한 러시아측 대응 전환점, 우크라이나 항만·이동 표적(선박) 타격에 실전 활용"
+      }
+    ]
   },
   "attack_stats": {
     "daily": [
@@ -43,6 +75,17 @@
         "intercept_rate": 0.77,
         "sources": ["https://en.interfax.com.ua/news/general/1199161.html", "https://www.ukrinform.net/rubric-ato/4161075-air-defense-forces-down-128-drones-used-by-russia-to-attack-ukraine-overnight.html"],
         "note": "2026-09-04 18:00~09-05 야간 공격 기준. Shahed계열/Gerbera/Parodiya 기만기 혼합 167기 중 약 절반이 제트추진형으로 보도(기종별 세부 수치 미확인). 탄도미사일(Iskander-M/KN-23)은 별도 집계, 본 통계에는 드론만 포함. 피격 23개 지점(구체 지역명 미확인)"
+      },
+      {
+        "date": "2026-09-06",
+        "attacks_total": 108,
+        "by_type": {},
+        "launch_areas": ["Millerovo", "Orel", "Kursk", "Donetsk(점령지)", "Hvardiyske/Crimea(점령지)"],
+        "target_areas": [],
+        "intercepted": 88,
+        "intercept_rate": 0.81,
+        "sources": ["https://www.ukrinform.net/rubric-ato/4161307-air-defense-neutralizes-82-russian-drones-six-banderol-missiles-overnight.html", "https://unn.ua/en/news/russia-launched-108-attack-uavs-at-ukraine-air-defense-shot-down-88-targets", "https://112.ua/en/6-veresna-rosia-atakuvala-ukrainu-108-bpla-zbito-82-bezpilotniki-ta-6-banderol-183563"],
+        "note": "2026-09-05 18:00~09-06 야간 공격 기준(09:30 시점 잠정치). Shahed계열(제트추진형 포함)/Gerbera/Parodiya 기만기 82기 요격·제압 + S8000 Banderol 순항미사일형 6기 별도 요격(합계 88). 피격 11개 지점, 격추 잔해 낙하 7개 지점(구체 지역명 미확인). 발사지역은 전일과 동일 방향대(밀레로보/오룔/쿠르스크/도네츠크 점령지/크림반도 흐바르디이스케)"
       }
     ],
     "monthly": []
@@ -129,6 +172,15 @@
         "source": "https://www.armyrecognition.com/news/army-news/2026/uk-advances-counter-drone-and-ai-targeting-capabilities-for-future-warfare",
         "source_name": "Army Recognition / UK MoD Dstl",
         "significance": "대드론체계와 AI Vision 표적식별을 경보병 제대(소부대) 단위까지 확산시키는 지역/제대별 배치 사례이며, 현장 병사가 직접 AI 모델을 신속 재훈련하는 접근은 기존 중앙집중형 AI Vision 개발·배치 방식과 다른 전환점"
+      },
+      {
+        "date": "2026-08-21",
+        "system": "요격드론(신규-제트추진)",
+        "event_type": "신규 시험",
+        "detail": "우크라이나 최초의 제트엔진 요격드론이 실전 시험 단계에 진입. 부총리 미하일로 페도로프가 2026-08-14 속도 600km/h 이상의 제트추진 요격드론이 실전 시험 중이라고 발표(개발사 미공개, 델타익 형상·터보젯·캐터펄트 발사). 2026-08-21 우크라이나 국방부가 해당 기체를 'Alexa Spatium'으로 제식 코드화. 별도 개발사의 유사 체계 'JetKiller'는 시험 중 제트추진형 샤헤드(Geran-3/4/5 계열) 12기 이상을 격추했다고 보도됨. Brave1 클러스터가 개발 지원.",
+        "source": "https://www.pravda.com.ua/eng/news/2026/08/14/8048658/",
+        "source_name": "Ukrainska Pravda / Mykhailo Fedorov, 국방부(제식명), Militarnyi",
+        "significance": "기존 STING/BAGNET 등 저가 프로펠러형 요격드론(최대 250~315km/h)으로는 요격이 어려운 제트추진 Geran-3/4/5(순항 300~500km/h대)를 직접 상대할 수 있는 600km/h급 제트 요격드론의 최초 등장 — 우크라이나 요격체계가 프로펠러형에서 제트추진형으로 확장되는 전환점"
       }
     ]
   },
