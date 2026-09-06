@@ -1,7 +1,7 @@
 {
   "meta": {
     "last_daily_run": "2026-09-06T02:06:06Z",
-    "last_weekly_run": "2026-09-06T02:03:41Z",
+    "last_weekly_run": "2026-09-06T22:05:50Z",
     "schema_version": 1
   },
   "geran_drones": {
@@ -102,6 +102,33 @@
         "source": "https://www.armyrecognition.com/news/army-news/2026/u-s-army-awards-aerovironment-500m-contract-for-layered-counter-drone-defense-systems",
         "source_name": "Army Recognition",
         "significance": "미군의 소형 상용 드론(Group 1-3) 대응 다층 방어체계 조달 규모를 보여주는 구체적 계약 사례"
+      },
+      {
+        "date": "2026-04-21",
+        "system": "C4I",
+        "event_type": "체계 구축",
+        "detail": "미 국방부(DoW)가 2027 회계연도 예산안에서 드론·대드론 기술에 700억 달러 이상을 요청, 이 중 대드론체계·정밀유도무기 등에 약 210억 달러가 배정됨. 이는 2026 회계연도(자율체계 134억+대드론 31억 달러) 대비 대폭 확대된 규모이며, 2025년 신설된 국방자율전 그룹(Defense Autonomous Warfare Group) 예산도 2.26억 달러에서 546억 달러 수준으로 급증.",
+        "source": "https://defensescoop.com/2026/04/21/dod-plans-largest-ever-investment-drones-anti-drone-weapons/",
+        "source_name": "DefenseScoop",
+        "significance": "미 국방부 역대 최대 규모의 드론·대드론 투자 계획으로, 서방 C-UAS 조달의 예산 규모가 자율무기 전환과 함께 이전 대비 3배 수준으로 확대되고 있음을 보여줌"
+      },
+      {
+        "date": "2026-08-14",
+        "system": "C4I",
+        "event_type": "신규 시험",
+        "detail": "나토 동맹군변혁사령부(ACT)의 2026년 '비콘 프로젝트'인 계층형 대드론 이니셔티브(LCI-X) 산하 최대 규모 실기동 시험 'Baltic Trust 26(BATT26)'이 2026년 8월 3~14일 라트비아 셀리야(Sēlija) 사격장에서 실시됨. 24개국 약 650명(우크라이나·호주·일본 인력 포함)이 참가해 센서·지휘통제(C2)·요격체계(효과기)를 단일 계층형 대드론체계로 통합 운용할 수 있는지 시험. LCI-X는 앞서 2026년 4월 루마니아, 6월 핀란드에서 단계적 통합 시험(Crucible 시리즈)을 거쳐 왔음.",
+        "source": "https://www.armadainternational.com/2026/08/blacktalon-ecosystem-trains-allied-operators-at-natos-batt26-exercise-in-latvia/",
+        "source_name": "Armada International / NATO ACT",
+        "significance": "기존 로그의 TIE26(5월, C2 소프트웨어 상호운용성 중심 검증)에 이어 나토가 실제 동부전선 인접 지역(발트해 연안)에서 센서-C2-효과기를 하나의 계층형 체계로 통합 운용하는 것을 대규모로 시험한 후속 단계 — 나토의 지역별 다층 방어체계 구축이 실전 배치 전 단계로 진입했음을 보여줌"
+      },
+      {
+        "date": "2026-07-29",
+        "system": "AI Vision",
+        "event_type": "신규 시험",
+        "detail": "영국 국방과학기술연구소(Dstl)가 2026년 7월 29일 공개한 사례연구에서 두 프로젝트 성과를 발표. ①'VANAHEIM'(영-미 공동, RAPSTONE 주관): 경보병 부대에 휴대형 대드론체계를 지급해 2025년 여름 독일·폴란드에서 13개 업체 장비를 대상으로 실전 조건 현장시험 실시. ②'ANVIL': 병사가 직접 24시간 이내 신규 위협에 재학습 가능한 컴퓨터비전 표적식별 모델을 개발·운용하는 프로젝트.",
+        "source": "https://www.armyrecognition.com/news/army-news/2026/uk-advances-counter-drone-and-ai-targeting-capabilities-for-future-warfare",
+        "source_name": "Army Recognition / UK MoD Dstl",
+        "significance": "대드론체계와 AI Vision 표적식별을 경보병 제대(소부대) 단위까지 확산시키는 지역/제대별 배치 사례이며, 현장 병사가 직접 AI 모델을 신속 재훈련하는 접근은 기존 중앙집중형 AI Vision 개발·배치 방식과 다른 전환점"
       }
     ]
   },
@@ -166,6 +193,36 @@
         "summary": "저가형 MEMS 마이크로폰 분산 배열과 머신러닝을 결합해 레이더·적외선이 놓치기 쉬운 저고도·저신호 소형 드론을 실시간으로 탐지·위치추정하는 시스템을 제안.",
         "link": "https://acta-acustica.edpsciences.org/articles/aacus/full_html/2026/01/aacus250134/aacus250134.html",
         "significance": "저비용 MEMS 센서 배열만으로 저고도 소형 드론 위치추정까지 가능함을 학술지에 검증 게재 — 민간·저예산 지역방어용 음향탐지망 구축 가능성 시사"
+      },
+      {
+        "date": "2026-07",
+        "title": "EchoHawk: A Reproducible Acoustic Pipeline for Drone Detection, Classification, and Direction-Finding, with a Cautionary Study of Session-Level Data Leakage",
+        "authors": "David Shulman",
+        "venue": "arXiv",
+        "topic": "음향탐지",
+        "summary": "로터 소음 기반 드론 탐지·분류·방향탐지(빔포밍/시간지연 처리)를 위한 완전 재현 가능한 오픈소스 음향 파이프라인. 합성 데이터셋과 실제 녹음 데이터로 평가하는 한편, 널리 쓰이는 공개 데이터셋에서 동일 녹음 세션의 인접 구간이 학습/검증에 함께 섞여 들어가는 '세션 단위 데이터 누출' 문제를 발견 — 이를 교정(세션 단위 교차검증)하자 랜덤포레스트 기준 탐지확률이 0.937→0.875(오경보율 5% 기준)로 하락.",
+        "link": "https://arxiv.org/abs/2606.29589",
+        "significance": "그동안 발표된 음향탐지 모델들의 높은 성능 수치 상당수가 데이터 누출로 인한 과대평가일 수 있음을 방법론적으로 입증 — 향후 음향탐지 연구·벤치마크 신뢰도 검증에 직접적 영향을 미치는 발견"
+      },
+      {
+        "date": "2026-08",
+        "title": "5G ISAC-Based UAV Detection and 3-D Tracking Using Uplink Sounding Reference Signals on an End-to-End O-RAN Simulation Testbed",
+        "authors": "Arun K. Gurung 외",
+        "venue": "arXiv",
+        "topic": "RF/Radar",
+        "summary": "상용 5G 통신망의 업링크 사운딩 참조 신호(SRS)를 수동형 레이더 파형으로 재활용해 저고도 UAV를 탐지·3차원 추적하는 O-RAN(개방형 무선접속망) 종단간 시뮬레이션 테스트베드를 오픈소스 컴포넌트(OpenAirInterface, FlexRIC, Sionna RT)로 구축.",
+        "link": "https://arxiv.org/abs/2608.05826",
+        "significance": "전용 레이더 없이 기존 5G 통신 인프라를 감지-통신 융합(ISAC)으로 재활용하는 접근으로, 별도 장비 없는 저비용·광역 UAV 탐지망 구축 가능성을 제시"
+      },
+      {
+        "date": "2026-09",
+        "title": "Evidential Deep Learning for Multi-Modal Anti-UAV Detection",
+        "authors": "Dmitry Golovchits 외",
+        "venue": "arXiv",
+        "topic": "AI Vision",
+        "summary": "다중 센서를 융합하는 대드론 탐지기가 센서별 신뢰도(불확실성) 신호를 제공하지 못하는 문제를 다룸. 증거기반 딥러닝(EDL) 헤드, 뎀프스터-셰이퍼 증거융합, 불확실성 기반 시간적 센서 게이팅을 열화상 추적(AntiUAV600), RGB-음향-RF 분류(TRIDENT), RGB-IR 추적(MM-UAV) 3개 벤치마크에서 통제된 절제실험으로 검증.",
+        "link": "https://arxiv.org/abs/2609.01742",
+        "significance": "기존 다중센서 융합 모델이 놓쳤던 '센서별 신뢰도 불확실성' 정량화를 3개 이질적 벤치마크(열상/음향-RF/IR)에서 동시 검증 — 센서 일부가 열화·기만당해도 신뢰도 가중치로 안전하게 판단하는 방향을 제시"
       }
     ]
   }
