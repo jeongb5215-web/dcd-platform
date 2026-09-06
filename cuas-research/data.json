@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "last_daily_run": null,
+    "last_weekly_run": null,
+    "schema_version": 1
+  },
+  "geran_drones": {
+    "baseline": {},
+    "log": []
+  },
+  "attack_stats": {
+    "daily": [],
+    "monthly": []
+  },
+  "cuas_tech": {
+    "log": []
+  },
+  "research_papers": {
+    "log": []
+  }
+}

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C-UAS 연구 자동화 시스템</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080b10;--panel:#0e1520;--panel2:#141d2e;--panel3:#192438;
+  --line:rgba(106,168,255,.2);--line-strong:rgba(106,168,255,.48);
+  --blue:#4fa3ff;--red:#ff5c5c;--green:#38e69b;--gold:#f4b942;--purple:#8b5cf6;
+  --text:#f6f9ff;--sub:#c5d5ec;--muted:#7d9abb;--dim:#4f6784;
+  --font:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',Arial,sans-serif;
+  --mono:'Cascadia Mono','Consolas','Courier New',monospace;
+}
+body{min-height:100vh;background:var(--bg);color:var(--text);font-family:var(--font)}
+button{font:inherit;cursor:pointer}
+a{color:var(--blue)}
+
+.wrap{max-width:960px;margin:0 auto;padding:28px 20px 80px}
+
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.logo{font-family:'Dancing Script',cursive;font-size:24px;color:#fff}
+.logo span{color:var(--blue)}
+.back-link{font-size:12px;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:20px;padding:6px 14px}
+.back-link:hover{border-color:var(--line-strong);color:var(--sub)}
+
+.hero{padding:32px 0 20px}
+.hero .kicker{color:var(--blue);font-size:11px;font-weight:800;letter-spacing:4px;text-transform:uppercase;margin-bottom:10px}
+.hero h1{font-size:28px;font-weight:800;margin-bottom:8px}
+.hero p{color:var(--sub);font-size:14px;line-height:1.6;max-width:640px}
+.hero .meta-row{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.hero .meta-row b{color:var(--text)}
+
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0 20px;border-bottom:1px solid var(--line);padding-bottom:14px}
+.tab{background:var(--panel);border:1px solid var(--line);color:var(--sub);border-radius:20px;padding:9px 16px;font-size:13px;font-weight:700;white-space:nowrap;transition:.15s}
+.tab:hover{border-color:var(--line-strong)}
+.tab.active{background:var(--blue);border-color:var(--blue);color:#04101f}
+
+.panel{display:none}
+.panel.active{display:block}
+
+.section-title{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:24px 0 12px}
+.section-title:first-child{margin-top:0}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:12px}
+
+/* 변화 감지 로그 항목 */
+.change-item{display:flex;flex-direction:column;gap:6px}
+.change-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.change-tag{font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap}
+.tag-verify{background:rgba(244,185,66,.15);color:var(--gold)}
+.tag-confirmed{background:rgba(56,230,155,.15);color:var(--green)}
+.tag-applied{background:rgba(79,163,255,.15);color:var(--blue)}
+.change-date{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.change-title{font-size:14px;font-weight:700}
+.change-diff{font-family:var(--mono);font-size:13px;background:var(--panel2);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.change-diff .old{color:var(--red);text-decoration:line-through;opacity:.75}
+.change-diff .arrow{color:var(--muted)}
+.change-diff .new{color:var(--green);font-weight:700}
+.change-note{font-size:13px;color:var(--sub);line-height:1.5}
+.change-src{font-size:11px;color:var(--muted)}
+.change-src a{color:var(--muted);text-decoration:underline}
+
+/* 제원 테이블 */
+table.spec{width:100%;border-collapse:collapse;font-size:13px}
+table.spec th,table.spec td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left}
+table.spec th{color:var(--muted);font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:700}
+table.spec td.num{font-family:var(--mono)}
+
+.badge-system{display:inline-block;background:var(--panel3);border:1px solid var(--line);color:var(--purple);font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px}
+
+.topic-tag{display:inline-block;background:rgba(139,92,246,.12);color:var(--purple);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-right:6px}
+
+.empty{padding:40px 20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.7}
+.empty .emoji{font-size:28px;margin-bottom:10px}
+
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.stat-box{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:14px}
+.stat-box .num{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--blue)}
+.stat-box .lbl{font-size:11px;color:var(--muted);margin-top:4px}
+
+footer{text-align:center;color:var(--dim);font-size:11px;padding:30px 0 10px}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="logo">D<span>c</span>D · C-UAS 연구 자동화</div>
+  <a class="back-link" href="../index.html">← DcD 플랫폼으로</a>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="kicker">Automated OSINT Change Detection</div>
+    <h1>C-UAS 연구 자동화 시스템</h1>
+    <p>전장 드론 및 대드론(C-UAS) 기술 동향을 매일 자동으로 수집하고, 기존 연구 자료와 대조하여 "연구에 의미 있는 변화"만 선별해 보여줍니다. 단순 뉴스 수집이 아니라 제원 변경·신규 위협·기술 전환점을 추적합니다.</p>
+    <div class="meta-row">
+      <span>일일 스캔: <b>매일 07:00 KST</b></span>
+      <span>주간 심층 분석: <b>매주 월요일</b></span>
+      <span id="lastRun">마지막 갱신: <b>—</b></span>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="geran">① Geran/Shahed 계열 드론</button>
+    <button class="tab" data-tab="stats">② 러-우 공격·요격 통계</button>
+    <button class="tab" data-tab="tech">③ C-UAS 요격기술 동향</button>
+    <button class="tab" data-tab="papers">④ 연구자료/논문</button>
+  </div>
+
+  <!-- ① Geran drones -->
+  <div class="panel active" id="panel-geran">
+    <div class="section-title">변경 감지 로그</div>
+    <div id="geranLog"></div>
+    <div class="section-title">현재 확인된 제원 (베이스라인)</div>
+    <div class="card"><div id="geranBaseline"></div></div>
+  </div>
+
+  <!-- ② Attack stats -->
+  <div class="panel" id="panel-stats">
+    <div class="section-title">최근 통계</div>
+    <div id="statsLatest"></div>
+    <div class="section-title">일별 추이</div>
+    <div class="card"><div id="statsDaily"></div></div>
+    <div class="section-title">월별 집계</div>
+    <div class="card"><div id="statsMonthly"></div></div>
+  </div>
+
+  <!-- ③ C-UAS tech -->
+  <div class="panel" id="panel-tech">
+    <div class="section-title">기술/전력화 동향 로그</div>
+    <div id="techLog"></div>
+  </div>
+
+  <!-- ④ Research papers -->
+  <div class="panel" id="panel-papers">
+    <div class="section-title">신규 연구자료</div>
+    <div id="papersLog"></div>
+  </div>
+
+  <footer>DcD Platform — C-UAS Research Automation · data.json 기반 자동 업데이트</footer>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    $('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function fmtDate(d) { return d || '—'; }
+
+function statusTagClass(status) {
+  if (status === '검증 필요') return 'tag-verify';
+  if (status === '확인됨') return 'tag-confirmed';
+  return 'tag-applied';
+}
+
+function emptyState(msg) {
+  return `<div class="empty"><div class="emoji">🛰️</div>${msg}</div>`;
+}
+
+function renderGeranLog(entries) {
+  if (!entries || !entries.length) {
+    $('geranLog').innerHTML = emptyState('아직 감지된 제원·기종 변화가 없습니다.<br>매일 07:00(KST) 자동 스캔이 기존 자료와 신규 출처를 비교합니다.');
+    return;
+  }
+  $('geranLog').innerHTML = entries.slice().reverse().map(e => `
+    <div class="card change-item">
+      <div class="change-head">
+        <span class="badge-system">${esc(e.variant)}</span>
+        <span class="change-tag ${statusTagClass(e.status)}">${esc(e.status || '검증 필요')}</span>
+        <span class="change-date">${fmtDate(e.date)}</span>
+      </div>
+      <div class="change-title">${esc(e.field)} 값 상이 감지</div>
+      <div class="change-diff">
+        <span class="old">${esc(e.old_value)}</span>
+        <span class="arrow">→</span>
+        <span class="new">${esc(e.new_value)}</span>
+      </div>
+      ${e.note ? `<div class="change-note">${esc(e.note)}</div>` : ''}
+      <div class="change-src">출처: ${e.new_source ? `<a href="${esc(e.new_source)}" target="_blank" rel="noopener">${esc(e.new_source_name || e.new_source)}</a>` : '—'} · 신뢰도 ${esc(e.confidence || '미상')}</div>
+    </div>
+  `).join('');
+}
+
+function renderGeranBaseline(baseline) {
+  const variants = Object.keys(baseline || {});
+  if (!variants.length) {
+    $('geranBaseline').innerHTML = emptyState('베이스라인 제원 데이터가 아직 없습니다.');
+    return;
+  }
+  let html = '<table class="spec"><thead><tr><th>기종</th><th>항목</th><th>값</th><th>출처</th><th>확인일</th></tr></thead><tbody>';
+  variants.forEach(v => {
+    const fields = baseline[v] || {};
+    Object.keys(fields).forEach((f, i) => {
+      const d = fields[f];
+      html += `<tr>
+        <td>${i === 0 ? `<b>${esc(v)}</b>` : ''}</td>
+        <td>${esc(f)}</td>
+        <td class="num">${esc(d.value)}</td>
+        <td>${d.source ? `<a href="${esc(d.source)}" target="_blank" rel="noopener">${esc(d.source_name || '출처')}</a>` : '—'}</td>
+        <td class="num">${fmtDate(d.date)}</td>
+      </tr>`;
+    });
+  });
+  html += '</tbody></table>';
+  $('geranBaseline').innerHTML = html;
+}
+
+function renderStats(stats) {
+  const daily = (stats && stats.daily) || [];
+  const monthly = (stats && stats.monthly) || [];
+  if (!daily.length) {
+    $('statsLatest').innerHTML = emptyState('아직 수집된 공격/요격 통계가 없습니다.');
+  } else {
+    const latest = daily[daily.length - 1];
+    $('statsLatest').innerHTML = `
+      <div class="stat-grid">
+        <div class="stat-box"><div class="num">${esc(latest.attacks_total ?? '—')}</div><div class="lbl">${fmtDate(latest.date)} 공격량</div></div>
+        <div class="stat-box"><div class="num">${esc(latest.intercepted ?? '—')}</div><div class="lbl">요격량</div></div>
+        <div class="stat-box"><div class="num">${latest.intercept_rate != null ? Math.round(latest.intercept_rate*100)+'%' : '—'}</div><div class="lbl">요격률</div></div>
+      </div>`;
+  }
+  if (!daily.length) {
+    $('statsDaily').innerHTML = emptyState('일별 데이터 없음');
+  } else {
+    let html = '<table class="spec"><thead><tr><th>날짜</th><th>공격량</th><th>요격량</th><th>요격률</th><th>주요 발사지역</th><th>주요 목표지역</th></tr></thead><tbody>';
+    daily.slice().reverse().slice(0, 30).forEach(d => {
+      html += `<tr>
+        <td class="num">${fmtDate(d.date)}</td>
+        <td class="num">${esc(d.attacks_total ?? '—')}</td>
+        <td class="num">${esc(d.intercepted ?? '—')}</td>
+        <td class="num">${d.intercept_rate != null ? Math.round(d.intercept_rate*100)+'%' : '—'}</td>
+        <td>${esc((d.launch_areas||[]).join(', ') || '—')}</td>
+        <td>${esc((d.target_areas||[]).join(', ') || '—')}</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    $('statsDaily').innerHTML = html;
+  }
+  if (!monthly.length) {
+    $('statsMonthly').innerHTML = emptyState('월별 집계 없음 (일별 데이터가 누적되면 자동 생성됩니다)');
+  } else {
+    let html = '<table class="spec"><thead><tr><th>월</th><th>총 공격</th><th>총 요격</th><th>요격률</th></tr></thead><tbody>';
+    monthly.slice().reverse().forEach(m => {
+      html += `<tr><td class="num">${esc(m.month)}</td><td class="num">${esc(m.attacks_total)}</td><td class="num">${esc(m.intercepted_total)}</td><td class="num">${m.intercept_rate != null ? Math.round(m.intercept_rate*100)+'%' : '—'}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    $('statsMonthly').innerHTML = html;
+  }
+}
+
+function renderTech(entries) {
+  if (!entries || !entries.length) {
+    $('techLog').innerHTML = emptyState('아직 감지된 C-UAS 기술 동향이 없습니다.<br>STING·BAGNET·YOLKA, 음향/RF/레이더/EO-IR/AI Vision, C4I·델타 체계 등을 추적합니다.');
+    return;
+  }
+  $('techLog').innerHTML = entries.slice().reverse().map(e => `
+    <div class="card change-item">
+      <div class="change-head">
+        <span class="badge-system">${esc(e.system)}</span>
+        <span class="change-tag tag-applied">${esc(e.event_type || '동향')}</span>
+        <span class="change-date">${fmtDate(e.date)}</span>
+      </div>
+      <div class="change-note">${esc(e.detail)}</div>
+      <div class="change-src">출처: ${e.source ? `<a href="${esc(e.source)}" target="_blank" rel="noopener">${esc(e.source_name || e.source)}</a>` : '—'}${e.significance ? ` · 의의: ${esc(e.significance)}` : ''}</div>
+    </div>
+  `).join('');
+}
+
+function renderPapers(entries) {
+  if (!entries || !entries.length) {
+    $('papersLog').innerHTML = emptyState('아직 수집된 신규 연구자료가 없습니다.<br>매주 C-UAS·AI Vision·자율요격·음향탐지 관련 논문을 추적합니다.');
+    return;
+  }
+  $('papersLog').innerHTML = entries.slice().reverse().map(e => `
+    <div class="card change-item">
+      <div class="change-head">
+        <span class="topic-tag">${esc(e.topic)}</span>
+        <span class="change-date">${fmtDate(e.date)}</span>
+      </div>
+      <div class="change-title"><a href="${esc(e.link)}" target="_blank" rel="noopener">${esc(e.title)}</a></div>
+      <div class="change-note">${esc(e.summary)}</div>
+      <div class="change-src">${esc(e.authors || '')}${e.venue ? ' · ' + esc(e.venue) : ''}${e.significance ? ' · 의의: ' + esc(e.significance) : ''}</div>
+    </div>
+  `).join('');
+}
+
+fetch('./data.json?t=' + Date.now())
+  .then(r => r.json())
+  .then(data => {
+    const meta = data.meta || {};
+    const lastRuns = [meta.last_daily_run, meta.last_weekly_run].filter(Boolean);
+    $('lastRun').innerHTML = `마지막 갱신: <b>${lastRuns.length ? lastRuns.sort().reverse()[0] : '아직 없음'}</b>`;
+
+    renderGeranLog((data.geran_drones || {}).log);
+    renderGeranBaseline((data.geran_drones || {}).baseline);
+    renderStats(data.attack_stats);
+    renderTech((data.cuas_tech || {}).log);
+    renderPapers((data.research_papers || {}).log);
+  })
+  .catch(() => {
+    ['geranLog','statsLatest','techLog','papersLog'].forEach(id => {
+      $(id).innerHTML = emptyState('데이터를 불러오지 못했습니다.');
+    });
+  });
+</script>
+</body>
+</html>
