@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>실시간 C-UAS 위협도 평가 및 의사결정 지원시스템</title>
+<style>
+  :root{
+    --bg:#0c1420; --panel:#111d2e; --panel2:#0f1929; --line:#223449; --line2:#2d4360;
+    --text:#d3dde9; --muted:#7f93aa; --dim:#4f637c; --cyan:#4cc9f0; --cyan-dim:#1f6f88;
+    --g-normal:#3b82f6; --g-notice:#22c55e; --g-caution:#eab308; --g-warning:#f97316; --g-critical:#ef4444;
+    font-size:13px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);
+    font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+    font-variant-numeric:tabular-nums;}
+  button{font:inherit;color:inherit;background:var(--panel2);border:1px solid var(--line2);border-radius:4px;padding:4px 9px;cursor:pointer}
+  button:hover{border-color:var(--cyan-dim)} button:focus-visible{outline:2px solid var(--cyan);outline-offset:1px}
+  button.primary{background:var(--cyan-dim);border-color:var(--cyan)} button:disabled{opacity:.4;cursor:not-allowed}
+  select,input[type=range],input[type=number]{font:inherit;color:inherit;background:var(--panel2);border:1px solid var(--line2);border-radius:4px;padding:3px 6px}
+  input[type=range]{padding:0;accent-color:var(--cyan)}
+  .app{display:grid;grid-template-rows:auto 1fr auto;height:100%;gap:6px;padding:6px}
+  /* ── 상단 바 ── */
+  .top{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:stretch}
+  .brand{padding:6px 12px;border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:center}
+  .brand h1{margin:0;font-size:15px;font-weight:700;letter-spacing:-.01em}
+  .brand small{color:var(--muted)}
+  .asti{display:flex;gap:14px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 12px}
+  .asti .big{font-size:26px;font-weight:800;line-height:1}
+  .asti .lbl{color:var(--muted);font-size:11px}
+  .asti .axis{display:flex;gap:10px;font-size:11.5px;color:var(--muted)} .asti .axis b{color:var(--text);font-weight:600}
+  .fresh{display:flex;flex-wrap:wrap;gap:4px;max-width:520px}
+  .chip{font-size:10.5px;padding:2px 6px;border-radius:3px;border:1px solid var(--line2);color:var(--muted);white-space:nowrap}
+  .chip.stale{color:#6b7a8c;border-style:dashed;text-decoration:line-through}
+  .chip.ok{border-color:#2b5a3d;color:#9dd5b1}
+  .ctrl{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+  .ctrl .time{font-size:16px;font-weight:700;min-width:64px;text-align:right}
+  .back-link{font-size:11px;color:var(--muted);text-decoration:none;border:1px solid var(--line2);border-radius:20px;padding:4px 10px;white-space:nowrap;align-self:flex-start;margin-bottom:4px}
+  .back-link:hover{border-color:var(--cyan-dim);color:var(--text)}
+  /* ── 본문 ── */
+  .main{display:grid;grid-template-columns:65fr 35fr;gap:6px;min-height:0}
+  .cop{position:relative;background:var(--panel2);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+  .cop canvas{width:100%;height:100%;display:block}
+  .cop .legend{position:absolute;left:10px;bottom:8px;font-size:10.5px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap;pointer-events:none}
+  .cop .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+  .cop .scn{position:absolute;left:10px;top:8px;font-size:11.5px;color:var(--muted);max-width:60%;pointer-events:none}
+  .cop .scn b{color:var(--text)}
+  .right{display:grid;grid-template-rows:minmax(0,1fr) auto;gap:6px;min-height:0}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;min-height:0}
+  .panel h2{margin:0;padding:7px 12px;font-size:12px;font-weight:600;color:var(--muted);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .panel h2 span{color:var(--dim);font-weight:400}
+  .queue{overflow:auto;padding:6px;display:flex;flex-direction:column;gap:5px}
+  .card{border:1px solid var(--line2);border-left:5px solid var(--dim);border-radius:4px;padding:6px 8px;background:var(--panel2);cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:2px 8px}
+  .card.sel{outline:1px solid var(--cyan);background:#12243a}
+  .card .id{font-weight:700;font-size:14px}
+  .card .grade{font-weight:700;font-size:12.5px;text-align:right}
+  .card .meta{color:var(--muted);font-size:11px;grid-column:1/-1}
+  .card .ttc{font-size:18px;font-weight:800;text-align:right}
+  .card .ttc small{font-size:10px;font-weight:400;color:var(--muted);display:block}
+  .card .opts{grid-column:1/-1;display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
+  .opt{font-size:10.5px;padding:1px 6px;border-radius:3px;border:1px solid var(--line2);color:var(--muted)}
+  .opt.available{border-color:#2b5a3d;color:#9dd5b1} .opt.expired{color:#6b7a8c;text-decoration:line-through}
+  .opt.blocked{color:#8b6a3a;border-color:#5a4423}
+  .conf{letter-spacing:1px;color:var(--cyan)} .conf s{text-decoration:none;color:var(--dim)}
+  .tent{opacity:.55} .tent .card{border-left-color:#3a4a5c}
+  .empty{color:var(--dim);padding:18px;text-align:center;font-size:12px}
+  /* ── HUD ── */
+  .hud{display:grid;grid-template-columns:168px 1fr;gap:8px;padding:8px 10px}
+  .hud .gauge{grid-row:1/3}
+  .hud svg{display:block}
+  .factors{font-size:11.5px}
+  .factors .row{display:flex;justify-content:space-between;gap:8px;padding:2px 0;border-bottom:1px dashed var(--line)}
+  .factors .row span:last-child{color:var(--muted)}
+  .badges{display:flex;gap:4px;flex-wrap:wrap;margin:4px 0}
+  .badge{font-size:10.5px;padding:2px 6px;border-radius:3px;background:#3a1c1c;border:1px solid #6b2a2a;color:#f3b0b0}
+  .badge.ov{background:#3a2e12;border-color:#6b5320;color:#f0d08a}
+  .actions{grid-column:1/-1;display:flex;gap:5px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:7px}
+  .actions .warnnote{width:100%;font-size:11px;color:#f0d08a}
+  /* ── 하단 ── */
+  .bottom{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:6px;height:168px}
+  .bottom .panel{overflow:hidden}
+  .sit{padding:6px 10px;font-size:11.5px;display:grid;grid-template-columns:1fr 1fr;gap:3px 12px;overflow:auto}
+  .sit label{display:flex;justify-content:space-between;align-items:center;gap:6px;color:var(--muted)}
+  .sit label b{color:var(--text);font-weight:500;min-width:36px;text-align:right}
+  .sit input[type=range]{width:90px}
+  .sit .ind{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px}
+  .sit .ind button{font-size:10.5px;padding:2px 7px} .sit .ind button.on{background:#2a3d1f;border-color:#4d7a35;color:#c6e8b0}
+  .log{overflow:auto;padding:4px 10px;font-size:11px;font-family:ui-monospace,"D2Coding","NanumGothicCoding",monospace;color:var(--muted)}
+  .log div b{color:var(--text);font-weight:500}
+  .cfg{padding:6px 10px;display:flex;flex-direction:column;gap:5px;min-height:0}
+  .cfg textarea{flex:1;font:11px ui-monospace,monospace;background:var(--panel2);color:var(--text);border:1px solid var(--line2);border-radius:4px;padding:6px;resize:none;min-height:0}
+  .cfg .row{display:flex;gap:6px;align-items:center;font-size:11px;color:var(--muted)}
+  @media (max-width:1100px){ .main{grid-template-columns:1fr} .right{grid-template-rows:auto auto} .bottom{height:auto;grid-template-columns:1fr} .fresh{display:none} }
+  @media (prefers-reduced-motion:reduce){ *{transition:none!important;animation:none!important} }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- ── 상단 ── -->
+  <div class="top">
+    <div class="brand"><a class="back-link" href="../../index.html">← DcD Platform</a><h1>실시간 C-UAS 위협도 평가 및 의사결정 지원시스템</h1><small>프로토타입 v3 · 시뮬레이션 피드 · 자동 집행 없음</small></div>
+    <div class="asti">
+      <div style="min-width:88px"><div class="lbl">상황 위협지수 ASTI</div><div class="big" id="astiScore">–</div></div>
+      <div style="min-width:78px"><div class="lbl">등급</div><div id="astiGrade" style="font-weight:700;font-size:15px">–</div><div class="lbl" id="astiShift"></div></div>
+      <div class="axis"><div>P <b id="aP">–</b></div><div>C<sub>e</sub> <b id="aCe">–</b></div><div>V<sub>env</sub> <b id="aVe">–</b></div><div>비행가능 <b id="aFly">–</b></div><div>탐지저하 <b id="aDet">–</b></div></div>
+      <div class="fresh" id="fresh"></div>
+    </div>
+    <div class="ctrl">
+      <select id="scenario"></select>
+      <button id="btnReset" title="시나리오 처음부터">재시작</button>
+      <button id="btnPlay" class="primary">일시정지</button>
+      <select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select>
+      <input type="range" id="replay" min="0" max="0" value="0" style="width:150px" title="재생 위치">
+      <div class="time" id="clock">0.0s</div>
+    </div>
+  </div>
+
+  <!-- ── 본문 ── -->
+  <div class="main">
+    <div class="cop">
+      <canvas id="cop"></canvas>
+      <div class="scn" id="scnDesc"></div>
+      <div class="legend">
+        <span><i style="background:#2a3a52"></i>대응 음영구역</span>
+        <span><i style="background:#4a3a2a"></i>전파차단 불가</span>
+        <span><i style="background:transparent;border:1px solid var(--cyan)"></i>재머 유효사거리</span>
+        <span><i style="background:transparent;border:1px dashed #9dd5b1"></i>옵션 만료 지점</span>
+        <span>◇ 대응팀 &nbsp; ▣ 보호대상</span>
+      </div>
+    </div>
+    <div class="right">
+      <div class="panel">
+        <h2>위협 우선순위 큐 <span id="qCount"></span></h2>
+        <div class="queue" id="queue"></div>
+      </div>
+      <div class="panel">
+        <h2>위협 진단 <span id="hudId"></span></h2>
+        <div class="hud" id="hud"><div class="empty" style="grid-column:1/-1">트랙을 선택하면 지표·요인·대응 옵션이 표시됩니다.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 하단 ── -->
+  <div class="bottom">
+    <div class="panel"><h2>상황지수 입력 <span>수동 입력 · 어댑터 대체</span></h2><div class="sit" id="sit"></div></div>
+    <div class="panel"><h2>감사 로그 <span id="logCount"></span></h2><div class="log" id="log"></div></div>
+    <div class="panel"><h2>가중치 · 임계값 설정 <span>부록 B</span></h2>
+      <div class="cfg"><textarea id="cfgText" spellcheck="false"></textarea>
+        <div class="row"><button id="btnApply">적용</button><button id="btnCfgReset">기본값</button><span id="cfgMsg"></span></div></div>
+    </div>
+  </div>
+</div>
+
+<script src="engine.js"></script>
+<script src="sim.js"></script>
+<script>
+(function(){
+  const E = window.CUAS, S = window.CUAS_SIM, Z = S.ZONES;
+  const $ = (id) => document.getElementById(id);
+  const GC = E.GRADE_COLOR, GK = E.GRADE_KO;
+  let engine = new E.ThreatEngine();
+  let sim, situation, frame = null, result = null, selected = null, playing = true, replayIdx = -1, timer = null;
+  const OPERATOR = "OP-1";
+
+  /* ---------- 초기화 ---------- */
+  const scSel = $("scenario");
+  for (const k in S.SCENARIOS) { const o = document.createElement("option"); o.value = k; o.textContent = S.SCENARIOS[k].name; scSel.appendChild(o); }
+  scSel.value = "composite";
+  function start(key) {
+    sim = new S.Simulator(key); engine = new E.ThreatEngine(JSON.parse($("cfgText").value || "{}"));
+    situation = S.defaultSituation(Date.now()); selected = null; replayIdx = -1; playing = true; $("btnPlay").textContent = "일시정지";
+    $("scnDesc").innerHTML = "<b>" + S.SCENARIOS[key].name + "</b><br>" + S.SCENARIOS[key].desc;
+    renderSituation(); schedule();
+  }
+  $("cfgText").value = JSON.stringify(pickCfg(E.DEFAULT_CONFIG), null, 2);
+  function pickCfg(c) { const o = {}; for (const k of ["x_min","ttti_weights","asti_weights","urgency","mod_I","grades","asti_shift","hysteresis_s","gates","decision_time_s","tentative_min_detections","permissions","asset"]) o[k] = c[k]; return o; }
+
+  /* ---------- 루프 ---------- */
+  function schedule() { clearTimeout(timer); timer = setTimeout(loop, 500 / parseFloat($("speed").value)); }
+  function loop() {
+    if (playing && replayIdx < 0) { frame = sim.step(); evaluate(); $("replay").max = sim.frames.length - 1; $("replay").value = sim.frames.length - 1; }
+    schedule();
+  }
+  function evaluate() {
+    if (!frame) return;
+    result = engine.evaluateFrame(frame.tracks, situation, frame.ts);
+    if (selected && !result.results.some((r) => r.track_id === selected)) selected = null;
+    if (!selected && result.queue.length) selected = result.queue[0].track_id;
+    $("clock").textContent = frame.t.toFixed(1) + "s";
+    renderASTI(); renderQueue(); renderHUD(); renderLog(); draw();
+  }
+  $("btnPlay").onclick = () => { playing = !playing; if (playing) replayIdx = -1; $("btnPlay").textContent = playing ? "일시정지" : "재생"; };
+  $("btnReset").onclick = () => start(scSel.value);
+  scSel.onchange = () => start(scSel.value);
+  $("speed").onchange = schedule;
+  $("replay").oninput = (e) => { replayIdx = +e.target.value; playing = false; $("btnPlay").textContent = "재생"; frame = sim.frames[replayIdx]; engine.state.clear(); evaluate(); };
+  $("btnApply").onclick = () => { try { engine.setConfig(JSON.parse($("cfgText").value)); $("cfgMsg").textContent = "적용됨 (히스테리시스 상태 유지)"; evaluate(); } catch (e) { $("cfgMsg").textContent = "JSON 오류: " + e.message; } };
+  $("btnCfgReset").onclick = () => { $("cfgText").value = JSON.stringify(pickCfg(E.DEFAULT_CONFIG), null, 2); $("cfgMsg").textContent = ""; };
+
+  /* ---------- 상황지수 패널 ---------- */
+  function renderSituation() {
+    const s = situation, el = $("sit"); el.innerHTML = "";
+    const rng = (label, get, set, min, max, step, fmt) => {
+      const l = document.createElement("label"); l.innerHTML = `<span>${label}</span>`;
+      const i = document.createElement("input"); i.type = "range"; i.min = min; i.max = max; i.step = step; i.value = get();
+      const b = document.createElement("b"); b.textContent = fmt(get());
+      i.oninput = () => { set(+i.value); b.textContent = fmt(+i.value); evaluate(); };
+      l.append(i, b); el.appendChild(l);
+    };
+    rng("행사 중요도", () => s.event.importance, (v) => s.event.importance = v, 0, 1, 0.05, (v) => v.toFixed(2));
+    rng("군중 밀도", () => s.event.crowd, (v) => s.event.crowd = v, 0, 1, 0.05, (v) => v.toFixed(2));
+    rng("풍속", () => s.weather.wind_mps, (v) => s.weather.wind_mps = v, 0, 20, 1, (v) => v + " m/s");
+    rng("강우", () => s.weather.rain_mmh, (v) => s.weather.rain_mmh = v, 0, 20, 1, (v) => v + " mm/h");
+    rng("시정", () => s.weather.visibility_km, (v) => s.weather.visibility_km = v, 0, 10, 0.5, (v) => v + " km");
+    rng("대응팀 커버리지", () => s.team_coverage, (v) => s.team_coverage = v, 0, 1, 0.05, (v) => v.toFixed(2));
+    const ind = document.createElement("div"); ind.className = "ind";
+    for (const t in S.INDICATOR_LABEL) {
+      const b = document.createElement("button"); b.textContent = S.INDICATOR_LABEL[t];
+      const on = () => s.indicators.some((x) => x.type === t); b.className = on() ? "on" : "";
+      b.onclick = () => { if (on()) s.indicators = s.indicators.filter((x) => x.type !== t); else s.indicators.push({ type: t, ts: new Date(Date.now() - 3.6e6).toISOString(), weight: 0.7 }); b.className = on() ? "on" : ""; evaluate(); };
+      ind.appendChild(b);
+    }
+    const nt = document.createElement("button"); nt.textContent = "NOTAM 발효"; nt.className = s.notam_active ? "on" : ""; nt.onclick = () => { s.notam_active = !s.notam_active; nt.className = s.notam_active ? "on" : ""; evaluate(); }; ind.appendChild(nt);
+    el.appendChild(ind);
+  }
+  function renderASTI() {
+    const a = result.asti;
+    $("astiScore").textContent = a.score; $("astiScore").style.color = GC[a.grade];
+    $("astiGrade").textContent = GK[a.grade]; $("astiGrade").style.color = GC[a.grade];
+    const sh = engine.cfg.asti_shift[a.grade] || 0; $("astiShift").textContent = sh ? "트랙 임계값 " + sh + "점" : "임계값 이동 없음";
+    $("aP").textContent = a.P.toFixed(2); $("aCe").textContent = a.Ce.toFixed(2); $("aVe").textContent = a.Venv.toFixed(2);
+    $("aFly").textContent = a.flight_feasibility.toFixed(2); $("aDet").textContent = a.detection_degradation.toFixed(2);
+    const f = $("fresh"); f.innerHTML = "";
+    for (const k in situation.freshness) { const v = situation.freshness[k]; const age = v.age_min + frame.t / 60; const stale = age > v.valid_min;
+      const c = document.createElement("span"); c.className = "chip " + (stale ? "stale" : "ok"); c.textContent = k + " " + (age < 60 ? Math.round(age) + "분" : (age / 60).toFixed(1) + "h") + (stale ? " 만료" : ""); c.title = stale ? "유효기간 초과: 계산에서 제외/직전값 유지" : "유효"; f.appendChild(c); }
+  }
+
+  /* ---------- 큐 ---------- */
+  function fmtT(t) { if (!isFinite(t)) return "–"; return (t < 0 ? "" : "") + Math.round(t) + "s"; }
+  function confDots(n) { return `<span class="conf">${"●".repeat(n)}<s>${"●".repeat(3 - n)}</s></span>`; }
+  function optChips(r) { return r.options.map((o) => `<span class="opt ${o.status}" title="${o.reason || ("필요 " + Math.round(o.need_s) + "s")}">${o.label} ${o.status === "available" ? "○ " + fmtT(o.t_decision_s) : o.status === "expired" ? "×" : "권한외"}</span>`).join(""); }
+  function renderQueue() {
+    const q = $("queue"); q.innerHTML = ""; $("qCount").textContent = result.queue.length + "개 확정 · " + result.tentative.length + "개 후보";
+    if (!result.queue.length) q.innerHTML = '<div class="empty">확정 트랙 없음 — 자동 감시 중</div>';
+    for (const r of result.queue) q.appendChild(card(r, false));
+    if (result.tentative.length) { const w = document.createElement("div"); w.className = "tent"; for (const r of result.tentative) w.appendChild(card(r, true)); q.appendChild(w); }
+  }
+  function card(r, tent) {
+    const t = r.track, g = t.geo, d = document.createElement("div");
+    d.className = "card" + (r.track_id === selected ? " sel" : ""); d.style.borderLeftColor = tent ? "" : r.color; d.onclick = () => { selected = r.track_id; renderQueue(); renderHUD(); draw(); };
+    const name = r.is_swarm ? `군집 ${r.swarm_id} <small style="color:var(--muted)">${r.members.length}기 · 대표 ${r.track_id}</small>` : r.track_id;
+    d.innerHTML = `<div class="id">${name}</div><div class="grade" style="color:${r.color}">${tent ? "후보" : r.grade_ko} ${r.score}${r.overridden ? " ✎" : ""}</div>
+      <div class="meta">${t.est_type} · ${g.dist_to_asset_m}m · ${g.bearing_deg}° · ${t.pos.alt_m}m · ${t.vel.speed_mps}m/s ${confDots(r.confidence)} ${t.sources.join("+")}${r.gates.length ? " · <span style='color:#f3b0b0'>GATE " + r.gates[0].name + "</span>" : ""}</div>
+      ${tent ? "" : `<div class="ttc" style="grid-column:2;grid-row:1/3">${fmtT(g.ttc_boundary_s)}<small>경계선 도달</small></div><div class="opts">${optChips(r)}</div>`}`;
+    return d;
+  }
+
+  /* ---------- HUD ---------- */
+  function renderHUD() {
+    const h = $("hud"); const r = result.results.find((x) => x.track_id === selected);
+    $("hudId").textContent = r ? r.track_id : "";
+    if (!r) { h.innerHTML = '<div class="empty" style="grid-column:1/-1">트랙을 선택하면 지표·요인·대응 옵션이 표시됩니다.</div>'; return; }
+    const g = r.track.geo;
+    h.innerHTML = `<div class="gauge">${gaugeSVG(r)}${radarSVG(r)}</div>
+      <div class="factors">
+        <div class="badges">${r.gates.map((x) => `<span class="badge">GATE ${x.name}</span>`).join("")}${r.overridden ? `<span class="badge ov">수동 ${GK[r.overridden.grade]} · ${r.overridden.reason}</span>` : ""}${r.kinetic_gate_ok ? "" : '<span class="badge ov">단일 센서 · 무력화 집행 확인 필요</span>'}</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:3px">점수 등급 ${GK[r.score_grade]} · 게이트 등급 ${GK[r.gate_grade]} · ASTI 보정 ${r.asti_shift}점 · 신뢰도 ${confDots(r.confidence)}</div>
+        ${r.top_factors.map((f, i) => `<div class="row"><span>${i + 1}. ${f.name} <small style="color:var(--dim)">[${f.axis}]</small></span><span>+${(f.w * 100).toFixed(0)}</span></div>`).join("")}
+        <div class="row"><span>CPA ${g.cpa_m}m · 접근속도 ${g.closing_mps}m/s · 고도변화 ${r.track.vel.climb_mps}m/s</span><span></span></div>
+      </div>
+      <div class="actions">
+        ${r.options.filter((o) => o.kinetic).map((o) => `<button ${o.status !== "available" ? "disabled" : ""} data-act="${o.id}">${o.label} 집행 확인 ${o.status === "available" ? fmtT(o.t_decision_s) : o.status === "expired" ? "만료" : o.reason}</button>`).join("")}
+        <button data-act="shelter">대피 지시 확인</button>
+        <button data-ov="up">등급 상향</button><button data-ov="down">등급 하향</button><button data-ov="wl">화이트리스트 5분</button>
+        ${r.kinetic_gate_ok ? "" : '<div class="warnnote">단일 센서 트랙: 집행 확인 시 사유가 감사 로그에 기록됩니다.</div>'}
+      </div>`;
+    h.querySelectorAll("[data-act]").forEach((b) => b.onclick = () => { const reason = r.kinetic_gate_ok ? null : prompt("단일 센서 트랙 집행 사유:", "EO/IR 육안 확인"); if (reason === null && !r.kinetic_gate_ok) return; engine.confirmAction(r.track_id, b.dataset.act + (reason ? " (" + reason + ")" : ""), OPERATOR, frame.ts); evaluate(); });
+    h.querySelectorAll("[data-ov]").forEach((b) => b.onclick = () => {
+      const gi = E.GRADES.indexOf(r.grade); let tg = r.grade, reason = "";
+      if (b.dataset.ov === "up") tg = E.GRADES[Math.min(4, gi + 1)]; else if (b.dataset.ov === "down") tg = E.GRADES[Math.max(0, gi - 1)]; else tg = "normal";
+      reason = prompt("오버라이드 사유:", b.dataset.ov === "wl" ? "우호 드론(시설관리)" : "현장 확인") ; if (reason === null) return;
+      engine.override(r.track_id, tg, reason, OPERATOR, frame.ts, 300); evaluate();
+    });
+  }
+  function gaugeSVG(r) {
+    const a = -Math.PI, sc = r.score / 100, ang = a + Math.PI * sc, cx = 70, cy = 66, R = 56;
+    const px = cx + R * Math.cos(ang), py = cy + R * Math.sin(ang);
+    const arc = (t0, t1, col) => { const x0 = cx + R * Math.cos(t0), y0 = cy + R * Math.sin(t0), x1 = cx + R * Math.cos(t1), y1 = cy + R * Math.sin(t1); return `<path d="M${x0} ${y0} A${R} ${R} 0 0 1 ${x1} ${y1}" stroke="${col}" stroke-width="9" fill="none" opacity=".35"/>`; };
+    const th = engine.cfg.grades; const segs = [[0, th.notice, GC.normal], [th.notice, th.caution, GC.notice], [th.caution, th.warning, GC.caution], [th.warning, th.critical, GC.warning], [th.critical, 100, GC.critical]];
+    return `<svg viewBox="0 0 140 78" width="140" height="78">
+      ${segs.map(([s0, s1, c]) => arc(a + Math.PI * s0 / 100, a + Math.PI * s1 / 100, c)).join("")}
+      <path d="M${cx - R} ${cy} A${R} ${R} 0 0 1 ${px} ${py}" stroke="${r.color}" stroke-width="9" fill="none"/>
+      <circle cx="${cx}" cy="${cy}" r="${R + 8}" fill="none" stroke="${GC[result.asti.grade]}" stroke-width="2" stroke-dasharray="3 3" opacity=".6" clip-path="inset(0 0 12px 0)"/>
+      <text x="${cx}" y="${cy - 6}" text-anchor="middle" font-size="24" font-weight="800" fill="${r.color}">${r.score}</text>
+      <text x="${cx}" y="${cy + 10}" text-anchor="middle" font-size="12" font-weight="700" fill="${r.color}">${r.grade_ko}</text></svg>`;
+  }
+  function radarSVG(r) {
+    const ax = ["I", "C", "U", "V"], ko = { I: "의도", C: "피해", U: "긴급", V: "취약" }, cx = 100, cy = 66, R = 40;
+    const pt = (i, v) => { const t = -Math.PI / 2 + i * Math.PI / 2; return [cx + R * v * Math.cos(t), cy + R * v * Math.sin(t)]; };
+    const poly = ax.map((k, i) => pt(i, r.axes[k]).join(",")).join(" ");
+    const grid = [0.25, 0.5, 0.75, 1].map((v) => `<polygon points="${ax.map((k, i) => pt(i, v).join(",")).join(" ")}" fill="none" stroke="#2d4360" stroke-width="${v === 1 ? 1 : .5}"/>`).join("");
+    const anchor = ["middle", "start", "middle", "end"], dy = [-4, 4, 12, 4];
+    const labels = ax.map((k, i) => { const [x, y] = pt(i, 1.12); return `<text x="${x}" y="${y + dy[i]}" text-anchor="${anchor[i]}" font-size="10" fill="#7f93aa">${k} ${ko[k]} <tspan fill="#d3dde9" font-weight="600">${r.axes[k].toFixed(2)}</tspan></text>`; }).join("");
+    return `<svg viewBox="0 0 200 132" width="168" height="111" style="margin-top:6px">${grid}<polygon points="${poly}" fill="${r.color}" fill-opacity=".3" stroke="${r.color}" stroke-width="1.5"/>${labels}</svg>`;
+  }
+  /* ---------- 감사 로그 ---------- */
+  function renderLog() {
+    const el = $("log"); const L = engine.log.slice(-40).reverse(); $("logCount").textContent = engine.log.length + "건";
+    el.innerHTML = L.map((x) => { const t = ((x.ts - sim.startEpoch) / 1000).toFixed(1) + "s";
+      if (x.type === "grade") return `<div>${t} <b>${x.track_id}</b> ${GK[x.from]}→<span style="color:${GC[x.to]}">${GK[x.to]}</span> (${x.reason === "gate" ? "게이트" : x.reason === "release" ? "히스테리시스 해제" : "점수"})</div>`;
+      if (x.type === "override") return `<div>${t} <b>${x.track_id}</b> 오버라이드 → ${GK[x.to]} · ${x.reason} · ${x.operator}</div>`;
+      return `<div>${t} <b>${x.track_id}</b> 집행 확인: ${x.option} · ${x.operator}</div>`; }).join("") || '<div style="color:var(--dim)">기록 없음</div>';
+  }
+
+  /* ---------- COP 캔버스 ---------- */
+  const cv = $("cop"), ctx = cv.getContext("2d");
+  let W = 0, H = 0, SCALE = 1;
+  function resize() { const r = cv.parentElement.getBoundingClientRect(); const dpr = window.devicePixelRatio || 1; W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); SCALE = Math.min(W, H) / 2 / 3600; draw(); }
+  window.addEventListener("resize", resize);
+  const X = (x) => W / 2 + x * SCALE, Y = (y) => H / 2 - y * SCALE;
+  function sector(z, fill) {
+    ctx.beginPath(); const a0 = (z.from_deg - 90) * Math.PI / 180, a1 = ((z.to_deg < z.from_deg ? z.to_deg + 360 : z.to_deg) - 90) * Math.PI / 180;
+    ctx.arc(X(0), Y(0), z.r_max * SCALE, a0, a1); ctx.arc(X(0), Y(0), z.r_min * SCALE, a1, a0, true); ctx.closePath(); ctx.fillStyle = fill; ctx.fill();
+  }
+  function draw() {
+    if (!W) return; ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#0f1929"; ctx.fillRect(0, 0, W, H);
+    // 그리드
+    ctx.strokeStyle = "#182638"; ctx.lineWidth = 1;
+    for (let m = -3000; m <= 3000; m += 500) { ctx.beginPath(); ctx.moveTo(X(m), 0); ctx.lineTo(X(m), H); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, Y(m)); ctx.lineTo(W, Y(m)); ctx.stroke(); }
+    for (const z of Z.dead_zones) sector(z, "rgba(80,110,150,.22)");
+    for (const z of Z.no_jam_zones) sector(z, "rgba(150,110,60,.2)");
+    // 거리 링
+    const rings = [[Z.boundary_m, "#ef4444", "경계선 300m"], [Z.r1_m, "#f97316", "R1 1km"], [2000, "#2d4360", "2km"], [3000, "#2d4360", "3km"]];
+    for (const [r, c, l] of rings) { ctx.beginPath(); ctx.arc(X(0), Y(0), r * SCALE, 0, Math.PI * 2); ctx.strokeStyle = c; ctx.setLineDash(r <= 1000 ? [] : [4, 6]); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = c; ctx.font = "10px sans-serif"; ctx.fillText(l, X(0) + 4, Y(r) - 3); }
+    // 재머 사거리, 대응팀, 모터케이드
+    ctx.beginPath(); ctx.arc(X(Z.jammer.x), Y(Z.jammer.y), Z.jammer.range_m * SCALE, 0, Math.PI * 2); ctx.strokeStyle = "rgba(76,201,240,.45)"; ctx.setLineDash([2, 4]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = "#4cc9f0"; ctx.fillRect(X(Z.jammer.x) - 4, Y(Z.jammer.y) - 4, 8, 8); ctx.fillText("재머", X(Z.jammer.x) + 7, Y(Z.jammer.y) + 4);
+    ctx.save(); ctx.translate(X(Z.team.x), Y(Z.team.y)); ctx.rotate(Math.PI / 4); ctx.strokeStyle = "#9dd5b1"; ctx.lineWidth = 1.5; ctx.strokeRect(-5, -5, 10, 10); ctx.restore(); ctx.fillStyle = "#9dd5b1"; ctx.fillText("대응팀", X(Z.team.x) + 9, Y(Z.team.y) + 4);
+    ctx.beginPath(); ctx.moveTo(X(Z.motorcade[0].x), Y(Z.motorcade[0].y)); ctx.lineTo(X(0), Y(0)); ctx.strokeStyle = "rgba(240,208,138,.5)"; ctx.setLineDash([8, 6]); ctx.lineWidth = 2; ctx.stroke(); ctx.setLineDash([]); ctx.lineWidth = 1;
+    ctx.fillStyle = "#f0d08a"; ctx.fillText("모터케이드 동선", X(Z.motorcade[0].x) + 6, Y(Z.motorcade[0].y) - 6);
+    // 보호대상
+    ctx.fillStyle = "#ffffff"; ctx.fillRect(X(0) - 6, Y(0) - 6, 12, 12); ctx.fillStyle = "#0c1420"; ctx.fillRect(X(0) - 3, Y(0) - 3, 6, 6);
+    if (!result) return;
+    // 군집 외곽선
+    const groups = {}; for (const r of result.results) if (r.track.swarm_id) (groups[r.track.swarm_id] = groups[r.track.swarm_id] || []).push(r);
+    for (const sid in groups) { const pts = groups[sid].map((r) => [X(r.track.pos.x), Y(r.track.pos.y)]); const cx = pts.reduce((s, p) => s + p[0], 0) / pts.length, cy = pts.reduce((s, p) => s + p[1], 0) / pts.length; const rad = Math.max(...pts.map((p) => Math.hypot(p[0] - cx, p[1] - cy))) + 14;
+      ctx.beginPath(); ctx.arc(cx, cy, rad, 0, Math.PI * 2); ctx.strokeStyle = groups[sid][0].color; ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = groups[sid][0].color; ctx.fillText("군집 " + sid + " ×" + pts.length, cx + rad + 3, cy); }
+    // 트랙
+    for (const r of result.results) {
+      const t = r.track, p = t.pos, g = t.geo, sel = r.track_id === selected, col = r.tentative ? "#4f637c" : r.color;
+      // 항적
+      if (t.history.length > 1) { ctx.beginPath(); t.history.forEach((h, i) => i ? ctx.lineTo(X(h[0]), Y(h[1])) : ctx.moveTo(X(h[0]), Y(h[1]))); ctx.strokeStyle = col; ctx.globalAlpha = .35; ctx.stroke(); ctx.globalAlpha = 1; }
+      const hd = t.vel.heading_deg * Math.PI / 180, vx = Math.sin(hd), vy = Math.cos(hd);
+      // 예상 도달 원추(60초) + 속도 벡터(10초)
+      if (!r.tentative) { const L = t.vel.speed_mps * 60; ctx.beginPath(); ctx.moveTo(X(p.x), Y(p.y));
+        for (const s of [-10, 10]) { const a = hd + s * Math.PI / 180; ctx.lineTo(X(p.x + Math.sin(a) * L), Y(p.y + Math.cos(a) * L)); } ctx.closePath(); ctx.fillStyle = col; ctx.globalAlpha = sel ? .18 : .08; ctx.fill(); ctx.globalAlpha = 1; }
+      ctx.beginPath(); ctx.moveTo(X(p.x), Y(p.y)); ctx.lineTo(X(p.x + vx * t.vel.speed_mps * 10), Y(p.y + vy * t.vel.speed_mps * 10)); ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.stroke(); ctx.lineWidth = 1;
+      // 옵션 만료 지점 (경계선에서 closing × need 만큼 바깥 지점, 선택 트랙만)
+      if (sel && g.closing_mps > 0.5 && g.heading_to_asset) {
+        for (const o of r.options) if (o.kinetic && o.status !== "blocked") { const dist = Z.boundary_m + g.closing_mps * o.need_s; if (dist > g.dist_to_asset_m) continue; const ux = -p.x / g.dist_to_asset_m, uy = -p.y / g.dist_to_asset_m; const mx = p.x + ux * (g.dist_to_asset_m - dist), my = p.y + uy * (g.dist_to_asset_m - dist);
+          ctx.beginPath(); ctx.arc(X(mx), Y(my), 4, 0, Math.PI * 2); ctx.strokeStyle = "#9dd5b1"; ctx.setLineDash([2, 2]); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = "#9dd5b1"; ctx.fillText(o.label, X(mx) + 6, Y(my) - 4); }
+      }
+      // 심볼
+      ctx.beginPath(); ctx.arc(X(p.x), Y(p.y), sel ? 7 : 5, 0, Math.PI * 2); ctx.fillStyle = col; ctx.fill();
+      if (sel) { ctx.beginPath(); ctx.arc(X(p.x), Y(p.y), 12, 0, Math.PI * 2); ctx.strokeStyle = "#fff"; ctx.stroke(); }
+      if (t.whitelisted) { ctx.beginPath(); ctx.arc(X(p.x), Y(p.y), 9, 0, Math.PI * 2); ctx.strokeStyle = "#9dd5b1"; ctx.stroke(); }
+      ctx.fillStyle = "#d3dde9"; ctx.font = (sel ? "bold " : "") + "11px sans-serif";
+      ctx.fillText(t.track_id + (r.tentative ? " (후보)" : " " + r.grade_ko + " " + r.score) + (g.ttc_boundary_s != null && !r.tentative ? " · " + Math.round(g.ttc_boundary_s) + "s" : ""), X(p.x) + 10, Y(p.y) + 4);
+    }
+  }
+  cv.addEventListener("click", (e) => { if (!result) return; const rect = cv.getBoundingClientRect(); const mx = e.clientX - rect.left, my = e.clientY - rect.top; let best = null, bd = 18;
+    for (const r of result.results) { const d = Math.hypot(X(r.track.pos.x) - mx, Y(r.track.pos.y) - my); if (d < bd) { bd = d; best = r; } }
+    if (best) { selected = best.track_id; renderQueue(); renderHUD(); draw(); } });
+  document.addEventListener("keydown", (e) => { if (e.code === "Space" && e.target.tagName !== "TEXTAREA" && e.target.tagName !== "INPUT") { e.preventDefault(); $("btnPlay").click(); } });
+
+  resize(); start(scSel.value);
+})();
+</script>
+</body>
+</html>
