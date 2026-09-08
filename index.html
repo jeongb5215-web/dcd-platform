@@ -709,6 +709,7 @@
     <nav class="topbar">
       <button class="top-logo" onclick="enterApp()">Drone <span class="sh-amp">&amp;</span> <span class="sh-cd">C-drone</span></button><div class="top-divider"></div>
       <button class="nav-tab" onclick="window.open('cuas-research/index.html','_blank')"><span>C-UAS 연구 자동화 시스템</span></button>
+      <button class="nav-tab" onclick="window.open('atlas/index.html','_blank')"><span>학습 도감</span></button>
       <button class="nav-tab active" onclick="switchPanel('drone',this)"><span>DRONE</span></button>
       <button class="nav-tab" onclick="switchPanel('cdrone',this)"><span>C-DRONE</span></button>
       <button class="nav-tab" onclick="switchPanel('ew',this)"><span>EW</span></button>
@@ -986,6 +987,14 @@
     ];
 
     let labItems=[
+      {
+        id: 10015,
+        title: '세계 드론·안티드론 학습 도감 (Global Drone & C-UAS Learning Atlas)',
+        desc: '우크라이나·러시아·유럽·대한민국의 드론 40종과 안티드론 장비 16종을 국가·임무·형상·크기·추진, 탐지센서·식별·대응수단으로 검색하고 2~5종을 비교하는 공개출처 기반 도감. 모든 핵심 수치에 개별 출처(6단계 티어)와 신뢰도 등급(A~E)이 붙고, 출처가 상충하면 하나로 확정하지 않고 각주로 병기한다. 탐지거리와 무력화거리, 항속거리와 작전반경, 탄두중량과 탑재중량을 구분해 표기. 드론을 선택하면 위협 특성에 맞는 탐지·식별·소프트킬·하드킬 수단을 다층방어 9단계에 배치해 보여주는 위협-대응 매칭, 정보 검증 대기 목록, 이미지 등록(출처·라이선스 필수), 퀴즈·학습메모, 발표 모드 포함.',
+        url: 'https://jeongb5215-web.github.io/dcd-platform/atlas/index.html',
+        thumb: 'https://jeongb5215-web.github.io/dcd-platform/atlas/atlas-thumb.svg',
+        date: '2026-09-08'
+      },
       {
         id: 10014,
         title: '실시간 C-UAS 위협도 평가 및 의사결정 지원시스템',

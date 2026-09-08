@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" width="320" height="180">
+  <rect width="320" height="180" fill="#0e1520"/>
+  <g stroke="#1c2b3d" stroke-width="1">
+    <path d="M0 45h320M0 90h320M0 135h320M80 0v180M160 0v180M240 0v180"/>
+  </g>
+  <g fill="none" stroke="#4fa3ff" stroke-width="1.6" stroke-linejoin="round">
+    <path d="M62 52 L86 92 L62 83 L38 92 Z"/><path d="M62 52 v31"/>
+  </g>
+  <g fill="none" stroke="#ff5c5c" stroke-width="1.6" stroke-linejoin="round">
+    <path d="M160 50 v40 M138 70 h44 M149 92 h22"/>
+  </g>
+  <g fill="none" stroke="#38e69b" stroke-width="1.6" stroke-linejoin="round">
+    <path d="M240 96 h36 M258 96 v-12 M248 84 h20"/>
+    <path d="M244 76 q14-20 28 0" /><path d="M250 72 q8-11 16 0"/>
+  </g>
+  <text x="24" y="140" fill="#f6f9ff" font-family="Georgia,serif" font-size="19" font-weight="700">세계 드론·안티드론 학습 도감</text>
+  <text x="24" y="160" fill="#7d9abb" font-family="monospace" font-size="10.5" letter-spacing="1.4">GLOBAL DRONE &amp; C-UAS LEARNING ATLAS · 56 SYSTEMS</text>
+  <rect x="0" y="176" width="320" height="4" fill="#4fa3ff"/>
+</svg>
