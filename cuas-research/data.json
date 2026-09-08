@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-07T22:09:07Z",
+    "last_daily_run": "2026-09-08T22:04:49Z",
     "last_weekly_run": "2026-09-06T22:05:50Z",
     "schema_version": 1
   },
@@ -103,6 +103,19 @@
         "intercept_rate": 0.92,
         "sources": ["https://english.nv.ua/nation/russia-launches-record-810-drones-and-decoys-in-massive-attack-on-ukraine-50543009.html", "https://abcnews.com/International/russian-drone-missile-attacks-ukraine-set-new-record/story?id=126068632", "https://www.yahoo.com/news/articles/drone-record-russia-launches-over-053000941.html"],
         "note": "2026-09-06 17:00~09-07 야간 공격 기준(09:30 시점 갱신치). 역대 최대 규모 공격 — 기존 최고기록(2025-07-08/09, 741기)을 경신. 드론(Shahed계열/기만기) 810기 + 순항미사일(Iskander-K) 9기 + 탄도미사일(Iskander-M/KN-23) 4기 = 총 823기 중 751기 요격(드론 747기 + 순항미사일 4기, 탄도미사일 요격 0기). attacks_total/intercepted는 드론만 집계(기존 관례 유지), 총계는 본 note 참고. 미사일 9기+드론 54기가 33개 지점 명중, 잔해 낙하 8개 지점. 오데사·키이우·드니프로페트로우스크·폴타바·지토미르·수미·하르키우 등 피격. ABC News는 민간인 최소 5명 사망·41명 부상 보도. 참고: Ukrinform/UNN 등 일부 매체는 같은 야간 공격에 대해 이른 아침(09:00) 시점 잠정치로 '92기 중 71기 요격'을 보도했으나, 이후(09:30) 전체 집계로 810기/751기(총 823기)로 대폭 상향 갱신됨 — 초기 속보와 최종 집계 간 큰 편차 존재, 교차검증 참고용으로 병기."
+      },
+      {
+        "date": "2026-09-08",
+        "attacks_total": 166,
+        "attacks_total_source": "https://ua.news/en/war-vs-rf/rf-atakuvala-ukrayinu-raketami-ta-166-dronami-ppo-znishchila-175-povitrianikh-tsilei",
+        "intercepted_source": "https://www.nbcnews.com/world/ukraine/russian-drone-missile-strikes-ukrainian-capital-kill-2-people-ending-p-rcna596538",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": ["Kyiv", "Odesa"],
+        "intercepted": 142,
+        "intercept_rate": 0.86,
+        "sources": ["https://ua.news/en/war-vs-rf/rf-atakuvala-ukrayinu-raketami-ta-166-dronami-ppo-znishchila-175-povitrianikh-tsilei", "https://www.nbcnews.com/world/ukraine/russian-drone-missile-strikes-ukrainian-capital-kill-2-people-ending-p-rcna596538", "https://www.usnews.com/news/world/articles/2026-09-07/russian-ballistic-missiles-hit-kyiv-as-us-envoys-leave", "https://abcnews.com/International/wireStory/russia-launched-massive-overnight-strike-9-ukrainian-cities-135997859"],
+        "note": "2026-09-07 18:00~09-08 08:30 시점 집계. 드론 166기 중 142기 요격 + 순항미사일 32기 중 31기 요격 + 탄도미사일(발사량 미상) 중 2기 요격 = 총 175개 표적 요격·제압(공식 발표). attacks_total/intercepted는 드론만 집계(기존 관례 유지). 기종별 세부 수치 미확인(Shahed/Geran 계열 뭉뚱그려 보도) — by_type 비움. 미국 특사(쿠슈너·위트코프) 방문에 따른 사흘간의 소강상태가 끝난 뒤 재개된 첫 대규모 공습으로, 키이우·오데사 집중 타격. 피격 29개 지점, 잔해 낙하 9개 지점. 사상자 수는 매체별 편차 큼(2명 사망·10명 부상 ~ 5명 사망·63명 부상) — 교차검증 필요, 확정 수치 아님."
       }
     ],
     "monthly": []
