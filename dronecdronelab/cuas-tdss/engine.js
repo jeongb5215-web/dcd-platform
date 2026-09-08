@@ -45,7 +45,11 @@
     indicator_half_life_h: {
       missile: 72, artillery: 48, recon_drone: 24, gps_jam: 6,
       nk_media: 24, adf_activity: 12, illegal_flight: 48, osint: 12,
+      /* 현장 사건(트랙 게이트에서 역전파) */
+      inc_attack: 0.75, inc_intrusion: 0.75, inc_swarm: 0.5, inc_payload: 1.0, inc_illegal: 0.25,
     },
+    /* 현장 사건 가중치: 게이트 사실에서만 생성(등급·ASTI 보정과 무관 → 순환 방지) */
+    incident_weight: { inc_attack: 1.0, inc_intrusion: 0.9, inc_swarm: 0.7, inc_payload: 0.8, inc_illegal: 0.3 },
     payload_weight: { unknown: 0.4, camera: 0.2, cargo: 0.6, explosive: 1.0, cbrn: 1.0 },
   };
 
@@ -112,14 +116,17 @@
     return { value: clamp01(raw * mod * boost), factors: f, mod, multi };
   }
 
-  function consequence(track, cfg) {
+  function consequence(track, cfg, typeEst) {
     const f = [];
     const a = cfg.asset;
     const pl = (track.payload && track.payload.class) || "unknown";
     const plw = cfg.payload_weight[pl] != null ? cfg.payload_weight[pl] : 0.4;
-    const mass = track.payload && track.payload.mass_kg_est;
+    let mass = track.payload && track.payload.mass_kg_est;
+    let massSrc = "";
+    if (!mass && pl === "unknown" && typeEst && typeEst.confidence >= 0.3) { mass = typeEst.est_payload_kg; massSrc = " (추정 " + typeEst.candidates[0].name + ")"; }
     const massw = mass ? clamp01(mass / 5) : 0;
     const payloadScore = Math.max(plw, massw);
+    if (massSrc) f.push({ name: "추정 기종 페이로드 " + mass + "kg" + massSrc, w: massw * 0.30 - plw * 0.30 > 0 ? massw * 0.30 - plw * 0.30 : 0 });
     f.push({ name: "보호자산 가치", w: a.value * 0.35 });
     f.push({ name: "군중 밀집도", w: a.crowd_density * 0.25 });
     f.push({ name: pl === "unknown" ? "페이로드 미확인" : "페이로드: " + pl, w: payloadScore * 0.30 });
@@ -139,6 +146,73 @@
     if (single) f.push({ name: "단일 센서 추적", w: 0.15 });
     f.push({ name: "기본 취약성", w: 0.15 });
     return { value: clamp01(f.reduce((s, x) => s + x.w, 0)), factors: f };
+  }
+
+  /* ---------- 기종 추정 (센서 특성 기반, 규칙형) ---------- */
+  /* track.sensor: { rcs_class, rf_signature, hover_observed, min_speed_observed, max_speed_observed } */
+  function estimateType(track, db, prior) {
+    if (!db || !db.DRONES) return null;
+    const sn = track.sensor || {};
+    const spd = (track.vel && track.vel.speed_mps) || 0;
+    const vmax = sn.max_speed_observed != null ? Math.max(sn.max_speed_observed, spd) : spd;
+    const vmin = sn.min_speed_observed != null ? Math.min(sn.min_speed_observed, spd) : spd;
+    const alt = (track.pos && track.pos.alt_m) || 0;
+    const hover = !!sn.hover_observed || !!(track.behavior && track.behavior.loiter && spd < 6);
+    const rcsIdx = db.RCS_ORDER.indexOf(sn.rcs_class);
+    const rfObs = sn.rf_signature || "unknown";
+    const scored = db.DRONES.map((d) => {
+      const why = [];
+      let s = 1;
+      // 속도 포락선
+      if (vmax > d.max_speed * 1.1) { s *= 0.03; why.push("최고속 초과"); }
+      else { const sig = Math.max(d.max_speed - d.cruise, 4); const z = (vmax - d.cruise) / sig; s *= Math.exp(-0.5 * z * z) * 0.8 + 0.2; }
+      // 실속속도(고정익) / 정지비행
+      const rotor = !!db.ROTOR[d.cls];
+      if (!rotor && (hover || vmin < d.stall * 0.8)) { s *= 0.05; why.push("정지·저속비행 관측"); }
+      if (rotor && hover) { s *= 1.15; why.push("정지비행 일치"); }
+      // 레이더 크기 등급
+      if (rcsIdx >= 0) { const diff = Math.abs(db.RCS_ORDER.indexOf(d.rcs) - rcsIdx); s *= diff === 0 ? 1 : diff === 1 ? 0.3 : 0.05; if (diff === 0) why.push("RCS 등급 일치"); }
+      // RF 시그니처
+      if (rfObs !== "unknown") {
+        if (rfObs === d.rf) { s *= 1.3; why.push("RF 시그니처 일치"); }
+        else if (rfObs === "none") s *= (d.rf === "none" ? 1 : 0.35);
+        else s *= 0.08;
+      }
+      // 고도
+      if (alt > d.ceiling_m) { s *= 0.1; why.push("실용상승한도 초과"); }
+      // EO/IR 시각 식별 (기체 형상 계열)
+      if (sn.eoir_class) { if (sn.eoir_class === d.cls) { s *= 3.0; why.push("EO/IR 형상 일치"); } else if (!!db.ROTOR[sn.eoir_class] === !!db.ROTOR[d.cls]) s *= 0.4; else s *= 0.05; }
+      return { id: d.id, name: d.name, cls: d.cls, score: s, like: s, why, payload_kg: d.payload_kg, mtow_kg: d.mtow_kg, max_speed: d.max_speed };
+    });
+    /* 베이지안 누적: 사후 ∝ 사전^λ × 우도  (λ=0.75 망각계수: 누적 수렴하되 새 증거에 적응) */
+    if (prior) for (const c of scored) c.score = Math.exp(0.75 * Math.log(Math.max(prior[c.id] || 0.1, 1e-4)) + Math.log(Math.max(c.like, 1e-6)));
+    const total = scored.reduce((a, b) => a + b.score, 0) || 1;
+    scored.forEach((c) => (c.p = 0.94 * c.score / total + 0.06 / scored.length)); // 상한 ≈ 95%: 센서 추정은 확정이 아님
+    scored.sort((a, b) => b.p - a.p);
+    const top = scored[0];
+    // 클래스 확률 합
+    const clsP = {};
+    for (const c of scored) clsP[c.cls] = (clsP[c.cls] || 0) + c.p;
+    const topCls = Object.entries(clsP).sort((a, b) => b[1] - a[1])[0];
+    // 일치성 경고
+    const notes = [];
+    const quadMax = Math.max(...db.DRONES.filter((d) => db.ROTOR[d.cls]).map((d) => d.max_speed));
+    if (vmax > quadMax) notes.push("관측 속도 " + vmax.toFixed(0) + "m/s: 상용 회전익 한계 초과 → 고정익/자폭형 가능성");
+    if (hover && !db.ROTOR[top.cls]) notes.push("정지비행 관측과 고정익 추정 불일치 → 센서 확인 필요");
+    if (top.p < 0.35) notes.push("후보 분산 — 추정 신뢰도 낮음, EO/IR 식별 요망");
+    if (rfObs === "none" && db.ROTOR[top.cls]) notes.push("RF 무방사 회전익: 자율비행 개조 가능성");
+    const evidence = {
+      radar_hits: track.detect_count || 0,
+      rcs: !!sn.rcs_class, rf: rfObs !== "unknown", rf_scanning: rfObs === "unknown" && !!sn.rf_scanning,
+      speed_samples: sn.speed_samples || 0, hover: hover, eoir: !!sn.eoir_class,
+    };
+    const stage = evidence.eoir && top.p >= 0.6 ? "confirmed" : top.p >= 0.6 ? "narrowed" : evidence.rcs || evidence.rf ? "estimating" : "observing";
+    return {
+      candidates: scored.slice(0, 3), all: Object.fromEntries(scored.map((c) => [c.id, c.p])),
+      cls: topCls[0], cls_p: topCls[1], cls_ko: db.CLASS_KO[topCls[0]],
+      confidence: top.p, est_payload_kg: top.payload_kg, notes, evidence, stage,
+      observed: { speed: spd, vmax, vmin, alt, hover, rcs: sn.rcs_class || null, rf: rfObs },
+    };
   }
 
   /* ---------- 3.6 대응 옵션별 결심 한계시간 ---------- */
@@ -204,20 +278,23 @@
   }
 
   /* ---------- 2.1 상황 위협지수 ASTI ---------- */
-  function computeASTI(sit, cfg, now) {
+  const INCIDENT_KO = { inc_attack: "현장: 공격 기동", inc_intrusion: "현장: 경계선 침투", inc_swarm: "현장: 군집 출현", inc_payload: "현장: 위해 페이로드", inc_illegal: "현장: 불법비행" };
+  function computeASTI(sit, cfg, now, incidents) {
     /* sit.indicators: [{type, ts, weight(0~1)}], sit.event: {importance, outdoor, motorcade, crowd},
-       sit.weather: {wind_mps, rain_mmh, visibility_km}, sit.notam_active, sit.illegal_history(0~1) */
+       sit.weather: {wind_mps, rain_mmh, visibility_km}, sit.notam_active, sit.illegal_history(0~1)
+       incidents: 트랙 게이트에서 역전파된 현장 사건 [{type, ts, weight, track_id}] */
     const hl = cfg.indicator_half_life_h;
     let P = 0; const pf = [];
     const byType = {};
-    for (const ind of sit.indicators || []) {
+    const all = (sit.indicators || []).concat(incidents || []);
+    for (const ind of all) {
       const ageH = Math.max(0, (now - new Date(ind.ts).getTime()) / 3.6e6);
       const life = hl[ind.type] || 12;
       const decayed = (ind.weight || 0.5) * Math.pow(0.5, ageH / life);
       byType[ind.type] = Math.max(byType[ind.type] || 0, decayed);
     }
     const types = Object.keys(byType);
-    for (const t of types) { P += byType[t] * 0.35; pf.push({ name: "징후: " + t, w: byType[t] * 0.35 }); }
+    for (const t of types) { P += byType[t] * 0.35; pf.push({ name: INCIDENT_KO[t] || ("징후: " + t), w: byType[t] * 0.35, incident: !!INCIDENT_KO[t] }); }
     /* 시간 결합: 2종 이상 동시 활성 시 승수 */
     if (types.length >= 2) { const m = 1 + 0.15 * (types.length - 1); P *= m; pf.push({ name: "다수 징후 시간 결합 ×" + m.toFixed(2), w: 0 }); }
     if (sit.illegal_history) { P += 0.2 * sit.illegal_history; pf.push({ name: "과거 불법비행", w: 0.2 * sit.illegal_history }); }
@@ -232,15 +309,24 @@
     const Venv = clamp01(0.5 * detect + 0.3 * (sit.notam_active ? 0.2 : 0.6) + 0.2 * (1 - (sit.team_coverage == null ? 0.7 : sit.team_coverage)));
 
     const score = geometricMean({ P, Ce, Venv }, cfg.asti_weights, cfg.x_min);
-    const grade = gradeFromScore(score, cfg, 0);
-    return { score: Math.round(score), grade, P, Ce, Venv, flight_feasibility: flight, detection_degradation: detect, factors: pf };
+    let grade = gradeFromScore(score, cfg, 0);
+    /* 상황지수 규칙 게이트: 현장에서 공격이 확인되면 지역 태세는 점수와 무관하게 상향 */
+    let gate = null;
+    const strength = (t) => byType[t] || 0;
+    if (strength("inc_attack") >= 0.5 || strength("inc_intrusion") >= 0.5) { if (gi(grade) < gi("warning")) { grade = "warning"; gate = "현장 공격·침투 확인"; } }
+    else if (strength("inc_swarm") >= 0.5 || strength("inc_payload") >= 0.5) { if (gi(grade) < gi("caution")) { grade = "caution"; gate = "현장 군집·페이로드 확인"; } }
+    const active = (incidents || []).map((i) => Object.assign({}, i, { label: INCIDENT_KO[i.type], age_min: Math.round((now - new Date(i.ts).getTime()) / 6e4) }));
+    return { score: Math.round(score), grade, gate, P, Ce, Venv, flight_feasibility: flight, detection_degradation: detect, factors: pf, incidents: active };
   }
 
   /* ---------- 엔진 (히스테리시스 상태 보유) ---------- */
   class ThreatEngine {
-    constructor(config) {
+    constructor(config, droneDb) {
       this.cfg = deepMerge(DEFAULT_CONFIG, config || {});
+      this.db = droneDb || null;
       this.state = new Map(); // track_id → {grade, since, pendingGrade, pendingSince}
+      this.typePost = new Map(); // track_id → {post:{id:p}, history:[{t, p, id}]}
+      this.incidents = []; // 현장 사건 [{type, ts, weight, track_id}] — ASTI로 역전파
       this.log = [];
       this.overrides = new Map(); // track_id → {grade, reason, until}
     }
@@ -250,7 +336,8 @@
       const cfg = this.cfg;
       const astiGrade = (asti && asti.grade) || "normal";
       const I = intent(track, cfg, astiGrade);
-      const C = consequence(track, cfg);
+      const typeEst = this._updateType(track, now);
+      const C = consequence(track, cfg, typeEst);
       const g = track.geo || {};
       const inside = g.dist_to_asset_m != null && g.dist_to_asset_m <= cfg.gates.boundary_radius_m;
       const Uv = urgency(g.ttc_boundary_s, inside, cfg);
@@ -290,10 +377,23 @@
         track_id: track.track_id, ts: track.ts, score: Math.round(score), grade, grade_ko: GRADE_KO[grade], color: GRADE_COLOR[grade],
         score_grade: scoreGrade, gate_grade: gateGrade, gates: gateHits, asti_shift: shift, tentative,
         axes: values, parts, confidence: I.multi ? (track.track_quality > 0.8 ? 3 : 2) : 1,
-        kinetic_gate_ok: I.multi, options: opts, min_t_decision_s: minT, top_factors: contrib.slice(0, 3), overridden, track,
+        kinetic_gate_ok: I.multi, options: opts, min_t_decision_s: minT, top_factors: contrib.slice(0, 3), overridden, track, type_est: typeEst,
       };
     }
 
+    _updateType(track, now) {
+      const st = this.typePost.get(track.track_id);
+      const te = estimateType(track, this.db, st ? st.post : null);
+      if (!te) return null;
+      const rec = st || { post: null, history: [], top: null };
+      rec.post = te.all;
+      if (!rec.history.length || now - rec.history[rec.history.length - 1].t >= 1000) { rec.history.push({ t: now, p: te.confidence, id: te.candidates[0].id }); if (rec.history.length > 60) rec.history.shift(); }
+      if (rec.top && rec.top !== te.candidates[0].id && te.confidence >= 0.4 && track.status !== "tentative") this.log.push({ ts: now, type: "type", track_id: track.track_id, from: rec.top, to: te.candidates[0].id, p: te.confidence });
+      rec.top = te.candidates[0].id;
+      this.typePost.set(track.track_id, rec);
+      te.history = rec.history; te.frames = rec.history.length;
+      return te;
+    }
     _hysteresis(id, target, now, reason) {
       const st = this.state.get(id) || { grade: "normal", since: now, pendingGrade: null, pendingSince: null };
       if (!this.state.has(id)) this.state.set(id, st);
@@ -319,11 +419,26 @@
     confirmAction(track_id, option, operator, now) {
       this.log.push({ ts: now, type: "action_confirm", track_id, option, operator });
     }
-    dropTrack(id) { this.state.delete(id); }
+    dropTrack(id) { this.state.delete(id); this.typePost.delete(id); }
 
     /* 프레임 단위 평가: 군집 묶기 + 정렬 */
+    /* 트랙 게이트 사실 → 현장 사건 등록 (같은 트랙·유형은 갱신, 반감기로 자연 소멸) */
+    _recordIncidents(results, now) {
+      const map = { "공격 기동(급강하)": "inc_attack", "경계선 내 직할 침투": "inc_intrusion", "군집 형성": "inc_swarm", "위해 페이로드 확인": "inc_payload", "불법 비행": "inc_illegal" };
+      for (const r of results) {
+        if (r.tentative) continue;
+        for (const g of r.gates) {
+          const type = map[g.name]; if (!type) continue;
+          const ex = this.incidents.find((i) => i.type === type && i.track_id === r.track_id);
+          if (ex) ex.ts = new Date(now).toISOString();
+          else { this.incidents.push({ type, ts: new Date(now).toISOString(), weight: this.cfg.incident_weight[type], track_id: r.track_id }); this.log.push({ ts: now, type: "incident", track_id: r.track_id, to: type }); }
+        }
+      }
+      /* 반감기 3배 경과 → 제거 */
+      this.incidents = this.incidents.filter((i) => (now - new Date(i.ts).getTime()) / 3.6e6 < 3 * (this.cfg.indicator_half_life_h[i.type] || 1));
+    }
     evaluateFrame(tracks, situation, now, env) {
-      const asti = computeASTI(situation || {}, this.cfg, now);
+      let asti = computeASTI(situation || {}, this.cfg, now, this.incidents);
       /* 군집 크기 부여 */
       const swarmCount = {};
       for (const t of tracks) if (t.swarm_id) swarmCount[t.swarm_id] = (swarmCount[t.swarm_id] || 0) + 1;
@@ -342,6 +457,9 @@
       }
       for (const sid in groups) queue.push(groups[sid]);
       queue.sort(sortQueue);
+      /* 현장 사건 역전파: 이번 프레임의 게이트 사실로 ASTI 재산출 (트랙 등급에는 다음 프레임부터 반영) */
+      this._recordIncidents(results, now);
+      asti = computeASTI(situation || {}, this.cfg, now, this.incidents);
       const confirmed = queue.filter((q) => !q.tentative);
       const tentative = queue.filter((q) => q.tentative);
       return { asti, results, queue: confirmed, tentative, now };
@@ -360,6 +478,6 @@
 
   return {
     DEFAULT_CONFIG, GRADES, GRADE_KO, GRADE_COLOR, ThreatEngine,
-    geometricMean, urgency, intent, consequence, vulnerability, optionTimes, gates, gradeFromScore, computeASTI, sortQueue, deepMerge,
+    geometricMean, urgency, intent, consequence, vulnerability, estimateType, INCIDENT_KO, optionTimes, gates, gradeFromScore, computeASTI, sortQueue, deepMerge,
   };
 });

@@ -6,6 +6,7 @@
 <title>실시간 C-UAS 위협도 평가 및 의사결정 지원시스템</title>
 <style>
   :root{
+    --green:#9dd5b1; --amber:#f0d08a;
     --bg:#0c1420; --panel:#111d2e; --panel2:#0f1929; --line:#223449; --line2:#2d4360;
     --text:#d3dde9; --muted:#7f93aa; --dim:#4f637c; --cyan:#4cc9f0; --cyan-dim:#1f6f88;
     --g-normal:#3b82f6; --g-notice:#22c55e; --g-caution:#eab308; --g-warning:#f97316; --g-critical:#ef4444;
@@ -34,6 +35,7 @@
   .chip{font-size:10.5px;padding:2px 6px;border-radius:3px;border:1px solid var(--line2);color:var(--muted);white-space:nowrap}
   .chip.stale{color:#6b7a8c;border-style:dashed;text-decoration:line-through}
   .chip.ok{border-color:#2b5a3d;color:#9dd5b1}
+  .chip.inc{border-color:#7a2f2f;color:#f3b0b0;background:#2a1414}
   .ctrl{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
   .ctrl .time{font-size:16px;font-weight:700;min-width:64px;text-align:right}
   .back-link{font-size:11px;color:var(--muted);text-decoration:none;border:1px solid var(--line2);border-radius:20px;padding:4px 10px;white-space:nowrap;align-self:flex-start;margin-bottom:4px}
@@ -78,14 +80,35 @@
   .actions{grid-column:1/-1;display:flex;gap:5px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:7px}
   .actions .warnnote{width:100%;font-size:11px;color:#f0d08a}
   /* ── 하단 ── */
-  .bottom{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:6px;height:168px}
+  .bottom{display:grid;grid-template-columns:1.45fr 1.15fr 0.8fr 0.7fr;gap:6px;height:236px}
   .bottom .panel{overflow:hidden}
   .sit{padding:6px 10px;font-size:11.5px;display:grid;grid-template-columns:1fr 1fr;gap:3px 12px;overflow:auto}
   .sit label{display:flex;justify-content:space-between;align-items:center;gap:6px;color:var(--muted)}
   .sit label b{color:var(--text);font-weight:500;min-width:36px;text-align:right}
-  .sit input[type=range]{width:90px}
+  .sit input[type=range]{width:80px}
   .sit .ind{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px}
   .sit .ind button{font-size:10.5px;padding:2px 7px} .sit .ind button.on{background:#2a3d1f;border-color:#4d7a35;color:#c6e8b0}
+  .typ{display:grid;grid-template-columns:118px 1fr 1fr;gap:8px;padding:7px 10px;overflow:hidden;font-size:11.5px;min-height:0}
+  .typ .cand{overflow:auto;min-height:0} .typ>.spec{overflow:auto;min-height:0}
+  .typ .sil{background:var(--panel2);border:1px solid var(--line2);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--cyan);gap:3px;padding:4px;overflow:hidden}
+  .typ .sil svg{width:100px;height:60px} .typ .sil img{max-width:110px;max-height:70px;object-fit:contain}
+  .typ .sil small{color:var(--muted);font-size:10px;text-align:center}
+  .typ .cand .row{display:grid;grid-template-columns:1fr 34px;gap:4px;align-items:center;margin-bottom:3px}
+  .typ .bar{height:5px;background:var(--line);border-radius:2px;overflow:hidden} .typ .bar i{display:block;height:100%;background:var(--cyan);transition:width .6s ease}
+  .typ .sil{transition:color .4s}
+  .typ .sil.pulse{animation:typPulse .9s ease} @keyframes typPulse{0%{box-shadow:0 0 0 0 rgba(76,201,240,.7)}100%{box-shadow:0 0 0 14px rgba(76,201,240,0)}}
+  .typ .sil svg{transition:transform .5s ease} .typ .sil.pulse svg{transform:scale(1.12)}
+  .typ .conf{font-size:10px;color:var(--muted);margin-top:2px} .typ .conf b{transition:color .4s}
+  .typ .ev{display:flex;gap:3px;flex-wrap:wrap;margin:3px 0}
+  .typ .ev span{font-size:9.5px;padding:1px 5px;border-radius:3px;border:1px solid var(--line2);color:var(--dim);transition:all .4s}
+  .typ .ev span.on{border-color:#2b5a3d;color:var(--green);background:#12291c} .typ .ev span.scan{border-color:#5a4423;color:var(--amber);animation:evBlink 1s infinite}
+  @keyframes evBlink{50%{opacity:.4}}
+  .typ .stage{font-size:10.5px;font-weight:600;padding:1px 6px;border-radius:3px;display:inline-block;margin-right:4px}
+  .typ .spark{width:100%;height:26px;display:block;margin-top:2px}
+  .typ .changed{animation:typFlash 1.2s ease} @keyframes typFlash{0%{background:rgba(76,201,240,.35)}100%{background:transparent}}
+  .typ .spec{color:var(--muted);line-height:1.45} .typ .spec b{color:var(--text);font-weight:500}
+  .typ .note{color:var(--amber);font-size:10.5px;margin-top:3px}
+  .typ .truth{color:var(--dim);font-size:10px;margin-top:2px}
   .log{overflow:auto;padding:4px 10px;font-size:11px;font-family:ui-monospace,"D2Coding","NanumGothicCoding",monospace;color:var(--muted)}
   .log div b{color:var(--text);font-weight:500}
   .cfg{padding:6px 10px;display:flex;flex-direction:column;gap:5px;min-height:0}
@@ -105,12 +128,13 @@
       <div style="min-width:78px"><div class="lbl">등급</div><div id="astiGrade" style="font-weight:700;font-size:15px">–</div><div class="lbl" id="astiShift"></div></div>
       <div class="axis"><div>P <b id="aP">–</b></div><div>C<sub>e</sub> <b id="aCe">–</b></div><div>V<sub>env</sub> <b id="aVe">–</b></div><div>비행가능 <b id="aFly">–</b></div><div>탐지저하 <b id="aDet">–</b></div></div>
       <div class="fresh" id="fresh"></div>
+      <div class="fresh" id="astiInc" style="max-width:260px"></div>
     </div>
     <div class="ctrl">
       <select id="scenario"></select>
       <button id="btnReset" title="시나리오 처음부터">재시작</button>
       <button id="btnPlay" class="primary">일시정지</button>
-      <select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select>
+      <select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="3">3×</option><option value="4">4×</option></select>
       <input type="range" id="replay" min="0" max="0" value="0" style="width:150px" title="재생 위치">
       <div class="time" id="clock">0.0s</div>
     </div>
@@ -127,6 +151,8 @@
         <span><i style="background:transparent;border:1px solid var(--cyan)"></i>재머 유효사거리</span>
         <span><i style="background:transparent;border:1px dashed #9dd5b1"></i>옵션 만료 지점</span>
         <span>◇ 대응팀 &nbsp; ▣ 보호대상</span>
+        <span><i style="background:transparent;border:1px solid #4cc9f0;border-radius:50%"></i>회전 레이더(5km)</span>
+        <span><i style="background:#f0d08a"></i>EO/IR 슬루 · <i style="background:#9dd5b1"></i>추적 고정</span>
       </div>
     </div>
     <div class="right">
@@ -143,6 +169,7 @@
 
   <!-- ── 하단 ── -->
   <div class="bottom">
+    <div class="panel"><h2>기종 추정 <span id="typeId"></span></h2><div class="typ" id="typ"><div class="empty">트랙 선택 시 표시</div></div></div>
     <div class="panel"><h2>상황지수 입력 <span>수동 입력 · 어댑터 대체</span></h2><div class="sit" id="sit"></div></div>
     <div class="panel"><h2>감사 로그 <span id="logCount"></span></h2><div class="log" id="log"></div></div>
     <div class="panel"><h2>가중치 · 임계값 설정 <span>부록 B</span></h2>
@@ -152,14 +179,15 @@
   </div>
 </div>
 
+<script src="drones.js"></script>
 <script src="engine.js"></script>
 <script src="sim.js"></script>
 <script>
 (function(){
-  const E = window.CUAS, S = window.CUAS_SIM, Z = S.ZONES;
+  const E = window.CUAS, S = window.CUAS_SIM, Z = S.ZONES, DB = window.CUAS_DRONES;
   const $ = (id) => document.getElementById(id);
   const GC = E.GRADE_COLOR, GK = E.GRADE_KO;
-  let engine = new E.ThreatEngine();
+  let engine = new E.ThreatEngine(null, DB);
   let sim, situation, frame = null, result = null, selected = null, playing = true, replayIdx = -1, timer = null;
   const OPERATOR = "OP-1";
 
@@ -168,7 +196,7 @@
   for (const k in S.SCENARIOS) { const o = document.createElement("option"); o.value = k; o.textContent = S.SCENARIOS[k].name; scSel.appendChild(o); }
   scSel.value = "composite";
   function start(key) {
-    sim = new S.Simulator(key); engine = new E.ThreatEngine(JSON.parse($("cfgText").value || "{}"));
+    sim = new S.Simulator(key); engine = new E.ThreatEngine(JSON.parse($("cfgText").value || "{}"), DB);
     situation = S.defaultSituation(Date.now()); selected = null; replayIdx = -1; playing = true; $("btnPlay").textContent = "일시정지";
     $("scnDesc").innerHTML = "<b>" + S.SCENARIOS[key].name + "</b><br>" + S.SCENARIOS[key].desc;
     renderSituation(); schedule();
@@ -188,7 +216,7 @@
     if (selected && !result.results.some((r) => r.track_id === selected)) selected = null;
     if (!selected && result.queue.length) selected = result.queue[0].track_id;
     $("clock").textContent = frame.t.toFixed(1) + "s";
-    renderASTI(); renderQueue(); renderHUD(); renderLog(); draw();
+    renderASTI(); renderQueue(); renderHUD(); renderType(); renderLog(); draw();
   }
   $("btnPlay").onclick = () => { playing = !playing; if (playing) replayIdx = -1; $("btnPlay").textContent = playing ? "일시정지" : "재생"; };
   $("btnReset").onclick = () => start(scSel.value);
@@ -228,7 +256,8 @@
     const a = result.asti;
     $("astiScore").textContent = a.score; $("astiScore").style.color = GC[a.grade];
     $("astiGrade").textContent = GK[a.grade]; $("astiGrade").style.color = GC[a.grade];
-    const sh = engine.cfg.asti_shift[a.grade] || 0; $("astiShift").textContent = sh ? "트랙 임계값 " + sh + "점" : "임계값 이동 없음";
+    const sh = engine.cfg.asti_shift[a.grade] || 0; $("astiShift").textContent = (sh ? "트랙 임계값 " + sh + "점" : "임계값 이동 없음") + (a.gate ? " · GATE " + a.gate : "");
+    const inc = $("astiInc"); inc.innerHTML = a.incidents.length ? a.incidents.map((i) => `<span class="chip inc" title="반감기 감쇠 · ${i.age_min}분 전">${i.label} ${i.track_id}</span>`).join("") : '<span class="chip" style="border-style:dashed">현장 사건 없음</span>';
     $("aP").textContent = a.P.toFixed(2); $("aCe").textContent = a.Ce.toFixed(2); $("aVe").textContent = a.Venv.toFixed(2);
     $("aFly").textContent = a.flight_feasibility.toFixed(2); $("aDet").textContent = a.detection_degradation.toFixed(2);
     const f = $("fresh"); f.innerHTML = "";
@@ -248,10 +277,10 @@
   }
   function card(r, tent) {
     const t = r.track, g = t.geo, d = document.createElement("div");
-    d.className = "card" + (r.track_id === selected ? " sel" : ""); d.style.borderLeftColor = tent ? "" : r.color; d.onclick = () => { selected = r.track_id; renderQueue(); renderHUD(); draw(); };
+    d.className = "card" + (r.track_id === selected ? " sel" : ""); d.style.borderLeftColor = tent ? "" : r.color; d.onclick = () => { selected = r.track_id; renderQueue(); renderHUD(); renderType(); draw(); };
     const name = r.is_swarm ? `군집 ${r.swarm_id} <small style="color:var(--muted)">${r.members.length}기 · 대표 ${r.track_id}</small>` : r.track_id;
     d.innerHTML = `<div class="id">${name}</div><div class="grade" style="color:${r.color}">${tent ? "후보" : r.grade_ko} ${r.score}${r.overridden ? " ✎" : ""}</div>
-      <div class="meta">${t.est_type} · ${g.dist_to_asset_m}m · ${g.bearing_deg}° · ${t.pos.alt_m}m · ${t.vel.speed_mps}m/s ${confDots(r.confidence)} ${t.sources.join("+")}${r.gates.length ? " · <span style='color:#f3b0b0'>GATE " + r.gates[0].name + "</span>" : ""}</div>
+      <div class="meta">${r.type_est ? r.type_est.candidates[0].name + " " + (r.type_est.confidence * 100).toFixed(0) + "%" : "기종 미상"} · ${g.dist_to_asset_m}m · ${g.bearing_deg}° · ${t.pos.alt_m}m · ${t.vel.speed_mps}m/s ${confDots(r.confidence)} ${t.sources.join("+")}${r.gates.length ? " · <span style='color:#f3b0b0'>GATE " + r.gates[0].name + "</span>" : ""}</div>
       ${tent ? "" : `<div class="ttc" style="grid-column:2;grid-row:1/3">${fmtT(g.ttc_boundary_s)}<small>경계선 도달</small></div><div class="opts">${optChips(r)}</div>`}`;
     return d;
   }
@@ -304,11 +333,58 @@
     const labels = ax.map((k, i) => { const [x, y] = pt(i, 1.12); return `<text x="${x}" y="${y + dy[i]}" text-anchor="${anchor[i]}" font-size="10" fill="#7f93aa">${k} ${ko[k]} <tspan fill="#d3dde9" font-weight="600">${r.axes[k].toFixed(2)}</tspan></text>`; }).join("");
     return `<svg viewBox="0 0 200 132" width="168" height="111" style="margin-top:6px">${grid}<polygon points="${poly}" fill="${r.color}" fill-opacity=".3" stroke="${r.color}" stroke-width="1.5"/>${labels}</svg>`;
   }
+  /* ---------- 기종 추정 패널 ---------- */
+  let typState = { track: null, ids: "", top: null };
+  function renderType() {
+    const el = $("typ"); const r = result && result.results.find((x) => x.track_id === selected);
+    const te = r && r.type_est; $("typeId").textContent = r ? r.track_id : "";
+    if (!te) { el.innerHTML = '<div class="empty" style="grid-column:1/-1">트랙 선택 시 표시</div>'; typState = { track: null, ids: "", top: null }; return; }
+    const top = DB.byId[te.candidates[0].id], o = te.observed, ids = te.candidates.map((c) => c.id).join(",");
+    const topChanged = typState.top && typState.top !== top.id && typState.track === r.track_id;
+    const rebuild = typState.track !== r.track_id || typState.ids !== ids;
+    const confTxt = te.confidence >= 0.6 ? "확정 후보" : te.confidence >= 0.35 ? "추정 중" : "후보 분산 · 식별 필요";
+    if (rebuild) {
+      const pic = top.image ? `<img src="${top.image}" alt="${top.name}">` : `<svg viewBox="0 0 100 60">${DB.SILHOUETTE[te.cls]}</svg>`;
+      el.innerHTML = `<div class="sil" id="typSil">${pic}<small id="typCls"></small></div>
+        <div class="cand">${te.candidates.map((c, i) => `<div class="row" data-id="${c.id}"><div><div class="nm" style="${i ? "color:var(--muted)" : "font-weight:600"}">${c.name}</div><div class="bar"><i style="width:0%"></i></div></div><div class="pct" style="text-align:right;${i ? "color:var(--muted)" : ""}"></div></div>`).join("")}
+          <div class="conf"><span class="stage" id="typStage"></span><b id="typConf"></b></div>
+          <div class="ev" id="typEv"></div>
+          <svg class="spark" id="typSpark" viewBox="0 0 200 26" preserveAspectRatio="none"></svg>
+          <div class="spec" id="typWhy"></div><div id="typNotes"></div>
+          ${r.track.truth_model ? `<div class="truth">시뮬 정답: ${DB.byId[r.track.truth_model].name}</div>` : ""}</div>
+        <div class="spec" id="typSpec"></div>`;
+      typState = { track: r.track_id, ids, top: top.id };
+      requestAnimationFrame(() => updateBars());
+    } else updateBars();
+    function updateBars() {
+      el.querySelectorAll(".cand .row").forEach((row, i) => { const c = te.candidates[i]; row.querySelector(".bar i").style.width = (c.p * 100).toFixed(0) + "%"; row.querySelector(".pct").textContent = (c.p * 100).toFixed(0) + "%"; });
+    }
+    if (topChanged || rebuild) {
+      const sil = $("typSil"); if (topChanged) { sil.classList.remove("pulse"); void sil.offsetWidth; sil.classList.add("pulse"); el.querySelector(".cand .row").classList.add("changed"); }
+      if (!top.image) sil.innerHTML = `<svg viewBox="0 0 100 60">${DB.SILHOUETTE[te.cls]}</svg><small id="typCls"></small>`;
+      typState.top = top.id;
+    }
+    $("typCls").textContent = te.cls_ko + " " + (te.cls_p * 100).toFixed(0) + "%";
+    const STG = { observing: ["관측 중", "#3a4a5c", "var(--muted)"], estimating: ["추정 중", "#1f3a4a", "var(--cyan)"], narrowed: ["후보 압축", "#1e4d34", "var(--green)"], confirmed: ["시각 확인", "#2b5a3d", "#c6f0d2"] };
+    const sg = STG[te.stage] || STG.observing, se = $("typStage"); se.textContent = sg[0]; se.style.background = sg[1]; se.style.color = sg[2];
+    const cf = $("typConf"); cf.textContent = "신뢰도 " + (te.confidence * 100).toFixed(0) + "% · 관측 " + te.frames + "s"; cf.style.color = sg[2];
+    const ev = te.evidence;
+    $("typEv").innerHTML = [["레이더 " + ev.radar_hits + "회", ev.radar_hits >= 3 ? "on" : ""], ["RCS 등급", ev.rcs ? "on" : ev.radar_hits < 6 ? "scan" : ""], ["RF 시그니처", ev.rf ? "on" : ev.rf_scanning ? "scan" : ""], ["속도 포락선 " + ev.speed_samples, ev.speed_samples >= 6 ? "on" : ""], ["정지비행", ev.hover ? "on" : ""], ["EO/IR 형상", ev.eoir ? "on" : (r.track.sensor && r.track.sensor.eoir_locked) ? "scan" : ""]].map((x) => `<span class="${x[1]}">${x[0]}</span>`).join("");
+    const h = te.history || []; const pts = h.map((p, i) => `${(i / Math.max(h.length - 1, 1) * 200).toFixed(1)},${(25 - p.p * 24).toFixed(1)}`).join(" ");
+    $("typSpark").innerHTML = `<line x1="0" y1="10.6" x2="200" y2="10.6" stroke="#2d4360" stroke-width=".5" stroke-dasharray="2 2"/>${h.length > 1 ? `<polyline points="${pts}" fill="none" stroke="${sg[2]}" stroke-width="1.5"/>` : ""}<text x="1" y="9" font-size="7" fill="#5b6e86">60%</text>`;
+    $("typWhy").textContent = "근거: " + (te.candidates[0].why.join(", ") || "속도 포락선");
+    $("typNotes").innerHTML = te.notes.map((n) => `<div class="note">⚠ ${n}</div>`).join("");
+    $("typSpec").innerHTML = `<b>${top.name}</b> · ${top.maker} (${top.origin})<br>${top.role}<br>MTOW <b>${top.mtow_kg}kg</b> · 페이로드 <b>${top.payload_kg}kg</b><br>최고 <b>${top.max_speed}m/s</b> · 순항 ${top.cruise}m/s · 체공 ${top.endurance_min}분<br>${top.nav}<br>위협: ${top.threat}<br>
+      <span style="color:var(--dim)">관측 ${o.speed}m/s (${o.vmin}~${o.vmax}) · ${o.alt}m · ${DB.RCS_KO[o.rcs] || "RCS 미상"} · ${DB.RF_KO[o.rf] || "RF 미상"}${o.hover ? " · 정지비행" : ""}</span>`;
+  }
+
   /* ---------- 감사 로그 ---------- */
   function renderLog() {
     const el = $("log"); const L = engine.log.slice(-40).reverse(); $("logCount").textContent = engine.log.length + "건";
     el.innerHTML = L.map((x) => { const t = ((x.ts - sim.startEpoch) / 1000).toFixed(1) + "s";
       if (x.type === "grade") return `<div>${t} <b>${x.track_id}</b> ${GK[x.from]}→<span style="color:${GC[x.to]}">${GK[x.to]}</span> (${x.reason === "gate" ? "게이트" : x.reason === "release" ? "히스테리시스 해제" : "점수"})</div>`;
+      if (x.type === "type") return `<div>${t} <b>${x.track_id}</b> 기종 추정 변경 ${DB.byId[x.from] ? DB.byId[x.from].name : x.from} → <span style="color:var(--cyan)">${DB.byId[x.to] ? DB.byId[x.to].name : x.to}</span> (${(x.p * 100).toFixed(0)}%)</div>`;
+      if (x.type === "incident") return `<div>${t} <b>${x.track_id}</b> <span style="color:#f3b0b0">${E.INCIDENT_KO[x.to]}</span> → 상황지수 반영</div>`;
       if (x.type === "override") return `<div>${t} <b>${x.track_id}</b> 오버라이드 → ${GK[x.to]} · ${x.reason} · ${x.operator}</div>`;
       return `<div>${t} <b>${x.track_id}</b> 집행 확인: ${x.option} · ${x.operator}</div>`; }).join("") || '<div style="color:var(--dim)">기록 없음</div>';
   }
@@ -316,7 +392,7 @@
   /* ---------- COP 캔버스 ---------- */
   const cv = $("cop"), ctx = cv.getContext("2d");
   let W = 0, H = 0, SCALE = 1;
-  function resize() { const r = cv.parentElement.getBoundingClientRect(); const dpr = window.devicePixelRatio || 1; W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); SCALE = Math.min(W, H) / 2 / 3600; draw(); }
+  function resize() { const r = cv.parentElement.getBoundingClientRect(); const dpr = window.devicePixelRatio || 1; W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); SCALE = Math.min(W, H) / 2 / 5300; draw(); }
   window.addEventListener("resize", resize);
   const X = (x) => W / 2 + x * SCALE, Y = (y) => H / 2 - y * SCALE;
   function sector(z, fill) {
@@ -328,11 +404,11 @@
     ctx.fillStyle = "#0f1929"; ctx.fillRect(0, 0, W, H);
     // 그리드
     ctx.strokeStyle = "#182638"; ctx.lineWidth = 1;
-    for (let m = -3000; m <= 3000; m += 500) { ctx.beginPath(); ctx.moveTo(X(m), 0); ctx.lineTo(X(m), H); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, Y(m)); ctx.lineTo(W, Y(m)); ctx.stroke(); }
+    for (let m = -5000; m <= 5000; m += 500) { ctx.beginPath(); ctx.moveTo(X(m), 0); ctx.lineTo(X(m), H); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, Y(m)); ctx.lineTo(W, Y(m)); ctx.stroke(); }
     for (const z of Z.dead_zones) sector(z, "rgba(80,110,150,.22)");
     for (const z of Z.no_jam_zones) sector(z, "rgba(150,110,60,.2)");
     // 거리 링
-    const rings = [[Z.boundary_m, "#ef4444", "경계선 300m"], [Z.r1_m, "#f97316", "R1 1km"], [2000, "#2d4360", "2km"], [3000, "#2d4360", "3km"]];
+    const rings = [[Z.boundary_m, "#ef4444", "경계선 300m"], [Z.r1_m, "#f97316", "R1 1km"], [2000, "#2d4360", "2km"], [3000, "#2d4360", "3km"], [4000, "#2d4360", "4km"], [Z.detect_range_m, "#4cc9f0", "탐지한계 5km"]];
     for (const [r, c, l] of rings) { ctx.beginPath(); ctx.arc(X(0), Y(0), r * SCALE, 0, Math.PI * 2); ctx.strokeStyle = c; ctx.setLineDash(r <= 1000 ? [] : [4, 6]); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = c; ctx.font = "10px sans-serif"; ctx.fillText(l, X(0) + 4, Y(r) - 3); }
     // 재머 사거리, 대응팀, 모터케이드
     ctx.beginPath(); ctx.arc(X(Z.jammer.x), Y(Z.jammer.y), Z.jammer.range_m * SCALE, 0, Math.PI * 2); ctx.strokeStyle = "rgba(76,201,240,.45)"; ctx.setLineDash([2, 4]); ctx.stroke(); ctx.setLineDash([]);
@@ -342,6 +418,7 @@
     ctx.fillStyle = "#f0d08a"; ctx.fillText("모터케이드 동선", X(Z.motorcade[0].x) + 6, Y(Z.motorcade[0].y) - 6);
     // 보호대상
     ctx.fillStyle = "#ffffff"; ctx.fillRect(X(0) - 6, Y(0) - 6, 12, 12); ctx.fillStyle = "#0c1420"; ctx.fillRect(X(0) - 3, Y(0) - 3, 6, 6);
+    drawSensors();
     if (!result) return;
     // 군집 외곽선
     const groups = {}; for (const r of result.results) if (r.track.swarm_id) (groups[r.track.swarm_id] = groups[r.track.swarm_id] || []).push(r);
@@ -370,12 +447,51 @@
       ctx.fillText(t.track_id + (r.tentative ? " (후보)" : " " + r.grade_ko + " " + r.score) + (g.ttc_boundary_s != null && !r.tentative ? " · " + Math.round(g.ttc_boundary_s) + "s" : ""), X(p.x) + 10, Y(p.y) + 4);
     }
   }
+  /* ---------- 능동 센서 애니메이션: 회전 레이더 + EO/IR 슬루 ---------- */
+  let sweepDeg = 0, eoirDeg = 0, eoirLock = null, lastAnim = performance.now();
+  function animate(now) {
+    const dt = Math.min(0.1, (now - lastAnim) / 1000); lastAnim = now;
+    const rate = playing && replayIdx < 0 ? parseFloat($("speed").value) : 0;
+    sweepDeg = (sweepDeg + Z.radar.sweep_dps * rate * dt) % 360;
+    // EO/IR: 선택 트랙(없으면 큐 1순위) 방위로 제한 속도 슬루
+    const tgt = result && (result.results.find((x) => x.track_id === selected) || result.queue[0]);
+    if (tgt) {
+      const p = tgt.track.pos, want = (Math.atan2(p.x - Z.eoir.x, p.y - Z.eoir.y) * 180 / Math.PI + 360) % 360;
+      let diff = ((want - eoirDeg + 540) % 360) - 180;
+      const step = Z.eoir.slew_dps * Math.max(rate, 0.5) * dt;
+      if (Math.abs(diff) <= step) eoirDeg = want; else eoirDeg = (eoirDeg + Math.sign(diff) * step + 360) % 360;
+      const dist = Math.hypot(p.x - Z.eoir.x, p.y - Z.eoir.y);
+      eoirLock = Math.abs(((want - eoirDeg + 540) % 360) - 180) < 1.5 && dist <= Z.eoir.range_m ? tgt.track_id : null;
+    } else eoirLock = null;
+    if (sim) sim.eoirLock = eoirLock;
+    draw(); requestAnimationFrame(animate);
+  }
+  function drawSensors() {
+    const R = Z.radar, cx = X(R.x), cy = Y(R.y), rr = R.range_m * SCALE;
+    // 레이더 회전 빔 + 잔광
+    const a = (sweepDeg - 90) * Math.PI / 180;
+    for (let i = 0; i < 24; i++) { const a0 = a - (i + 1) * 0.045, a1 = a - i * 0.045;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, rr, a0, a1); ctx.closePath(); ctx.fillStyle = `rgba(76,201,240,${0.16 * (1 - i / 24)})`; ctx.fill(); }
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + rr * Math.cos(a), cy + rr * Math.sin(a)); ctx.strokeStyle = "rgba(76,201,240,.9)"; ctx.lineWidth = 1.5; ctx.stroke(); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI * 2); ctx.fillStyle = "#4cc9f0"; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cy, 9, 0, Math.PI * 2); ctx.strokeStyle = "#4cc9f0"; ctx.stroke();
+    ctx.fillStyle = "#4cc9f0"; ctx.font = "10px sans-serif"; ctx.fillText("레이더 " + Math.round(sweepDeg) + "°", cx + 12, cy + 4);
+    // EO/IR 카메라 시야각(FOV) + 슬루
+    const E2 = Z.eoir, ex = X(E2.x), ey = Y(E2.y), er = E2.range_m * SCALE, ea = (eoirDeg - 90) * Math.PI / 180, half = E2.fov_deg / 2 * Math.PI / 180;
+    ctx.beginPath(); ctx.moveTo(ex, ey); ctx.arc(ex, ey, er, ea - half, ea + half); ctx.closePath();
+    ctx.fillStyle = eoirLock ? "rgba(157,213,177,.22)" : "rgba(240,208,138,.14)"; ctx.fill();
+    ctx.strokeStyle = eoirLock ? "#9dd5b1" : "#f0d08a"; ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.save(); ctx.translate(ex, ey); ctx.rotate(ea); ctx.fillStyle = eoirLock ? "#9dd5b1" : "#f0d08a"; ctx.fillRect(-4, -4, 8, 8); ctx.fillRect(4, -2, 5, 4); ctx.restore();
+    ctx.fillStyle = eoirLock ? "#9dd5b1" : "#f0d08a"; ctx.fillText("EO/IR " + (eoirLock ? "추적 " + eoirLock : "슬루 " + Math.round(eoirDeg) + "°"), ex + 12, ey - 6);
+    if (eoirLock && result) { const t = result.results.find((x) => x.track_id === eoirLock); if (t) { const px = X(t.track.pos.x), py = Y(t.track.pos.y); ctx.strokeStyle = "#9dd5b1"; ctx.lineWidth = 1.5;
+      for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) { ctx.beginPath(); ctx.moveTo(px + sx * 16, py + sy * 9); ctx.lineTo(px + sx * 16, py + sy * 16); ctx.lineTo(px + sx * 9, py + sy * 16); ctx.stroke(); } ctx.lineWidth = 1; } }
+  }
   cv.addEventListener("click", (e) => { if (!result) return; const rect = cv.getBoundingClientRect(); const mx = e.clientX - rect.left, my = e.clientY - rect.top; let best = null, bd = 18;
     for (const r of result.results) { const d = Math.hypot(X(r.track.pos.x) - mx, Y(r.track.pos.y) - my); if (d < bd) { bd = d; best = r; } }
-    if (best) { selected = best.track_id; renderQueue(); renderHUD(); draw(); } });
+    if (best) { selected = best.track_id; renderQueue(); renderHUD(); renderType(); draw(); } });
   document.addEventListener("keydown", (e) => { if (e.code === "Space" && e.target.tagName !== "TEXTAREA" && e.target.tagName !== "INPUT") { e.preventDefault(); $("btnPlay").click(); } });
 
-  resize(); start(scSel.value);
+  resize(); start(scSel.value); requestAnimationFrame(animate);
 })();
 </script>
 </body>
