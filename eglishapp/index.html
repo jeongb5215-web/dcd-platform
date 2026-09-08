@@ -778,7 +778,7 @@ function deleteDeck(deckId) {
 // ── Practice Mode ──────────────────────────────────────────
 let practiceState = {};
 const RATE_STEPS = [0.6, 0.8, 1.0, 1.2];
-const practiceOptions = { showKo: true, repeatEn: false, rate: 0.8, accent: 'US' };
+const practiceOptions = { showKo: true, repeatCount: 1, rate: 0.8, accent: 'US' };
 
 function toggleShowKo() {
   practiceOptions.showKo = !practiceOptions.showKo;
@@ -787,10 +787,11 @@ function toggleShowKo() {
   renderCard();
 }
 
+// 영어 반복 재생 횟수 순환 (1회 → 2회 → 3회 → 4회 → 5회 → 1회)
 function toggleRepeatEn() {
-  practiceOptions.repeatEn = !practiceOptions.repeatEn;
+  practiceOptions.repeatCount = practiceOptions.repeatCount >= 5 ? 1 : practiceOptions.repeatCount + 1;
   const btn = document.getElementById('btnRepeatEn');
-  if (btn) { btn.textContent = practiceOptions.repeatEn ? '영어 2회' : '영어 1회'; btn.classList.toggle('on', practiceOptions.repeatEn); }
+  if (btn) { btn.textContent = '영어 ' + practiceOptions.repeatCount + '회'; btn.classList.toggle('on', practiceOptions.repeatCount > 1); }
 }
 
 // 발음 속도 순환 (0.6x → 0.8x → 1.0x → 1.2x)
@@ -1014,7 +1015,7 @@ function autoPlayEnKo(en, ko, onDone) {
     currentAudio = null;
   }
 
-  var repeat = practiceOptions.repeatEn ? 2 : 1;
+  var repeat = practiceOptions.repeatCount;
 
   function makeApEnUtter() {
     var u = new SpeechSynthesisUtterance(cleanTTS(en));
@@ -1197,7 +1198,7 @@ function speakEnKo(en, ko) {
   if (currentAudio) { try { currentAudio.pause(); } catch(e) {} currentAudio = null; }
   if (!window.speechSynthesis) { speakAudio(en); return; }
 
-  var repeat = practiceOptions.repeatEn ? 2 : 1;
+  var repeat = practiceOptions.repeatCount;
 
   function makeEnUtter() {
     var u = new SpeechSynthesisUtterance(cleanTTS(en));
