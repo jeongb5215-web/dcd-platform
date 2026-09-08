@@ -1897,6 +1897,18 @@ const shortLab=k=>SHORT[k]||lab(k);
    원본 Blob을 저장하고 메모리에 objectURL을 캐시해 렌더는 동기로 유지한다.
    ========================================================================== */
 const IMG={};                    /* {itemId:{url, meta}} — 렌더용 캐시 */
+/* 저장소에 함께 배포되는 "기본 제공" 이미지 — 방문자 전원에게 동일하게 보인다.
+   IndexedDB(개인 브라우저 로컬 업로드)가 있으면 그쪽이 우선이며, seedImages()는
+   loadImages()보다 먼저 실행되어 자리를 채워둔 뒤 로컬 업로드가 있으면 덮어써진다. */
+const SEED_IMG={
+ ru_geran5:{url:"images/ru_geran5.jpg",bytes:28407,meta:{
+   kind:"real",credit:"TSN.ua — Flash 제공 사진",
+   src:"https://tsn.ua/ru/ato/novye-reaktivnye-gerani-5-uzhe-sbivayut-vozle-kieva-flesh-nazval-glavnuyu-opasnost-3161732.html",
+   license:"보도자료 인용 (fair use 검토 필요)",
+   note:"OSINT/보도 사진 — 정부·제조사 공식 확인 자료 아님, 게란-5로 보도됨",
+   uncertain:true,added:"2026-09-08",dim:""}}
+};
+function seedImages(){for(const id in SEED_IMG)if(!IMG[id])IMG[id]=SEED_IMG[id]}
 const IMGKIND=[
  {id:"real",ko:"실물 사진",en:"In-service photo"},
  {id:"wreck",ko:"잔해·격추 사진",en:"Wreckage"},
@@ -3454,11 +3466,12 @@ function csvImport(){
    document.body가 준비된 뒤에 시작하도록 방어한다. */
 function boot(){
  if(document.getElementById("app"))return;
+ seedImages();
  document.body.insertAdjacentHTML("afterbegin",shell());
  applyTheme();
  window.addEventListener("hashchange",route);
  route();
- /* 저장된 이미지를 불러온 뒤 다시 그린다 (없으면 실루엣 유지) */
+ /* 저장된(로컬 업로드) 이미지를 불러온 뒤 다시 그린다 — 있으면 기본 제공 이미지를 덮어쓴다 */
  loadImages().then(n=>{if(n)rerender()}).catch(()=>{});
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);
