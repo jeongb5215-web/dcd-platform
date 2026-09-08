@@ -56,7 +56,15 @@
       {
         "date": "2026-09-05",
         "attacks_total": 120,
-        "by_type": { "Geran-2": 80, "Lancet": 30 },
+        "attacks_total_source": "https://...",   // attacks_total 수치를 실제로 보도한 단일 출처(대개 sources[0])
+        "intercepted_source": "https://...",     // intercepted 수치를 실제로 보도한 단일 출처
+        // 기종별(Geran-2/3/4/5, Lancet, Shahed-136 등) 공격량·요격량 분리 집계.
+        // 출처가 기종별로 명시적으로 구분해 보도한 경우에만 채운다 — 추정으로 채우지 않는다.
+        // 전체와 기종별 합계가 안 맞을 수 있으므로(미상 물량 존재) attacks_total을 그대로 신뢰한다.
+        "by_type": {
+          "Geran-2": { "attacks": 80, "intercepted": 65, "source": "https://..." },
+          "Lancet":  { "attacks": 30, "intercepted": 20, "source": "https://..." }
+        },
         "launch_areas": ["Kursk", "Bryansk"],
         "target_areas": ["Kyiv", "Odesa"],
         "intercepted": 95,
@@ -69,6 +77,19 @@
       { "month": "2026-08", "attacks_total": 3400, "intercepted_total": 2700, "intercept_rate": 0.79 }
     ]
   },
+
+  /* attack_stats.daily 작성 규칙 (2026-09-08 추가)
+     1. attacks_total_source / intercepted_source는 필수다. 그 날의 attacks_total·intercepted 수치를
+        실제로 보도한 단일 출처 URL을 적는다 (여러 출처가 같은 수치를 보도하면 그중 가장 1차에 가까운
+        쪽 — 우크라이나 공군/합참 발표를 직접 인용한 매체 — 을 고른다). sources[]는 교차검증용 전체
+        목록으로 계속 유지한다.
+     2. by_type은 출처가 기종(Geran-2/3/4/5, Shahed-136, Lancet 등)을 명시적으로 구분해 보도한 경우에만
+        채운다. 매체가 "샤헤드·게란 계열 N기"처럼 뭉뚱그려 보도하면 by_type은 비워두고
+        note에 "기종별 세부 수치 미확인"이라고 남긴다 — 절대 비율로 추정해 채우지 않는다.
+     3. by_type 각 항목의 attacks/intercepted 값도 각자 source를 갖는다. 여러 기종이 같은 발표문
+        하나에서 함께 나오면 동일 URL을 반복 사용해도 된다.
+     4. by_type 합계가 attacks_total보다 작아도 정상이다(미상 물량 = attacks_total 그대로 신뢰).
+        by_type 합계가 attacks_total을 초과하면 상충으로 보고 note에 "검증 필요"로 남긴다. */
 
   "cuas_tech": {
     "log": [

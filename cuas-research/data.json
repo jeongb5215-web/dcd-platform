@@ -68,6 +68,8 @@
       {
         "date": "2026-09-05",
         "attacks_total": 167,
+        "attacks_total_source": "https://en.interfax.com.ua/news/general/1199161.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4161075-air-defense-forces-down-128-drones-used-by-russia-to-attack-ukraine-overnight.html",
         "by_type": {},
         "launch_areas": ["Orel", "Millerovo", "Kursk", "Donetsk(점령지)", "Hvardiyske/Crimea(점령지)"],
         "target_areas": [],
@@ -79,6 +81,8 @@
       {
         "date": "2026-09-06",
         "attacks_total": 108,
+        "attacks_total_source": "https://unn.ua/en/news/russia-launched-108-attack-uavs-at-ukraine-air-defense-shot-down-88-targets",
+        "intercepted_source": "https://unn.ua/en/news/russia-launched-108-attack-uavs-at-ukraine-air-defense-shot-down-88-targets",
         "by_type": {},
         "launch_areas": ["Millerovo", "Orel", "Kursk", "Donetsk(점령지)", "Hvardiyske/Crimea(점령지)"],
         "target_areas": [],
@@ -90,6 +94,8 @@
       {
         "date": "2026-09-07",
         "attacks_total": 810,
+        "attacks_total_source": "https://english.nv.ua/nation/russia-launches-record-810-drones-and-decoys-in-massive-attack-on-ukraine-50543009.html",
+        "intercepted_source": "https://english.nv.ua/nation/russia-launches-record-810-drones-and-decoys-in-massive-attack-on-ukraine-50543009.html",
         "by_type": {},
         "launch_areas": ["Kursk", "Bryansk", "Millerovo", "Oryol", "Shatalovo", "Primorsko-Akhtarsk", "Hvardiyske/Crimea(점령지)", "Chauda/Crimea(점령지)"],
         "target_areas": ["Odesa", "Kyiv", "Dnipropetrovsk", "Poltava", "Zhytomyr", "Sumy", "Kharkiv"],

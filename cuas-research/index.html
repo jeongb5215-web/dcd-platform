@@ -220,6 +220,25 @@ function renderGeranBaseline(baseline) {
   $('geranBaseline').innerHTML = html;
 }
 
+function byTypeCompact(byType) {
+  const keys = byType ? Object.keys(byType) : [];
+  if (!keys.length) return '—';
+  return keys.map(k => {
+    const v = byType[k] || {};
+    const label = `${esc(k)} ${esc(v.attacks ?? '?')}(${esc(v.intercepted ?? '?')})`;
+    return v.source ? `<a href="${esc(v.source)}" target="_blank" rel="noopener" title="출처 보기">${label}</a>` : label;
+  }).join(', ');
+}
+function renderByType(byType) {
+  const keys = byType ? Object.keys(byType) : [];
+  if (!keys.length) return '';
+  const rows = keys.map(k => {
+    const v = byType[k] || {};
+    const label = `${esc(k)}: 공격 ${esc(v.attacks ?? '—')} · 요격 ${esc(v.intercepted ?? '—')}`;
+    return v.source ? `<a href="${esc(v.source)}" target="_blank" rel="noopener">${label}</a>` : label;
+  });
+  return `<div style="margin-top:8px;font-size:12px;color:var(--muted)">기종별: ${rows.join(' &nbsp;·&nbsp; ')}</div>`;
+}
 function renderStats(stats) {
   const daily = (stats && stats.daily) || [];
   const monthly = (stats && stats.monthly) || [];
@@ -227,23 +246,27 @@ function renderStats(stats) {
     $('statsLatest').innerHTML = emptyState('아직 수집된 공격/요격 통계가 없습니다.');
   } else {
     const latest = daily[daily.length - 1];
+    const srcLink = (v, src) => src ? `<a href="${esc(src)}" target="_blank" rel="noopener" title="출처 보기">${esc(v ?? '—')}</a>` : esc(v ?? '—');
     $('statsLatest').innerHTML = `
       <div class="stat-grid">
-        <div class="stat-box"><div class="num">${esc(latest.attacks_total ?? '—')}</div><div class="lbl">${fmtDate(latest.date)} 공격량</div></div>
-        <div class="stat-box"><div class="num">${esc(latest.intercepted ?? '—')}</div><div class="lbl">요격량</div></div>
+        <div class="stat-box"><div class="num">${srcLink(latest.attacks_total, latest.attacks_total_source)}</div><div class="lbl">${fmtDate(latest.date)} 공격량</div></div>
+        <div class="stat-box"><div class="num">${srcLink(latest.intercepted, latest.intercepted_source)}</div><div class="lbl">요격량</div></div>
         <div class="stat-box"><div class="num">${latest.intercept_rate != null ? Math.round(latest.intercept_rate*100)+'%' : '—'}</div><div class="lbl">요격률</div></div>
-      </div>`;
+      </div>
+      ${renderByType(latest.by_type)}`;
   }
   if (!daily.length) {
     $('statsDaily').innerHTML = emptyState('일별 데이터 없음');
   } else {
-    let html = '<table class="spec"><thead><tr><th>날짜</th><th>공격량</th><th>요격량</th><th>요격률</th><th>주요 발사지역</th><th>주요 목표지역</th></tr></thead><tbody>';
+    let html = '<table class="spec"><thead><tr><th>날짜</th><th>공격량</th><th>요격량</th><th>요격률</th><th>기종별 공격(요격)</th><th>주요 발사지역</th><th>주요 목표지역</th></tr></thead><tbody>';
     daily.slice().reverse().slice(0, 30).forEach(d => {
+      const srcLink = (v, src) => src ? `<a href="${esc(src)}" target="_blank" rel="noopener" title="출처 보기">${esc(v ?? '—')}</a>` : esc(v ?? '—');
       html += `<tr>
         <td class="num">${fmtDate(d.date)}</td>
-        <td class="num">${esc(d.attacks_total ?? '—')}</td>
-        <td class="num">${esc(d.intercepted ?? '—')}</td>
+        <td class="num">${srcLink(d.attacks_total, d.attacks_total_source)}</td>
+        <td class="num">${srcLink(d.intercepted, d.intercepted_source)}</td>
         <td class="num">${d.intercept_rate != null ? Math.round(d.intercept_rate*100)+'%' : '—'}</td>
+        <td style="font-size:12px">${byTypeCompact(d.by_type)}</td>
         <td>${esc((d.launch_areas||[]).join(', ') || '—')}</td>
         <td>${esc((d.target_areas||[]).join(', ') || '—')}</td>
       </tr>`;
