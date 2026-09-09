@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-08T22:04:49Z",
+    "last_daily_run": "2026-09-09T22:10:01Z",
     "last_weekly_run": "2026-09-06T22:05:50Z",
     "schema_version": 1
   },
@@ -116,6 +116,19 @@
         "intercept_rate": 0.86,
         "sources": ["https://ua.news/en/war-vs-rf/rf-atakuvala-ukrayinu-raketami-ta-166-dronami-ppo-znishchila-175-povitrianikh-tsilei", "https://www.nbcnews.com/world/ukraine/russian-drone-missile-strikes-ukrainian-capital-kill-2-people-ending-p-rcna596538", "https://www.usnews.com/news/world/articles/2026-09-07/russian-ballistic-missiles-hit-kyiv-as-us-envoys-leave", "https://abcnews.com/International/wireStory/russia-launched-massive-overnight-strike-9-ukrainian-cities-135997859"],
         "note": "2026-09-07 18:00~09-08 08:30 시점 집계. 드론 166기 중 142기 요격 + 순항미사일 32기 중 31기 요격 + 탄도미사일(발사량 미상) 중 2기 요격 = 총 175개 표적 요격·제압(공식 발표). attacks_total/intercepted는 드론만 집계(기존 관례 유지). 기종별 세부 수치 미확인(Shahed/Geran 계열 뭉뚱그려 보도) — by_type 비움. 미국 특사(쿠슈너·위트코프) 방문에 따른 사흘간의 소강상태가 끝난 뒤 재개된 첫 대규모 공습으로, 키이우·오데사 집중 타격. 피격 29개 지점, 잔해 낙하 9개 지점. 사상자 수는 매체별 편차 큼(2명 사망·10명 부상 ~ 5명 사망·63명 부상) — 교차검증 필요, 확정 수치 아님."
+      },
+      {
+        "date": "2026-09-09",
+        "attacks_total": 196,
+        "attacks_total_source": "https://en.interfax.com.ua/news/general/1201127.html",
+        "intercepted_source": "https://en.interfax.com.ua/news/general/1201127.html",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Kursk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)", "Bryansk", "Voronezh"],
+        "target_areas": ["Odesa", "Kyiv"],
+        "intercepted": 165,
+        "intercept_rate": 0.84,
+        "sources": ["https://en.interfax.com.ua/news/general/1201127.html", "https://www.ukrinform.net/rubric-ato/4162294-air-defenses-down-165-drones-in-overnight-russian-attack-on-ukraine.html", "https://unn.ua/en/news/russia-attacked-ukraine-with-missiles-and-196-drones-air-defenses-shot-down-165-uavs", "https://ua.news/en/war-vs-rf/ppo-zneshkodila-165-iz-196-droniv-pid-chas-ataki-rf"],
+        "note": "2026-09-08 18:00~09-09 08:30 시점 집계. 드론(Shahed/게란 계열·제트추진형·Gerbera·Parodiya 기만기 포함) 196기 중 165기 요격·제압. 이스칸데르-M 탄도미사일(크림반도 발사)·S8000 반데롤 드론(아조프해 발사)은 별도 집계, 드론 발사방향은 오룔·쿠르스크·도네츠크(점령지)·흐바르디이스케(크림반도), 미사일은 브랸스크·쿠르스크 및 크림반도(이스칸데르-M), 브랸스크·보로네시(추가 탄도미사일)에서 발사. attacks_total/intercepted는 드론만 집계(기존 관례 유지). 기종별 세부 수치 미확인 — by_type 비움. 피격 23개 지점, 잔해 낙하 4개 지점. 키이우 제트추진 드론 타격으로 최소 14명 부상(어린이 2명 포함, Forbes 보도) — 매체별 사상자 수치 편차 있어 교차검증 필요, 확정 수치 아님."
       }
     ],
     "monthly": []
@@ -211,6 +224,33 @@
         "source": "https://www.pravda.com.ua/eng/news/2026/08/14/8048658/",
         "source_name": "Ukrainska Pravda / Mykhailo Fedorov, 국방부(제식명), Militarnyi",
         "significance": "기존 STING/BAGNET 등 저가 프로펠러형 요격드론(최대 250~315km/h)으로는 요격이 어려운 제트추진 Geran-3/4/5(순항 300~500km/h대)를 직접 상대할 수 있는 600km/h급 제트 요격드론의 최초 등장 — 우크라이나 요격체계가 프로펠러형에서 제트추진형으로 확장되는 전환점"
+      },
+      {
+        "date": "2026-08-29",
+        "system": "요격드론(제트추진 대응 4종)",
+        "event_type": "신규 시험",
+        "detail": "우크라이나 국방장관 예우헨 흐마라(Yevhen Khmara)가 2026-08-29 러시아의 제트추진 게란-4/5(최대 600km/h, 기존 피스톤 샤헤드 대비 3배 이상 속도)에 대응 가능한 요격체계 4종이 야전 시험을 거치고 있다고 발표. 목표는 신속한 성능 고도화 후 수천 대 규모 양산 전환. 대통령 자문 세르히 '플래시' 베스크레스트노프에 따르면 러시아는 2026년 8월 한 달간 제트추진 드론 약 2,500기를 발사(7월 약 1,500기에서 증가).",
+        "source": "https://www.ukrinform.net/rubric-ato/4159554-ukraine-testing-at-least-four-jetpowered-interceptors-flash.html",
+        "source_name": "Ukrinform (국방장관 흐마라 발표 인용)",
+        "significance": "기존 08-21 로그(Alexa Spatium/JetKiller 단일 사례)에 이어, 제트추진 게란-4/5에 대응하는 신규 요격체계가 복수(4종)로 동시에 야전시험 단계에 진입 — 요격체계 다변화 및 양산 전환 준비가 확인된 후속 전환점"
+      },
+      {
+        "date": "2026-09-02",
+        "system": "Griffen(Firebolt Engineering)",
+        "event_type": "실전 배치",
+        "detail": "영국-우크라이나 합작사 Firebolt Engineering의 제트추진 요격드론 'Griffen'이 우크라이나 공군 2개 부대에 배치되어 실전 임무를 수행 중인 것으로 확인(2026-09-02 보도). 2026-07-27 최초의 제트추진 요격드론에 의한 샤헤드(게란-2)급 표적 격추 검증 이후, 시험 단계를 넘어 정규 공군 부대의 실전 운용으로 전환. 같은 시기 STING도 최근 제트추진 드론 2기를 격추한 것으로 함께 보도됨.",
+        "source": "https://euromaidanpress.com/2026/09/02/twenty-ukrainian-firms-are-racing-to-catch-russias-jet-powered-shaheds-this-ones-interceptor-is-already-flying-combat-missions/",
+        "source_name": "Euromaidan Press",
+        "significance": "제트추진 요격드론이 시험비행 검증 단계(2026-07-27)에서 정규 공군 부대의 실전 임무 운용 단계로 전환된 사례 — 제트추진 요격체계 실전 전력화 속도를 보여주는 전환점"
+      },
+      {
+        "date": "2026-09-08",
+        "system": "AI Vision / EO-IR (자동사격 대드론 모듈)",
+        "event_type": "신규 시험",
+        "detail": "우크라이나 방산업체 Ukrainian Armor가 UNIT사와 공동 개발한 무인 대드론 사격모듈 시제품을 폴란드 키엘체 MSPO 2026(9/8~11) 국제방산전시회에서 공개. 카메라 3~4대(주간광학+열영상)로 360도 전방위 탐지를 수행하며 최대 150m 거리에서 드론을 자동 탐지·추적, 벅샷 산탄총으로 자동 교전. 아직 정식 명칭이 없는 실험적 시제품 단계.",
+        "source": "https://news.az/news/ukrainian-armor-debuts-unmanned-anti-drone-module",
+        "source_name": "News.az / Militarnyi",
+        "significance": "EO-IR 탐지+AI 자동추적을 장갑차 근접방어용 산탄총 교전체계에 결합한 신규 사례 — 소형 FPV·드론에 대한 근접(150m 이내) 자동교전 방어체계의 시제품 단계 등장"
       }
     ]
   },
