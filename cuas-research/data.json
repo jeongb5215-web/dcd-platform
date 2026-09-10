@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-09T22:10:01Z",
+    "last_daily_run": "2026-09-10T22:08:58Z",
     "last_weekly_run": "2026-09-06T22:05:50Z",
     "schema_version": 1
   },
@@ -60,6 +60,18 @@
         "confidence": "중간",
         "status": "확인됨",
         "note": "전자전(EW)으로 통신 두절 시에도 종말 단계에서 자율 표적 획득이 가능해짐 — RF 재밍에 대한 러시아측 대응 전환점, 우크라이나 항만·이동 표적(선박) 타격에 실전 활용"
+      },
+      {
+        "date": "2026-09-10",
+        "variant": "Shahed-136 / Geran-2",
+        "field": "guidance",
+        "old_value": null,
+        "new_value": "중국산 Xingkai Tech XK-F358 메시모뎀 + 전방 감시카메라 탑재를 통한 FPV식 수동 유도(중계망 기반 원격조종) 기능 통합이 2026년 7월 시험적 장착 → 8월 정례화 → 9월 초 기준 실험 단계를 넘어 정식 양산 적용(시리얼 솔루션)으로 확인",
+        "new_source": "https://english.nv.ua/nation/russia-turns-shaheds-into-fpv-drones-with-cameras-and-mesh-modems-defense-express-50544076.html",
+        "new_source_name": "NV(New Voice of Ukraine) / Defense Express",
+        "confidence": "중간",
+        "status": "확인됨",
+        "note": "기존 Gerbera 기만기에서만 확인되던 메시모뎀 중계망을 Shahed-136/Geran-2 본체에도 확대 적용 — RF 재밍으로 표준 무선유도가 두절돼도 조작자가 카메라 영상을 보며 수동 유도할 수 있는 FPV형 예비유도 수단 확보. Geran-4의 자율 EO 시커(2026-08-09 로그)와는 별개로, 구형 피스톤 계열(Shahed-136/Geran-2)에 적용된 저비용 대응책이라는 점에서 구분됨"
       }
     ]
   },
@@ -129,6 +141,19 @@
         "intercept_rate": 0.84,
         "sources": ["https://en.interfax.com.ua/news/general/1201127.html", "https://www.ukrinform.net/rubric-ato/4162294-air-defenses-down-165-drones-in-overnight-russian-attack-on-ukraine.html", "https://unn.ua/en/news/russia-attacked-ukraine-with-missiles-and-196-drones-air-defenses-shot-down-165-uavs", "https://ua.news/en/war-vs-rf/ppo-zneshkodila-165-iz-196-droniv-pid-chas-ataki-rf"],
         "note": "2026-09-08 18:00~09-09 08:30 시점 집계. 드론(Shahed/게란 계열·제트추진형·Gerbera·Parodiya 기만기 포함) 196기 중 165기 요격·제압. 이스칸데르-M 탄도미사일(크림반도 발사)·S8000 반데롤 드론(아조프해 발사)은 별도 집계, 드론 발사방향은 오룔·쿠르스크·도네츠크(점령지)·흐바르디이스케(크림반도), 미사일은 브랸스크·쿠르스크 및 크림반도(이스칸데르-M), 브랸스크·보로네시(추가 탄도미사일)에서 발사. attacks_total/intercepted는 드론만 집계(기존 관례 유지). 기종별 세부 수치 미확인 — by_type 비움. 피격 23개 지점, 잔해 낙하 4개 지점. 키이우 제트추진 드론 타격으로 최소 14명 부상(어린이 2명 포함, Forbes 보도) — 매체별 사상자 수치 편차 있어 교차검증 필요, 확정 수치 아님."
+      },
+      {
+        "date": "2026-09-10",
+        "attacks_total": 149,
+        "attacks_total_source": "https://en.interfax.com.ua/news/general/1201768.html",
+        "intercepted_source": "https://en.interfax.com.ua/news/general/1201768.html",
+        "by_type": {},
+        "launch_areas": ["Millerovo", "Kursk", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": ["Kyiv", "Odesa", "Dnipropetrovsk", "Sumy"],
+        "intercepted": 128,
+        "intercept_rate": 0.86,
+        "sources": ["https://en.interfax.com.ua/news/general/1201768.html", "https://www.pravda.com.ua/eng/news/2026/09/10/8052715/", "https://ua.news/en/war-vs-rf/u-nich-na-10-veresnia-rf-atakuvala-ukrayinu-149-dronami-ppo-znishchila-bilshist-z-nikh", "https://abcnews.com/International/nato-aircraft-deployed-poland-russian-jet-powered-drones/story?id=136327662"],
+        "note": "2026-09-09 18:00~09-10 08:00 시점 잠정 집계. Shahed/Herbera/Parodiya 기만기 149기 중 약 절반이 제트추진형으로 보도, 128기 요격·제압. 발사방향은 밀레로보·쿠르스크·프리모르스코-아흐타르스크·도네츠크(점령지)·흐바르디이스케(크림반도 점령지). 피격 13개 지점, 잔해 낙하 9개 지점. 수미 쇼핑몰 피격 2명 사망·23명 부상, 키이우 홀로시이우 주유소 피격 3명 부상 및 주거건물 피해, 드니프로페트로우스크 8명 부상 — 매체별 사상자 수치 편차 있어 교차검증 필요, 확정 수치 아님. 러시아 국방부는 오데사행 화물선 2척도 타격 대상이었다고 주장. 기종별 세부 수치 미확인 — by_type 비움. 나토 폴란드 주둔 항공기가 이번 제트추진 드론 공격에 대응해 출격."
       }
     ],
     "monthly": []
@@ -251,6 +276,15 @@
         "source": "https://news.az/news/ukrainian-armor-debuts-unmanned-anti-drone-module",
         "source_name": "News.az / Militarnyi",
         "significance": "EO-IR 탐지+AI 자동추적을 장갑차 근접방어용 산탄총 교전체계에 결합한 신규 사례 — 소형 FPV·드론에 대한 근접(150m 이내) 자동교전 방어체계의 시제품 단계 등장"
+      },
+      {
+        "date": "2026-09-09",
+        "system": "요격드론(General Cherry Bullet / Grim Tech / BlueBird Tech)",
+        "event_type": "신규 시험",
+        "detail": "폴란드 키엘체 MSPO 2026(9/8~11) 전시회에서 우크라이나 요격드론 업체들이 제트추진 게란 대응 신형 요격체계를 다수 공개. General Cherry는 고체연료(화학) 부스터를 장착해 최고속도 약 450km/h로 끌어올린 'Bullet' 요격드론 개량형을 공개, 가을 중 양산 전환 목표. Grim Tech는 최고속도 500~700km/h급 요격드론을 개발 중이라고 발표. BlueBird Tech도 대량양산 가능한 저비용 제트 요격드론 개발 계획을 공개(아직 초기 단계).",
+        "source": "https://ua.news/en/war-vs-rf/ukrayinski-kompaniyi-rozrobliaiut-perekhopliuvachi-proti-reaktivnikh-droniv-rosiyi",
+        "source_name": "UA.News",
+        "significance": "기존 로그(08-21/08-29/09-02)에서 익명(4종) 또는 개별 사례(Alexa Spatium/JetKiller/Griffen)로만 확인되던 제트 요격체계 개발 경쟁에 구체적 업체명(General Cherry/Grim Tech/BlueBird Tech)과 세부 속도 목표가 국제 방산전시회를 통해 다수 확인됨 — 요격드론 산업 다변화·양산 경쟁이 본격화되고 있음을 보여주는 사례"
       }
     ]
   },
