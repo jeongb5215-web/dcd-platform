@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-10T22:08:58Z",
+    "last_daily_run": "2026-09-11T22:08:03Z",
     "last_weekly_run": "2026-09-06T22:05:50Z",
     "schema_version": 1
   },
@@ -154,6 +154,19 @@
         "intercept_rate": 0.86,
         "sources": ["https://en.interfax.com.ua/news/general/1201768.html", "https://www.pravda.com.ua/eng/news/2026/09/10/8052715/", "https://ua.news/en/war-vs-rf/u-nich-na-10-veresnia-rf-atakuvala-ukrayinu-149-dronami-ppo-znishchila-bilshist-z-nikh", "https://abcnews.com/International/nato-aircraft-deployed-poland-russian-jet-powered-drones/story?id=136327662"],
         "note": "2026-09-09 18:00~09-10 08:00 시점 잠정 집계. Shahed/Herbera/Parodiya 기만기 149기 중 약 절반이 제트추진형으로 보도, 128기 요격·제압. 발사방향은 밀레로보·쿠르스크·프리모르스코-아흐타르스크·도네츠크(점령지)·흐바르디이스케(크림반도 점령지). 피격 13개 지점, 잔해 낙하 9개 지점. 수미 쇼핑몰 피격 2명 사망·23명 부상, 키이우 홀로시이우 주유소 피격 3명 부상 및 주거건물 피해, 드니프로페트로우스크 8명 부상 — 매체별 사상자 수치 편차 있어 교차검증 필요, 확정 수치 아님. 러시아 국방부는 오데사행 화물선 2척도 타격 대상이었다고 주장. 기종별 세부 수치 미확인 — by_type 비움. 나토 폴란드 주둔 항공기가 이번 제트추진 드론 공격에 대응해 출격."
+      },
+      {
+        "date": "2026-09-11",
+        "attacks_total": 161,
+        "attacks_total_source": "https://en.interfax.com.ua/news/general/1202456.html",
+        "intercepted_source": "https://en.interfax.com.ua/news/general/1202456.html",
+        "by_type": {},
+        "launch_areas": ["Belgorod", "Oryol", "Kursk", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiyske/Crimea(점령지)"],
+        "target_areas": ["Kyiv", "Zaporizhzhia", "Odesa"],
+        "intercepted": 138,
+        "intercept_rate": 0.86,
+        "sources": ["https://en.interfax.com.ua/news/general/1202456.html", "https://www.kyivpost.com/post/84256", "https://www.euronews.com/my-europe/2026/09/11/russia-launches-160-drones-overnight-across-ukraine-killing-at-least-one-and-leaving-many-", "https://unn.ua/en/news/russia-attacked-ukraine-with-161-drones-air-defense-destroyed-138-targets", "https://ua.news/en/war-vs-rf/ppo-ukrayini-zbila-ta-podavila-138-vorozhikh-droniv-za-nich", "https://112.ua/en/rosia-11-veresna-atakuvala-ukrainu-161-dronami-z-zastosuvannam-sahediv-i-gerberiv-184602"],
+        "note": "2026-09-10 18:00~09-11 08:00 시점 집계. Shahed(제트추진형 포함)/Gerbera/Parodiya 기만기 161기 중 138기 요격·제압 + S8000 Banderol 순항미사일형 1기 별도(요격 여부 미확인, attacks_total/intercepted는 드론만 집계하는 기존 관례 유지). 발사지역: 벨고로드·오룔·쿠르스크·프리모르스코-아흐타르스크(러) 및 도네츠크·흐바르디이스케/크림반도(점령지). 피격 19개 지점, 잔해 낙하 3개 지점. 키이우·자포리자 타격으로 최소 10명 부상(Kyiv Post 보도), 키이우 드니프로구 9층 건물 파손·화재, 오볼론구 창고 화재, 오데사 자원봉사단체 창고 피해. 사상자 수는 매체별 편차 있음(Kyiv Independent은 최근 24시간 전국 기준 사망 9명·부상 145명을 보도했으나 이 공격에만 국한된 수치인지 불명확) — 교차검증 필요, 확정 수치 아님. 기종별 세부 수치 미확인 — by_type 비움."
       }
     ],
     "monthly": []
@@ -285,6 +298,24 @@
         "source": "https://ua.news/en/war-vs-rf/ukrayinski-kompaniyi-rozrobliaiut-perekhopliuvachi-proti-reaktivnikh-droniv-rosiyi",
         "source_name": "UA.News",
         "significance": "기존 로그(08-21/08-29/09-02)에서 익명(4종) 또는 개별 사례(Alexa Spatium/JetKiller/Griffen)로만 확인되던 제트 요격체계 개발 경쟁에 구체적 업체명(General Cherry/Grim Tech/BlueBird Tech)과 세부 속도 목표가 국제 방산전시회를 통해 다수 확인됨 — 요격드론 산업 다변화·양산 경쟁이 본격화되고 있음을 보여주는 사례"
+      },
+      {
+        "date": "2026-08-28",
+        "system": "STING",
+        "event_type": "기술 개선",
+        "detail": "미국 기업 Archimedes가 80mm급·24GHz 대역 능동 레이더 시커(가격 약 4,000달러)를 개발해 Wild Hornets의 STING 요격드론에 장착·시연. 기존 EO(전자광학) 센서 단독 의존형 요격드론이 안개·구름 등 저시정 환경에서 표적을 놓치는 문제를 해결하기 위한 레이더 호밍 방식으로, 대통령 자문 세르히 '플래시' 베스크레스트노프가 우크라이나 요격드론의 핵심 개선과제로 지목.",
+        "source": "https://militarnyi.com/en/news/radar-homing-head-interceptor-drone-ukraine/",
+        "source_name": "Militarnyi / Euromaidan Press",
+        "significance": "EO 센서 단독 의존형 요격드론의 기상 제약(저시정 시 요격률 급감) 문제에 대한 저비용 레이더 시커 솔루션 — 전천후 요격 능력 확보를 위한 센서 기술 전환점"
+      },
+      {
+        "date": "2026-09-11",
+        "system": "MAC Dead Fly / Katran (해상 플랫폼 통합)",
+        "event_type": "실전 배치",
+        "detail": "우크라이나 국방부 정보총국(GUR) FERRATA 특수작전부대(흑해 군단 포함)가 해상 무인정 'Katran'을 요격드론(MAC Dead Fly, AI 자율표적획득, 최대 380km/h, 27기 탑재) 및 레이더 정찰장비의 이동식 운반체로 활용해 우크라이나 공군과 합동으로 키이우 영공 방어에 투입. 지상 고정진지가 아닌 수상 플랫폼에서 탐지·요격 자산을 운용하며, GUR는 2026년 9월 한 달간 173건의 교전을 기록했다고 영상으로 공개.",
+        "source": "https://www.ukrinform.net/rubric-ato/4163004-diu-deploys-interceptor-drones-to-protect-kyivs-airspace.html",
+        "source_name": "Ukrinform (GUR 발표 인용)",
+        "significance": "8월 말 이후 제트추진 게란 드론의 24시간 상시 공습으로 요격 난이도가 높아진 키이우 방어에 해상 기반 이동식 탐지·요격 플랫폼을 결합 — 지상 고정 방공망의 사각지대를 보완하는 새로운 전술적 통합 사례"
       }
     ]
   },
