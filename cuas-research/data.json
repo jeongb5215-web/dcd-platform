@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-11T22:08:03Z",
+    "last_daily_run": "2026-09-12T22:03:40Z",
     "last_weekly_run": "2026-09-06T22:05:50Z",
     "schema_version": 1
   },
@@ -72,6 +72,18 @@
         "confidence": "중간",
         "status": "확인됨",
         "note": "기존 Gerbera 기만기에서만 확인되던 메시모뎀 중계망을 Shahed-136/Geran-2 본체에도 확대 적용 — RF 재밍으로 표준 무선유도가 두절돼도 조작자가 카메라 영상을 보며 수동 유도할 수 있는 FPV형 예비유도 수단 확보. Geran-4의 자율 EO 시커(2026-08-09 로그)와는 별개로, 구형 피스톤 계열(Shahed-136/Geran-2)에 적용된 저비용 대응책이라는 점에서 구분됨"
+      },
+      {
+        "date": "2026-08-28",
+        "variant": "Geran-4",
+        "field": "range_km",
+        "old_value": 450,
+        "new_value": "단일 비행 실측 약 960km (고도 5,000~7,000m 고고도 비행 시)",
+        "new_source": "https://militarnyi.com/en/news/jet-shahed-record-distance-reaches-volyn/",
+        "new_source_name": "Militarnyi (우크라이나 OSINT 그룹 Oko Hora 분석 인용) / UNITED24 Media",
+        "confidence": "중간",
+        "status": "검증 필요",
+        "note": "2026-08-28 크림반도 흐바르디이스케 시험장에서 발사된 제트추진 게란-4로 추정되는 기체가 볼린주 토르치나 마을까지 약 960km 비행 후 우크라이나 방공망에 격추됨 — 볼린주(폴란드 접경 인근) 최초 도달 사례. 기존 베이스라인(공식 사거리 450km, 일부 2차 출처 850km) 대비 훨씬 긴 거리로, 고고도 비행 시 항속거리가 대폭 늘어날 수 있음을 시사. 우크라이나 정부의 공식 확인이 아닌 OSINT 분석 기반이며 단발성 시험/공격 비행이라 상시 작전반경으로 보기 어려워 baseline.value는 유지하고 검증 필요 상태로 기록. 서부 우크라이나(NATO 접경 인접) 종심타격 능력 확장 가능성이라는 전술적 의미가 있어 로그에 등재"
       }
     ]
   },
@@ -167,6 +179,19 @@
         "intercept_rate": 0.86,
         "sources": ["https://en.interfax.com.ua/news/general/1202456.html", "https://www.kyivpost.com/post/84256", "https://www.euronews.com/my-europe/2026/09/11/russia-launches-160-drones-overnight-across-ukraine-killing-at-least-one-and-leaving-many-", "https://unn.ua/en/news/russia-attacked-ukraine-with-161-drones-air-defense-destroyed-138-targets", "https://ua.news/en/war-vs-rf/ppo-ukrayini-zbila-ta-podavila-138-vorozhikh-droniv-za-nich", "https://112.ua/en/rosia-11-veresna-atakuvala-ukrainu-161-dronami-z-zastosuvannam-sahediv-i-gerberiv-184602"],
         "note": "2026-09-10 18:00~09-11 08:00 시점 집계. Shahed(제트추진형 포함)/Gerbera/Parodiya 기만기 161기 중 138기 요격·제압 + S8000 Banderol 순항미사일형 1기 별도(요격 여부 미확인, attacks_total/intercepted는 드론만 집계하는 기존 관례 유지). 발사지역: 벨고로드·오룔·쿠르스크·프리모르스코-아흐타르스크(러) 및 도네츠크·흐바르디이스케/크림반도(점령지). 피격 19개 지점, 잔해 낙하 3개 지점. 키이우·자포리자 타격으로 최소 10명 부상(Kyiv Post 보도), 키이우 드니프로구 9층 건물 파손·화재, 오볼론구 창고 화재, 오데사 자원봉사단체 창고 피해. 사상자 수는 매체별 편차 있음(Kyiv Independent은 최근 24시간 전국 기준 사망 9명·부상 145명을 보도했으나 이 공격에만 국한된 수치인지 불명확) — 교차검증 필요, 확정 수치 아님. 기종별 세부 수치 미확인 — by_type 비움."
+      },
+      {
+        "date": "2026-09-12",
+        "attacks_total": 129,
+        "attacks_total_source": "https://kyivindependent.com/russian-attacks-kill-11-injure-96-across-ukraine-as-odesa-comes-under-mass-overnight-strike/",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4163392-air-defense-downs-six-kalibr-missiles-two-airlaunched-missiles-101-drones-in-overnight-attack.html",
+        "by_type": {},
+        "launch_areas": ["Kursk", "Oryol", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)", "Voronezh(미사일)", "Rostov(미사일)", "Black Sea(미사일)"],
+        "target_areas": ["Odesa", "Zaporizhzhia", "Kryvyi Rih"],
+        "intercepted": 101,
+        "intercept_rate": 0.78,
+        "sources": ["https://kyivindependent.com/russian-attacks-kill-11-injure-96-across-ukraine-as-odesa-comes-under-mass-overnight-strike/", "https://www.ukrinform.net/rubric-ato/4163392-air-defense-downs-six-kalibr-missiles-two-airlaunched-missiles-101-drones-in-overnight-attack.html", "https://ua.news/en/war-vs-rf/vnochi-sili-ppo-zbili-shist-kalibriv-ta-odnu-banderol", "https://unn.ua/en/news/the-air-force-reported-what-the-russians-attacked-ukraine-with-overnight-and-how-many-targets-were-shot-down", "https://www.kyivpost.com/post/84333", "https://112.ua/en/rosijska-armia-12-veresna-zavdala-masovanogo-udaru-po-odesi-ta-oblasti-zbito-ponad-100-cilej-184794"],
+        "note": "2026-09-11 18:00~09-12 08:30 시점 야간 공격 집계. Shahed(제트추진 포함)/S8000 Banderol/Parodiya 기만기 등 드론 129기 중 101기 요격·제압(요격률 0.78). 별도로 이스칸데르-M/KN-23 탄도미사일(보로네시·로스토프·크림 발사), 칼리브르 순항미사일 8기 발사 중 6기 요격, Kh-59/69 유도미사일 6기 발사 중 2기 요격, 반데롤 1기 요격 — 드론+미사일 통합 요격 110건(=101+6+1+2, attacks_total/intercepted는 기존 관례대로 드론만 집계). 오데사주가 주요 표적으로 다층 아파트 피격, 부상자 다수(매체별 23~38명 편차). 전국 기준 사망 11명·부상 96명 보도(교차검증 필요, 확정치 아님). 자포리자·크리비이리흐도 피격. 기종별 세부 수치 미확인 — by_type 비움. [특이사항] 이와 별개로 같은 날(2026-09-12) 06:30~18:00 주간 시간대에 우크라이나 공군이 사상 이례적인 대규모 주간 드론 공습을 별도 발표: 공격드론 410기(그중 제트추진 37기) 발사, 336기 요격·제압(제트추진 23기 포함), 21기 명중 확인, 18:00 시점 약 55기 미요격 상태로 공중 잔존(출처: https://unn.ua/en/news/the-russians-attacked-ukraine-with-410-drones-air-defense-destroyed-336-targets , https://mezha.net/eng/news/0f28f068_russia_launches_410/ , https://www.pravda.com.ua/news/2026/09/12/8053130/ ). 이 주간 공습 수치는 야간(18:00~08:00) 정례 집계와는 별도 시간대(06:30~18:00) 통계로 위 attacks_total/intercepted(129/101)에는 포함되지 않음 — 두 수치를 합산해 보도한 단일 출처가 없어 임의로 합산하지 않음. 기존에는 야간에 집중되던 대규모 드론 공습이 주간까지 확장된 것으로 관측되어 전술적 전환 가능성이 있어 별도 기록함."
       }
     ],
     "monthly": []
@@ -316,6 +341,15 @@
         "source": "https://www.ukrinform.net/rubric-ato/4163004-diu-deploys-interceptor-drones-to-protect-kyivs-airspace.html",
         "source_name": "Ukrinform (GUR 발표 인용)",
         "significance": "8월 말 이후 제트추진 게란 드론의 24시간 상시 공습으로 요격 난이도가 높아진 키이우 방어에 해상 기반 이동식 탐지·요격 플랫폼을 결합 — 지상 고정 방공망의 사각지대를 보완하는 새로운 전술적 통합 사례"
+      },
+      {
+        "date": "2026-09-12",
+        "system": "Arrow(Praetorian Aeronautics/Zero Dawn, 호주)",
+        "event_type": "신규 시험",
+        "detail": "호주 남호주(South Australia) 소재 방산기업 Praetorian Aeronautics와 Zero Dawn이 양해각서(MoU)를 체결하고, Zero Dawn이 개발한 탄두를 Praetorian의 대드론 요격체계 'Arrow'에 통합하는 지상 폭발시험(ground-based blast test)을 실시. 시험은 우크라이나 주호주 대사 바실 미로슈니첸코가 참관했으며, 양사는 2027년 우크라이나 수출을 목표로 개발 중이라고 발표.",
+        "source": "https://militarnyi.com/en/news/australia-develop-interceptor-drone-ukraine/",
+        "source_name": "Militarnyi / Defence SA / APDR(Asia Pacific Defence Reporter)",
+        "significance": "우크라이나 자국 개발(STING/BAGNET/Alexa Spatium 등) 중심이던 요격체계 공급망에 호주 등 서방 우방국이 자체 개발 요격체계를 우크라이나向으로 수출하기 위해 참여하기 시작한 초기 사례 — 요격체계 국제 공급망 확대 신호"
       }
     ]
   },
