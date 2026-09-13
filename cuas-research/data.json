@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-12T22:03:40Z",
+    "last_daily_run": "2026-09-13T22:07:24Z",
     "last_weekly_run": "2026-09-06T22:05:50Z",
     "schema_version": 1
   },
@@ -192,6 +192,19 @@
         "intercept_rate": 0.78,
         "sources": ["https://kyivindependent.com/russian-attacks-kill-11-injure-96-across-ukraine-as-odesa-comes-under-mass-overnight-strike/", "https://www.ukrinform.net/rubric-ato/4163392-air-defense-downs-six-kalibr-missiles-two-airlaunched-missiles-101-drones-in-overnight-attack.html", "https://ua.news/en/war-vs-rf/vnochi-sili-ppo-zbili-shist-kalibriv-ta-odnu-banderol", "https://unn.ua/en/news/the-air-force-reported-what-the-russians-attacked-ukraine-with-overnight-and-how-many-targets-were-shot-down", "https://www.kyivpost.com/post/84333", "https://112.ua/en/rosijska-armia-12-veresna-zavdala-masovanogo-udaru-po-odesi-ta-oblasti-zbito-ponad-100-cilej-184794"],
         "note": "2026-09-11 18:00~09-12 08:30 시점 야간 공격 집계. Shahed(제트추진 포함)/S8000 Banderol/Parodiya 기만기 등 드론 129기 중 101기 요격·제압(요격률 0.78). 별도로 이스칸데르-M/KN-23 탄도미사일(보로네시·로스토프·크림 발사), 칼리브르 순항미사일 8기 발사 중 6기 요격, Kh-59/69 유도미사일 6기 발사 중 2기 요격, 반데롤 1기 요격 — 드론+미사일 통합 요격 110건(=101+6+1+2, attacks_total/intercepted는 기존 관례대로 드론만 집계). 오데사주가 주요 표적으로 다층 아파트 피격, 부상자 다수(매체별 23~38명 편차). 전국 기준 사망 11명·부상 96명 보도(교차검증 필요, 확정치 아님). 자포리자·크리비이리흐도 피격. 기종별 세부 수치 미확인 — by_type 비움. [특이사항] 이와 별개로 같은 날(2026-09-12) 06:30~18:00 주간 시간대에 우크라이나 공군이 사상 이례적인 대규모 주간 드론 공습을 별도 발표: 공격드론 410기(그중 제트추진 37기) 발사, 336기 요격·제압(제트추진 23기 포함), 21기 명중 확인, 18:00 시점 약 55기 미요격 상태로 공중 잔존(출처: https://unn.ua/en/news/the-russians-attacked-ukraine-with-410-drones-air-defense-destroyed-336-targets , https://mezha.net/eng/news/0f28f068_russia_launches_410/ , https://www.pravda.com.ua/news/2026/09/12/8053130/ ). 이 주간 공습 수치는 야간(18:00~08:00) 정례 집계와는 별도 시간대(06:30~18:00) 통계로 위 attacks_total/intercepted(129/101)에는 포함되지 않음 — 두 수치를 합산해 보도한 단일 출처가 없어 임의로 합산하지 않음. 기존에는 야간에 집중되던 대규모 드론 공습이 주간까지 확장된 것으로 관측되어 전술적 전환 가능성이 있어 별도 기록함."
+      },
+      {
+        "date": "2026-09-13",
+        "attacks_total": 453,
+        "attacks_total_source": "https://www.pravda.com.ua/eng/news/2026/09/13/8053180/",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4163638-ukrainian-air-defenses-down-409-drones-used-by-russia-to-attack-ukraine-overnight.html",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Kursk", "Primorsko-Akhtarsk", "Hvardiiske/Crimea(점령지)", "Sea of Azov(해상)"],
+        "target_areas": ["Odesa", "Dnipropetrovsk", "Zaporizhzhia", "Sumy", "Kharkiv", "Volyn", "Rivne"],
+        "intercepted": 409,
+        "intercept_rate": 0.9,
+        "sources": ["https://www.pravda.com.ua/eng/news/2026/09/13/8053180/", "https://www.ukrinform.net/rubric-ato/4163638-ukrainian-air-defenses-down-409-drones-used-by-russia-to-attack-ukraine-overnight.html", "https://kyivindependent.com/russian-drone-hits-kyiv-warsaw-train-near-polish-border-as-nationwide-attacks-kill-6-injure-43/", "https://english.nv.ua/russian-war/russia-launches-453-drones-at-ukraine-overnight-air-defenses-neutralize-405-50640955.html"],
+        "note": "2026-09-12 18:00~09-13 08:00 야간 공격 기준. Shahed(제트추진 포함)/Gerbera/Parodiya 기만기 등 드론 453기 중 405기 요격·제압 + S8000 Banderol 4기 별도 요격(합계 409, 요격률 0.90) — 매체별로 409(ukrinform/pravda) vs 405(nv.ua, 드론만) 표기 편차 있어 통합치 409를 채택. 오데사주가 주요 표적으로 다층 주거건물 피격 2명 사망·26명 부상(건물 상층부 붕괴). 드니프로페트롭스크·자포리자·수미·하르키우 등도 피격. 특이사항으로 평소 공격이 드문 서부 볼린·리우네주까지 대규모 드론 공격이 확대되어 폴란드 국경 인근(약 2km)에서 키이우-바르샤바 국제여객열차 기관차가 게란-5 계열로 추정되는 드론에 피격(폴란드 당국 발표, 사상자 없음), 인근 야호딘-도로후스크 국경통과소 인프라도 피해 — 서부 국경지대 종심타격이 NATO 접경까지 근접한 사례로 외교적 파장(젤렌스키·시비하 외무장관 NATO/EU 우려 표명). 전국 기준 사망 6명·부상 43명 집계(교차검증 필요, 확정치 아님). 기종별 세부 수치 미확인 — by_type 비움. [특이사항] 전날(09-12)에 이어 2026-09-13에도 06:30~18:00 주간 시간대에 별도의 대규모 주간 드론 공습 발생: 공격드론 323기(그중 제트추진 14기) 발사, 310기 요격·제압(제트추진 9기 포함) + Banderol/Dan-T 순항형 약 10기 중 일부 요격, 10개 지점 명중, 18:00 시점 일부 미요격 잔존(출처: https://www.ukrinform.net/rubric-ato/4163797-ukraines-air-defenses-neutralize-310-out-of-323-russian-drones-on-sunday.html). 이 주간 공습 수치는 야간 정례 집계(453/409)와는 별도이며 위 attacks_total/intercepted에는 미포함(합산 보도 출처 없어 임의 합산하지 않음). 이틀 연속 대규모 주간 공습이 관측되어 09-12 로그에서 지적한 '주간 공습으로의 전술적 확장' 추세가 이어지고 있음을 재확인."
       }
     ],
     "monthly": []
@@ -350,6 +363,24 @@
         "source": "https://militarnyi.com/en/news/australia-develop-interceptor-drone-ukraine/",
         "source_name": "Militarnyi / Defence SA / APDR(Asia Pacific Defence Reporter)",
         "significance": "우크라이나 자국 개발(STING/BAGNET/Alexa Spatium 등) 중심이던 요격체계 공급망에 호주 등 서방 우방국이 자체 개발 요격체계를 우크라이나向으로 수출하기 위해 참여하기 시작한 초기 사례 — 요격체계 국제 공급망 확대 신호"
+      },
+      {
+        "date": "2026-09-01",
+        "system": "러시아 대응책(요격드론 회피용 넷건/그물)",
+        "event_type": "기술 개선",
+        "detail": "러시아 59독립강습여단 Signum 무인체계대대가 정찰드론 'Knyaz Veshchiy Oleg'에 넷건(net gun)을 장착해 우크라이나 요격드론의 공격을 받을 시 그물을 발사해 회피하는 모습을 공개(2026-09-01 보도). 러시아 'Supercam' 정찰드론도 유사하게 그물을 이용해 우크라이나 요격드론을 무력화하는 사례가 함께 확인됨. 기존에 Orlan 정찰드론에서 확인된 후방 감시카메라(접근하는 요격드론 탐지용으로 추정)와 결합해 운용되는 것으로 분석됨.",
+        "source": "https://militarnyi.com/en/news/russian-uavs-begin-using-net-guns-to-counter-interceptor-drones/",
+        "source_name": "Militarnyi",
+        "significance": "우크라이나 요격드론(STING/BAGNET 등)의 정찰용 UAV 요격 성공률을 낮추기 위한 러시아측 대응 회피장비(넷건/후방카메라)가 실전에서 확인된 최초 사례 — 요격-회피 기술 경쟁이 정찰드론 단계까지 확대되는 전환점"
+      },
+      {
+        "date": "2026-09-12",
+        "system": "Baton(EDRONE)",
+        "event_type": "체계 구축",
+        "detail": "우크라이나 방산업체 EDRONE의 요격드론 'Baton' 시리즈(4종 — 멀티콥터형 'Baton Interceptor Copter'/고정익형 'Baton Interceptor Wing', 각 주간광학·열영상 버전)가 공식 코드화(codification)를 완료하고 국방부 조달체계(Brave1 Market)에 정식 등재됨. Baton Copter는 최고속도 300km/h·항속 15분·작전반경 30km·탄두 420g, Baton Wing은 최고속도 360km/h·항속 60분·작전반경 45km·운용고도 3,000m까지 가능하며 두 기종 모두 머신비전 기반 종말유도를 사용.",
+        "source": "https://militarnyi.com/en/news/edrone-baton-interceptor-drone-codification/",
+        "source_name": "Militarnyi",
+        "significance": "기존 STING/BAGNET/제트추진 요격체계 경쟁에 이어, 고정익·회전익 두 플랫폼을 모두 갖춘 신규 요격드론 라인업이 공식 조달체계에 편입되어 정규 전력화 단계에 진입 — 요격드론 공급기반 다변화·양산 확대의 추가 사례"
       }
     ]
   },
