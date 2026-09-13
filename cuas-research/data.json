@@ -1,7 +1,7 @@
 {
   "meta": {
     "last_daily_run": "2026-09-13T22:07:24Z",
-    "last_weekly_run": "2026-09-06T22:05:50Z",
+    "last_weekly_run": "2026-09-13T22:08:45Z",
     "schema_version": 1
   },
   "geran_drones": {
@@ -381,6 +381,33 @@
         "source": "https://militarnyi.com/en/news/edrone-baton-interceptor-drone-codification/",
         "source_name": "Militarnyi",
         "significance": "기존 STING/BAGNET/제트추진 요격체계 경쟁에 이어, 고정익·회전익 두 플랫폼을 모두 갖춘 신규 요격드론 라인업이 공식 조달체계에 편입되어 정규 전력화 단계에 진입 — 요격드론 공급기반 다변화·양산 확대의 추가 사례"
+      },
+      {
+        "date": "2026-07-22",
+        "system": "CLWS(Boeing, 지향성에너지)",
+        "event_type": "실전 배치",
+        "detail": "미 공군 유럽·아프리카사령부(USAFE-AFAFRICA)가 보잉의 모듈형 고에너지 레이저 요격체계 'CLWS(Compact Laser Weapon System)'를 유럽 내 미공개 기지들에 배치·평가 완료했다고 공식 확인. 고정형·컨테이너형·경전술차량 탑재형 등 다양한 형태로 전자전 등 다른 요격수단과 함께 계층형(다층) 대드론 통합체계의 일부로 운용 중.",
+        "source": "https://thedefensepost.com/2026/08/03/usaf-counter-drone-laser-europe/",
+        "source_name": "The Defense Post / Stars and Stripes / DVIDS(USAFE-AFAFRICA)",
+        "significance": "유럽 전역 미군 기지 방어에 레이저 요격체계가 전자전·운동성 효과기와 결합된 다층 방어 아키텍처의 실제 배치 구성요소로 확인된 사례 — 나토 동부전선 인접 지역의 지역별 다층 방어체계 구축이 실전 배치 단계로 진입했음을 보여줌"
+      },
+      {
+        "date": "2026-09-02",
+        "system": "LOCUST X3(AeroVironment, 지향성에너지)",
+        "event_type": "체계 구축",
+        "detail": "미 육군이 에어로바이런먼트와 4억 6,480만 달러 규모 다년 생산계약(E-HEL, Other Transaction Agreement)을 체결. 30kW급 고에너지 레이저 요격체계 'LOCUST X3' 수십 대를 향후 수년간 순차 생산·납품하며 훈련·정비 지원도 포함. 미군 역사상 지향성에너지무기 최초의 정식 생산계약으로 보도됨.",
+        "source": "https://defensescoop.com/2026/09/02/army-awards-aerovironment-nearly-500m-contract-laser-weapons/",
+        "source_name": "DefenseScoop / Breaking Defense / Task & Purpose",
+        "significance": "기존 07-01 로그(에어로바이런먼트 5억 달러 다층 대드론체계 조달경로 계약)와 별개로, 이번 계약은 30kW 고에너지 레이저 단일 품목의 최초 정식 양산계약 — 미군 대드론 다층방어에 지향성에너지무기가 시험단계를 넘어 실전 전력화 단계로 진입했음을 보여줌"
+      },
+      {
+        "date": "2026-09-08",
+        "system": "Tempest(V2X, 이동형 C-UAS 차량)",
+        "event_type": "체계 구축",
+        "detail": "미 해병대가 V2X(옛 Vectrus)와 1,906만 달러 규모 계약을 체결, 이동형 대드론 요격차량 'Tempest' 10대를 도입(계약은 2026-08-11 국방부 발표, V2X는 09-08 공식 확인). 소프트웨어 관리·예비부품·훈련·정비 지원을 포함해 2027년 8월까지 해병대의 광역 대드론 네트워크에 통합될 예정.",
+        "source": "https://www.unmannedairspace.info/counter-uas-systems-and-policies/us-marines-selects-v2x-c-uas-vehicles-to-protect-forces/",
+        "source_name": "Unmanned Airspace / DefenseScoop / RealClearDefense",
+        "significance": "고정 기지 방어용 레이저(LOCUST X3, CLWS)와 달리 부대 기동 시 동행하는 이동형 지상차량 기반 C-UAS 체계 조달 사례 — 미군 대드론 방어체계가 고정진지형에서 기동부대 동반형까지 배치 형태를 다변화하고 있음을 보여줌"
       }
     ]
   },
@@ -475,6 +502,26 @@
         "summary": "다중 센서를 융합하는 대드론 탐지기가 센서별 신뢰도(불확실성) 신호를 제공하지 못하는 문제를 다룸. 증거기반 딥러닝(EDL) 헤드, 뎀프스터-셰이퍼 증거융합, 불확실성 기반 시간적 센서 게이팅을 열화상 추적(AntiUAV600), RGB-음향-RF 분류(TRIDENT), RGB-IR 추적(MM-UAV) 3개 벤치마크에서 통제된 절제실험으로 검증.",
         "link": "https://arxiv.org/abs/2609.01742",
         "significance": "기존 다중센서 융합 모델이 놓쳤던 '센서별 신뢰도 불확실성' 정량화를 3개 이질적 벤치마크(열상/음향-RF/IR)에서 동시 검증 — 센서 일부가 열화·기만당해도 신뢰도 가중치로 안전하게 판단하는 방향을 제시"
+      },
+      {
+        "date": "2026-07",
+        "title": "Learning Agile Intruder Interception using Differentiable Quadrotor Dynamics",
+        "authors": "Michael Anoruo, Xiaoyu Tian, Abhishek Rathod, Timothy Naudet, Thomas Canchola, Eric Sturzinger, Kshitij Goel, Wennie Tabib",
+        "venue": "arXiv",
+        "topic": "자율요격",
+        "summary": "표적까지의 상대위치·거리 정보 없이 단안 카메라 등 수동 센서로 얻을 수 있는 표적 방향 단위벡터만으로 요격 정책을 학습하는 기법. 미분가능한 쿼드로터 동역학 기반 해석적 정책 그래디언트 방법을 활용해 최대 10m/s 속도의 민첩한 요격 기동을 학습.",
+        "link": "https://arxiv.org/abs/2607.02472",
+        "significance": "기존 강화학습 기반 요격 연구 다수가 전제하던 '표적까지의 상대위치·거리 정보 기지' 가정을 배제 — 저비용 수동 광학센서만 탑재한 요격드론에도 적용 가능한 현실적 자율요격 학습 방식을 제시"
+      },
+      {
+        "date": "2026-08",
+        "title": "Acoustic UAV Detection in Battlefield Scenarios: Handling Noise, Domain Shift, and Weak Labels",
+        "authors": "Vadym Vilhurin, Volodymyr Sydorskyi, Andrii Shevtsov",
+        "venue": "arXiv (ICMCIS 2026 발표)",
+        "topic": "음향탐지",
+        "summary": "우크라이나 전선에서 수집된 실제 전투지역 녹음 30만여 건(9초 단위, 32kHz)으로 구성된 데이터셋을 이용해 극심한 배경소음과 이기종 마이크로폰 간 도메인 시프트 문제를 다룸. PCEN(채널별 에너지 정규화) 스펙트로그램과 어텐션 기반 풀링, 도메인 인지 학습 전략을 결합해 F1 점수를 기존 55.4%에서 78.6%로 개선.",
+        "link": "https://arxiv.org/abs/2608.14287",
+        "significance": "실험실 합성 데이터가 아닌 우크라이나 실전 전선의 실제 전투 소음 환경 녹음으로 검증된 음향탐지 연구 — 실전 배치 시 성능 저하의 핵심 원인(소음·기기 편차)을 정량적으로 해결한 사례"
       }
     ]
   }
