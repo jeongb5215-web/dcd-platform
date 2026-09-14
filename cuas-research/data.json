@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-13T22:07:24Z",
+    "last_daily_run": "2026-09-14T22:03:34Z",
     "last_weekly_run": "2026-09-13T22:08:45Z",
     "schema_version": 1
   },
@@ -205,6 +205,19 @@
         "intercept_rate": 0.9,
         "sources": ["https://www.pravda.com.ua/eng/news/2026/09/13/8053180/", "https://www.ukrinform.net/rubric-ato/4163638-ukrainian-air-defenses-down-409-drones-used-by-russia-to-attack-ukraine-overnight.html", "https://kyivindependent.com/russian-drone-hits-kyiv-warsaw-train-near-polish-border-as-nationwide-attacks-kill-6-injure-43/", "https://english.nv.ua/russian-war/russia-launches-453-drones-at-ukraine-overnight-air-defenses-neutralize-405-50640955.html"],
         "note": "2026-09-12 18:00~09-13 08:00 야간 공격 기준. Shahed(제트추진 포함)/Gerbera/Parodiya 기만기 등 드론 453기 중 405기 요격·제압 + S8000 Banderol 4기 별도 요격(합계 409, 요격률 0.90) — 매체별로 409(ukrinform/pravda) vs 405(nv.ua, 드론만) 표기 편차 있어 통합치 409를 채택. 오데사주가 주요 표적으로 다층 주거건물 피격 2명 사망·26명 부상(건물 상층부 붕괴). 드니프로페트롭스크·자포리자·수미·하르키우 등도 피격. 특이사항으로 평소 공격이 드문 서부 볼린·리우네주까지 대규모 드론 공격이 확대되어 폴란드 국경 인근(약 2km)에서 키이우-바르샤바 국제여객열차 기관차가 게란-5 계열로 추정되는 드론에 피격(폴란드 당국 발표, 사상자 없음), 인근 야호딘-도로후스크 국경통과소 인프라도 피해 — 서부 국경지대 종심타격이 NATO 접경까지 근접한 사례로 외교적 파장(젤렌스키·시비하 외무장관 NATO/EU 우려 표명). 전국 기준 사망 6명·부상 43명 집계(교차검증 필요, 확정치 아님). 기종별 세부 수치 미확인 — by_type 비움. [특이사항] 전날(09-12)에 이어 2026-09-13에도 06:30~18:00 주간 시간대에 별도의 대규모 주간 드론 공습 발생: 공격드론 323기(그중 제트추진 14기) 발사, 310기 요격·제압(제트추진 9기 포함) + Banderol/Dan-T 순항형 약 10기 중 일부 요격, 10개 지점 명중, 18:00 시점 일부 미요격 잔존(출처: https://www.ukrinform.net/rubric-ato/4163797-ukraines-air-defenses-neutralize-310-out-of-323-russian-drones-on-sunday.html). 이 주간 공습 수치는 야간 정례 집계(453/409)와는 별도이며 위 attacks_total/intercepted에는 미포함(합산 보도 출처 없어 임의 합산하지 않음). 이틀 연속 대규모 주간 공습이 관측되어 09-12 로그에서 지적한 '주간 공습으로의 전술적 확장' 추세가 이어지고 있음을 재확인."
+      },
+      {
+        "date": "2026-09-14",
+        "attacks_total": 108,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4163866-adf-neutralizes-85-russian-drones-overnight.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4163866-adf-neutralizes-85-russian-drones-overnight.html",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Kursk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": ["Sumy", "Kharkiv", "Zaporizhzhia", "Dnipropetrovsk", "Kherson", "Odesa", "Kyiv", "Ternopil", "Rivne", "Ivano-Frankivsk", "Lviv", "Khmelnytskyi", "Vinnytsia", "Chernihiv", "Mykolaiv", "Volyn", "Poltava", "Zhytomyr"],
+        "intercepted": 85,
+        "intercept_rate": 0.79,
+        "sources": ["https://www.ukrinform.net/rubric-ato/4163866-adf-neutralizes-85-russian-drones-overnight.html", "https://ua.news/en/war-vs-rf/rf-atakuvala-ukrayinu-108-dronami-u-kilkokh-oblastiakh-ie-zagibli-ta-poraneni", "https://unn.ua/en/news/russia-attacked-ukraine-with-108-unmanned-aerial-vehicles-85-of-which-were-destroyed-or-suppressed-by-air-defense", "https://112.ua/en/rosia-atakuvala-ukrainu-108-udarnimi-dronami-tipu-sahed-ta-gerbera-14-veresna-185127", "https://www.ukrinform.net/rubric-ato/4163998-russian-drone-strikes-hospital-in-kherson-injuring-staff-member.html"],
+        "note": "2026-09-13 18:00~09-14 08:00 시점 야간 공격 기준(공격은 09-14 오전까지도 진행 중이었다고 보도되어 85/108은 잠정치일 가능성 있음). Shahed(제트추진 포함)/Gerbera/Parodiya 기만기 등 드론 108기 중 85기 요격·제압(요격률 0.79). 발사방향은 러시아 오룔·쿠르스크 및 도네츠크·흐바르디이스케(크림반도) 점령지. 피격 7개 지점. 이번 공격은 수미·하르키우·자포리자·드니프로페트로우스크·케르손·오데사·키이우뿐 아니라 테르노필·리우네·이바노프란키우시크·리비우·흐멜니츠키·빈니치아·체르니히우·미콜라이우·볼린·폴타바·지토미르 등 서부·전국에 걸친 이례적으로 넓은 피격 범위가 보도됨(ua.news) — 09-12/09-13 로그에서 지적된 주간 공습 확대·서부 종심타격 확대 추세와 함께, 야간 공격의 지리적 분산도 심화되는 양상. 케르손주에서 병원이 드론에 직접 피격돼 직원 1명 부상(09-14 오전, 별도 기사), 케르손주 24시간 기준 2명 사망·14명 부상 집계(드론 외 타격수단 포함 가능성 있어 교차검증 필요, 확정 사망자 수 아님). 기종별 세부 수치 미확인 — by_type 비움."
       }
     ],
     "monthly": []
