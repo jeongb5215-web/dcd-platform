@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-15T22:07:13Z",
+    "last_daily_run": "2026-09-16T22:06:56Z",
     "last_weekly_run": "2026-09-13T22:08:45Z",
     "schema_version": 1
   },
@@ -25,8 +25,10 @@
       "Geran-5": {
         "warhead_kg": { "value": 90, "source": "https://militarnyi.com/en/news/russia-unveils-geran-5-analog-peklo-drone/", "source_name": "Militarnyi / Defense Express", "date": "2026-05-09", "confidence": "중간", "note": "연료 탑재량 축소 시 탄두 120~130kg까지 증대 가능하다는 보고 있음" },
         "range_km": { "value": 950, "source": "https://militarnyi.com/en/news/russia-unveils-geran-5-analog-peklo-drone/", "source_name": "Militarnyi / Defense Express", "date": "2026-05-09", "confidence": "중간", "note": "일부 출처는 공식 타격 사거리 최대 1,000km로 보고" },
-        "engine": { "value": "터보젯 (중국산 부품 다수 사용)", "source": "https://militarnyi.com/en/news/russia-unveils-geran-5-analog-peklo-drone/", "source_name": "Militarnyi / Defense Express", "date": "2026-05-09", "confidence": "중간" },
-        "speed_kmh": { "value": 600, "source": "https://militarnyi.com/en/news/russia-unveils-geran-5-analog-peklo-drone/", "source_name": "Militarnyi / Defense Express", "date": "2026-05-09", "confidence": "중간" }
+        "engine": { "value": "Telefly TF-TJ2000A 터보젯 (추력 약 200kgf, 중국 Telefly Telecommunications 제작)", "source": "https://www.twz.com/air/russias-new-geran-5-long-range-kamikaze-drone-could-be-air-launched", "source_name": "The War Zone (TWZ)", "date": "2026-09-16", "confidence": "중간", "note": "기존 Geran-3/Shahed-238용 Telefly JT80(추력 약 80kgf) 대비 추력 대폭 증가. 잔해 분석 기반 추정치" },
+        "speed_kmh": { "value": 600, "source": "https://militarnyi.com/en/news/russia-unveils-geran-5-analog-peklo-drone/", "source_name": "Militarnyi / Defense Express", "date": "2026-05-09", "confidence": "중간" },
+        "length_m": { "value": 6, "source": "https://www.twz.com/air/russias-new-geran-5-long-range-kamikaze-drone-could-be-air-launched", "source_name": "The War Zone (TWZ)", "date": "2026-09-16", "confidence": "중간", "note": "원통형 동체+직선날개+수평미익(핀렛 포함), 등면 공기흡입구 — 기존 델타익/블렌디드윙 게란 계열과 다른 설계. 신규 항목" },
+        "wingspan_m": { "value": 5.5, "source": "https://www.twz.com/air/russias-new-geran-5-long-range-kamikaze-drone-could-be-air-launched", "source_name": "The War Zone (TWZ)", "date": "2026-09-16", "confidence": "중간", "note": "신규 항목" }
       },
       "Geran-4": {
         "warhead_kg": { "value": "50 (고폭/열압력) 또는 90 (대형 열압력)", "source": "https://militarnyi.com/en/news/russia-upgrades-geran-4-seeker-fuselage-for-optical-guidance/", "source_name": "Militarnyi (우크라이나 국방정보국 DIU 분석 인용)", "date": "2026-08-02", "confidence": "중간", "note": "탄두 2종 구성 확인 (경량 50kg / 대형 90kg 열압력)" },
@@ -84,6 +86,18 @@
         "confidence": "중간",
         "status": "검증 필요",
         "note": "2026-08-28 크림반도 흐바르디이스케 시험장에서 발사된 제트추진 게란-4로 추정되는 기체가 볼린주 토르치나 마을까지 약 960km 비행 후 우크라이나 방공망에 격추됨 — 볼린주(폴란드 접경 인근) 최초 도달 사례. 기존 베이스라인(공식 사거리 450km, 일부 2차 출처 850km) 대비 훨씬 긴 거리로, 고고도 비행 시 항속거리가 대폭 늘어날 수 있음을 시사. 우크라이나 정부의 공식 확인이 아닌 OSINT 분석 기반이며 단발성 시험/공격 비행이라 상시 작전반경으로 보기 어려워 baseline.value는 유지하고 검증 필요 상태로 기록. 서부 우크라이나(NATO 접경 인접) 종심타격 능력 확장 가능성이라는 전술적 의미가 있어 로그에 등재"
+      },
+      {
+        "date": "2026-09-16",
+        "variant": "Geran-5",
+        "field": "engine",
+        "old_value": "터보젯 (중국산 부품 다수 사용)",
+        "new_value": "Telefly TF-TJ2000A 터보젯(추력 약 200kgf) — 기존 Geran-3/Shahed-238용 Telefly JT80(추력 약 80kgf) 대비 추력 대폭 증가. 동체도 델타익/블렌디드윙이 아닌 원통형+직선날개+수평미익 구성(전장 약 6m, 날개폭 약 5.5m), 등면 공기흡입구 탑재로 확인",
+        "new_source": "https://www.twz.com/air/russias-new-geran-5-long-range-kamikaze-drone-could-be-air-launched",
+        "new_source_name": "The War Zone (TWZ)",
+        "confidence": "중간",
+        "status": "확인됨",
+        "note": "잔해 분석 기반 — 이륙중량 약 850kg, 최고속도 600km/h(기존 baseline과 일치), 사거리 약 1,000km(기존 note의 2차출처 수치와 일치)로 보도되어 range_km/speed_kmh는 유지. 엔진 모델 구체화 및 전장·날개폭 신규 필드를 baseline에 반영. 원통형 동체 설계는 공중발사 가능성도 시사한다는 분석 있으나 미확정이라 baseline에는 별도 기재하지 않음"
       }
     ]
   },
@@ -231,6 +245,19 @@
         "intercept_rate": 0.935,
         "sources": ["https://unn.ua/en/news/russia-attacked-ukraine-with-200-drones-air-defense-destroyed-187-targets", "https://www.kyivpost.com/post/84528", "https://euromaidanpress.com/2026/09/15/russian-drones-killed-a-man-and-injured-eight-in-kyiv-hitting-two-gas-stations/", "https://cpj.org/2026/09/ukraine-russian-drone-strike-on-tv-channel-building-in-kyiv-injures-six-people-damages-newsroom/"],
         "note": "2026-09-14 18:00~09-15 08:00 시점 야간 공격 기준. Shahed(제트추진 포함)/Gerbera/Parodiya 기만기 등 드론 200기 중 187기 요격·제압(요격률 0.935) — 역대 최고 수준 요격률 중 하나. 발사방향은 오룔·쿠르스크·밀레로보(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 피격 7개 지점, 잔해 낙하 3개 지점. 키이우 다르니치키·오볼론·솔로먄스키·홀로시이우 등 여러 구에서 주유소 2곳·창고·패스트푸드점·업무용 빌딩 피격, 다르니치키 주유소 부상자가 병원 이송 후 사망(1명), 클리치코 시장 발표 기준 부상자 2→4→8명(중상 2명)으로 늘어남. 별도로 TV방송국 건물 피격으로 6명 부상·보도국 파손(CPJ 보도, 위 8명 부상 수치와 중복 여부 불명확 — 교차검증 필요). 오데사주도 피격. 기종별 세부 수치 미확인 — by_type 비움."
+      },
+      {
+        "date": "2026-09-16",
+        "attacks_total": 80,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4164459-adf-neutralizes-63-russian-drones-used-to-attack-ukraine-overnight.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4164459-adf-neutralizes-63-russian-drones-used-to-attack-ukraine-overnight.html",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Kursk", "Millerovo", "Hvardiiske/Crimea(점령지)", "Chauda/Crimea(점령지)"],
+        "target_areas": ["Dnipropetrovsk", "Zaporizhzhia", "Mykolaiv"],
+        "intercepted": 63,
+        "intercept_rate": 0.79,
+        "sources": ["https://www.ukrinform.net/rubric-ato/4164459-adf-neutralizes-63-russian-drones-used-to-attack-ukraine-overnight.html", "https://unn.ua/en/news/russia-attacked-ukraine-with-80-drones-air-defenses-destroyed-63-targets", "https://news.novyny.live/rosiia-vipustila-80-droniv-ie-vluchannia-na-semi-lokatsiiakh-344705.html"],
+        "note": "2026-09-15 18:00~09-16 08:00 시점 야간 공격 기준. Shahed(일부 제트추진)/Gerbera/Parodiya 기만기 등 드론 80기 중 63기 요격·제압(요격률 0.79). 발사방향은 오룔·쿠르스크·밀레로보(러) 및 흐바르디이스케·차우다곶(크림반도 점령지). 피격 7개 지점, 잔해 낙하 2개 지점 — 드니프로페트로우스크주 니코폴 인근 여객버스 피격(5명 사망·7명 이상 부상), 자포리자주(빌니안스크·자포리자시), 미콜라이우주 열차 인근 피격 등. 기종별 세부 수치 미확인 — by_type 비움."
       }
     ],
     "monthly": []
@@ -434,6 +461,15 @@
         "source": "https://www.unmannedairspace.info/counter-uas-systems-and-policies/us-marines-selects-v2x-c-uas-vehicles-to-protect-forces/",
         "source_name": "Unmanned Airspace / DefenseScoop / RealClearDefense",
         "significance": "고정 기지 방어용 레이저(LOCUST X3, CLWS)와 달리 부대 기동 시 동행하는 이동형 지상차량 기반 C-UAS 체계 조달 사례 — 미군 대드론 방어체계가 고정진지형에서 기동부대 동반형까지 배치 형태를 다변화하고 있음을 보여줌"
+      },
+      {
+        "date": "2026-09-15",
+        "system": "요격드론(제트추진 게란 대응, 명칭 미공개)",
+        "event_type": "신규 시험",
+        "detail": "우크라이나군 총사령관 미하일로 드라파티의 보고를 받은 젤렌스키 대통령이 2026-09-15 제트추진 게란(게란-3/4/5)급 고속 드론을 표적으로 한 신형 요격드론이 실사격 시험에서 '샤헤드'를 성공적으로 격추했다고 발표. 젤렌스키: '요격기 조종의 일부 요소는 아직 개선이 필요하며 작업은 계속된다'고 언급 — 요격기 구체 명칭·개발사는 비공개.",
+        "source": "https://militarnyi.com/en/news/ukraine-successfully-tests-new-interceptor-for-jet-powered-drones-zelensky/",
+        "source_name": "Militarnyi / Kyiv Independent (대통령실 발표 인용)",
+        "significance": "2026-08-21(Alexa Spatium/JetKiller 등장), 2026-08-29(4종 야전시험)로 이어진 제트추진 요격드론 개발 흐름에서, 대통령이 직접 실사격 성공(실제 게란 격추)을 공식 확인한 최초 사례 — 그동안 '시험 중'이라는 발표만 있었던 것과 달리 실제 교전 결과가 처음 확인된 전환점"
       }
     ]
   },
