@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-16T22:06:56Z",
+    "last_daily_run": "2026-09-17T22:03:32Z",
     "last_weekly_run": "2026-09-13T22:08:45Z",
     "schema_version": 1
   },
@@ -258,6 +258,19 @@
         "intercept_rate": 0.79,
         "sources": ["https://www.ukrinform.net/rubric-ato/4164459-adf-neutralizes-63-russian-drones-used-to-attack-ukraine-overnight.html", "https://unn.ua/en/news/russia-attacked-ukraine-with-80-drones-air-defenses-destroyed-63-targets", "https://news.novyny.live/rosiia-vipustila-80-droniv-ie-vluchannia-na-semi-lokatsiiakh-344705.html"],
         "note": "2026-09-15 18:00~09-16 08:00 시점 야간 공격 기준. Shahed(일부 제트추진)/Gerbera/Parodiya 기만기 등 드론 80기 중 63기 요격·제압(요격률 0.79). 발사방향은 오룔·쿠르스크·밀레로보(러) 및 흐바르디이스케·차우다곶(크림반도 점령지). 피격 7개 지점, 잔해 낙하 2개 지점 — 드니프로페트로우스크주 니코폴 인근 여객버스 피격(5명 사망·7명 이상 부상), 자포리자주(빌니안스크·자포리자시), 미콜라이우주 열차 인근 피격 등. 기종별 세부 수치 미확인 — by_type 비움."
+      },
+      {
+        "date": "2026-09-17",
+        "attacks_total": 157,
+        "attacks_total_source": "https://unn.ua/en/news/russia-launched-a-massive-overnight-attack-on-ukraine-with-missiles-and-157-drones-air-defenses-neutralized-131-targets",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4164886-ukrainian-air-defenses-down-seven-banderol-missiles-124-drones-in-overnight-russian-attack.html",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Millerovo", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": ["Kyiv", "Zaporizhzhia", "Odesa"],
+        "intercepted": 124,
+        "intercept_rate": 0.79,
+        "sources": ["https://unn.ua/en/news/russia-launched-a-massive-overnight-attack-on-ukraine-with-missiles-and-157-drones-air-defenses-neutralized-131-targets", "https://www.ukrinform.net/rubric-ato/4164886-ukrainian-air-defenses-down-seven-banderol-missiles-124-drones-in-overnight-russian-attack.html", "https://mezha.net/eng/news/8cde4ca9_russia_launched_a/", "https://www.ksat.com/news/world/2026/09/17/russian-barrage-of-missiles-and-drones-on-ukraine-injures-at-least-19-including-children/"],
+        "note": "2026-09-16 18:00~09-17 08:00 시점 야간 공격 기준. Shahed형 공격·기만 드론 157기(절반 이상이 제트추진형으로 보도) 중 124기 요격·제압(요격률 0.79) + Banderol/Dan-T 순항형 미사일 10기 중 7기 별도 요격(드론과 별도 집계, attacks_total/intercepted는 기존 관례대로 드론만 집계). 그 외 오닉스 대함미사일(쿠르스크 발사), 이스칸데르-M/S-400/KN-23 탄도미사일(브랸스크·보로네시), 칼리브르 순항미사일 4기(카스피해 해상 발사)도 함께 사용. 발사방향은 오룔·밀레로보(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 주요 표적은 키이우·자포리자·오데사주. 피격 36개 지점, 잔해 낙하 5개 지점. 키이우 등에서 최소 19명 부상(어린이 2명 포함, 10세 여아·12세 남아). 기종별 세부 수치 미확인 — by_type 비움. 같은 날 밤 우크라이나군은 러시아 야로슬라블 정유시설·로스토프주 군용비행장 등을 반격 타격했다고 발표."
       }
     ],
     "monthly": []
@@ -470,6 +483,15 @@
         "source": "https://militarnyi.com/en/news/ukraine-successfully-tests-new-interceptor-for-jet-powered-drones-zelensky/",
         "source_name": "Militarnyi / Kyiv Independent (대통령실 발표 인용)",
         "significance": "2026-08-21(Alexa Spatium/JetKiller 등장), 2026-08-29(4종 야전시험)로 이어진 제트추진 요격드론 개발 흐름에서, 대통령이 직접 실사격 성공(실제 게란 격추)을 공식 확인한 최초 사례 — 그동안 '시험 중'이라는 발표만 있었던 것과 달리 실제 교전 결과가 처음 확인된 전환점"
+      },
+      {
+        "date": "2026-09-17",
+        "system": "요격드론(제트추진 대응 4종, 명칭 비공개)",
+        "event_type": "체계 구축",
+        "detail": "우크라이나 공군이 제트추진 게란 대응 유망 요격드론 4종(제트엔진형·전기추진형 혼합)이 제조사와의 협업 끝에 '최종 준비 단계'에 도달했다고 발표. 시제품이 이미 최전선 부대에 인도되어 실전 조건 시험이 진행 중이며, 병행해 운용 전술·추가 소요를 정립 중. 구체 제원은 기밀로 비공개.",
+        "source": "https://www.ukrinform.net/rubric-ato/4165027-ukrainian-forces-test-four-interceptor-drone-models-to-counter-jetpowered-uavs.html",
+        "source_name": "Ukrinform",
+        "significance": "2026-08-29 로그(제트추진 대응 요격체계 4종 야전시험 착수)의 후속 진행 상황 — 야전시험 단계에서 '최종 준비 단계 + 최전선 부대 인도·실전시험'으로 전력화가 한 단계 더 진전됨을 보여주는 전환점"
       }
     ]
   },
