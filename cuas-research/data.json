@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-17T22:03:32Z",
+    "last_daily_run": "2026-09-18T22:04:17Z",
     "last_weekly_run": "2026-09-13T22:08:45Z",
     "schema_version": 1
   },
@@ -271,6 +271,19 @@
         "intercept_rate": 0.79,
         "sources": ["https://unn.ua/en/news/russia-launched-a-massive-overnight-attack-on-ukraine-with-missiles-and-157-drones-air-defenses-neutralized-131-targets", "https://www.ukrinform.net/rubric-ato/4164886-ukrainian-air-defenses-down-seven-banderol-missiles-124-drones-in-overnight-russian-attack.html", "https://mezha.net/eng/news/8cde4ca9_russia_launched_a/", "https://www.ksat.com/news/world/2026/09/17/russian-barrage-of-missiles-and-drones-on-ukraine-injures-at-least-19-including-children/"],
         "note": "2026-09-16 18:00~09-17 08:00 시점 야간 공격 기준. Shahed형 공격·기만 드론 157기(절반 이상이 제트추진형으로 보도) 중 124기 요격·제압(요격률 0.79) + Banderol/Dan-T 순항형 미사일 10기 중 7기 별도 요격(드론과 별도 집계, attacks_total/intercepted는 기존 관례대로 드론만 집계). 그 외 오닉스 대함미사일(쿠르스크 발사), 이스칸데르-M/S-400/KN-23 탄도미사일(브랸스크·보로네시), 칼리브르 순항미사일 4기(카스피해 해상 발사)도 함께 사용. 발사방향은 오룔·밀레로보(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 주요 표적은 키이우·자포리자·오데사주. 피격 36개 지점, 잔해 낙하 5개 지점. 키이우 등에서 최소 19명 부상(어린이 2명 포함, 10세 여아·12세 남아). 기종별 세부 수치 미확인 — by_type 비움. 같은 날 밤 우크라이나군은 러시아 야로슬라블 정유시설·로스토프주 군용비행장 등을 반격 타격했다고 발표."
+      },
+      {
+        "date": "2026-09-18",
+        "attacks_total": 93,
+        "attacks_total_source": "https://unn.ua/en/news/russia-launched-93-drones-at-ukraine-72-of-which-were-successfully-shot-down-or-jammed",
+        "intercepted_source": "https://unn.ua/en/news/russia-launched-93-drones-at-ukraine-72-of-which-were-successfully-shot-down-or-jammed",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Millerovo", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": [],
+        "intercepted": 72,
+        "intercept_rate": 0.77,
+        "sources": ["https://unn.ua/en/news/russia-launched-93-drones-at-ukraine-72-of-which-were-successfully-shot-down-or-jammed", "https://en.interfax.com.ua/news/general/1206268.html", "https://www.ukrinform.net/rubric-ato/4165311-air-defense-forces-shoot-down-more-than-70-russian-drones-and-banderole-drones-since-evening.html", "https://112.ua/en/rosijska-armia-atakuvala-ukrainu-93-udarami-bpla-18-veresna-zbito-69-droniv-185917", "https://www.yahoo.com/news/world/articles/russia-attacks-ukraine-93-uavs-052300661.html"],
+        "note": "2026-09-17 18:00~09-18 야간 공격 기준. Shahed·Gerbera 공격드론, Parodiya 기만드론, Banderol/Dan-T 순항형 등 총 93기 중 Shahed형의 46기가 제트추진형으로 보도. 예비 집계(Interfax, 09-18 08:00 기준) 69기 요격 대비 최종 집계(UNN 등) 72기 요격으로 상향 갱신 — 본 항목은 최종치(72) 채택. 발사방향은 오룔·밀레로보(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 피격 13개 지점, 잔해 낙하 3개 지점. 구체 표적 지역명·사상자 정보 미확인. 기종별(Geran/Shahed 세부) 수치 미확인 — by_type 비움."
       }
     ],
     "monthly": []
