@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-19T22:19:43Z",
+    "last_daily_run": "2026-09-20T22:16:46Z",
     "last_weekly_run": "2026-09-20T22:07:43Z",
     "schema_version": 1
   },
@@ -309,6 +309,19 @@
         "intercept_rate": 0.81,
         "sources": ["https://112.ua/en/19-veresna-rosia-atakuvala-ukrainu-raketami-cirkon-i-174-udarnimi-bpla-odesa-ta-kiiv-pid-udarom-186122", "https://www.ukrinform.net/rubric-ato/4165679-adf-neutralizes-three-banderol-missiles-138-russian-drones-used-to-attack-ukraine-overnight.html", "https://kyivindependent.com/russian-attacks-kill-11-injure-over-64-in-ukraine-over-past-day/", "https://www.aljazeera.com/news/2026/9/19/poland-on-high-alert-as-russia-claims-black-sea-vessel-strikes"],
         "note": "2026-09-18 18:00~09-19 08:00 시점 야간 공격 기준. 쿠르스크에서 발사된 지르콘(Zircon) 대함미사일 2기(모두 표적 미도달, 낙하지점 확인 중)와 별도로 Shahed형 공격드론(약 절반이 제트추진형)·Gerbera·Banderol/Dan-T·Parodiya 기만기 등 174기 중 138기 요격·제압 + Banderol/Dan-T 3기 별도 요격(합계 141, 요격률 0.81). 발사방향은 오룔·밀레로보·프리모르스코-아흐타르스크(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 주요 표적은 오데사·키이우. 피격 15개 지점, 잔해 낙하 9개 지점, 08:00 시점 10기 이상 미요격 상태로 공중 잔존(공격 진행 중이었음). 전국 기준 최근 24시간 사망 11명·부상 64명 이상 집계(드론 외 활공유도폭탄 등 다른 타격수단 포함 가능성 있어 교차검증 필요, 확정치 아님). 러시아 국방부는 별도로 게란-4 'Seeker'형 드론으로 흑해 상선 2척을 타격했다고 주장 — 기존 baseline(2026-08-09 로그, 흑해 항만·상선 타격 실전운용)과 일치하는 내용으로 신규 사실 아님. 기종별 세부 수치 미확인 — by_type 비움."
+      },
+      {
+        "date": "2026-09-20",
+        "attacks_total": 138,
+        "attacks_total_source": "https://unn.ua/en/news/air-defense-neutralized-101-of-the-138-drones-with-which-the-russians-attacked-ukraine-overnight",
+        "intercepted_source": "https://unn.ua/en/news/air-defense-neutralized-101-of-the-138-drones-with-which-the-russians-attacked-ukraine-overnight",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Millerovo", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": ["Kyiv", "Sumy"],
+        "intercepted": 101,
+        "intercept_rate": 0.73,
+        "sources": ["https://unn.ua/en/news/air-defense-neutralized-101-of-the-138-drones-with-which-the-russians-attacked-ukraine-overnight", "https://112.ua/en/vorozi-ataki-na-kiivsini-i-dnipri-zabrali-zitta-cotiroh-z-nih-troe-ditej-zniseno-101-bezpilotnik-186267", "https://www.ukrinform.net/rubric-ato/4166110-woman-killed-husband-injured-in-drone-attack-in-sumy.html", "https://www.ukrinform.net/rubric-ato/4165982-drone-attack-on-kyiv-region-industrial-warehouse-damaged-in-boyarka-private-enterprise-hit-in-novosilky.html", "https://www.usnews.com/news/world/articles/2026-09-20/russian-drone-attack-kills-three-children-and-a-woman-in-kyiv-region"],
+        "note": "2026-09-19 18:00~09-20 08:00 시점 야간 공격 기준. Shahed형 공격드론(약 절반이 제트추진형으로 보도)·Gerbera·Parodiya 기만기 등 138기 중 101기 요격·제압(요격률 0.73). 발사방향은 오룔·밀레로보(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 피격 17개 지점, 잔해 낙하 5개 지점. 키이우주 파스티우 구역에서 러시아 드론이 민가를 직격해 어머니와 3세 자녀 2명 사망, 별도 지점 피격으로 소녀 1명이 추가로 병원에서 사망(키이우주에서만 사망 4명, 이 중 3명이 어린이) — 키이우주 5개 구역 31개 지점 피해(파스티우 구역 24개 지점 최다, 비슈호로드 구역 4개 지점). 수미시에서도 드론 2기가 아파트 인근을 명중해 여성 1명 사망·남편(41세) 파편상. 러시아 국방부는 별도로 오데사·미콜라이우(보즈네센스크 공군기지)·흑해 항만 선박 타격도 주장했으나 우크라이나측 공식 확인 출처 미확보 — 확정치 아님, 교차검증 필요. 기종별 세부 수치 미확인 — by_type 비움."
       }
     ],
     "monthly": []
