@@ -1,0 +1,2498 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="리허설 스튜디오">
+<title>발표 리허설 스튜디오</title>
+<style>
+:root{color-scheme:light dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px system-ui,-apple-system,sans-serif;background:#fafafa}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<script>window.__STANDALONE__ = true;</script>
+</head>
+<body>
+<title>발표 리허설 스튜디오</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+:root{
+  --bg:#eef1f3; --surface:#ffffff; --surface-2:#f6f9fa; --mat:#1b2529;
+  --ink:#17242a; --ink-2:#48595f; --muted:#74888f; --line:#dbe3e6;
+  --accent:#0f766e; --accent-ink:#ffffff; --accent-soft:#d9efec;
+  --warm:#a8501d; --warm-soft:#f7e6da; --danger:#b42318;
+  --shadow:0 1px 2px rgba(15,35,40,.06), 0 8px 24px rgba(15,35,40,.07);
+  --ui:'Archivo','Noto Sans KR',system-ui,-apple-system,sans-serif;
+  --serif:'Source Serif 4','Noto Sans KR',Georgia,serif;
+  --kr:'Noto Sans KR','Archivo',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b1113; --surface:#141c1f; --surface-2:#192327; --mat:#05090a;
+    --ink:#e6eef0; --ink-2:#b0c1c5; --muted:#7d9197; --line:#243035;
+    --accent:#2aa89c; --accent-ink:#04211e; --accent-soft:#11302d;
+    --warm:#dd8a56; --warm-soft:#33241b; --danger:#e07a6e;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0b1113; --surface:#141c1f; --surface-2:#192327; --mat:#05090a;
+  --ink:#e6eef0; --ink-2:#b0c1c5; --muted:#7d9197; --line:#243035;
+  --accent:#2aa89c; --accent-ink:#04211e; --accent-soft:#11302d;
+  --warm:#dd8a56; --warm-soft:#33241b; --danger:#e07a6e;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:14px;-webkit-text-size-adjust:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+#app{height:100%;display:flex;flex-direction:column;min-height:0}
+
+/* ---------- top bar ---------- */
+.topbar{display:flex;align-items:center;gap:12px;padding:10px 16px;
+  padding-top:calc(10px + env(safe-area-inset-top,0px));
+  background:var(--surface);border-bottom:1px solid var(--line);flex:none}
+.mark{display:flex;align-items:center;gap:8px;font-weight:700;letter-spacing:-.01em;white-space:nowrap}
+.mark i{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none;display:block}
+.deckname{flex:1;min-width:0;color:var(--ink-2);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.topActions{display:flex;gap:6px;flex:none}
+
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:8px;padding:7px 11px;cursor:pointer;font-weight:500;line-height:1;transition:background .12s,border-color .12s}
+.btn:hover{background:var(--accent-soft);border-color:var(--accent)}
+.btn.ghost{background:transparent}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.icon{padding:7px 9px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn svg{width:15px;height:15px;display:block}
+
+/* ---------- main ---------- */
+.main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) clamp(320px,32vw,460px);gap:12px;padding:12px}
+.stage{position:relative;background:var(--mat);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.slideFrame{position:relative;flex:1;min-height:0;cursor:pointer}
+#slideCanvas{position:absolute;left:50%;top:50%;transform-origin:50% 50%;background:#fff;
+  box-shadow:0 10px 40px rgba(0,0,0,.45);overflow:hidden}
+.stageBar{flex:none;display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(0,0,0,.28);
+  color:#e9f1f2;backdrop-filter:blur(6px)}
+.stageBar .count{font-variant-numeric:tabular-nums;font-weight:600;letter-spacing:.02em}
+.stageBar .btn{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);color:#eef5f6}
+.stageBar .btn:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.35)}
+.autoTrack{flex:1;height:4px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden}
+.autoTrack i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s linear}
+.thumbs{flex:none;display:flex;gap:6px;overflow-x:auto;padding:8px 10px;background:rgba(0,0,0,.2);scrollbar-width:thin}
+.thumbs button{flex:none;width:30px;height:26px;border-radius:5px;border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.07);color:#dbe6e8;font-size:11px;font-variant-numeric:tabular-nums;cursor:pointer}
+.thumbs button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+
+/* ---------- rail ---------- */
+.rail{display:grid;grid-template-rows:1fr 1fr;gap:12px;min-height:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;
+  min-height:0;overflow:hidden;box-shadow:var(--shadow)}
+.panel > header{flex:none;display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--line)}
+.tagline{display:flex;align-items:baseline;gap:7px;flex:1;min-width:0}
+.tag{font-size:10px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;padding:3px 7px;border-radius:5px}
+.panel-en .tag{background:var(--accent-soft);color:var(--accent)}
+.panel-ko .tag{background:var(--warm-soft);color:var(--warm)}
+.tagline span{font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.body{flex:1;min-height:0;overflow:auto;padding:14px 16px 18px;position:relative}
+.script{margin:0;white-space:pre-wrap;word-break:break-word}
+.script .ln{margin:0 0 .75em;padding:2px 6px;margin-left:-6px;border-radius:6px;transition:background .18s}
+.script .ln:last-child{margin-bottom:0}
+.panel-en .script .ln.on{background:var(--accent-soft)}
+.panel-ko .script .ln.on{background:var(--warm-soft)}
+.panel-en .script{font-family:var(--serif);font-size:var(--fs-en,19px);line-height:1.62}
+.panel-ko .script{font-family:var(--kr);font-size:var(--fs-ko,16px);line-height:1.72;color:var(--ink-2)}
+.script .empty{color:var(--muted);font-family:var(--ui);font-size:13px;font-style:normal}
+textarea.editor{width:100%;height:100%;min-height:120px;border:none;background:transparent;resize:none;padding:0;
+  font-family:var(--kr);font-size:15px;line-height:1.6}
+textarea.editor:focus{outline:none}
+.panel-ko .body.mask-blur .script{filter:blur(7px);user-select:none}
+.panel-ko .body.mask-hide .script{visibility:hidden}
+.peek{position:absolute;inset:0;display:none;align-items:center;justify-content:center;cursor:pointer;
+  font-size:12px;color:var(--muted);background:linear-gradient(var(--surface),var(--surface));opacity:.82}
+.body.mask-hide .peek{display:flex}
+.body.mask-blur .peek{display:flex;background:none;opacity:1;align-items:flex-start;justify-content:flex-end;padding:2px 4px}
+.body.revealed .peek{display:none!important}
+.body.revealed .script{filter:none!important;visibility:visible!important}
+
+/* ---------- control bar ---------- */
+.controls{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:10px 16px;
+  padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));
+  background:var(--surface);border-top:1px solid var(--line)}
+.grp{display:flex;align-items:center;gap:7px}
+.grp > label{font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;white-space:nowrap}
+.seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:none;background:transparent;padding:6px 10px;cursor:pointer;font-size:12.5px;font-weight:600;
+  color:var(--muted);line-height:1.2;white-space:nowrap}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--accent);color:var(--accent-ink)}
+.spacer{flex:1}
+.num{width:58px;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);
+  font-variant-numeric:tabular-nums;text-align:right}
+input[type=range]{accent-color:var(--accent);width:96px}
+.hint{font-size:11.5px;color:var(--muted)}
+
+/* ---------- drop zone ---------- */
+.drop{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  color:#eaf6f5;text-align:center;padding:24px;pointer-events:none;font-size:15px}
+.drop.on{display:flex;background:rgba(15,118,110,.55);border:2px dashed var(--accent);border-radius:12px;z-index:5}
+
+/* ---------- modal ---------- */
+.modal{position:fixed;inset:0;background:rgba(10,18,20,.55);display:flex;align-items:center;justify-content:center;
+  padding:16px;z-index:40;overflow:auto}
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
+  width:min(620px,100%);max-height:88vh;overflow:auto;padding:20px}
+.sheet h2{margin:0 0 4px;font-size:18px;letter-spacing:-.01em}
+.sheet p.sub{margin:0 0 18px;color:var(--muted);font-size:13px}
+.row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.row:last-of-type{border-bottom:none}
+.row > label{flex:1;min-width:150px;font-weight:500}
+.row .desc{flex-basis:100%;font-size:11.5px;color:var(--muted);margin-top:-4px}
+select,input[type=text]{padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);max-width:100%}
+.row select{flex:1 1 200px;min-width:0;max-width:340px}
+.sheet textarea{width:100%;min-height:150px;padding:10px;border:1px solid var(--line);border-radius:9px;
+  background:var(--surface-2);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;line-height:1.5;resize:vertical}
+.sheetFoot{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+.saveDot{flex:none;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.02em;white-space:nowrap}
+.saveDot.ok{color:var(--accent)}
+.saveDot.bad{color:var(--danger)}
+.hint.warn{color:var(--danger);font-weight:600}
+.deckRow{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);
+  border-radius:10px;margin-bottom:8px;flex-wrap:wrap;background:var(--surface-2)}
+.deckRow.on{border-color:var(--accent);background:var(--accent-soft)}
+.deckRow .nmWrap{flex:1 1 190px;min-width:0;display:flex;flex-direction:column;gap:3px}
+.deckRow input.nm{width:100%;padding:3px 6px;border:1px solid transparent;border-radius:6px;
+  background:transparent;font-weight:600;font-size:14.5px}
+.deckRow input.nm:hover{border-color:var(--line)}
+.deckRow input.nm:focus{border-color:var(--accent);background:var(--surface);outline:none}
+.deckRow .meta{font-size:11.5px;color:var(--muted);padding-left:6px}
+.badge{flex:none;font-size:10px;font-weight:700;letter-spacing:.07em;padding:3px 7px;border-radius:5px;
+  background:var(--surface);border:1px solid var(--line);color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(78px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);
+  background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:13px;z-index:60;
+  box-shadow:var(--shadow);max-width:90vw;text-align:center}
+
+/* ---------- phone ---------- */
+@media (max-width:880px){
+  .main{grid-template-columns:1fr;grid-template-rows:auto 1fr;overflow:auto;padding:10px;gap:10px}
+  .stage{min-height:0}
+  .slideFrame{aspect-ratio:16/9;flex:none}
+  .rail{grid-template-rows:auto auto}
+  .panel{min-height:170px}
+  .thumbs{display:none}
+  .controls{gap:8px 10px;padding:8px 12px;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px))}
+  .grp > label{display:none}
+  .hint{display:none}
+  input[type=range]{width:70px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div id="app">
+  <header class="topbar">
+    <div class="mark"><i></i>리허설 스튜디오</div>
+    <div class="deckname" id="deckName">데모 덱</div>
+    <span class="saveDot" id="saveDot"></span>
+    <div class="topActions">
+      <button class="btn" id="btnLib">자료실</button>
+      <button class="btn" id="btnOpen">파일 열기</button>
+      <button class="btn ghost icon" id="btnHelp" title="사용법" aria-label="사용법">?</button>
+      <button class="btn ghost icon" id="btnSettings" title="설정" aria-label="설정">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="main">
+    <section class="stage">
+      <div class="slideFrame" id="slideFrame">
+        <div id="slideCanvas"></div>
+        <div class="drop" id="drop"><strong>여기에 파일을 놓으세요</strong><span>.pptx · PDF · 이미지</span></div>
+      </div>
+      <div class="stageBar">
+        <button class="btn icon" id="btnPrev" aria-label="이전 슬라이드">◀</button>
+        <button class="btn icon" id="btnNext" aria-label="다음 슬라이드">▶</button>
+        <span class="count" id="counter">1 / 3</span>
+        <div class="autoTrack" aria-hidden="true"><i id="autoFill"></i></div>
+        <button class="btn icon" id="btnAuto" title="자동 넘김 시작/정지">자동</button>
+      </div>
+      <div class="thumbs" id="thumbs"></div>
+    </section>
+
+    <aside class="rail">
+      <section class="panel panel-en">
+        <header>
+          <div class="tagline"><span class="tag" id="enTag">EN · UK</span><span id="enMeta">영어 대본</span></div>
+          <button class="btn icon" id="btnPlayEn" title="영어 낭독 (Enter)">▶ 낭독</button>
+          <button class="btn ghost icon" id="btnAudioEn" title="이 슬라이드에 녹음 파일 연결">녹음</button>
+          <button class="btn ghost icon" id="btnEditEn" title="영어 대본 편집">편집</button>
+        </header>
+        <div class="body" id="enBody">
+          <div class="script" id="enText"></div>
+          <textarea class="editor" id="enEdit" hidden placeholder="영어 대본을 입력하세요."></textarea>
+        </div>
+      </section>
+
+      <section class="panel panel-ko">
+        <header>
+          <div class="tagline"><span class="tag">KO</span><span id="koMeta">한글 대본</span></div>
+          <button class="btn icon" id="btnPlayKo" title="한글 낭독 (K)">▶ 낭독</button>
+          <button class="btn ghost icon" id="btnAudioKo" title="이 슬라이드에 녹음 파일 연결">녹음</button>
+          <button class="btn ghost icon" id="btnEditKo" title="한글 대본 편집">편집</button>
+        </header>
+        <div class="body" id="koBody">
+          <div class="script" id="koText"></div>
+          <textarea class="editor" id="koEdit" hidden placeholder="한글 대본을 입력하세요."></textarea>
+          <div class="peek" id="koPeek">눌러서 잠깐 보기</div>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <footer class="controls">
+    <div class="grp">
+      <button class="btn primary" id="btnPlay">▶ 낭독</button>
+      <button class="btn" id="btnStop">■ 정지</button>
+    </div>
+    <div class="grp"><label for="segRepeat">반복</label>
+      <div class="seg" id="segRepeat" role="group" aria-label="반복 횟수">
+        <button data-val="1" class="on">1회</button><button data-val="2">2회</button><button data-val="3">3회</button>
+      </div>
+    </div>
+    <div class="grp"><label>발음</label>
+      <div class="seg" id="segAccent" role="group" aria-label="영어 발음">
+        <button data-val="en-GB" class="on">영국식</button><button data-val="en-US">미국식</button>
+      </div>
+    </div>
+    <div class="grp"><label>한글</label>
+      <div class="seg" id="segMask" role="group" aria-label="한글 자막 가림">
+        <button data-val="show" class="on">표시</button><button data-val="blur">블러</button><button data-val="hide">숨김</button>
+      </div>
+    </div>
+    <div class="grp"><label for="rSpeed">속도</label>
+      <input type="range" id="rSpeed" min="0.7" max="1.3" step="0.05" value="1">
+      <span class="hint" id="speedVal">1.00×</span>
+    </div>
+    <div class="spacer"></div>
+    <div class="grp"><label>자동 넘김</label>
+      <div class="seg" id="segAuto" role="group" aria-label="자동 넘김 방식">
+        <button data-val="off" class="on">끄기</button><button data-val="timer">고정 시간</button><button data-val="after">낭독 후</button>
+      </div>
+      <input class="num" type="number" id="nSec" min="3" max="600" step="1" value="30" aria-label="슬라이드 체류 시간(초)">
+      <span class="hint">초</span>
+      <button class="btn ghost icon" id="btnSecSlide" title="이 시간을 현재 슬라이드에만 적용">이 장만</button>
+    </div>
+  </footer>
+</div>
+
+<input type="file" id="filePick" accept=".pptx,.pdf,.zip,image/*" multiple hidden>
+<input type="file" id="audioPick" accept="audio/*" hidden>
+<input type="file" id="audioBulk" accept="audio/*" multiple hidden>
+
+<div class="modal" id="mSettings" hidden>
+  <div class="sheet" role="dialog" aria-label="설정">
+    <h2>설정</h2>
+    <p class="sub">음성·자동 진행·대본 데이터를 조정합니다. 설정은 이 기기에 저장됩니다.</p>
+    <div class="row"><label for="selEngine">음성 엔진</label>
+      <select id="selEngine"><option value="device">기기 내장 음성 (무료)</option><option value="google">구글 클라우드 TTS (원어민급)</option></select>
+      <div class="desc" id="engineNote"></div></div>
+    <div id="gBox" hidden>
+      <div class="row"><label for="inKey">구글 API 키</label>
+        <input type="text" id="inKey" placeholder="AIza…" autocomplete="off" spellcheck="false" style="flex:1 1 220px;max-width:340px">
+        <button class="btn" id="btnConnect">연결 확인</button>
+        <div class="desc" id="gNote">키는 이 기기의 브라우저에만 저장되며 구글 외의 어디로도 전송되지 않습니다.</div></div>
+      <div class="row"><label for="gvGB">영국식 음성</label><select id="gvGB"></select>
+        <button class="btn ghost icon" id="gtryGB">미리 듣기</button></div>
+      <div class="row"><label for="gvUS">미국식 음성</label><select id="gvUS"></select>
+        <button class="btn ghost icon" id="gtryUS">미리 듣기</button></div>
+      <div class="row"><label for="gvKO">한국어 음성</label><select id="gvKO"></select>
+        <button class="btn ghost icon" id="gtryKO">미리 듣기</button>
+        <div class="desc">Chirp 3 HD가 가장 자연스럽습니다. 한 번 합성한 문장은 기기에 보관되어 반복 재생에는 추가 비용이 들지 않습니다.</div></div>
+      <div class="row"><label>사용량</label><div class="desc" id="gUsage"></div></div>
+      <div class="row"><label>내려받기</label>
+        <button class="btn" id="btnMakeMp3">전체 대본 mp3로 저장</button>
+        <div class="desc">모든 슬라이드의 대본을 mp3로 합성해 ZIP으로 저장합니다. 이 파일들을 게시된 앱의 <b>녹음</b> 칸에 올리면 휴대폰에서도 같은 음성으로 연습할 수 있습니다.</div></div>
+      <div class="row"><label>설정 방법</label><button class="btn" id="btnGuide">API 키 발급 안내 보기</button></div>
+    </div>
+    <div class="row"><label for="vGB">영국식 음성 <span class="hint">(기기 내장)</span></label><select id="vGB"></select>
+      <button class="btn ghost icon" id="tryGB">미리 듣기</button></div>
+    <div class="row"><label for="vUS">미국식 음성</label><select id="vUS"></select>
+      <button class="btn ghost icon" id="tryUS">미리 듣기</button></div>
+    <div class="row"><label for="vKO">한국어 음성</label><select id="vKO"></select>
+      <button class="btn ghost icon" id="tryKO">미리 듣기</button>
+      <div class="desc" id="voiceNote">목록은 품질이 좋은 순으로 정렬되며, 기본값은 가장 자연스러운 음성입니다.</div></div>
+    <div class="row"><label for="rPitch">음높이</label>
+      <input type="range" id="rPitch" min="0.8" max="1.2" step="0.05" value="1">
+      <span class="hint" id="pitchVal">1.00</span>
+      <div class="desc">낮추면 차분하게, 높이면 밝게 들립니다. 1.00이 그 음성의 본래 음높이입니다.</div></div>
+    <div class="row"><label for="ckPolish">낭독 다듬기</label><input type="checkbox" id="ckPolish" checked>
+      <div class="desc">단위와 기호를 사람이 읽는 대로 바꿔 읽습니다. 예: <code>5 km</code> → five kilometres, <code>30%</code> → thirty percent, <code>e.g.</code> → for example. 화면의 대본은 그대로 유지됩니다.</div></div>
+    <div class="row"><label for="ckSpellAcr">약어를 글자 단위로</label><input type="checkbox" id="ckSpellAcr" checked>
+      <div class="desc"><code>RF</code>, <code>C-UAS</code> 같은 대문자 약어를 한 글자씩 또박또박 읽습니다. NATO처럼 단어로 읽는 약어는 그대로 둡니다.</div></div>
+    <div class="row"><label for="taDict">발음 사전</label>
+      <div class="desc">한 줄에 하나씩 <code>표기 = 읽는 법</code>. 기관명·장비명처럼 음성이 자주 틀리는 단어를 직접 지정하세요.</div>
+      <textarea id="taDict" spellcheck="false" style="min-height:104px"></textarea></div>
+    <div class="row"><label>발음·속도 점검</label>
+      <button class="btn" id="btnTestRead">현재 슬라이드 영어 대본 시험 낭독</button>
+      <div class="desc">낭독이 끝나면 영어 대본 칸에 실제 속도(wpm)가 표시됩니다. 영어 발표의 권장 속도는 130~160 wpm입니다.</div></div>
+    <div class="row"><label for="selOrder">낭독 순서</label>
+      <select id="selOrder"><option value="en">영어만</option><option value="en-ko">영어 → 한글</option><option value="ko-en">한글 → 영어</option></select></div>
+    <div class="row"><label for="nGap">반복·낭독 사이 간격</label><input class="num" type="number" id="nGap" min="0" max="10" step="0.5" value="0.8"><span class="hint">초</span></div>
+    <div class="row"><label for="ckAutoSpeak">슬라이드 이동 시 자동 낭독</label><input type="checkbox" id="ckAutoSpeak"></div>
+    <div class="row"><label for="nFsEn">영어 대본 글자 크기</label><input class="num" type="number" id="nFsEn" min="13" max="40" value="19"><span class="hint">px</span></div>
+    <div class="row"><label for="nFsKo">한글 대본 글자 크기</label><input class="num" type="number" id="nFsKo" min="12" max="36" value="16"><span class="hint">px</span></div>
+    <div class="row"><label>녹음 파일 일괄 등록</label>
+      <button class="btn" id="btnAudioBulk">음성 파일 여러 개 올리기</button>
+      <div class="desc">파일 이름 앞의 숫자로 슬라이드를 찾아 자동 배정합니다. 예: <code>01-en.mp3</code>, <code>01-ko.mp3</code>, <code>02-en.mp3</code>. <code>-ko</code>가 붙지 않으면 영어 칸에 들어갑니다.</div></div>
+    <div class="sheetFoot">
+      <button class="btn" id="btnBulk">대본 일괄 편집</button>
+      <button class="btn" id="btnReset">자료실 열기</button>
+      <button class="btn primary" id="btnCloseSettings">닫기</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="mBulk" hidden>
+  <div class="sheet" role="dialog" aria-label="대본 일괄 편집">
+    <h2>대본 일괄 편집</h2>
+    <p class="sub">슬라이드는 <code>===</code>, 영어와 한글은 <code>---</code> 로 구분합니다. 내용을 복사해 두거나 다른 기기에서 붙여넣어 쓸 수 있습니다.</p>
+    <textarea id="taBulk" spellcheck="false"></textarea>
+    <div class="sheetFoot">
+      <button class="btn" id="btnCopyBulk">클립보드로 복사</button>
+      <button class="btn" id="btnCancelBulk">취소</button>
+      <button class="btn primary" id="btnApplyBulk">대본 적용</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="mLib" hidden>
+  <div class="sheet" role="dialog" aria-label="내 발표 자료">
+    <h2>내 발표 자료</h2>
+    <p class="sub">올린 파일과 대본, 녹음이 이 기기에 함께 저장됩니다. <span id="libCount"></span></p>
+    <p class="hint" id="libStore" style="margin:-8px 0 14px"></p>
+    <div id="libList"></div>
+    <p class="hint" id="libStorage" style="margin:12px 0 0"></p>
+    <div class="sheetFoot">
+      <button class="btn" id="btnExportPack">연습팩 내보내기</button>
+      <button class="btn" id="btnLibDemo">데모 덱 보기</button>
+      <button class="btn" id="btnLibAdd">새 자료 올리기</button>
+      <button class="btn primary" id="btnCloseLib">닫기</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="mGuide" hidden>
+  <div class="sheet" role="dialog" aria-label="구글 TTS 설정 안내">
+    <h2>구글 클라우드 TTS 연결하기</h2>
+    <p class="sub">5분이면 끝납니다. 월 100만 자(강의 대본 약 100벌)까지 무료입니다.</p>
+    <div class="row"><label>1. 프로젝트 만들기</label><div class="desc"><b>console.cloud.google.com</b> 에 구글 계정으로 접속해 새 프로젝트를 만듭니다.</div></div>
+    <div class="row"><label>2. API 사용 설정</label><div class="desc">검색창에 <b>Cloud Text-to-Speech API</b> 를 입력하고 <b>사용</b> 버튼을 누릅니다.</div></div>
+    <div class="row"><label>3. 결제 계정 연결</label><div class="desc">무료 한도 안에서만 쓰더라도 카드 등록이 필요합니다. 한도를 넘지 않으면 청구되지 않으며, 결제 페이지에서 <b>예산 알림</b>을 걸어 두면 안전합니다.</div></div>
+    <div class="row"><label>4. 키 발급</label><div class="desc"><b>API 및 서비스 → 사용자 인증 정보 → 사용자 인증 정보 만들기 → API 키</b> 순서로 누르면 <code>AIza…</code> 로 시작하는 키가 나옵니다.</div></div>
+    <div class="row"><label>5. 키 제한 (권장)</label><div class="desc">만든 키를 눌러 <b>API 제한사항 → 키 제한</b> 에서 <b>Cloud Text-to-Speech API</b> 만 선택해 저장하세요. 키가 새어 나가도 다른 서비스에는 쓰이지 못합니다.</div></div>
+    <div class="row"><label>6. 붙여넣기</label><div class="desc">설정 화면의 <b>구글 API 키</b> 칸에 붙여넣고 <b>연결 확인</b>을 누르면 음성 목록이 채워집니다.</div></div>
+    <div class="row"><label>열리지 않는다면</label><div class="desc">이 파일을 브라우저에서 직접 열었을 때 연결이 막히는 경우가 드물게 있습니다. 그럴 때는 파일이 있는 폴더에서 <code>python3 -m http.server 8000</code> 을 실행하고 <code>localhost:8000</code> 으로 여시면 됩니다.</div></div>
+    <div class="sheetFoot"><button class="btn primary" id="btnCloseGuide">닫기</button></div>
+  </div>
+</div>
+
+<div class="modal" id="mHelp" hidden>
+  <div class="sheet" role="dialog" aria-label="사용법">
+    <h2>사용법</h2>
+    <p class="sub">PPT 발표를 영어·한글 이중 대본으로 연습하는 도구입니다.</p>
+    <div class="row"><label>0. 자료실</label><div class="desc">올린 자료는 <b>자료실</b>에 쌓입니다. 발표 자료를 여러 개 저장해 두고 필요할 때 <b>열기</b>로 바꿔 가며 연습할 수 있습니다. 개수 제한은 없으며 이름 바꾸기와 삭제도 그 화면에서 합니다.</div></div>
+    <div class="row"><label>1. 자료 올리기</label><div class="desc"><b>.pptx</b>를 그대로 올리면 슬라이드를 그려 보여 주고, <b>발표자 노트</b>에 적어 둔 대본을 자동으로 가져옵니다. 레이아웃이 원본과 다르게 보이면 PPT를 <b>PDF 또는 이미지로 내보내</b> 올리시면 원본 그대로 표시됩니다.</div></div>
+    <div class="row"><label>2. 노트 작성 규칙</label><div class="desc">발표자 노트에 영어 대본을 쓰고 <code>---</code> 한 줄을 넣은 뒤 한글 대본을 적으면 위·아래 칸으로 나뉩니다. 구분선이 없으면 한글이 섞인 문단을 자동으로 구별합니다.</div></div>
+    <div class="row"><label>3. 음성</label><div class="desc">기본은 기기 내장 음성(TTS)이며 영국식·미국식을 고를 수 있습니다. 설정에서 음성은 품질 좋은 순으로 정렬되니 <b>미리 듣기</b>로 비교해 고르세요. 신경망(Natural·Premium) 음성이 원어민에 가장 가깝습니다. 더 좋은 음성이 필요하면 내려받은 독립 실행 파일에서 구글 클라우드 TTS를 연결할 수 있습니다. 직접 녹음한 파일을 쓰려면 대본 칸의 <b>녹음</b> 버튼으로 오디오를 올리세요. 그 슬라이드는 녹음본이 우선 재생됩니다. 반복은 최대 3회입니다.</div></div>
+    <div class="row"><label>4. 화면 넘기기</label><div class="desc">슬라이드를 클릭하면 다음 장으로 넘어갑니다. 아래에서 <b>고정 시간</b> 또는 <b>낭독 후</b>를 고른 뒤 슬라이드 아래 <b>자동</b> 버튼을 누르면 자동으로 넘어갑니다. 특정 장만 시간을 다르게 주려면 초를 입력하고 <b>이 장만</b>을 누르세요.</div></div>
+    <div class="row"><label>5. 단축키</label><div class="desc"><b>→ / Space</b> 다음 · <b>←</b> 이전 · <b>Enter</b> 영어 낭독 · <b>K</b> 한글 낭독 · <b>M</b> 한글 가림 전환 · <b>Esc</b> 정지</div></div>
+    <div class="sheetFoot"><button class="btn primary" id="btnCloseHelp">닫기</button></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+(function(){
+const $ = s => document.querySelector(s);
+const el = (t,p) => Object.assign(document.createElement(t), p||{});
+const EMU = 9525;
+const HANGUL = /[ㄱ-ㆎ가-힣]/g;
+
+/* ============================ state ============================ */
+const S = {
+  slides: [],          // {node: HTMLElement, w, h}
+  scripts: [],         // {en, ko, sec}
+  audio: {},           // idx -> {en:Blob, ko:Blob}
+  idx: 0,
+  deckId: null,
+  name: '데모 덱',
+  source: null,        // {kind:'pptx'|'pdf'|'img', blobs:[Blob], names:[]}
+  playToken: 0,
+  playing: false,
+  autoOn: false,
+  autoTimer: null,
+  autoStart: 0,
+  editing: {en:false, ko:false},
+};
+const CFG = {
+  repeat:1, accent:'en-GB', mask:'show', speed:1, pitch:1, auto:'off', sec:30, gap:0.8,
+  order:'en', autoSpeak:false, fsEn:19, fsKo:16, vGB:'', vUS:'', vKO:'',
+  polish:true, spellAcr:true, dict:null,
+  engine:'device', gKey:'', gGB:'', gUS:'', gKO:''
+};
+const STANDALONE = !!window.__STANDALONE__;
+
+function toast(msg, ms){
+  const t = el('div',{className:'toast',textContent:msg});
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), ms||2400);
+}
+
+/* ============================ settings persistence ============================ */
+function saveCfg(){ try{ localStorage.setItem('rehearsal.cfg', JSON.stringify(CFG)); }catch(e){} }
+function loadCfg(){
+  try{ const raw = localStorage.getItem('rehearsal.cfg'); if(raw) Object.assign(CFG, JSON.parse(raw)); }catch(e){}
+}
+
+/* ============================ IndexedDB (deck storage) ============================ */
+const IDB = (function(){
+  let dbp = null;
+  function open(){
+    if(dbp) return dbp;
+    dbp = new Promise((res,rej)=>{
+      let r;
+      try{ r = indexedDB.open('rehearsal-db', 1); }catch(e){ return rej(e); }
+      r.onupgradeneeded = () => { r.result.createObjectStore('kv'); };
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    }).catch(()=>null);
+    return dbp;
+  }
+  async function tx(mode, fn){
+    const db = await open(); if(!db) return null;
+    return new Promise((res,rej)=>{
+      const t = db.transaction('kv', mode);
+      const req = fn(t.objectStore('kv'));
+      t.oncomplete = () => res(req && req.result);
+      t.onerror = () => rej(t.error);
+    }).catch(()=>null);
+  }
+  /* write transactions report real success: true only when the transaction committed */
+  async function txOk(fn){
+    const db = await open(); if(!db) return false;
+    return new Promise(res=>{
+      let t;
+      try{ t = db.transaction('kv', 'readwrite'); fn(t.objectStore('kv')); }catch(e){ return res(false); }
+      t.oncomplete = () => res(true);
+      t.onerror = () => res(false);
+      t.onabort = () => res(false);
+    });
+  }
+  return {
+    get: k => tx('readonly', st => st.get(k)),
+    set: (k,v) => txOk(st => st.put(v,k)),
+    del: k => txOk(st => st.delete(k)),
+  };
+})();
+
+/* ---- storage layer: server store (published app) + this browser (files) ---- */
+const Store = { srv:null, loc:false, ready:false, lastOk:null };
+
+async function probeLocal(){
+  try{
+    const t = {t: Date.now()};
+    await IDB.set('__probe', t);
+    const v = await IDB.get('__probe');
+    return !!(v && v.t === t.t);
+  }catch(e){ return false; }
+}
+async function initStore(){
+  Store.loc = await probeLocal();
+  try{
+    if(window.claude && typeof window.claude.use === 'function'){
+      Store.srv = await window.claude.use('db');
+    }
+  }catch(e){ Store.srv = null; }
+  Store.ready = true;
+  paintSaveState();
+}
+function storeSummary(){
+  if(!Store.ready) return '저장소를 확인하는 중…';
+  if(Store.srv && Store.loc) return '대본은 계정에, 원본 파일은 이 브라우저에 저장됩니다.';
+  if(Store.srv) return '대본은 계정에 저장됩니다. 이 브라우저가 파일 보관을 막고 있어 원본은 열 때 다시 올려 주셔야 합니다.';
+  if(Store.loc) return '이 브라우저에만 저장됩니다. 다른 기기로 옮기려면 연습팩을 내보내세요.';
+  return '이 브라우저가 저장소를 차단해 자동 저장이 되지 않습니다. 연습팩 내보내기로 파일에 보관해 주세요.';
+}
+function paintSaveState(){
+  const d = $('#saveDot');
+  if(!d) return;
+  if(!S.deckId){ d.textContent = '데모'; d.className = 'saveDot'; return; }
+  if(Store.lastOk === true){ d.textContent = Store.srv ? '저장됨 · 계정' : '저장됨 · 이 기기'; d.className = 'saveDot ok'; }
+  else if(Store.lastOk === false){ d.textContent = '저장 안 됨'; d.className = 'saveDot bad'; }
+  else { d.textContent = ''; d.className = 'saveDot'; }
+}
+
+/* ---- deck library: many saved decks, one open at a time ---- */
+function newDeckId(){ return 'd' + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+async function libLocal(){
+  try{ return (await IDB.get('library')) || []; }catch(e){ return []; }
+}
+async function libSave(list){ try{ return await IDB.set('library', list); }catch(e){ return false; } }
+async function libList(){
+  const local = await libLocal();
+  const byId = new Map(local.map(d => [d.id, Object.assign({}, d, {hasFile:true})]));
+  if(Store.srv){
+    try{
+      const snap = await Store.srv.collection('decks').limit(200).get();
+      for(const doc of snap.docs){
+        const v = doc.data() || {};
+        const prev = byId.get(doc.id) || {};
+        byId.set(doc.id, {
+          id: doc.id,
+          name: v.name || prev.name || '이름 없음',
+          kind: v.kind || prev.kind || 'pptx',
+          slides: v.slides || prev.slides || 0,
+          scripted: v.scripted || prev.scripted || 0,
+          updatedAt: Math.max(v.updatedAt||0, prev.updatedAt||0),
+          hasFile: !!prev.hasFile
+        });
+      }
+    }catch(e){}
+  }
+  return [...byId.values()];
+}
+function lastDeckId(){ try{ return localStorage.getItem('rehearsal.lastDeck'); }catch(e){ return null; } }
+function setLastDeck(id){ try{ id ? localStorage.setItem('rehearsal.lastDeck', id) : localStorage.removeItem('rehearsal.lastDeck'); }catch(e){} }
+
+let saveQueued = null;
+function saveDeck(now){
+  if(!S.deckId) return Promise.resolve();      // the demo deck is not stored
+  clearTimeout(saveQueued);
+  const run = async () => {
+    const entry = {
+      id: S.deckId, name: S.name,
+      kind: S.source ? S.source.kind : 'img',
+      slides: S.slides.length,
+      scripted: S.scripts.filter(s => s && (s.en || s.ko)).length,
+      updatedAt: Date.now()
+    };
+    let okS = false, okL = false;
+
+    if(Store.srv){
+      try{
+        await Store.srv.doc('decks/'+S.deckId).set({
+          name: entry.name, kind: entry.kind, slides: entry.slides,
+          scripted: entry.scripted, updatedAt: entry.updatedAt,
+          scripts: S.scripts, idx: S.idx
+        });
+        okS = true;
+      }catch(e){}
+    }
+    if(Store.loc && S.source){
+      try{
+        // the list entry is added only after the deck itself is confirmed written
+        const wrote = await IDB.set('deck:'+S.deckId, {
+          name: S.name, source: S.source, scripts: S.scripts, audio: S.audio, idx: S.idx, v: 3
+        });
+        if(wrote){
+          const list = await libLocal();
+          const i = list.findIndex(d => d.id === S.deckId);
+          if(i < 0) list.unshift(entry); else list[i] = entry;
+          okL = await libSave(list);
+        }
+      }catch(e){}
+    }
+    Store.lastOk = (okS || okL);
+    setLastDeck(S.deckId);
+    paintSaveState();
+  };
+  if(now) return run();
+  saveQueued = setTimeout(run, 600);
+  return Promise.resolve();
+}
+
+/* write any pending debounced edit now (before switching decks or leaving the page) */
+function flushSave(){ return saveQueued ? saveDeck(true) : Promise.resolve(); }
+window.addEventListener('pagehide', () => { flushSave(); });
+document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'hidden') flushSave(); });
+
+/* ============================ XML helpers ============================ */
+const kid  = (n,t) => { if(!n) return null; for(const c of n.children) if(c.tagName===t) return c; return null; };
+const kids = (n,t) => n ? [...n.children].filter(c=>c.tagName===t) : [];
+const deep = (n,t) => n ? n.getElementsByTagName(t)[0] : null;
+const att  = (n,a,d) => (n && n.getAttribute(a)!=null) ? n.getAttribute(a) : d;
+const num  = (n,a,d) => { const v = att(n,a,null); return v==null ? d : parseFloat(v); };
+
+function parseXML(str){ return new DOMParser().parseFromString(str,'application/xml'); }
+
+function dirOf(p){ const i = p.lastIndexOf('/'); return i<0 ? '' : p.slice(0,i); }
+function resolvePath(base, target){
+  if(target.startsWith('/')) return target.slice(1);
+  const parts = (dirOf(base) + '/' + target).split('/');
+  const out = [];
+  for(const p of parts){ if(p==='' || p==='.') continue; if(p==='..') out.pop(); else out.push(p); }
+  return out.join('/');
+}
+
+async function readRels(zip, partPath){
+  const rp = dirOf(partPath) + '/_rels/' + partPath.split('/').pop() + '.rels';
+  const f = zip.file(rp);
+  const map = {};
+  if(!f) return map;
+  const doc = parseXML(await f.async('string'));
+  for(const r of doc.getElementsByTagName('Relationship')){
+    map[r.getAttribute('Id')] = {
+      type: r.getAttribute('Type') || '',
+      target: r.getAttribute('Target') || '',
+      external: r.getAttribute('TargetMode')==='External',
+      path: r.getAttribute('TargetMode')==='External' ? null : resolvePath(partPath, r.getAttribute('Target'))
+    };
+  }
+  return map;
+}
+
+/* ============================ color ============================ */
+function clamp(v,a,b){ return Math.max(a, Math.min(b,v)); }
+function hex2rgb(h){ h = h.replace('#',''); if(h.length===3) h = h.split('').map(c=>c+c).join('');
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)]; }
+function rgb2hex(r){ return '#' + r.map(v=>clamp(Math.round(v),0,255).toString(16).padStart(2,'0')).join(''); }
+function rgb2hsl(r,g,b){ r/=255;g/=255;b/=255;
+  const mx=Math.max(r,g,b), mn=Math.min(r,g,b); let h=0,s=0; const l=(mx+mn)/2;
+  if(mx!==mn){ const d=mx-mn; s = l>0.5 ? d/(2-mx-mn) : d/(mx+mn);
+    h = mx===r ? (g-b)/d + (g<b?6:0) : mx===g ? (b-r)/d+2 : (r-g)/d+4; h/=6; }
+  return [h,s,l]; }
+function hsl2rgb(h,s,l){
+  if(s===0){ const v=l*255; return [v,v,v]; }
+  const q = l<0.5 ? l*(1+s) : l+s-l*s, p = 2*l-q;
+  const f = t => { if(t<0)t+=1; if(t>1)t-=1;
+    if(t<1/6) return p+(q-p)*6*t; if(t<1/2) return q; if(t<2/3) return p+(q-p)*(2/3-t)*6; return p; };
+  return [f(h+1/3)*255, f(h)*255, f(h-1/3)*255];
+}
+
+function applyMods(hexv, node){
+  let rgb = hex2rgb(hexv), alpha = 1;
+  const get = t => { const e = kid(node,t); return e ? num(e,'val',null) : null; };
+  const lumMod = get('a:lumMod'), lumOff = get('a:lumOff');
+  const shade = get('a:shade'), tint = get('a:tint'), alph = get('a:alpha');
+  if(lumMod!=null || lumOff!=null){
+    let [h,s,l] = rgb2hsl(rgb[0],rgb[1],rgb[2]);
+    if(lumMod!=null) l *= lumMod/100000;
+    if(lumOff!=null) l += lumOff/100000;
+    rgb = hsl2rgb(h, s, clamp(l,0,1));
+  }
+  if(shade!=null){ const k = shade/100000; rgb = rgb.map(v=>v*k); }
+  if(tint!=null){ const k = tint/100000; rgb = rgb.map(v=>v*k + 255*(1-k)); }
+  if(alph!=null) alpha = alph/100000;
+  const hx = rgb2hex(rgb);
+  if(alpha < 1){ const c = hex2rgb(hx); return `rgba(${c[0]},${c[1]},${c[2]},${alpha.toFixed(3)})`; }
+  return hx;
+}
+
+function colorFromNode(node, ctx){
+  if(!node) return null;
+  if(node.tagName==='a:srgbClr') return applyMods('#'+att(node,'val','000000'), node);
+  if(node.tagName==='a:sysClr') return applyMods('#'+att(node,'lastClr','000000'), node);
+  if(node.tagName==='a:schemeClr'){
+    let name = att(node,'val','tx1');
+    const mapped = (ctx.clrMap && ctx.clrMap[name]) || name;
+    const hexv = (ctx.scheme && ctx.scheme[mapped]) || (ctx.scheme && ctx.scheme[name]) || '#000000';
+    return applyMods(hexv, node);
+  }
+  if(node.tagName==='a:prstClr'){
+    const PRST = {black:'#000000',white:'#ffffff',red:'#ff0000',blue:'#0000ff',green:'#008000',yellow:'#ffff00',gray:'#808080'};
+    return applyMods(PRST[att(node,'val','black')]||'#000000', node);
+  }
+  return null;
+}
+function firstColorChild(parent, ctx){
+  if(!parent) return null;
+  for(const c of parent.children){
+    const v = colorFromNode(c, ctx);
+    if(v) return v;
+  }
+  return null;
+}
+
+/* fill -> css background */
+function fillToCss(spPr, ctx){
+  if(!spPr) return null;
+  if(kid(spPr,'a:noFill')) return 'transparent';
+  const sf = kid(spPr,'a:solidFill');
+  if(sf) return firstColorChild(sf, ctx);
+  const gf = kid(spPr,'a:gradFill');
+  if(gf){
+    const stops = [...gf.getElementsByTagName('a:gs')].map(gs=>({
+      pos: num(gs,'pos',0)/1000, col: firstColorChild(gs, ctx) || '#cccccc'
+    })).sort((a,b)=>a.pos-b.pos);
+    if(stops.length){
+      const lin = deep(gf,'a:lin');
+      const ang = lin ? (num(lin,'ang',0)/60000 + 90) : 180;
+      return `linear-gradient(${ang}deg, ${stops.map(s=>`${s.col} ${s.pos.toFixed(1)}%`).join(', ')})`;
+    }
+  }
+  return null;
+}
+
+/* ============================ PPTX renderer ============================ */
+async function parsePptx(file){
+  const zip = await JSZip.loadAsync(file);
+  const xml = async p => { const f = zip.file(p); return f ? parseXML(await f.async('string')) : null; };
+
+  const presPath = 'ppt/presentation.xml';
+  const pres = await xml(presPath);
+  if(!pres) throw new Error('presentation.xml 을 찾을 수 없습니다.');
+  const presRels = await readRels(zip, presPath);
+
+  const sz = deep(pres,'p:sldSz');
+  const W = Math.round(num(sz,'cx',9144000)/EMU), H = Math.round(num(sz,'cy',6858000)/EMU);
+
+  const order = [...pres.getElementsByTagName('p:sldId')]
+    .map(n => n.getAttribute('r:id'))
+    .map(id => presRels[id] && presRels[id].path)
+    .filter(Boolean);
+
+  const mediaCache = new Map();
+  async function mediaURL(path){
+    if(mediaCache.has(path)) return mediaCache.get(path);
+    const f = zip.file(path);
+    if(!f){ mediaCache.set(path,null); return null; }
+    const ext = (path.split('.').pop()||'').toLowerCase();
+    const mime = ext==='png'?'image/png':ext==='gif'?'image/gif':ext==='bmp'?'image/bmp':
+                 ext==='svg'?'image/svg+xml':ext==='webp'?'image/webp':
+                 ext==='emf'||ext==='wmf'?'':'image/jpeg';
+    if(!mime){ mediaCache.set(path,null); return null; }
+    const url = URL.createObjectURL(new Blob([await f.async('arraybuffer')], {type:mime}));
+    mediaCache.set(path, url);
+    return url;
+  }
+
+  const partCache = new Map();
+  async function part(p){
+    if(partCache.has(p)) return partCache.get(p);
+    const v = {doc: await xml(p), rels: await readRels(zip,p), path:p};
+    partCache.set(p,v); return v;
+  }
+
+  const slides = [];
+  const notes = [];
+
+  for(const sp of order){
+    const slide = await part(sp);
+    if(!slide.doc) continue;
+
+    // layout + master
+    const layRel = Object.values(slide.rels).find(r=>r.type.endsWith('/slideLayout'));
+    const layout = layRel ? await part(layRel.path) : null;
+    const masRel = layout ? Object.values(layout.rels).find(r=>r.type.endsWith('/slideMaster')) : null;
+    const master = masRel ? await part(masRel.path) : null;
+
+    // theme
+    let scheme = {}, fonts = {major:'', minor:''};
+    if(master){
+      const thRel = Object.values(master.rels).find(r=>r.type.endsWith('/theme'));
+      if(thRel){
+        const th = await part(thRel.path);
+        const cs = deep(th.doc,'a:clrScheme');
+        if(cs) for(const c of cs.children){
+          const nm = c.tagName.split(':')[1];
+          const v = firstColorChild(c, {scheme:{},clrMap:{}});
+          if(v) scheme[nm] = v;
+        }
+        const maj = deep(th.doc,'a:majorFont'), mino = deep(th.doc,'a:minorFont');
+        fonts.major = att(kid(maj,'a:latin'),'typeface','');
+        fonts.minor = att(kid(mino,'a:latin'),'typeface','');
+      }
+    }
+    const clrMapEl = master ? deep(master.doc,'p:clrMap') : null;
+    const clrMap = {};
+    if(clrMapEl) for(const a of clrMapEl.attributes) clrMap[a.name] = a.value;
+    const ctx = {scheme, clrMap, fonts, mediaURL, W, H};
+
+    // build node
+    const node = el('div');
+    node.style.cssText = `position:absolute;inset:0;overflow:hidden;`;
+
+    // background: slide > layout > master
+    let bgCss = null;
+    for(const src of [slide, layout, master]){
+      if(!src || !src.doc) continue;
+      const bg = deep(src.doc,'p:bg');
+      if(!bg) continue;
+      const pr = kid(bg,'p:bgPr');
+      if(pr){
+        const bl = kid(pr,'a:blipFill');
+        if(bl){
+          const blip = deep(bl,'a:blip');
+          const rid = blip && blip.getAttribute('r:embed');
+          const rel = rid && src.rels[rid];
+          if(rel && rel.path){ const u = await mediaURL(rel.path); if(u){ bgCss = `url("${u}") center/cover no-repeat`; break; } }
+        }
+        const c = fillToCss(pr, ctx);
+        if(c){ bgCss = c; break; }
+      }
+      const ref = kid(bg,'p:bgRef');
+      if(ref){ const c = firstColorChild(ref, ctx); if(c){ bgCss = c; break; } }
+    }
+    node.style.background = bgCss || '#ffffff';
+
+    // master / layout decorations (non-placeholder shapes)
+    const showMaster = att(deep(layout&&layout.doc,'p:sldLayout'),'showMasterSp','1') !== '0';
+    if(master && showMaster) await renderTree(node, deep(master.doc,'p:spTree'), master, ctx, {skipPh:true, layout, master});
+    if(layout) await renderTree(node, deep(layout.doc,'p:spTree'), layout, ctx, {skipPh:true, layout, master});
+    await renderTree(node, deep(slide.doc,'p:spTree'), slide, ctx, {skipPh:false, layout, master});
+
+    slides.push({node, w:W, h:H});
+
+    // notes
+    const noteRel = Object.values(slide.rels).find(r=>r.type.endsWith('/notesSlide'));
+    let text = '';
+    if(noteRel){
+      const ns = await part(noteRel.path);
+      if(ns.doc){
+        for(const sh of ns.doc.getElementsByTagName('p:sp')){
+          const ph = deep(sh,'p:ph');
+          if(ph && att(ph,'type','')==='sldNum') continue;
+          const tb = kid(sh,'p:txBody'); if(!tb) continue;
+          const paras = kids(tb,'a:p').map(p =>
+            [...p.getElementsByTagName('a:t')].map(t=>t.textContent).join('')).join('\n');
+          if(paras.trim()) text += (text?'\n':'') + paras;
+        }
+      }
+    }
+    notes.push(text.trim());
+  }
+
+  return {slides, notes, W, H};
+}
+
+/* --- shape tree --- */
+async function renderTree(parent, spTree, srcPart, ctx, opt){
+  if(!spTree) return;
+  for(const child of spTree.children){
+    const t = child.tagName;
+    if(t==='p:sp')          await renderSp(parent, child, srcPart, ctx, opt);
+    else if(t==='p:pic')    await renderPic(parent, child, srcPart, ctx, opt);
+    else if(t==='p:cxnSp')  await renderCxn(parent, child, ctx);
+    else if(t==='p:grpSp')  await renderGrp(parent, child, srcPart, ctx, opt);
+    else if(t==='p:graphicFrame') await renderFrame(parent, child, srcPart, ctx, opt);
+  }
+}
+
+function getXfrm(node){
+  const x = kid(node,'p:xfrm') || deep(node,'a:xfrm') || deep(node,'p:xfrm');
+  if(!x) return null;
+  const off = kid(x,'a:off'), ext = kid(x,'a:ext');
+  if(!off || !ext) return null;
+  return {
+    x: num(off,'x',0)/EMU, y: num(off,'y',0)/EMU,
+    w: num(ext,'cx',0)/EMU, h: num(ext,'cy',0)/EMU,
+    rot: num(x,'rot',0)/60000, flipH: att(x,'flipH','0')==='1', flipV: att(x,'flipV','0')==='1'
+  };
+}
+
+function phInfo(sp){
+  const ph = deep(sp,'p:ph');
+  if(!ph) return null;
+  return {type: att(ph,'type','body'), idx: att(ph,'idx',null)};
+}
+function normType(t){ return (t==='ctrTitle') ? 'title' : t; }
+
+function findPhShape(partObj, info){
+  if(!partObj || !partObj.doc || !info) return null;
+  const tree = deep(partObj.doc,'p:spTree'); if(!tree) return null;
+  const list = [...tree.getElementsByTagName('p:sp')];
+  if(info.idx!=null){
+    for(const s of list){ const p = phInfo(s); if(p && p.idx===info.idx) return s; }
+  }
+  for(const s of list){ const p = phInfo(s); if(p && normType(p.type)===normType(info.type)) return s; }
+  return null;
+}
+
+function positionEl(d, f){
+  d.style.position = 'absolute';
+  d.style.left = f.x+'px'; d.style.top = f.y+'px';
+  d.style.width = f.w+'px'; d.style.height = f.h+'px';
+  const tr = [];
+  if(f.rot) tr.push(`rotate(${f.rot}deg)`);
+  if(f.flipH) tr.push('scaleX(-1)');
+  if(f.flipV) tr.push('scaleY(-1)');
+  if(tr.length){ d.style.transform = tr.join(' '); d.style.transformOrigin='50% 50%'; }
+}
+
+async function renderSp(parent, sp, srcPart, ctx, opt){
+  const info = phInfo(sp);
+  if(opt.skipPh && info) return;
+
+  let f = getXfrm(sp);
+  let layoutSp = null, masterSp = null;
+  if(info){
+    layoutSp = findPhShape(opt.layout, info);
+    masterSp = findPhShape(opt.master, info);
+    if(!f) f = (layoutSp && getXfrm(layoutSp)) || (masterSp && getXfrm(masterSp));
+  }
+  if(!f) return;
+
+  const spPr = kid(sp,'p:spPr');
+  const txBody = kid(sp,'p:txBody');
+  const hasText = txBody && [...txBody.getElementsByTagName('a:t')].some(t=>t.textContent.trim());
+  const fill = fillToCss(spPr, ctx);
+  const ln = kid(spPr,'a:ln');
+  const lnColor = ln ? (kid(ln,'a:noFill') ? null : firstColorChild(kid(ln,'a:solidFill'), ctx)) : null;
+
+  if(!hasText && !fill && !lnColor) return;
+
+  const d = el('div');
+  positionEl(d, f);
+  d.style.overflow = 'visible';
+
+  const prst = att(deep(spPr,'a:prstGeom'),'prst','rect');
+  if(prst==='ellipse' || prst==='circle') d.style.borderRadius='50%';
+  else if(prst.indexOf('round')===0) d.style.borderRadius = Math.min(f.w,f.h)*0.14 + 'px';
+
+  if(fill && fill!=='transparent'){
+    if(fill.indexOf('gradient')>=0) d.style.backgroundImage = fill; else d.style.background = fill;
+  }
+  if(lnColor){
+    const w = Math.max(1, num(ln,'w',12700)/EMU);
+    d.style.border = `${w}px solid ${lnColor}`;
+  }
+  // picture fill on shape
+  const bl = kid(spPr,'a:blipFill');
+  if(bl){
+    const blip = deep(bl,'a:blip'); const rid = blip && blip.getAttribute('r:embed');
+    const rel = rid && srcPart.rels[rid];
+    if(rel && rel.path){ const u = await ctx.mediaURL(rel.path); if(u){ d.style.background = `url("${u}") center/cover no-repeat`; } }
+  }
+
+  if(hasText) buildText(d, txBody, sp, layoutSp, masterSp, info, ctx, opt, f);
+  parent.appendChild(d);
+}
+
+async function renderPic(parent, pic, srcPart, ctx, opt){
+  const f = getXfrm(pic); if(!f) return;
+  const blip = deep(pic,'a:blip');
+  const rid = blip && blip.getAttribute('r:embed');
+  const rel = rid && srcPart.rels[rid];
+  const d = el('div'); positionEl(d,f); d.style.overflow='hidden';
+  if(rel && rel.path){
+    const u = await ctx.mediaURL(rel.path);
+    if(u){
+      const img = el('img');
+      img.src = u; img.alt='';
+      img.style.cssText = 'width:100%;height:100%;object-fit:fill;display:block;max-width:none';
+      const sr = deep(pic,'a:srcRect');
+      if(sr){
+        const l=num(sr,'l',0)/1000, r=num(sr,'r',0)/1000, t=num(sr,'t',0)/1000, b=num(sr,'b',0)/1000;
+        if(l||r||t||b){
+          img.style.width = (100/(100-l-r)*100)+'%';
+          img.style.height = (100/(100-t-b)*100)+'%';
+          img.style.marginLeft = (-l/(100-l-r)*100)+'%';
+          img.style.marginTop = (-t/(100-t-b)*100)+'%';
+        }
+      }
+      d.appendChild(img);
+    }
+  }
+  if(!d.firstChild){ d.style.background='rgba(120,140,150,.14)'; }
+  parent.appendChild(d);
+}
+
+async function renderCxn(parent, cx, ctx){
+  const f = getXfrm(cx); if(!f) return;
+  const ln = deep(cx,'a:ln');
+  const col = firstColorChild(kid(ln,'a:solidFill'), ctx) || (ctx.scheme.dk1 || '#444');
+  const w = Math.max(1, ln ? num(ln,'w',12700)/EMU : 1);
+  const W = Math.max(f.w,1), H = Math.max(f.h,1);
+  const svg = el('div');
+  svg.style.cssText = `position:absolute;left:${f.x}px;top:${f.y}px;width:${W}px;height:${H}px`;
+  const x1 = f.flipH ? W : 0, x2 = f.flipH ? 0 : W;
+  const y1 = f.flipV ? H : 0, y2 = f.flipV ? 0 : H;
+  svg.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;overflow:visible">
+    <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${w}" fill="none"/></svg>`;
+  parent.appendChild(svg);
+}
+
+async function renderGrp(parent, grp, srcPart, ctx, opt){
+  const x = deep(grp,'a:xfrm'); if(!x) return;
+  const off = kid(x,'a:off'), ext = kid(x,'a:ext'), chOff = kid(x,'a:chOff'), chExt = kid(x,'a:chExt');
+  if(!off||!ext) return;
+  const ox = num(off,'x',0)/EMU, oy = num(off,'y',0)/EMU;
+  const ew = num(ext,'cx',1)/EMU, eh = num(ext,'cy',1)/EMU;
+  const cx = chOff ? num(chOff,'x',0)/EMU : 0, cy = chOff ? num(chOff,'y',0)/EMU : 0;
+  const cw = chExt ? num(chExt,'cx',ew)/EMU : ew, ch = chExt ? num(chExt,'cy',eh)/EMU : eh;
+  const box = el('div');
+  box.style.cssText = `position:absolute;left:${ox}px;top:${oy}px;width:${cw}px;height:${ch}px;`+
+    `transform:scale(${(ew/(cw||1)).toFixed(5)},${(eh/(ch||1)).toFixed(5)});transform-origin:0 0`;
+  const inner = el('div');
+  inner.style.cssText = `position:absolute;left:${-cx}px;top:${-cy}px;width:${cw}px;height:${ch}px`;
+  box.appendChild(inner);
+  await renderTree(inner, grp, srcPart, ctx, opt);
+  parent.appendChild(box);
+}
+
+async function renderFrame(parent, fr, srcPart, ctx, opt){
+  const f = getXfrm(fr); if(!f) return;
+  const tbl = deep(fr,'a:tbl');
+  const d = el('div'); positionEl(d,f);
+  if(tbl){
+    const grid = deep(tbl,'a:tblGrid');
+    const cols = kids(grid,'a:gridCol').map(c=>num(c,'w',0)/EMU);
+    const total = cols.reduce((a,b)=>a+b,0) || f.w;
+    const table = el('table');
+    table.style.cssText = 'width:100%;height:100%;border-collapse:collapse;table-layout:fixed';
+    for(const row of kids(tbl,'a:tr')){
+      const tr = el('tr');
+      tr.style.height = (num(row,'h',0)/EMU)+'px';
+      kids(row,'a:tc').forEach((tc,i)=>{
+        const td = el('td');
+        td.style.cssText = `border:1px solid rgba(120,140,150,.5);padding:4px 6px;vertical-align:middle;`+
+          `width:${((cols[i]||total/cols.length)/total*100).toFixed(2)}%`;
+        const tcPr = kid(tc,'a:tcPr');
+        const bg = fillToCss(tcPr, ctx);
+        if(bg && bg!=='transparent') td.style.background = bg;
+        const tb = kid(tc,'p:txBody') || kid(tc,'a:txBody');
+        if(tb){
+          const inner = el('div');
+          buildText(inner, tb, null, null, null, null, ctx, opt, {w:0,h:0}, true);
+          td.appendChild(inner);
+        }
+        tr.appendChild(td);
+      });
+      table.appendChild(tr);
+    }
+    d.appendChild(table);
+  } else {
+    d.style.cssText += ';display:flex;align-items:center;justify-content:center;border:1px dashed rgba(120,140,150,.5);'+
+      'color:rgba(120,140,150,.9);font-size:13px;font-family:sans-serif;border-radius:6px';
+    d.textContent = deep(fr,'c:chart') ? '차트' : '개체';
+  }
+  parent.appendChild(d);
+}
+
+/* --- text --- */
+function styleStack(sp, layoutSp, masterSp, info, ctx, opt){
+  const stack = [];
+  if(sp) stack.push(kid(kid(sp,'p:txBody'),'a:lstStyle'));
+  if(layoutSp) stack.push(kid(kid(layoutSp,'p:txBody'),'a:lstStyle'));
+  if(masterSp) stack.push(kid(kid(masterSp,'p:txBody'),'a:lstStyle'));
+  if(opt.master && opt.master.doc && info){
+    const ts = deep(opt.master.doc,'p:txStyles');
+    if(ts){
+      const t = normType(info.type);
+      const which = t==='title' ? 'p:titleStyle' : (t==='body'||t==='subTitle') ? 'p:bodyStyle' : 'p:otherStyle';
+      stack.push(kid(ts, which));
+      stack.push(kid(ts,'p:bodyStyle'));
+    }
+  }
+  return stack.filter(Boolean);
+}
+
+function lvlProps(stack, lvl){
+  const key = 'a:lvl'+(lvl+1)+'pPr';
+  for(const st of stack){ const n = kid(st, key) || (lvl===0 ? kid(st,'a:lvl1pPr') : null); if(n) return n; }
+  return null;
+}
+
+function fontFamilyFor(tf, ctx){
+  if(!tf) return null;
+  if(tf.startsWith('+mj')) tf = ctx.fonts.major || '';
+  else if(tf.startsWith('+mn')) tf = ctx.fonts.minor || '';
+  if(!tf) return null;
+  return `"${tf}", 'Noto Sans KR', 'Archivo', sans-serif`;
+}
+
+function buildText(container, txBody, sp, layoutSp, masterSp, info, ctx, opt, frame, isCell){
+  const bodyPr = kid(txBody,'a:bodyPr');
+  const anchor = att(bodyPr,'anchor','t');
+  const lIns = num(bodyPr,'lIns',91440)/EMU, rIns = num(bodyPr,'rIns',91440)/EMU;
+  const tIns = num(bodyPr,'tIns',45720)/EMU, bIns = num(bodyPr,'bIns',45720)/EMU;
+
+  const box = el('div');
+  box.style.cssText = `position:absolute;inset:0;display:flex;flex-direction:column;`+
+    `justify-content:${anchor==='ctr'?'center':anchor==='b'?'flex-end':'flex-start'};`+
+    `padding:${tIns}px ${rIns}px ${bIns}px ${lIns}px;overflow:hidden`;
+  if(isCell){ box.style.position='static'; box.style.padding='0'; }
+
+  const stack = styleStack(sp, layoutSp, masterSp, info, ctx, opt);
+  const isTitle = info && normType(info.type)==='title';
+  const defaultSize = isTitle ? 3200 : 1800;
+
+  for(const p of kids(txBody,'a:p')){
+    const pPr = kid(p,'a:pPr');
+    const lvl = parseInt(att(pPr,'lvl','0'),10) || 0;
+    const inh = lvlProps(stack, lvl);
+    const algn = att(pPr,'algn', att(inh,'algn','l'));
+    const para = el('div');
+    para.style.textAlign = algn==='ctr'?'center':algn==='r'?'right':algn==='just'?'justify':'left';
+    const marL = num(pPr,'marL', num(inh,'marL', lvl*342900))/EMU;
+    const indent = num(pPr,'indent', num(inh,'indent',0))/EMU;
+    if(marL) para.style.marginLeft = marL+'px';
+    const spcBef = deep(kid(pPr,'a:spcBef'),'a:spcPts');
+    if(spcBef) para.style.marginTop = (num(spcBef,'val',0)/100*1.333)+'px';
+    const lnPct = deep(kid(pPr,'a:lnSpc'),'a:spcPct');
+    para.style.lineHeight = lnPct ? (num(lnPct,'val',100000)/100000).toFixed(2) : '1.22';
+
+    // size resolution for this paragraph (used by bullet + empty lines)
+    let paraSize = null;
+    const runs = kids(p,'a:r');
+    let text = '';
+
+    // bullet?
+    const buNone = kid(pPr,'a:buNone') || (inh && kid(inh,'a:buNone'));
+    const buChar = kid(pPr,'a:buChar') || (inh && kid(inh,'a:buChar'));
+    const buAuto = kid(pPr,'a:buAutoNum') || (inh && kid(inh,'a:buAutoNum'));
+    const wantBullet = !buNone && (buChar || buAuto) && !isTitle;
+
+    const frag = document.createDocumentFragment();
+    for(const node of p.children){
+      if(node.tagName==='a:br'){ frag.appendChild(el('br')); continue; }
+      if(node.tagName!=='a:r' && node.tagName!=='a:fld') continue;
+      const t = kid(node,'a:t'); if(!t) continue;
+      const rPr = kid(node,'a:rPr');
+      const span = el('span');
+      let size = rPr ? num(rPr,'sz',null) : null;
+      if(size==null && inh){ const dr = kid(inh,'a:defRPr'); if(dr) size = num(dr,'sz',null); }
+      if(size==null) size = defaultSize;
+      paraSize = paraSize==null ? size : paraSize;
+      span.style.fontSize = (size/100*1.3333).toFixed(1)+'px';
+      if(att(rPr,'b','0')==='1') span.style.fontWeight='700';
+      if(att(rPr,'i','0')==='1') span.style.fontStyle='italic';
+      const u = att(rPr,'u','none'); if(u && u!=='none') span.style.textDecoration='underline';
+      let col = firstColorChild(kid(rPr,'a:solidFill'), ctx);
+      if(!col && inh){ const dr = kid(inh,'a:defRPr'); if(dr) col = firstColorChild(kid(dr,'a:solidFill'), ctx); }
+      if(!col) col = ctx.scheme[(ctx.clrMap&&ctx.clrMap.tx1)||'dk1'] || '#1a1a1a';
+      span.style.color = col;
+      let fam = fontFamilyFor(att(kid(rPr,'a:latin'),'typeface',null), ctx);
+      if(!fam && inh){ const dr = kid(inh,'a:defRPr'); if(dr) fam = fontFamilyFor(att(kid(dr,'a:latin'),'typeface',null), ctx); }
+      span.style.fontFamily = fam || fontFamilyFor('+mn-lt', ctx) || `'Noto Sans KR', sans-serif`;
+      span.textContent = t.textContent;
+      text += t.textContent;
+      frag.appendChild(span);
+    }
+    if(!text.trim() && !frag.childNodes.length){
+      para.style.height = ((paraSize||defaultSize)/100*1.4)+'px';
+      box.appendChild(para); continue;
+    }
+    if(wantBullet && text.trim()){
+      const b = el('span');
+      b.textContent = (buChar ? att(buChar,'char','•') : '•') + ' ';
+      b.style.fontSize = ((paraSize||defaultSize)/100*1.3333).toFixed(1)+'px';
+      b.style.color = 'inherit';
+      para.appendChild(b);
+      para.style.textIndent = '0';
+      if(indent) para.style.marginLeft = (marL+indent)+'px';
+    }
+    para.appendChild(frag);
+    box.appendChild(para);
+  }
+  container.appendChild(box);
+}
+
+/* ============================ PDF / image loaders ============================ */
+async function loadPdf(file){
+  if(typeof pdfjsLib === 'undefined') throw new Error('PDF 모듈을 불러오지 못했습니다. PPTX 또는 이미지로 올려 주세요.');
+  try{ pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; }catch(e){}
+  const buf = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({data:buf}).promise;
+  const slides = [];
+  for(let i=1;i<=pdf.numPages;i++){
+    const page = await pdf.getPage(i);
+    const vp = page.getViewport({scale:2});
+    const cv = el('canvas'); cv.width = vp.width; cv.height = vp.height;
+    await page.render({canvasContext: cv.getContext('2d'), viewport: vp}).promise;
+    const node = el('div');
+    node.style.cssText='position:absolute;inset:0';
+    const img = el('img');
+    img.src = cv.toDataURL('image/jpeg',0.86); img.alt='';
+    img.style.cssText='width:100%;height:100%;object-fit:contain;display:block';
+    node.appendChild(img);
+    slides.push({node, w: Math.round(vp.width/2), h: Math.round(vp.height/2)});
+  }
+  return {slides, notes: slides.map(()=> '')};
+}
+
+function loadImages(files){
+  const sorted = [...files].sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true}));
+  return Promise.all(sorted.map(f => new Promise(res=>{
+    const url = URL.createObjectURL(f);
+    const probe = new Image();
+    probe.onload = () => {
+      const node = el('div'); node.style.cssText='position:absolute;inset:0';
+      const img = el('img'); img.src = url; img.alt='';
+      img.style.cssText='width:100%;height:100%;object-fit:contain;display:block';
+      node.appendChild(img);
+      res({node, w: probe.naturalWidth, h: probe.naturalHeight});
+    };
+    probe.onerror = () => res(null);
+    probe.src = url;
+  }))).then(list => {
+    const slides = list.filter(Boolean);
+    return {slides, notes: slides.map(()=> '')};
+  });
+}
+
+/* ============================ notes -> scripts ============================ */
+function hangulRatio(s){
+  const compact = s.replace(/\s/g,'');
+  if(!compact) return 0;
+  return (compact.match(HANGUL)||[]).length / compact.length;
+}
+function splitScript(text){
+  if(!text || !text.trim()) return {en:'', ko:''};
+  const lines = text.split(/\r?\n/);
+  const sepAt = lines.findIndex(l => /^\s*(-{3,}|={3,}|\*{3,}|_{3,})\s*$/.test(l));
+  if(sepAt >= 0){
+    const a = lines.slice(0,sepAt).join('\n').trim();
+    const b = lines.slice(sepAt+1).join('\n').trim();
+    return hangulRatio(a) > hangulRatio(b) ? {en:b, ko:a} : {en:a, ko:b};
+  }
+  const tagged = text.match(/\[(EN|영어)\]([\s\S]*?)(?=\[(KO|한글|한국어)\]|$)/i);
+  const tagged2 = text.match(/\[(KO|한글|한국어)\]([\s\S]*?)(?=\[(EN|영어)\]|$)/i);
+  if(tagged || tagged2) return {en:(tagged?tagged[2]:'').trim(), ko:(tagged2?tagged2[2]:'').trim()};
+  const en=[], ko=[];
+  for(const block of text.split(/\n\s*\n/)){
+    if(!block.trim()) continue;
+    (hangulRatio(block) > 0.12 ? ko : en).push(block.trim());
+  }
+  if(!en.length && !ko.length) return {en:text.trim(), ko:''};
+  if(!en.length || !ko.length){
+    // single language: split line by line instead
+    const le=[], lk=[];
+    for(const l of lines){ if(!l.trim()) continue; (hangulRatio(l)>0.12?lk:le).push(l.trim()); }
+    return {en:le.join('\n'), ko:lk.join('\n')};
+  }
+  return {en:en.join('\n\n'), ko:ko.join('\n\n')};
+}
+
+/* ============================ demo deck ============================ */
+function demoSlide(kind){
+  const node = el('div');
+  node.style.cssText = 'position:absolute;inset:0;background:#0f1b21;color:#eaf2f3;'+
+    "font-family:'Archivo','Noto Sans KR',sans-serif;overflow:hidden";
+  const bar = `<div style="position:absolute;left:0;top:0;width:10px;height:100%;background:#0f766e"></div>`;
+  const foot = `<div style="position:absolute;left:56px;bottom:26px;font-size:13px;letter-spacing:.14em;
+    color:#6d8a90;text-transform:uppercase">Counter-UAS Lecture Series</div>`;
+  if(kind===0){
+    node.innerHTML = bar + `
+      <div style="position:absolute;left:56px;top:150px;right:56px">
+        <div style="font-size:15px;letter-spacing:.2em;color:#4fb3a8;text-transform:uppercase;margin-bottom:22px">Session 01</div>
+        <div style="font-size:54px;font-weight:700;line-height:1.14;letter-spacing:-.02em">Counter-UAS:<br>Detection to Defeat</div>
+        <div style="font-size:21px;color:#9fb7bc;margin-top:24px">탐지에서 무력화까지, 대드론 대응 절차</div>
+      </div>` + foot;
+  } else if(kind===1){
+    const items = [['01','Detect','전자광학·레이더·RF 스캐너로 비인가 비행체를 포착'],
+                   ['02','Track','비행 경로와 속도를 지속 추적하여 위협 벡터를 산출'],
+                   ['03','Identify','피아 식별과 조종자 위치 추정, 법적 교전 권한 확인'],
+                   ['04','Defeat','재밍·스푸핑·물리적 요격 중 비례성 원칙에 맞는 수단 선택']];
+    node.innerHTML = bar + `
+      <div style="position:absolute;left:56px;top:56px;right:56px">
+        <div style="font-size:36px;font-weight:700;letter-spacing:-.01em;margin-bottom:34px">The Four-Stage Kill Chain</div>
+        ${items.map(([n,t,k])=>`<div style="display:flex;gap:20px;align-items:baseline;margin-bottom:22px">
+          <div style="font-size:15px;color:#4fb3a8;font-weight:700;letter-spacing:.08em;width:34px">${n}</div>
+          <div><div style="font-size:24px;font-weight:600">${t}</div>
+          <div style="font-size:16px;color:#9fb7bc;margin-top:4px">${k}</div></div></div>`).join('')}
+      </div>`;
+  } else {
+    node.innerHTML = bar + `
+      <div style="position:absolute;left:56px;top:70px;right:56px">
+        <div style="font-size:36px;font-weight:700;margin-bottom:16px">Layered Defense in Practice</div>
+        <div style="font-size:17px;color:#9fb7bc;margin-bottom:34px">단일 수단이 아닌 다층 방어로 대응한다</div>
+        <div style="display:flex;gap:16px">
+          ${[['Outer','5 km+','조기 탐지 · 레이더'],['Middle','1–5 km','RF 탐지 · 재밍'],['Inner','&lt; 1 km','요격 · 포획']]
+            .map(([a,b,c],i)=>`<div style="flex:1;border:1px solid #274046;border-radius:12px;padding:22px;
+              background:${i===2?'#13312e':'#14232a'}">
+              <div style="font-size:13px;letter-spacing:.14em;color:#4fb3a8;text-transform:uppercase">${a}</div>
+              <div style="font-size:30px;font-weight:700;margin:10px 0 6px">${b}</div>
+              <div style="font-size:14px;color:#9fb7bc">${c}</div></div>`).join('')}
+        </div>
+      </div>` + foot;
+  }
+  return {node, w:960, h:540};
+}
+function demoDeck(){
+  const scripts = [
+    {en:"Good morning, everyone. Over the next forty minutes I want to walk you through the counter-drone kill chain — how we detect an unauthorised aircraft, how we track and identify it, and what our legal and technical options are when we decide to defeat it.",
+     ko:"안녕하십니까. 앞으로 40분 동안 대드론 교전 절차, 즉 킬 체인을 함께 살펴보겠습니다. 비인가 비행체를 어떻게 탐지하고, 어떻게 추적하고 식별하며, 무력화를 결심했을 때 어떤 법적·기술적 선택지가 있는지 순서대로 짚어 보겠습니다.", sec:25},
+    {en:"The chain has four stages, and each one fails differently. Detection gives you the first cue. Tracking turns that cue into a vector. Identification is where most operations actually stall, because you must confirm friend or foe and confirm that you hold the legal authority to act. Only then do you choose a defeat mechanism.",
+     ko:"교전 절차는 네 단계로 구성되며, 각 단계는 서로 다른 방식으로 실패합니다. 탐지는 최초 단서를 줍니다. 추적은 그 단서를 벡터로 바꿉니다. 실제 작전에서 가장 많이 정체되는 지점은 식별 단계인데, 피아 식별과 함께 교전 권한이 있는지를 확인해야 하기 때문입니다. 그 다음에야 무력화 수단을 고릅니다.", sec:35},
+    {en:"In practice no single sensor and no single effector is enough. We build the response in layers: long-range radar for early warning, radio-frequency detection and jamming in the middle band, and kinetic or capture systems only in the innermost ring, where the risk of collateral damage can be controlled.",
+     ko:"실제 현장에서는 단일 센서나 단일 대응 수단만으로는 충분하지 않습니다. 대응 체계는 층으로 쌓습니다. 원거리에서는 레이더로 조기 경보를 확보하고, 중거리에서는 무선 주파수 탐지와 재밍을 적용하며, 부수 피해를 통제할 수 있는 최내곽 구역에서만 물리적 요격이나 포획 수단을 사용합니다.", sec:30},
+  ];
+  return {slides:[demoSlide(0),demoSlide(1),demoSlide(2)], scripts};
+}
+
+/* ============================ rendering the app ============================ */
+const canvas = $('#slideCanvas'), frame = $('#slideFrame');
+
+function fit(){
+  const s = S.slides[S.idx]; if(!s) return;
+  const r = frame.getBoundingClientRect();
+  if(!r.width || !r.height) return;
+  const k = Math.min(r.width/s.w, r.height/s.h) * 0.965;
+  canvas.style.width = s.w+'px';
+  canvas.style.height = s.h+'px';
+  canvas.style.transform = `translate(-50%,-50%) scale(${k})`;
+}
+
+function showSlide(i, opts){
+  if(!S.slides.length) return;
+  S.idx = Math.max(0, Math.min(S.slides.length-1, i));
+  canvas.replaceChildren(S.slides[S.idx].node);
+  fit();
+  $('#counter').textContent = `${S.idx+1} / ${S.slides.length}`;
+  renderScripts();
+  renderThumbs();
+  saveDeck();
+  stopPlayback();
+  if(S.autoOn) armAuto();
+  if((opts && opts.speak) || (S.autoOn && CFG.autoSpeak)) setTimeout(()=>playSequence(), 220);
+}
+
+function renderThumbs(){
+  const box = $('#thumbs');
+  if(box.childElementCount !== S.slides.length){
+    box.replaceChildren(...S.slides.map((_,i)=>{
+      const b = el('button',{textContent:String(i+1)});
+      b.onclick = () => showSlide(i);
+      return b;
+    }));
+  }
+  [...box.children].forEach((b,i)=> b.classList.toggle('on', i===S.idx));
+  const cur = box.children[S.idx];
+  if(cur && cur.scrollIntoView) cur.scrollIntoView({block:'nearest', inline:'nearest'});
+}
+
+function cur(){
+  if(!S.scripts[S.idx]) S.scripts[S.idx] = {en:'',ko:'',sec:null};
+  return S.scripts[S.idx];
+}
+
+function paintScript(root, text, emptyHtml){
+  root.replaceChildren();
+  if(!text || !text.trim()){ root.innerHTML = emptyHtml; return; }
+  for(const chunk of speechChunks(text)){
+    root.appendChild(el('p',{className:'ln', textContent:chunk}));
+  }
+}
+function estDuration(text){
+  const words = (text||'').trim().split(/\s+/).filter(Boolean).length;
+  if(!words) return '';
+  const sec = Math.round(words / (150 * CFG.speed) * 60);
+  return ` · 예상 ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;
+}
+function renderScripts(){
+  const c = cur();
+  const enT = $('#enText'), koT = $('#koText');
+  paintScript(enT, c.en, '<span class="empty">영어 대본이 비어 있습니다. 오른쪽 위 <b>편집</b>을 눌러 입력하세요.</span>');
+  paintScript(koT, c.ko, '<span class="empty">한글 대본이 비어 있습니다.</span>');
+  $('#enEdit').value = c.en || '';
+  $('#koEdit').value = c.ko || '';
+  const a = S.audio[S.idx] || {};
+  $('#enMeta').textContent = a.en ? '녹음 파일 사용 중'
+    : `${(c.en||'').trim().split(/\s+/).filter(Boolean).length} words${estDuration(c.en)}`;
+  $('#koMeta').textContent = a.ko ? '녹음 파일 사용 중' : `${(c.ko||'').replace(/\s/g,'').length}자`;
+  $('#btnAudioEn').textContent = a.en ? '녹음 해제' : '녹음';
+  $('#btnAudioEn').classList.toggle('primary', !!a.en);
+  $('#btnAudioKo').textContent = a.ko ? '녹음 해제' : '녹음';
+  $('#btnAudioKo').classList.toggle('primary', !!a.ko);
+  $('#btnSecSlide').classList.toggle('primary', !!c.sec);
+  $('#koBody').classList.remove('revealed');
+  applyMask();
+}
+
+function applyMask(){
+  const b = $('#koBody');
+  b.classList.remove('mask-blur','mask-hide');
+  if(CFG.mask==='blur') b.classList.add('mask-blur');
+  if(CFG.mask==='hide') b.classList.add('mask-hide');
+  $('#koPeek').textContent = CFG.mask==='hide' ? '눌러서 잠깐 보기' : '보기';
+}
+
+/* ============================ speech ============================ */
+let voices = [];
+
+/* Rank the installed voices. Modern neural voices (Microsoft "Natural", Apple
+   "Premium"/"Enhanced", Google's server voices) are far closer to a native
+   speaker than the legacy formant voices that ship as defaults. */
+function voiceScore(v){
+  const n = (v.name||'').toLowerCase();
+  let s = 0;
+  if(/natural|neural/.test(n)) s += 60;
+  if(/premium|enhanced/.test(n)) s += 48;
+  if(/\bsiri\b/.test(n)) s += 34;
+  if(/^google|\(google\)/.test(n) || /google/.test(n)) s += 32;
+  if(/online/.test(n)) s += 22;
+  if(v.localService === false) s += 12;
+  if(/desktop|compact|eloquence/.test(n)) s -= 28;
+  if(/espeak|festival|pico|flite|mbrola/.test(n)) s -= 70;
+  return s;
+}
+function voiceQualityLabel(v){
+  const s = voiceScore(v);
+  return s >= 40 ? '고품질' : s >= 15 ? '양호' : s < 0 ? '기본' : '';
+}
+function voicesFor(lang){
+  const strict = lang==='ko' ? /^ko/i : lang==='en-US' ? /^en[-_]US/i : /^en[-_]GB/i;
+  let list = voices.filter(v=>strict.test(v.lang));
+  if(!list.length) list = voices.filter(v => lang==='ko' ? /^ko/i.test(v.lang) : /^en/i.test(v.lang));
+  return list.sort((a,b)=> voiceScore(b)-voiceScore(a) || a.name.localeCompare(b.name));
+}
+function refreshVoices(){
+  try{ voices = window.speechSynthesis ? speechSynthesis.getVoices() : []; }catch(e){ voices = []; }
+  const fill = (sel, lang, saved) => {
+    const list = voicesFor(lang);
+    sel.replaceChildren(...(list.length ? list.map(v=>{
+      const q = voiceQualityLabel(v);
+      return el('option',{value:v.voiceURI, textContent:`${v.name}${q?' · '+q:''}`});
+    }) : [el('option',{value:'', textContent:'사용 가능한 음성 없음'})]));
+    if(saved && list.some(v=>v.voiceURI===saved)) sel.value = saved;
+    else if(list.length) sel.value = list[0].voiceURI;   // best available by default
+  };
+  fill($('#vGB'), 'en-GB', CFG.vGB);
+  fill($('#vUS'), 'en-US', CFG.vUS);
+  fill($('#vKO'), 'ko', CFG.vKO);
+
+  const best = voicesFor(CFG.accent)[0];
+  const note = $('#voiceNote');
+  if(!voices.length) note.textContent = '음성 목록을 읽는 중입니다. 설정을 다시 열어 주세요.';
+  else if(!best) note.textContent = '이 기기에 영어 음성이 없습니다. 운영체제 설정에서 영어 음성을 추가해 주세요.';
+  else if(voiceScore(best) >= 40) note.textContent = `현재 ${best.name} — 원어민에 가까운 신경망 음성입니다.`;
+  else note.textContent = `현재 ${best.name} — 기본 음성이라 억양이 단조로울 수 있습니다. `+
+    (/Win/i.test(navigator.platform) ? '윈도우 설정 > 시간 및 언어 > 음성에서 English(Natural) 음성을 추가하면 크게 좋아집니다.'
+     : /Mac|iPhone|iPad/i.test(navigator.platform) ? '설정 > 손쉬운 사용 > 음성 콘텐츠에서 Premium/Enhanced 음성을 내려받으면 크게 좋아집니다.'
+     : '크롬 브라우저에서 열면 Google 영어 음성을 쓸 수 있습니다.');
+  const anyEN = voices.some(v=>/^en/i.test(v.lang));
+  if(!anyEN && voices.length) $('#enTag').textContent = 'EN';
+}
+function pickVoice(lang){
+  const want = lang==='ko' ? CFG.vKO : lang==='en-US' ? CFG.vUS : CFG.vGB;
+  const list = voicesFor(lang);
+  return list.find(x=>x.voiceURI===want) || list[0] || null;
+}
+
+/* --- pronunciation: user dictionary + unit/abbreviation expansion --- */
+const DEFAULT_DICT = [
+  'C-UAS = counter U A S',
+  'UAS = U A S',
+  'UAV = U A V',
+  'RF = R F',
+  'EO/IR = E O, I R',
+  'GNSS = G N S S',
+  'ISR = I S R',
+  'RCS = R C S',
+].join('\n');
+
+function escapeRe(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+let dictRules = [];
+function buildDict(){
+  dictRules = [];
+  for(const line of (CFG.dict||'').split(/\r?\n/)){
+    const m = line.match(/^\s*(.+?)\s*=\s*(.+?)\s*$/);
+    if(!m) continue;
+    const key = m[1];
+    const bl = /^[A-Za-z]/.test(key) ? '\\b' : '';
+    const br = /[A-Za-z0-9]$/.test(key) ? '\\b' : '';
+    try{ dictRules.push([new RegExp(bl+escapeRe(key)+br,'gi'), m[2]]); }catch(e){}
+  }
+  dictRules.sort((a,b)=> b[0].source.length - a[0].source.length);
+}
+
+const SAY_AS_WORD = new Set(['NATO','RADAR','LIDAR','SONAR','LASER','NASA','ICAO','FAA','SWAT','OK','AI','ID','TV']);
+const EN_RULES = [
+  [/(\d)\s*%/g, '$1 percent'],
+  [/(\d)\s*km\/h\b/gi, '$1 kilometres per hour'],
+  [/(\d)\s*km\b/gi, '$1 kilometres'],
+  [/(\d)\s*kg\b/gi, '$1 kilograms'],
+  [/(\d)\s*m\b/g, '$1 metres'],
+  [/(\d)\s*cm\b/gi, '$1 centimetres'],
+  [/(\d)\s*mm\b/gi, '$1 millimetres'],
+  [/(\d)\s*GHz\b/g, '$1 gigahertz'],
+  [/(\d)\s*MHz\b/g, '$1 megahertz'],
+  [/(\d)\s*kHz\b/g, '$1 kilohertz'],
+  [/(\d)\s*Hz\b/g, '$1 hertz'],
+  [/(\d)\s*dB\b/g, '$1 decibels'],
+  [/(\d)\s*ft\b/gi, '$1 feet'],
+  [/(\d)\s*mph\b/gi, '$1 miles per hour'],
+  [/(\d)\s*°C\b/g, '$1 degrees Celsius'],
+  [/\be\.\s?g\.\s?/gi, 'for example, '],
+  [/\bi\.\s?e\.\s?/gi, 'that is, '],
+  [/\betc\./gi, 'et cetera'],
+  [/\bvs\.?(?=\s)/gi, 'versus'],
+  [/\bapprox\./gi, 'approximately'],
+  [/\bFig\.\s*(\d)/gi, 'figure $1'],
+  [/\bNo\.\s*(\d)/g, 'number $1'],
+  [/\s&\s/g, ' and '],
+  [/(\d)\s*[–—]\s*(\d)/g, '$1 to $2'],
+  [/(\d)\s*-\s*(\d)/g, '$1 to $2'],
+];
+function spellAcronyms(t){
+  return t
+    .replace(/\b([A-Z])-([A-Z]{2,5})\b/g, (m,a,b)=> a+' '+b.split('').join(' '))
+    .replace(/\b([A-Z]{2,5})\b/g, (m)=> SAY_AS_WORD.has(m) ? m : m.split('').join(' '));
+}
+function prepareSpeech(text, lang){
+  let t = text;
+  for(const [re, to] of dictRules) t = t.replace(re, to);
+  if(lang === 'ko') return t;
+  if(CFG.polish){
+    for(const [re, to] of EN_RULES) t = t.replace(re, to);
+    if(lang === 'en-US') t = t.replace(/metres/g,'meters').replace(/Metres/g,'Meters');
+  }
+  if(CFG.spellAcr) t = spellAcronyms(t);
+  return t.replace(/\s{2,}/g,' ').trim();
+}
+
+/* --- chunking: one utterance per paragraph keeps the intonation intact --- */
+function speechChunks(text){
+  const out = [];
+  for(const block of (text||'').split(/\n+/)){
+    const t = block.trim(); if(!t) continue;
+    if(t.length <= 260){ out.push(t); continue; }
+    const sents = t.match(/[^.!?。？！]+[.!?。？！]*\s*/g) || [t];
+    let buf = '';
+    for(const s of sents){
+      if((buf+s).length > 260 && buf){ out.push(buf.trim()); buf = s; }
+      else buf += s;
+    }
+    if(buf.trim()) out.push(buf.trim());
+  }
+  return out;
+}
+function highlightChunk(which, i){
+  const root = which==='en' ? $('#enText') : $('#koText');
+  const lines = root.querySelectorAll('.ln');
+  lines.forEach((n,j)=> n.classList.toggle('on', j===i));
+  if(lines[i] && lines[i].scrollIntoView) lines[i].scrollIntoView({block:'nearest'});
+}
+function clearHighlight(){
+  document.querySelectorAll('.script .ln.on').forEach(n=>n.classList.remove('on'));
+}
+
+function wait(ms, token){
+  return new Promise(res => setTimeout(()=> res(token===S.playToken), ms));
+}
+function speakChunk(text, lang, token){
+  return new Promise(res=>{
+    if(!window.speechSynthesis || !text){ res(false); return; }
+    const u = new SpeechSynthesisUtterance(text);
+    const v = pickVoice(lang);
+    if(v){ u.voice = v; u.lang = v.lang; } else { u.lang = lang; }
+    u.rate = CFG.speed; u.pitch = CFG.pitch; u.volume = 1;
+    let done = false;
+    const finish = () => { if(done) return; done = true; clearInterval(keep); res(token===S.playToken); };
+    u.onend = finish; u.onerror = finish;
+    // Chrome drops utterances past ~15s unless the queue is nudged.
+    const keep = setInterval(()=>{ try{ if(speechSynthesis.speaking && !speechSynthesis.paused) speechSynthesis.resume(); }catch(e){} }, 5000);
+    try{ speechSynthesis.speak(u); }catch(e){ finish(); }
+  });
+}
+/* ============================ Google Cloud Text-to-Speech ============================ */
+const GT = { voices: [], loaded:false, mem: new Map(), chars: 0, failed: false };
+
+function gTier(name){
+  if(/Chirp3-HD|Chirp-3/i.test(name)) return {score:100, label:'Chirp 3 HD'};
+  if(/Studio/i.test(name))            return {score:80,  label:'Studio'};
+  if(/Chirp/i.test(name))             return {score:75,  label:'Chirp HD'};
+  if(/Neural2/i.test(name))           return {score:60,  label:'Neural2'};
+  if(/Polyglot/i.test(name))          return {score:50,  label:'Polyglot'};
+  if(/Wavenet/i.test(name))           return {score:40,  label:'WaveNet'};
+  return {score:10, label:'Standard'};
+}
+function gVoicesFor(lang){
+  const want = lang==='ko' ? 'ko-KR' : lang;
+  return GT.voices.filter(v => (v.languageCodes||[]).includes(want))
+    .sort((a,b)=> gTier(b.name).score - gTier(a.name).score || a.name.localeCompare(b.name));
+}
+async function gErrText(res){
+  let msg = `HTTP ${res.status}`;
+  try{ const j = await res.json(); if(j.error && j.error.message) msg = j.error.message; }catch(e){}
+  if(res.status===403) msg += ' — API 키가 막혀 있거나 Text-to-Speech API가 아직 사용 설정되지 않았습니다.';
+  if(res.status===400) msg += ' — 키 형식 또는 요청 내용을 확인해 주세요.';
+  return msg;
+}
+async function gLoadVoices(){
+  if(!CFG.gKey) throw new Error('API 키를 먼저 입력해 주세요.');
+  const res = await fetch('https://texttospeech.googleapis.com/v1/voices?key='+encodeURIComponent(CFG.gKey));
+  if(!res.ok) throw new Error(await gErrText(res));
+  const j = await res.json();
+  GT.voices = j.voices || [];
+  GT.loaded = true;
+  return GT.voices.length;
+}
+function gPick(lang){
+  const saved = lang==='ko' ? CFG.gKO : lang==='en-US' ? CFG.gUS : CFG.gGB;
+  const list = gVoicesFor(lang);
+  return list.find(v=>v.name===saved) || list[0] || null;
+}
+function hash32(s){
+  let h = 2166136261;
+  for(let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return (h>>>0).toString(36);
+}
+function b64ToBlob(b64){
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) arr[i] = bin.charCodeAt(i);
+  return new Blob([arr], {type:'audio/mpeg'});
+}
+async function gSynth(text, lang){
+  const v = gPick(lang);
+  if(!v) throw new Error('선택할 수 있는 구글 음성이 없습니다. 연결 확인을 먼저 눌러 주세요.');
+  const rate = Math.max(0.25, Math.min(2, CFG.speed));
+  const key = hash32(v.name + '|' + rate + '|' + text);
+  if(GT.mem.has(key)) return GT.mem.get(key);
+  let cached = null;
+  try{ cached = await IDB.get('tts:'+key); }catch(e){}
+  if(cached instanceof Blob){ GT.mem.set(key, cached); return cached; }
+
+  const audioConfig = {audioEncoding:'MP3', speakingRate: rate};
+  if(!/Chirp/i.test(v.name)) audioConfig.pitch = Math.round((CFG.pitch-1)*20);
+  const res = await fetch('https://texttospeech.googleapis.com/v1/text:synthesize?key='+encodeURIComponent(CFG.gKey), {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ input:{text}, voice:{languageCode: v.languageCodes[0], name: v.name}, audioConfig })
+  });
+  if(!res.ok) throw new Error(await gErrText(res));
+  const j = await res.json();
+  const blob = b64ToBlob(j.audioContent);
+  GT.chars += text.length;
+  GT.mem.set(key, blob);
+  try{ await IDB.set('tts:'+key, blob); }catch(e){}
+  updateUsage();
+  return blob;
+}
+function updateUsage(){
+  const n = GT.chars;
+  const cost = (n/1e6*30).toFixed(3);
+  const u = $('#gUsage');
+  if(u) u.textContent = n ? `이번 접속에서 ${n.toLocaleString()}자 합성 · Chirp 3 HD 기준 약 $${cost} (월 100만 자까지 무료)`
+                          : '아직 합성한 글자가 없습니다. 월 100만 자까지 무료입니다.';
+}
+function gRefreshSelects(){
+  const fill = (sel, lang, saved) => {
+    const list = gVoicesFor(lang);
+    sel.replaceChildren(...(list.length ? list.map(v=>{
+      const t = gTier(v.name);
+      const g = v.ssmlGender==='FEMALE' ? '여성' : v.ssmlGender==='MALE' ? '남성' : '';
+      return el('option',{value:v.name, textContent:`${v.name.replace(/^[a-z]{2}-[A-Z]{2}-/,'')} · ${t.label}${g?' · '+g:''}`});
+    }) : [el('option',{value:'', textContent:'연결 확인을 먼저 눌러 주세요'})]));
+    if(saved && list.some(v=>v.name===saved)) sel.value = saved;
+    else if(list.length) sel.value = list[0].name;
+  };
+  fill($('#gvGB'), 'en-GB', CFG.gGB);
+  fill($('#gvUS'), 'en-US', CFG.gUS);
+  fill($('#gvKO'), 'ko', CFG.gKO);
+}
+function engineTag(){
+  $('#enTag').textContent = 'EN · ' + (CFG.accent==='en-GB'?'UK':'US') + (CFG.engine==='google' ? ' · 구글' : '');
+}
+async function gConnect(){
+  const note = $('#gNote');
+  note.textContent = '연결하는 중…';
+  try{
+    const n = await gLoadVoices();
+    gRefreshSelects();
+    const best = gPick(CFG.accent);
+    note.textContent = `연결되었습니다. 음성 ${n}종 확인 · 현재 ${best ? best.name : '-'}`;
+    GT.failed = false;
+    return true;
+  }catch(err){
+    GT.failed = true;
+    note.textContent = STANDALONE
+      ? '연결 실패: ' + (err && err.message ? err.message : err)
+      : '게시된 앱에서는 외부 연결이 차단됩니다. 내려받은 독립 실행 파일에서 사용해 주세요.';
+    return false;
+  }
+}
+
+function previewVoice(lang){
+  stopPlayback();
+  const token = ++S.playToken;
+  const sample = lang==='ko'
+    ? '안녕하십니까. 오늘 발표는 대드론 대응 절차를 다루겠습니다.'
+    : 'Good afternoon. Over the next forty minutes we will look at how a counter-drone system detects, tracks and defeats a hostile aircraft at five kilometres.';
+  speakOnce(prepareSpeech(sample, lang), lang, token);
+}
+
+/* one line of speech, through whichever engine is selected */
+async function speakOnce(text, lang, token){
+  if(CFG.engine==='google' && CFG.gKey && !GT.failed){
+    try{
+      const blob = await gSynth(text, lang);
+      if(token!==S.playToken) return false;
+      return await playBlob(blob, token);
+    }catch(err){
+      GT.failed = true;
+      toast('구글 음성 오류 — 기기 내장 음성으로 전환합니다. (' + (err && err.message ? err.message : err) + ')', 5200);
+      engineTag();
+    }
+  }
+  return speakChunk(text, lang, token);
+}
+let audioEl = null;
+function playBlob(blob, token){
+  return new Promise(res=>{
+    try{
+      if(audioEl){ audioEl.pause(); URL.revokeObjectURL(audioEl.src); }
+      audioEl = new Audio(URL.createObjectURL(blob));
+      audioEl.playbackRate = CFG.speed;
+      audioEl.onended = () => res(token===S.playToken);
+      audioEl.onerror = () => res(token===S.playToken);
+      audioEl.play().catch(()=>res(false));
+    }catch(e){ res(false); }
+  });
+}
+
+function reportRate(text, seconds){
+  const words = (text||'').trim().split(/\s+/).filter(Boolean).length;
+  if(!words || seconds < 2) return;
+  const wpm = Math.round(words / (seconds/60));
+  const verdict = wpm < 115 ? '느린 편' : wpm > 170 ? '빠른 편' : '발표 적정';
+  $('#enMeta').textContent = `${words} words · 실측 ${wpm} wpm · ${verdict}`;
+  $('#enMeta').title = '영어 발표의 권장 속도는 130~160 wpm입니다.';
+}
+
+async function playOne(which, token){
+  const c = cur();
+  const text = which==='en' ? c.en : c.ko;
+  const blob = (S.audio[S.idx]||{})[which];
+  if(!text && !blob) return true;
+  const lang = which==='ko' ? 'ko' : CFG.accent;
+  const chunks = text ? speechChunks(text) : [];
+  for(let r=0; r<CFG.repeat; r++){
+    if(token!==S.playToken) return false;
+    if(blob){
+      if(!await playBlob(blob, token)) return false;
+    } else {
+      const t0 = (window.performance ? performance.now() : Date.now());
+      for(let i=0; i<chunks.length; i++){
+        if(token!==S.playToken){ clearHighlight(); return false; }
+        highlightChunk(which, i);
+        // warm the next line while this one plays, so cloud voices run gapless
+        if(CFG.engine==='google' && CFG.gKey && !GT.failed && chunks[i+1]){
+          gSynth(prepareSpeech(chunks[i+1], lang), lang).catch(()=>{});
+        }
+        if(!await speakOnce(prepareSpeech(chunks[i], lang), lang, token)){ clearHighlight(); return false; }
+        // a short breath between paragraphs, the way a presenter pauses
+        if(i < chunks.length-1 && !await wait(280, token)){ clearHighlight(); return false; }
+      }
+      clearHighlight();
+      if(which==='en' && r===0) reportRate(text, ((window.performance?performance.now():Date.now()) - t0)/1000);
+    }
+    if(r < CFG.repeat-1){ if(!await wait(CFG.gap*1000, token)) return false; }
+  }
+  return true;
+}
+
+function stopPlayback(){
+  S.playToken++;
+  S.playing = false;
+  let was = false;
+  try{ if(window.speechSynthesis){ was = speechSynthesis.speaking || speechSynthesis.pending; speechSynthesis.cancel(); } }catch(e){}
+  try{ if(audioEl){ audioEl.pause(); audioEl.currentTime = 0; } }catch(e){}
+  clearHighlight();
+  $('#btnPlay').textContent = '▶ 낭독';
+  return was;
+}
+
+async function playSequence(only){
+  const was = stopPlayback();
+  const token = ++S.playToken;
+  S.playing = true;
+  $('#btnPlay').textContent = '■ 정지';
+  // cancel() needs a beat to settle, or the next utterance is swallowed
+  if(was && !await wait(140, token)) return;
+  const order = only ? [only] : CFG.order==='en-ko' ? ['en','ko'] : CFG.order==='ko-en' ? ['ko','en'] : ['en'];
+  for(let i=0;i<order.length;i++){
+    const ok = await playOne(order[i], token);
+    if(!ok || token!==S.playToken) return;
+    if(i<order.length-1 && !await wait(CFG.gap*1000, token)) return;
+  }
+  if(token!==S.playToken) return;
+  S.playing = false;
+  $('#btnPlay').textContent = '▶ 낭독';
+  if(S.autoOn && CFG.auto==='after'){
+    if(!await wait(Math.max(0.3, CFG.gap)*1000, token)) return;
+    next(true);
+  }
+}
+
+/* ============================ auto advance ============================ */
+function clearAuto(){ clearInterval(S.autoTimer); S.autoTimer = null; $('#autoFill').style.width = '0%'; }
+function armAuto(){
+  clearAuto();
+  if(!S.autoOn || CFG.auto!=='timer') return;
+  const sec = (cur().sec && cur().sec>0) ? cur().sec : CFG.sec;
+  S.autoStart = Date.now();
+  S.autoTimer = setInterval(()=>{
+    const p = (Date.now()-S.autoStart)/(sec*1000);
+    $('#autoFill').style.width = Math.min(100, p*100).toFixed(1)+'%';
+    if(p >= 1){ clearAuto(); next(true); }
+  }, 250);
+}
+function setAuto(on){
+  S.autoOn = on && CFG.auto!=='off';
+  $('#btnAuto').classList.toggle('primary', S.autoOn);
+  $('#btnAuto').textContent = S.autoOn ? '중지' : '자동';
+  clearAuto();
+  if(S.autoOn){
+    armAuto();
+    if(CFG.auto==='after' || CFG.autoSpeak) playSequence();
+  } else stopPlayback();
+}
+function next(fromAuto){
+  if(S.idx >= S.slides.length-1){
+    if(fromAuto){ setAuto(false); toast('마지막 슬라이드입니다. 자동 진행을 멈췄습니다.'); }
+    return;
+  }
+  showSlide(S.idx+1, {speak: S.autoOn && (CFG.auto==='after' || CFG.autoSpeak)});
+}
+function prev(){ if(S.idx>0) showSlide(S.idx-1); }
+
+/* ============================ loading decks ============================ */
+async function loadFiles(files){
+  const list = [...files];
+  if(!list.length) return;
+  await flushSave();                       // keep the current deck's last edits before switching
+  const prevName = S.name;
+  const pack = list.find(f=>/\.zip$/i.test(f.name));
+  if(pack){
+    toast('연습팩을 여는 중입니다…', 60000);
+    try{
+      const n = await importPack(pack);
+      document.querySelectorAll('.toast').forEach(t=>t.remove());
+      toast(`연습팩을 불러왔습니다. 슬라이드 ${n}장과 대본이 복원되었습니다.`, 4600);
+    }catch(err){
+      document.querySelectorAll('.toast').forEach(t=>t.remove());
+      toast('연습팩을 읽지 못했습니다: ' + (err && err.message ? err.message : err), 5200);
+    }
+    return;
+  }
+  const pptx = list.find(f=>/\.pptx$/i.test(f.name));
+  const pdf  = list.find(f=>/\.pdf$/i.test(f.name));
+  const imgs = list.filter(f=>/^image\//.test(f.type) || /\.(png|jpe?g|webp|gif)$/i.test(f.name));
+  toast('자료를 읽는 중입니다…', 60000);
+  try{
+    let res, source;
+    if(pptx){ res = await parsePptx(pptx); source = {kind:'pptx', blobs:[pptx], names:[pptx.name]}; S.name = pptx.name.replace(/\.pptx$/i,''); }
+    else if(pdf){ res = await loadPdf(pdf); source = {kind:'pdf', blobs:[pdf], names:[pdf.name]}; S.name = pdf.name.replace(/\.pdf$/i,''); }
+    else if(imgs.length){ res = await loadImages(imgs); source = {kind:'img', blobs:imgs, names:imgs.map(f=>f.name)}; S.name = `이미지 ${imgs.length}장`; }
+    else { document.querySelectorAll('.toast').forEach(t=>t.remove()); toast('지원하지 않는 형식입니다. .pptx, PDF 또는 이미지를 올려 주세요.'); return; }
+
+    if(!res.slides.length) throw new Error('슬라이드를 찾지 못했습니다.');
+    stopPlayback(); setAuto(false);
+
+    // re-linking a file to a deck whose scripts we already hold
+    const relink = S.relinkId;
+    S.relinkId = null;
+    const keepScripts = relink && S.deckId === relink && S.scripts.some(s => s && (s.en || s.ko));
+
+    S.slides = res.slides;
+    S.source = source;
+    if(!keepScripts) S.audio = {};
+    S.deckId = relink || newDeckId();
+    if(keepScripts){
+      S.name = prevName;                     // keep the name the user gave it
+      const old = S.scripts;
+      S.scripts = res.slides.map((_,i)=> old[i] || {en:'',ko:'',sec:null});
+    } else {
+      S.scripts = res.slides.map((_,i)=>{
+        const sp = splitScript((res.notes||[])[i] || '');
+        return {en:sp.en, ko:sp.ko, sec:null};
+      });
+    }
+    document.querySelectorAll('.toast').forEach(t=>t.remove());
+    $('#deckName').textContent = S.name;
+    $('#thumbs').replaceChildren();
+    showSlide(0);
+    await saveDeck(true);
+    if(Store.lastOk === false){ toast('자료는 열렸지만 이 기기에 저장하지 못했습니다(저장 공간 부족 또는 브라우저 차단). 자료실의 “연습팩 내보내기”로 보관해 주세요.', 7000); return; }
+    const withNotes = S.scripts.filter(s=>s.en||s.ko).length;
+    toast(`${S.slides.length}장을 불러왔습니다.` + (withNotes ? ` 발표자 노트에서 ${withNotes}장의 대본을 가져왔습니다.` : ' 대본은 편집 버튼으로 입력하세요.'), 4200);
+  }catch(err){
+    document.querySelectorAll('.toast').forEach(t=>t.remove());
+    toast('불러오지 못했습니다: ' + (err && err.message ? err.message : err), 5200);
+  }
+}
+
+function blankSlide(n){
+  const node = el('div');
+  node.style.cssText = 'position:absolute;inset:0;background:#131c21;color:#8fa6ac;display:flex;'+
+    "flex-direction:column;align-items:center;justify-content:center;gap:10px;font-family:'Noto Sans KR',sans-serif";
+  node.innerHTML = `<div style="font-size:42px;font-weight:700;color:#3f5a60">${n}</div>
+    <div style="font-size:15px">원본 파일이 이 기기에 없습니다</div>
+    <div style="font-size:13px;color:#61797f">대본은 그대로 있습니다. 자료실에서 “파일 연결”을 눌러 주세요.</div>`;
+  return {node, w:960, h:540};
+}
+
+/* a deck whose scripts survived but whose slide file is not on this device */
+async function openScriptsOnly(id, meta, quiet){
+  let v = null;
+  try{
+    const snap = await Store.srv.doc('decks/'+id).get();
+    if(!snap.exists) return false;
+    v = snap.data() || {};
+  }catch(e){ return false; }
+  const n = Math.max(1, v.slides || (v.scripts ? v.scripts.length : 1));
+  stopPlayback(); setAuto(false);
+  S.slides = Array.from({length:n}, (_,i)=> blankSlide(i+1));
+  S.source = null; S.audio = {}; S.deckId = id;
+  S.name = v.name || (meta && meta.name) || '내 자료';
+  S.scripts = (v.scripts && v.scripts.length) ? v.scripts : S.slides.map(()=>({en:'',ko:'',sec:null}));
+  $('#deckName').textContent = S.name;
+  $('#thumbs').replaceChildren();
+  showSlide(Math.min(v.idx||0, n-1));
+  setLastDeck(id);
+  if(!quiet) toast('대본을 불러왔습니다. 슬라이드를 보려면 자료실에서 원본 파일을 연결해 주세요.', 5200);
+  return true;
+}
+
+async function openDeck(id, quiet){
+  let saved = null;
+  try{ saved = await IDB.get('deck:'+id); }catch(e){}
+  if(!saved || !saved.source || !saved.source.blobs || !saved.source.blobs.length){
+    if(Store.srv) return openScriptsOnly(id, null, quiet);
+    return false;
+  }
+  if(!quiet) toast('자료를 여는 중입니다…', 60000);
+  try{
+    const src = saved.source;
+    let res;
+    if(src.kind==='pptx') res = await parsePptx(src.blobs[0]);
+    else if(src.kind==='pdf') res = await loadPdf(src.blobs[0]);
+    else res = await loadImages(src.blobs);
+    if(!res.slides.length) throw new Error('empty');
+    stopPlayback(); setAuto(false);
+    S.slides = res.slides; S.source = src; S.name = saved.name || '내 자료'; S.deckId = id;
+    S.scripts = (saved.scripts && saved.scripts.length) ? saved.scripts : res.slides.map(()=>({en:'',ko:'',sec:null}));
+    S.audio = saved.audio || {};
+    $('#deckName').textContent = S.name;
+    $('#thumbs').replaceChildren();
+    showSlide(Math.min(saved.idx||0, res.slides.length-1));
+    setLastDeck(id);
+    document.querySelectorAll('.toast').forEach(t=>t.remove());
+    return true;
+  }catch(e){
+    document.querySelectorAll('.toast').forEach(t=>t.remove());
+    return false;
+  }
+}
+
+function loadDemo(){
+  stopPlayback(); setAuto(false);
+  const d = demoDeck();
+  S.slides = d.slides; S.scripts = d.scripts; S.audio = {}; S.source = null;
+  S.deckId = null; S.name = '데모 덱';
+  $('#deckName').textContent = S.name;
+  $('#thumbs').replaceChildren();
+  showSlide(0);
+  setLastDeck(null);
+}
+
+/* ---- practice pack: one .zip holding the deck, its scripts and recordings ---- */
+async function saveFileOut(filename, blob){
+  try{
+    if(window.claude && typeof window.claude.use === 'function'){
+      const dl = await window.claude.use('downloads');
+      if(dl){ await dl.save({filename, data: blob}); return true; }
+    }
+  }catch(err){
+    if(err && err.code === 'declined') return false;
+  }
+  try{
+    const url = URL.createObjectURL(blob);
+    const a = el('a',{href:url, download:filename});
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 30000);
+    return true;
+  }catch(e){ return false; }
+}
+function safeName(s){ return (s||'deck').replace(/[^\w가-힣ㄱ-ㅎ.-]+/g,'_').slice(0,60); }
+
+async function exportPack(){
+  if(!S.slides.length){ toast('내보낼 자료가 없습니다.'); return; }
+  const btn = $('#btnExportPack');
+  btn.disabled = true; btn.textContent = '만드는 중…';
+  try{
+    const zip = new JSZip();
+    zip.file('deck.json', JSON.stringify({
+      v:1, name:S.name, kind:S.source?S.source.kind:'none',
+      slides:S.slides.length, scripts:S.scripts, savedAt:new Date().toISOString()
+    }, null, 1));
+    if(S.source && S.source.blobs){
+      for(let i=0;i<S.source.blobs.length;i++){
+        const nm = (S.source.names && S.source.names[i]) || ('slide'+(i+1));
+        zip.file('source/'+safeName(nm), S.source.blobs[i]);
+      }
+    }
+    for(const k of Object.keys(S.audio||{})){
+      for(const w of ['en','ko']){
+        const b = S.audio[k] && S.audio[k][w];
+        if(b) zip.file(`audio/${String(+k+1).padStart(2,'0')}-${w}.mp3`, b);
+      }
+    }
+    const out = await zip.generateAsync({type:'blob'});
+    const ok = await saveFileOut(safeName(S.name)+'-연습팩.zip', out);
+    toast(ok ? '연습팩을 저장했습니다. 다른 기기에서 이 파일을 올리면 그대로 이어서 연습할 수 있습니다.'
+             : '저장이 취소되었습니다.', 4600);
+  }catch(err){
+    toast('내보내기 실패: ' + (err && err.message ? err.message : err), 5000);
+  }finally{
+    btn.disabled = false; btn.textContent = '연습팩 내보내기';
+  }
+}
+
+async function importPack(file){
+  const zip = await JSZip.loadAsync(file);
+  const metaFile = zip.file('deck.json');
+  if(!metaFile) throw new Error('연습팩 형식이 아닙니다.');
+  const meta = JSON.parse(await metaFile.async('string'));
+  const srcFiles = zip.folder('source') ? zip.file(/^source\//) : [];
+  if(!srcFiles.length) throw new Error('연습팩 안에 원본 슬라이드 파일이 없습니다.');
+  const blobs = [];
+  const names = [];
+  for(const f of srcFiles){
+    const nm = f.name.replace(/^source\//,'');
+    blobs.push(new File([await f.async('blob')], nm));
+    names.push(nm);
+  }
+  const kind = /\.pptx$/i.test(names[0]) ? 'pptx' : /\.pdf$/i.test(names[0]) ? 'pdf' : 'img';
+  let res;
+  if(kind==='pptx') res = await parsePptx(blobs[0]);
+  else if(kind==='pdf') res = await loadPdf(blobs[0]);
+  else res = await loadImages(blobs);
+  if(!res.slides.length) throw new Error('슬라이드를 읽지 못했습니다.');
+
+  stopPlayback(); setAuto(false);
+  S.slides = res.slides;
+  S.source = {kind, blobs, names};
+  S.deckId = newDeckId();
+  S.name = meta.name || file.name.replace(/\.zip$/i,'');
+  S.scripts = res.slides.map((_,i)=> (meta.scripts && meta.scripts[i]) || {en:'',ko:'',sec:null});
+  S.audio = {};
+  for(const f of (zip.file(/^audio\//) || [])){
+    const m = f.name.match(/(\d+)-(en|ko)\.mp3$/i);
+    if(!m) continue;
+    const i = parseInt(m[1],10)-1;
+    if(i<0 || i>=S.slides.length) continue;
+    S.audio[i] = S.audio[i] || {};
+    S.audio[i][m[2].toLowerCase()] = await f.async('blob');
+  }
+  $('#deckName').textContent = S.name;
+  $('#thumbs').replaceChildren();
+  showSlide(0);
+  await saveDeck(true);
+  return S.slides.length;
+}
+
+/* ---- library UI ---- */
+function fmtDate(ms){
+  const d = new Date(ms||Date.now());
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+}
+const KIND_LABEL = {pptx:'PPTX', pdf:'PDF', img:'이미지'};
+
+async function renderLibrary(){
+  const list = await libList();
+  const box = $('#libList');
+  box.replaceChildren();
+  if(!list.length){
+    box.appendChild(el('p',{className:'hint', textContent:'아직 저장된 자료가 없습니다. 아래 “새 자료 올리기”로 PPT를 올리면 이 목록에 쌓입니다.'}));
+  }
+  list.sort((a,b)=> (b.updatedAt||0)-(a.updatedAt||0));
+  for(const d of list){
+    const row = el('div',{className:'deckRow' + (d.id===S.deckId ? ' on' : '')});
+    const name = el('input',{className:'nm', type:'text', value:d.name||'이름 없음'});
+    name.setAttribute('aria-label','자료 이름');
+    name.onchange = async () => {
+      const v = name.value.trim() || '이름 없음';
+      const l = await libList();
+      const i = l.findIndex(x=>x.id===d.id);
+      if(i>=0){ l[i].name = v; await libSave(l); }
+      try{
+        const rec = await IDB.get('deck:'+d.id);
+        if(rec){ rec.name = v; await IDB.set('deck:'+d.id, rec); }
+      }catch(e){}
+      if(d.id===S.deckId){ S.name = v; $('#deckName').textContent = v; }
+      toast('이름을 바꿨습니다.');
+    };
+    const meta = el('div',{className:'meta'});
+    meta.textContent = `슬라이드 ${d.slides||0}장 · 대본 ${d.scripted||0}장 · ${fmtDate(d.updatedAt)}`;
+    const left = el('div',{className:'nmWrap'});
+    left.append(name, meta);
+
+    if(!d.hasFile) meta.textContent += ' · 원본 파일 없음';
+    const open = el('button',{className:'btn' + (d.id===S.deckId ? '' : ' primary'), textContent: d.id===S.deckId ? '열려 있음' : '열기'});
+    open.disabled = d.id===S.deckId;
+    open.onclick = async () => {
+      closeModal('#mLib');
+      if(!await openDeck(d.id)) toast('이 자료를 여는 데 실패했습니다. 원본 파일을 다시 연결해 주세요.', 4200);
+    };
+    const relink = el('button',{className:'btn ghost', textContent:'파일 연결'});
+    relink.title = '이 자료에 원본 PPT/PDF/이미지를 다시 연결합니다. 대본은 그대로 유지됩니다.';
+    relink.onclick = async () => {
+      closeModal('#mLib');
+      if(d.id !== S.deckId) await openDeck(d.id, true);
+      S.relinkId = d.id;
+      $('#filePick').click();
+    };
+    const del = el('button',{className:'btn ghost', textContent:'삭제'});
+    del.onclick = async () => {
+      if(del.dataset.armed !== '1'){
+        del.dataset.armed = '1'; del.textContent = '정말 삭제';
+        setTimeout(()=>{ del.dataset.armed=''; del.textContent='삭제'; }, 4000);
+        return;
+      }
+      try{ await IDB.del('deck:'+d.id); }catch(e){}
+      const l = (await libList()).filter(x=>x.id!==d.id);
+      await libSave(l);
+      if(d.id===S.deckId) loadDemo();
+      renderLibrary();
+      toast('삭제했습니다.');
+    };
+    row.append(el('span',{className:'badge', textContent: KIND_LABEL[d.kind]||'자료'}), left, open);
+    if(!d.hasFile) row.append(relink);
+    row.append(del);
+    box.appendChild(row);
+  }
+  $('#libCount').textContent = list.length ? `저장된 자료 ${list.length}개` : '';
+  $('#libStore').textContent = storeSummary();
+  $('#libStore').className = 'hint' + ((!Store.srv && !Store.loc) ? ' warn' : '');
+  try{
+    if(navigator.storage && navigator.storage.estimate){
+      const e = await navigator.storage.estimate();
+      const sz = n => n >= 1048576 ? (n/1048576).toFixed(n>10485760?0:1)+'MB' : Math.max(1,Math.round(n/1024))+'KB';
+      $('#libStorage').textContent = `이 기기에서 ${sz(e.usage||0)} 사용 중 · 사용 가능 약 ${sz(e.quota||0)}. 저장 개수에는 제한이 없습니다.`;
+    } else $('#libStorage').textContent = '저장 개수에는 제한이 없습니다.';
+  }catch(e){ $('#libStorage').textContent = ''; }
+}
+
+/* ============================ UI wiring ============================ */
+function seg(id, key, after){
+  const box = $(id);
+  box.addEventListener('click', e => {
+    const b = e.target.closest('button'); if(!b) return;
+    [...box.children].forEach(c=>c.classList.toggle('on', c===b));
+    CFG[key] = isNaN(+b.dataset.val) ? b.dataset.val : +b.dataset.val;
+    saveCfg();
+    if(after) after(CFG[key]);
+  });
+}
+function syncSeg(id, val){
+  [...$(id).children].forEach(c => c.classList.toggle('on', String(c.dataset.val)===String(val)));
+}
+
+seg('#segRepeat','repeat');
+seg('#segAccent','accent', () => { engineTag(); stopPlayback(); });
+seg('#segMask','mask', () => applyMask());
+seg('#segAuto','auto', v => { if(v==='off') setAuto(false); else if(S.autoOn) setAuto(true); });
+
+$('#btnPrev').onclick = e => { e.stopPropagation(); prev(); };
+$('#btnNext').onclick = e => { e.stopPropagation(); next(false); };
+$('#btnAuto').onclick = e => { e.stopPropagation();
+  if(CFG.auto==='off'){ toast('먼저 아래에서 자동 넘김 방식을 고르세요.'); return; }
+  setAuto(!S.autoOn); };
+frame.addEventListener('click', () => next(false));
+$('#btnPlay').onclick = () => S.playing ? stopPlayback() : playSequence();
+$('#btnStop').onclick = () => { stopPlayback(); };
+$('#btnPlayEn').onclick = () => playSequence('en');
+$('#btnPlayKo').onclick = () => playSequence('ko');
+
+$('#rSpeed').oninput = e => {
+  CFG.speed = +e.target.value; $('#speedVal').textContent = CFG.speed.toFixed(2)+'×';
+  saveCfg(); renderScripts();
+};
+$('#nSec').onchange = e => { CFG.sec = Math.max(3, +e.target.value||30); saveCfg(); if(S.autoOn) armAuto(); };
+$('#btnSecSlide').onclick = () => {
+  const c = cur();
+  if(c.sec){ c.sec = null; toast(`${S.idx+1}번 슬라이드가 기본 시간(${CFG.sec}초)을 따릅니다.`); }
+  else { c.sec = CFG.sec; toast(`${S.idx+1}번 슬라이드만 ${CFG.sec}초로 고정했습니다.`); }
+  $('#btnSecSlide').classList.toggle('primary', !!c.sec);
+  saveDeck(); if(S.autoOn) armAuto();
+};
+
+$('#koPeek').onclick = e => { e.stopPropagation(); $('#koBody').classList.add('revealed'); };
+$('#koBody').addEventListener('click', e => { if(CFG.mask!=='show') $('#koBody').classList.add('revealed'); });
+
+function toggleEdit(which){
+  const isEn = which==='en';
+  const ta = isEn ? $('#enEdit') : $('#koEdit');
+  const tx = isEn ? $('#enText') : $('#koText');
+  const on = ta.hidden;
+  if(on){
+    ta.hidden = false; tx.hidden = true; ta.value = cur()[which] || '';
+    ta.focus();
+    if(!isEn) $('#koBody').classList.add('revealed');
+  } else {
+    cur()[which] = ta.value;
+    ta.hidden = true; tx.hidden = false;
+    renderScripts(); saveDeck();
+  }
+  (isEn ? $('#btnEditEn') : $('#btnEditKo')).textContent = on ? '완료' : '편집';
+  (isEn ? $('#btnEditEn') : $('#btnEditKo')).classList.toggle('primary', on);
+}
+$('#btnEditEn').onclick = () => toggleEdit('en');
+$('#btnEditKo').onclick = () => toggleEdit('ko');
+$('#enEdit').addEventListener('blur', ()=>{ if(!$('#enEdit').hidden) toggleEdit('en'); });
+$('#koEdit').addEventListener('blur', ()=>{ if(!$('#koEdit').hidden) toggleEdit('ko'); });
+
+// file open + drag & drop
+$('#btnOpen').onclick = () => $('#filePick').click();
+$('#filePick').onchange = e => { loadFiles(e.target.files); e.target.value=''; };
+['dragenter','dragover'].forEach(ev => document.addEventListener(ev, e => {
+  e.preventDefault(); $('#drop').classList.add('on');
+}));
+['dragleave','drop'].forEach(ev => document.addEventListener(ev, e => {
+  e.preventDefault();
+  if(ev==='drop'){ $('#drop').classList.remove('on'); if(e.dataTransfer && e.dataTransfer.files) loadFiles(e.dataTransfer.files); }
+  else if(e.relatedTarget===null) $('#drop').classList.remove('on');
+}));
+
+// modals
+const openModal = id => { $(id).hidden = false; };
+const closeModal = id => { $(id).hidden = true; };
+$('#btnSettings').onclick = () => { refreshVoices(); openModal('#mSettings'); };
+$('#btnCloseSettings').onclick = () => { closeModal('#mSettings'); };
+$('#btnLib').onclick = () => { renderLibrary(); openModal('#mLib'); };
+$('#btnCloseLib').onclick = () => closeModal('#mLib');
+$('#btnLibAdd').onclick = () => { closeModal('#mLib'); $('#filePick').click(); };
+$('#btnLibDemo').onclick = () => { closeModal('#mLib'); loadDemo(); };
+$('#btnExportPack').onclick = () => exportPack();
+$('#btnHelp').onclick = () => openModal('#mHelp');
+$('#btnCloseHelp').onclick = () => closeModal('#mHelp');
+document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.hidden = true; }));
+
+$('#vGB').onchange = e => { CFG.vGB = e.target.value; saveCfg(); refreshVoices(); previewVoice('en-GB'); };
+$('#vUS').onchange = e => { CFG.vUS = e.target.value; saveCfg(); refreshVoices(); previewVoice('en-US'); };
+$('#vKO').onchange = e => { CFG.vKO = e.target.value; saveCfg(); previewVoice('ko'); };
+function applyEngine(){
+  const on = CFG.engine==='google';
+  $('#gBox').hidden = !on;
+  $('#selEngine').value = CFG.engine;
+  $('#engineNote').textContent = on
+    ? (STANDALONE ? '대본을 구글 서버에서 합성해 재생합니다. 합성한 음성은 기기에 보관되어 다시 들을 때는 요금이 들지 않습니다.'
+                  : '게시된 앱은 외부 연결이 차단되어 있어 구글 음성이 작동하지 않습니다. 내려받은 독립 실행 파일에서 사용해 주세요.')
+    : '이 기기에 설치된 음성으로 읽습니다. 비용도 설정도 필요 없습니다.';
+  engineTag();
+  updateUsage();
+}
+$('#selEngine').onchange = e => {
+  CFG.engine = e.target.value; GT.failed = false; saveCfg(); applyEngine();
+  if(CFG.engine==='google' && CFG.gKey && !GT.loaded) gConnect();
+};
+$('#inKey').onchange = e => { CFG.gKey = e.target.value.trim(); GT.failed=false; saveCfg(); };
+$('#btnConnect').onclick = async () => {
+  CFG.gKey = $('#inKey').value.trim(); saveCfg();
+  if(await gConnect()) previewVoice(CFG.accent);
+};
+$('#gvGB').onchange = e => { CFG.gGB = e.target.value; saveCfg(); previewVoice('en-GB'); };
+$('#gvUS').onchange = e => { CFG.gUS = e.target.value; saveCfg(); previewVoice('en-US'); };
+$('#gvKO').onchange = e => { CFG.gKO = e.target.value; saveCfg(); previewVoice('ko'); };
+$('#gtryGB').onclick = () => previewVoice('en-GB');
+$('#gtryUS').onclick = () => previewVoice('en-US');
+$('#gtryKO').onclick = () => previewVoice('ko');
+$('#btnGuide').onclick = () => openModal('#mGuide');
+$('#btnCloseGuide').onclick = () => closeModal('#mGuide');
+
+$('#btnMakeMp3').onclick = async () => {
+  if(!CFG.gKey){ toast('구글 API 키를 먼저 입력하고 연결 확인을 눌러 주세요.'); return; }
+  const wants = CFG.order==='en' ? ['en'] : ['en','ko'];
+  const jobs = [];
+  S.slides.forEach((_,i)=>{
+    const sc = S.scripts[i] || {};
+    for(const w of wants){ if((sc[w]||'').trim()) jobs.push({i, w, text: sc[w]}); }
+  });
+  if(!jobs.length){ toast('저장할 대본이 없습니다.'); return; }
+  const btn = $('#btnMakeMp3');
+  btn.disabled = true;
+  try{
+    const zip = new JSZip();
+    for(let n=0; n<jobs.length; n++){
+      const j = jobs[n];
+      btn.textContent = `합성 중 ${n+1} / ${jobs.length}`;
+      const lang = j.w==='ko' ? 'ko' : CFG.accent;
+      const blob = await gSynth(prepareSpeech(j.text, lang), lang);
+      zip.file(`${String(j.i+1).padStart(2,'0')}-${j.w}.mp3`, blob);
+    }
+    btn.textContent = 'ZIP 만드는 중…';
+    const out = await zip.generateAsync({type:'blob'});
+    const url = URL.createObjectURL(out);
+    const a = el('a',{href:url, download:(S.name||'narration').replace(/[^\w가-힣-]+/g,'_')+'-narration.zip'});
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 30000);
+    toast(`${jobs.length}개 음성 파일을 ZIP으로 저장했습니다.`, 4000);
+  }catch(err){
+    toast('생성 실패: ' + (err && err.message ? err.message : err), 5200);
+  }finally{
+    btn.disabled = false; btn.textContent = '전체 대본 mp3로 저장';
+  }
+};
+
+$('#tryGB').onclick = () => previewVoice('en-GB');
+$('#tryUS').onclick = () => previewVoice('en-US');
+$('#tryKO').onclick = () => previewVoice('ko');
+$('#rPitch').oninput = e => { CFG.pitch = +e.target.value; $('#pitchVal').textContent = CFG.pitch.toFixed(2); saveCfg(); };
+$('#ckPolish').onchange = e => { CFG.polish = e.target.checked; saveCfg(); };
+$('#ckSpellAcr').onchange = e => { CFG.spellAcr = e.target.checked; saveCfg(); };
+$('#taDict').onchange = e => { CFG.dict = e.target.value; buildDict(); saveCfg(); toast('발음 사전을 저장했습니다.'); };
+$('#btnTestRead').onclick = () => { closeModal('#mSettings'); playSequence('en'); };
+$('#selOrder').onchange = e => { CFG.order = e.target.value; saveCfg(); };
+$('#nGap').onchange = e => { CFG.gap = Math.max(0, +e.target.value||0); saveCfg(); };
+$('#ckAutoSpeak').onchange = e => { CFG.autoSpeak = e.target.checked; saveCfg(); };
+$('#nFsEn').onchange = e => { CFG.fsEn = +e.target.value||19; applyFs(); saveCfg(); };
+$('#nFsKo').onchange = e => { CFG.fsKo = +e.target.value||16; applyFs(); saveCfg(); };
+function applyFs(){
+  document.documentElement.style.setProperty('--fs-en', CFG.fsEn+'px');
+  document.documentElement.style.setProperty('--fs-ko', CFG.fsKo+'px');
+}
+
+$('#btnReset').onclick = () => { closeModal('#mSettings'); renderLibrary(); openModal('#mLib'); };
+
+// bulk script editor
+function scriptsToText(){
+  return S.scripts.map((s,i)=> `${(s.en||'').trim()}\n---\n${(s.ko||'').trim()}`).join('\n===\n');
+}
+$('#btnBulk').onclick = () => { $('#taBulk').value = scriptsToText(); closeModal('#mSettings'); openModal('#mBulk'); };
+$('#btnCancelBulk').onclick = () => closeModal('#mBulk');
+$('#btnCopyBulk').onclick = async () => {
+  try{ await navigator.clipboard.writeText($('#taBulk').value); toast('클립보드에 복사했습니다.'); }
+  catch(e){ $('#taBulk').select(); toast('직접 복사해 주세요 (Ctrl/Cmd + C).'); }
+};
+$('#btnApplyBulk').onclick = () => {
+  const blocks = $('#taBulk').value.split(/^\s*={3,}\s*$/m);
+  blocks.forEach((b,i)=>{
+    if(i >= S.slides.length) return;
+    const sp = splitScript(b);
+    if(!S.scripts[i]) S.scripts[i] = {en:'',ko:'',sec:null};
+    S.scripts[i].en = sp.en; S.scripts[i].ko = sp.ko;
+  });
+  closeModal('#mBulk'); renderScripts(); saveDeck();
+  toast(`${Math.min(blocks.length, S.slides.length)}장의 대본을 적용했습니다.`);
+};
+
+// audio upload (per slide)
+let audioTarget = 'en';
+function audioBtn(which){
+  const has = (S.audio[S.idx]||{})[which];
+  if(has){
+    delete S.audio[S.idx][which];
+    renderScripts(); saveDeck();
+    toast(`${S.idx+1}번 슬라이드의 녹음 파일을 해제했습니다. 이제 내장 음성으로 읽습니다.`);
+  } else { audioTarget = which; $('#audioPick').click(); }
+}
+$('#btnAudioBulk').onclick = () => $('#audioBulk').click();
+$('#audioBulk').onchange = e => {
+  const files = [...(e.target.files||[])];
+  e.target.value = '';
+  let n = 0, skipped = 0;
+  for(const f of files){
+    const m = f.name.match(/(\d+)/);
+    if(!m){ skipped++; continue; }
+    const idx = parseInt(m[1],10) - 1;
+    if(idx < 0 || idx >= S.slides.length){ skipped++; continue; }
+    const which = /[-_.\s]ko\b|한글|korean/i.test(f.name) ? 'ko' : 'en';
+    S.audio[idx] = S.audio[idx] || {};
+    S.audio[idx][which] = f;
+    n++;
+  }
+  renderScripts(); saveDeck();
+  toast(`${n}개 파일을 배정했습니다.` + (skipped ? ` ${skipped}개는 슬라이드 번호를 찾지 못해 건너뛰었습니다.` : ''), 4200);
+};
+$('#btnAudioEn').onclick = () => audioBtn('en');
+$('#btnAudioKo').onclick = () => audioBtn('ko');
+$('#audioPick').onchange = e => {
+  const f = e.target.files && e.target.files[0];
+  if(f){
+    S.audio[S.idx] = S.audio[S.idx] || {};
+    S.audio[S.idx][audioTarget] = f;
+    renderScripts(); saveDeck();
+    toast(`${S.idx+1}번 슬라이드에 녹음 파일을 연결했습니다.`);
+  }
+  e.target.value = '';
+};
+
+// keyboard
+document.addEventListener('keydown', e => {
+  if(/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) {
+    if(e.key==='Escape') e.target.blur();
+    return;
+  }
+  if(e.key==='ArrowRight' || e.key===' '){ e.preventDefault(); next(false); }
+  else if(e.key==='ArrowLeft'){ e.preventDefault(); prev(); }
+  else if(e.key==='Enter'){ e.preventDefault(); playSequence('en'); }
+  else if(e.key==='k' || e.key==='K'){ playSequence('ko'); }
+  else if(e.key==='m' || e.key==='M'){
+    const nextMask = CFG.mask==='show' ? 'blur' : CFG.mask==='blur' ? 'hide' : 'show';
+    CFG.mask = nextMask; syncSeg('#segMask', nextMask); applyMask(); saveCfg();
+  }
+  else if(e.key==='Escape'){ stopPlayback(); setAuto(false); document.querySelectorAll('.modal').forEach(m=>m.hidden=true); }
+});
+
+window.addEventListener('resize', fit);
+if(window.ResizeObserver) new ResizeObserver(fit).observe(frame);
+if(window.speechSynthesis){
+  speechSynthesis.onvoiceschanged = refreshVoices;
+  setTimeout(refreshVoices, 300);
+}
+window.addEventListener('beforeunload', () => { try{ speechSynthesis.cancel(); }catch(e){} });
+
+/* ============================ boot ============================ */
+(async function boot(){
+  loadCfg();
+  applyFs();
+  await initStore();
+  syncSeg('#segRepeat', CFG.repeat); syncSeg('#segAccent', CFG.accent);
+  syncSeg('#segMask', CFG.mask); syncSeg('#segAuto', CFG.auto);
+  $('#rSpeed').value = CFG.speed; $('#speedVal').textContent = CFG.speed.toFixed(2)+'×';
+  $('#nSec').value = CFG.sec; $('#nGap').value = CFG.gap;
+  $('#selOrder').value = CFG.order; $('#ckAutoSpeak').checked = !!CFG.autoSpeak;
+  $('#nFsEn').value = CFG.fsEn; $('#nFsKo').value = CFG.fsKo;
+  $('#rPitch').value = CFG.pitch; $('#pitchVal').textContent = (+CFG.pitch).toFixed(2);
+  $('#ckPolish').checked = CFG.polish !== false;
+  $('#ckSpellAcr').checked = CFG.spellAcr !== false;
+  if(CFG.dict == null) CFG.dict = DEFAULT_DICT;
+  $('#taDict').value = CFG.dict;
+  $('#inKey').value = CFG.gKey || '';
+  buildDict();
+  applyEngine();
+  refreshVoices();
+  if(CFG.engine==='google' && CFG.gKey && STANDALONE) gConnect();
+
+  let opened = false;
+  const last = lastDeckId();
+  if(last) opened = await openDeck(last, true);
+  if(!opened){
+    const list = await libList();
+    if(list.length){
+      list.sort((a,b)=> (b.updatedAt||0)-(a.updatedAt||0));
+      opened = await openDeck(list[0].id, true);
+    }
+  }
+  if(!opened){
+    const d = demoDeck();
+    S.slides = d.slides; S.scripts = d.scripts;
+    showSlide(0);
+  }
+  paintSaveState();
+  if(!Store.srv && !Store.loc){
+    setTimeout(()=>toast('이 브라우저가 저장소를 차단하고 있어 자동 저장이 되지 않습니다. 자료실의 “연습팩 내보내기”로 파일에 보관해 주세요.', 7000), 1200);
+  }
+  setTimeout(fit, 400);
+})();
+})();
+</script>
+
+</body>
+</html>
