@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-21T22:19:44Z",
+    "last_daily_run": "2026-09-22T22:15:35Z",
     "last_weekly_run": "2026-09-20T22:07:43Z",
     "schema_version": 1
   },
@@ -335,6 +335,19 @@
         "intercept_rate": 0.86,
         "sources": ["https://unn.ua/en/news/russia-launched-172-drones-at-ukraine-air-defense-destroyed-147-targets", "https://www.ukrinform.net/rubric-ato/4166165-air-defense-neutralizes-banderol-missile-147-russian-drones-used-to-attack-ukraine-overnight.html", "https://mezha.net/eng/news/285d32be_ukraine_neutralizes_147/", "https://en.interfax.com.ua/news/general/1207254.html", "https://kyivindependent.com/russian-attacks-kill-at-least-6-wound-38-across-ukraine-as-overnight-strike-hit-shopping-mall-in-zaporizhzhia/", "https://www.kyivpost.com/post/84977"],
         "note": "2026-09-20 18:00~09-21 08:00 시점 야간 공격 기준. Shahed형 공격드론(172기 중 64기가 제트추진형으로 보도)·Gerbera·Parodiya 기만기 등 172기 중 147기 요격·제압 + Banderol/Dan-T 1기 별도 요격(합계 148, 요격률 0.86). 발사방향은 벨고로드·샤탈로보·오룔·쿠르스크·프리모르스코-아흐타르스크·밀레로보(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 직격 14개 지점, 잔해 낙하 4개 지점. 자포리자가 최다 피해 지역으로 쇼핑몰·대학(교육기관)·다세대주택 다수 피격(주민 대피), 자포리자주 기준 부상 8명. 수미에서 38세 여성·54세 남성 사망 및 14세 소녀 포함 3명 부상. 오데사에서는 대형마트 물류창고 피격(인명피해 없음). 전국 기준 사상자 수는 매체별 편차 큼(Kyiv Independent: 사망 6명·부상 38명 / Kyiv Post: 사망 2명·부상 11명) — 도네츠크·하르키우·드니프로페트로우스크 등 타 지역 사상자는 활공유도폭탄·포격 등 드론 외 타격수단이 혼재된 통계일 가능성이 있어 교차검증 필요, target_areas는 드론 피격이 명확한 지역만 기재. 기종별 세부 수치 미확인 — by_type 비움."
+      },
+      {
+        "date": "2026-09-22",
+        "attacks_total": 212,
+        "attacks_total_source": "https://www.pravda.com.ua/eng/news/2026/09/22/8054538/",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4166526-adf-down-kalibr-missile-eight-banderols-177-drones-in-overnight-russian-attack-on-ukraine.html",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Millerovo", "Shatalovo", "Kursk", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)", "Chauda/Crimea(점령지)"],
+        "target_areas": ["Dnipropetrovsk", "Kirovohrad", "Poltava", "Kyiv"],
+        "intercepted": 177,
+        "intercept_rate": 0.835,
+        "sources": ["https://www.pravda.com.ua/eng/news/2026/09/22/8054538/", "https://www.ukrinform.net/rubric-ato/4166526-adf-down-kalibr-missile-eight-banderols-177-drones-in-overnight-russian-attack-on-ukraine.html", "https://mezha.net/eng/news/7f9f87a4_ukrainian_air_defenses/", "https://kyivindependent.com/russian-jet-powered-drones-strike-kyiv-injuring-8/", "https://kyivindependent.com/russian-attacks-kill-at-least-8-wound-37-across-ukraine-as-ballistic-strike-hits-major-dnipro-industrial-plant/", "https://unn.ua/en/news/the-russian-federation-attacked-ukraine-with-oniks-missiles-and-ballistic-missiles-a-kalibr-missile-and-185-of-220-drones-were-neutralized"],
+        "note": "2026-09-21 18:00~09-22 08:00 시점 야간 공격 기준. Shahed형 공격드론(212기, 제트추진형 포함)·Parodiya 기만기 등 212기 중 177기 요격·제압 + Banderol/Dan-T 8기·Kalibr 1기 별도 요격(합계 186, 요격률 0.835). 별도로 오닉스 대함미사일(로스토프 발사), 이스칸데르-M/S-400/KN-23 탄도미사일(쿠르스크·로스토프·보로네시 발사), 칼리브르 순항미사일 4기(카스피해 발사) 사용. 드론 발사방향은 오룔·밀레로보·샤탈로보·쿠르스크·프리모르스코-아흐타르스크(러) 및 도네츠크·흐바르디이스케·차우다곶(크림반도 점령지). 공식 최종집계(Ukrinform/Pravda) 기준 212/177이나, UNN은 이른 시점 잠정치로 '220기 중 185기 요격'을 보도해 소폭 편차 있음(교차검증 참고용 병기, 본 항목은 최종치 채택). 직격 22개 지점, 잔해 낙하 4개 지점. 주요 표적은 드니프로페트로우스크·키로보흐라드·폴타바(우크라이나 공군 발표 기준). 드니프로(드니프로페트로우스크주)는 탄도미사일 공격으로 산업시설 피격, 매체별 사상자 편차 있음(Meduza 속보: 사망 3명 / Kyiv Independent 갱신치: 사망 5명·부상 7명) — 교차검증 필요, 확정치 아님. 키이우는 제트추진 드론에 피격돼 최소 8명 부상(3명 병원 이송). 폴타바주에서는 나프토가즈(Naftogaz) 시설이 이스칸데르-M 등 탄도미사일 5기 이상에 피격돼 중대한 피해(인명피해 없음) — 폴타바 피해는 드론이 아닌 탄도미사일에 의한 것으로 보이나, 우크라이나 공군이 이 지역을 이번 공습(드론+미사일 통합) 주요 표적으로 명시해 target_areas에 포함. 기종별 세부 수치 미확인 — by_type 비움."
       }
     ],
     "monthly": []
@@ -619,6 +632,15 @@
         "source": "https://militarnyi.com/en/news/sting-s-interceptor-drone-destroys-geran-5-small-cruise-missile/",
         "source_name": "Militarnyi / Wild Hornets",
         "significance": "기존 로그(2026-08-21·08-29·09-15·09-17)에서 다수 보도된 '명칭 비공개' 제트추진 게란 대응 요격드론 시험 사례 중 하나가 처음으로 구체적 명칭(STING S)과 함께 실제 게란-4·게란-5 격추 실적이 공개적으로 확인된 사례 — 기존 STING이 피스톤 샤헤드 요격에 최적화되어 제트추진 게란의 속도 우위(게란-5 최고속도가 기존 STING 대비 약 114% 빠름)에 취약하다는 한계를 고속화 버전으로 보완하려는 구체적 대응 사례"
+      },
+      {
+        "date": "2026-09-22",
+        "system": "STING S(Wild Hornets)",
+        "event_type": "체계 구축",
+        "detail": "Wild Hornets가 STING S 요격드론이 실전 시험 기간 중 제트추진 게란-4급 약 10기와 다수의 게란-5를 격추했으며(대부분 자체 'Hornet Vision Ctrl' 원격조종 기술 활용) 실전시험 종료 후 약 1개월 내 양산을 개시할 계획이라고 발표.",
+        "source": "https://euromaidanpress.com/2026/09/22/ukraines-new-interceptor-drone-moves-toward-mass-production-after-first-kills-against-jet-powered-russian-drones-that-fly-like-cruise-missiles/",
+        "source_name": "Euromaidan Press / Wild Hornets",
+        "significance": "기존 09-21 로그(STING S의 게란-4/5 첫 격추 확인)에 이어, 실전시험 종료 후 약 1개월 내 양산 개시라는 구체적 전력화 일정이 처음 확인됨 — 제트추진 요격체계가 시험 단계에서 양산 전환 단계로 진입하는 전환점"
       }
     ]
   },
