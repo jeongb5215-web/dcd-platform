@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-22T22:15:35Z",
+    "last_daily_run": "2026-09-23T22:16:46Z",
     "last_weekly_run": "2026-09-20T22:07:43Z",
     "schema_version": 1
   },
@@ -348,6 +348,19 @@
         "intercept_rate": 0.835,
         "sources": ["https://www.pravda.com.ua/eng/news/2026/09/22/8054538/", "https://www.ukrinform.net/rubric-ato/4166526-adf-down-kalibr-missile-eight-banderols-177-drones-in-overnight-russian-attack-on-ukraine.html", "https://mezha.net/eng/news/7f9f87a4_ukrainian_air_defenses/", "https://kyivindependent.com/russian-jet-powered-drones-strike-kyiv-injuring-8/", "https://kyivindependent.com/russian-attacks-kill-at-least-8-wound-37-across-ukraine-as-ballistic-strike-hits-major-dnipro-industrial-plant/", "https://unn.ua/en/news/the-russian-federation-attacked-ukraine-with-oniks-missiles-and-ballistic-missiles-a-kalibr-missile-and-185-of-220-drones-were-neutralized"],
         "note": "2026-09-21 18:00~09-22 08:00 시점 야간 공격 기준. Shahed형 공격드론(212기, 제트추진형 포함)·Parodiya 기만기 등 212기 중 177기 요격·제압 + Banderol/Dan-T 8기·Kalibr 1기 별도 요격(합계 186, 요격률 0.835). 별도로 오닉스 대함미사일(로스토프 발사), 이스칸데르-M/S-400/KN-23 탄도미사일(쿠르스크·로스토프·보로네시 발사), 칼리브르 순항미사일 4기(카스피해 발사) 사용. 드론 발사방향은 오룔·밀레로보·샤탈로보·쿠르스크·프리모르스코-아흐타르스크(러) 및 도네츠크·흐바르디이스케·차우다곶(크림반도 점령지). 공식 최종집계(Ukrinform/Pravda) 기준 212/177이나, UNN은 이른 시점 잠정치로 '220기 중 185기 요격'을 보도해 소폭 편차 있음(교차검증 참고용 병기, 본 항목은 최종치 채택). 직격 22개 지점, 잔해 낙하 4개 지점. 주요 표적은 드니프로페트로우스크·키로보흐라드·폴타바(우크라이나 공군 발표 기준). 드니프로(드니프로페트로우스크주)는 탄도미사일 공격으로 산업시설 피격, 매체별 사상자 편차 있음(Meduza 속보: 사망 3명 / Kyiv Independent 갱신치: 사망 5명·부상 7명) — 교차검증 필요, 확정치 아님. 키이우는 제트추진 드론에 피격돼 최소 8명 부상(3명 병원 이송). 폴타바주에서는 나프토가즈(Naftogaz) 시설이 이스칸데르-M 등 탄도미사일 5기 이상에 피격돼 중대한 피해(인명피해 없음) — 폴타바 피해는 드론이 아닌 탄도미사일에 의한 것으로 보이나, 우크라이나 공군이 이 지역을 이번 공습(드론+미사일 통합) 주요 표적으로 명시해 target_areas에 포함. 기종별 세부 수치 미확인 — by_type 비움."
+      },
+      {
+        "date": "2026-09-23",
+        "attacks_total": 161,
+        "attacks_total_source": "https://www.pravda.com.ua/eng/news/2026/09/23/8054680/",
+        "intercepted_source": "https://www.pravda.com.ua/eng/news/2026/09/23/8054680/",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Kursk", "Primorsko-Akhtarsk", "Millerovo", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": ["Kyiv"],
+        "intercepted": 122,
+        "intercept_rate": 0.76,
+        "sources": ["https://www.pravda.com.ua/eng/news/2026/09/23/8054680/", "https://en.interfax.com.ua/news/general/1208587.html", "https://mezha.net/eng/news/70e07761_ukraine_neutralized_119/", "https://kyivindependent.com/russian-drone-attack-hits-kyiv-gas-stations-warehouses-officials-say/", "https://ua.news/en/war-vs-rf/rosiia-atakuvala-ukrayinu-dronami-ppo-znishchila-ta-podavila-119-tsilei", "https://112.ua/en/rosijska-armia-23-veresna-atakuvala-ukrainu-161-udarnim-bpla-ppo-zbila-119-droniv-186806"],
+        "note": "2026-09-22 18:00~09-23 08:00 시점 야간 공격 기준. Shahed형 공격드론(161기 중 82기가 제트추진형으로 보도)·Gerbera·Parodiya 기만기 등 161기 중 122기 요격·제압(요격률 0.76) + Banderol/Dan-T 별도 발사(요격 수 미상). 발사방향은 오룔·쿠르스크·프리모르스코-아흐타르스크·밀레로보(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 인터팍스(en.interfax.com.ua)는 08:00 시점 잠정치로 '161기 중 119기 + Banderol 3기 요격'을 보도했으나, 이후 프라우다(pravda.com.ua)·야후 등이 최종치로 '161기 중 122기 요격'을 보도해 소폭 상향 — 본 항목은 최종치(122) 채택, 잠정치는 교차검증 참고용 병기. 직격 18개 지점, 잔해 낙하 8개 지점. 키이우 홀로시이우구·다르니치아구 등에서 주유소 2곳과 물류창고·운송회사 시설 피격, 화재 발생. 키이우 기준 사망 2명·부상 22명(이 중 16명 입원 치료) 보도. 기종별 세부 수치 미확인 — by_type 비움."
       }
     ],
     "monthly": []
@@ -641,6 +654,15 @@
         "source": "https://euromaidanpress.com/2026/09/22/ukraines-new-interceptor-drone-moves-toward-mass-production-after-first-kills-against-jet-powered-russian-drones-that-fly-like-cruise-missiles/",
         "source_name": "Euromaidan Press / Wild Hornets",
         "significance": "기존 09-21 로그(STING S의 게란-4/5 첫 격추 확인)에 이어, 실전시험 종료 후 약 1개월 내 양산 개시라는 구체적 전력화 일정이 처음 확인됨 — 제트추진 요격체계가 시험 단계에서 양산 전환 단계로 진입하는 전환점"
+      },
+      {
+        "date": "2026-09-22",
+        "system": "SPYS(WIY Drones/Quantum WIY Industries)",
+        "event_type": "신규 시험",
+        "detail": "9월 19일 SBU(우크라이나 보안국) 군방첩부대가 하루 두 차례 게란-5 요격에 성공했다고 발표할 당시 명칭이 비공개였던 신형 요격드론의 정체가 'SPYS'로 확인됨(기존 2026-09-19 로그 참고). 독일 Quantum Systems와 우크라이나 WIY Drones의 합작사 Quantum WIY Industries(QWI)가 개발한 델타익 전기추진 요격기로, 최고속도 약 600km/h, 비행시간 약 5분, 교전 반경 최대 12km, 탄두 중량 약 300g으로 보도됨. 독일 민간지원단체 'German Aid to Ukraine'가 공개한 영상을 통해 제트추진 게란-5 요격 장면이 확인됨.",
+        "source": "https://militarnyi.com/en/news/ukrainian-spys-interceptor-drone-shoots-down-geran-5-missile/",
+        "source_name": "Militarnyi / German Aid to Ukraine",
+        "significance": "2026-09-19 로그에서 '명칭 비공개'로 기록됐던 SBU 운용 요격드론의 정체와 구체 제원이 처음 공개됨 — Alexa Spatium(국방부 정식 전력화, 09-14), STING S(Wild Hornets, 09-21/22)에 이어 제트추진 게란 대응 요격드론이 복수 개발사·복수 계열로 동시다발 전력화되는 경쟁 구도를 보여주는 사례"
       }
     ]
   },
