@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-23T22:16:46Z",
+    "last_daily_run": "2026-09-24T22:24:27Z",
     "last_weekly_run": "2026-09-20T22:07:43Z",
     "schema_version": 1
   },
@@ -361,6 +361,19 @@
         "intercept_rate": 0.76,
         "sources": ["https://www.pravda.com.ua/eng/news/2026/09/23/8054680/", "https://en.interfax.com.ua/news/general/1208587.html", "https://mezha.net/eng/news/70e07761_ukraine_neutralized_119/", "https://kyivindependent.com/russian-drone-attack-hits-kyiv-gas-stations-warehouses-officials-say/", "https://ua.news/en/war-vs-rf/rosiia-atakuvala-ukrayinu-dronami-ppo-znishchila-ta-podavila-119-tsilei", "https://112.ua/en/rosijska-armia-23-veresna-atakuvala-ukrainu-161-udarnim-bpla-ppo-zbila-119-droniv-186806"],
         "note": "2026-09-22 18:00~09-23 08:00 시점 야간 공격 기준. Shahed형 공격드론(161기 중 82기가 제트추진형으로 보도)·Gerbera·Parodiya 기만기 등 161기 중 122기 요격·제압(요격률 0.76) + Banderol/Dan-T 별도 발사(요격 수 미상). 발사방향은 오룔·쿠르스크·프리모르스코-아흐타르스크·밀레로보(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 인터팍스(en.interfax.com.ua)는 08:00 시점 잠정치로 '161기 중 119기 + Banderol 3기 요격'을 보도했으나, 이후 프라우다(pravda.com.ua)·야후 등이 최종치로 '161기 중 122기 요격'을 보도해 소폭 상향 — 본 항목은 최종치(122) 채택, 잠정치는 교차검증 참고용 병기. 직격 18개 지점, 잔해 낙하 8개 지점. 키이우 홀로시이우구·다르니치아구 등에서 주유소 2곳과 물류창고·운송회사 시설 피격, 화재 발생. 키이우 기준 사망 2명·부상 22명(이 중 16명 입원 치료) 보도. 기종별 세부 수치 미확인 — by_type 비움."
+      },
+      {
+        "date": "2026-09-24",
+        "attacks_total": 282,
+        "attacks_total_source": "https://mezha.net/eng/news/917c7e51_ukraine-s_air_defenses/",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4167418-adf-neutralizes-four-zircon-missiles-three-ballistic-missiles-and-219-russian-uavs-used-to-attack-ukraine-overnight.html",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Millerovo", "Shatalovo", "Kursk", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)", "Chauda/Crimea(점령지)", "Sea of Azov(해상)"],
+        "target_areas": ["Odesa", "Kyiv"],
+        "intercepted": 219,
+        "intercept_rate": 0.78,
+        "sources": ["https://mezha.net/eng/news/917c7e51_ukraine-s_air_defenses/", "https://www.ukrinform.net/rubric-ato/4167418-adf-neutralizes-four-zircon-missiles-three-ballistic-missiles-and-219-russian-uavs-used-to-attack-ukraine-overnight.html", "https://en.interfax.com.ua/news/general/1209321.html", "https://kyivindependent.com/russian-ballistic-missiles-rock-kyiv-as-air-defenses-engaged/"],
+        "note": "2026-09-23 18:00~09-24 08:00 야간 공격 기준. Shahed/Gerbera/Banderol/Dan-T/Parodiya 등 드론 282기 중 219기 요격·제압(요격률 0.78) + 지르콘(Zircon) 대함미사일 4기, 이스칸데르 계열 탄도미사일 3기, Banderol/Dan-T 미사일형 1기 별도 요격(드론+미사일 통합 227개 표적 요격·제압). attacks_total/intercepted는 기존 관례대로 드론만 집계. 발사방향은 오룔·밀레로보·샤탈로보·쿠르스크·프리모르스코-아흐타르스크(러) 및 도네츠크·흐바르디이스케·차우다곶(크림반도 점령지)·아조프해 해상. 주요 표적은 오데사·키이우주(우크라이나 공군 발표 기준). 키이우 탄도미사일 타격으로 사망 2명·부상 8명(젤렌스키 대통령은 뉴욕 기자회견에서 이번 공격 중 탄도미사일의 약 60%를 요격했다고 언급). 직격 13개 지점, 잔해 낙하 10개 지점. 기종별 세부 수치 미확인 — by_type 비움."
       }
     ],
     "monthly": []
@@ -663,6 +676,15 @@
         "source": "https://militarnyi.com/en/news/ukrainian-spys-interceptor-drone-shoots-down-geran-5-missile/",
         "source_name": "Militarnyi / German Aid to Ukraine",
         "significance": "2026-09-19 로그에서 '명칭 비공개'로 기록됐던 SBU 운용 요격드론의 정체와 구체 제원이 처음 공개됨 — Alexa Spatium(국방부 정식 전력화, 09-14), STING S(Wild Hornets, 09-21/22)에 이어 제트추진 게란 대응 요격드론이 복수 개발사·복수 계열로 동시다발 전력화되는 경쟁 구도를 보여주는 사례"
+      },
+      {
+        "date": "2026-09-22",
+        "system": "Zorelit v5(Vluchnyk)",
+        "event_type": "신규 시험",
+        "detail": "우크라이나 방산업체 Vluchnyk가 제트추진 고속 표적(러시아 게란 계열 등) 요격을 목표로 한 신형 요격드론 'Zorelit v5'의 내부 시험 완료를 발표. 최고속도 약 416km/h, 순항속도 약 200km/h 시 비행시간 약 17분, 1회 충전 항속거리 최대 약 47km, 탄두 중량 약 300~600g. AI 기반 자동 표적 탐지·조준 기능과 종말단계 자동유도 기능을 갖췄으며, 선택적으로 우크라이나 지휘통제 소프트웨어 'SkyMap'과 연동해 잔여 배터리량을 고려한 최적 요격 경로를 자동 계산할 수 있음. 이미 실전 배치·NATO 재고번호(NSN)를 획득한 전작 'Zorelit v4'의 후속 모델.",
+        "source": "https://thedefensepost.com/2026/09/22/ukraine-jet-interceptor-russian-drones/",
+        "source_name": "The Defense Post / Militarnyi / Mezha",
+        "significance": "Alexa Spatium(국방부, 08-21/09-14), STING S(Wild Hornets, 09-21/22), SPYS(QWI, 09-22)에 이어 같은 날 또 다른 개발사(Vluchnyk)의 신형 제트추진 요격드론이 공개됨 — SkyMap C2 연동과 AI 자동조준을 결합한 구체적 운용개념을 갖춘 후속 모델(v4→v5)이라는 점에서, 제트추진 게란 대응 요격체계 개발 경쟁이 기존 실전배치 계보를 갖춘 업체들의 세대교체(반복 개량)로도 확장되고 있음을 보여줌"
       }
     ]
   },
