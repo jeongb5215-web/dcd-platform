@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-24T22:24:27Z",
+    "last_daily_run": "2026-09-25T22:22:32Z",
     "last_weekly_run": "2026-09-20T22:07:43Z",
     "schema_version": 1
   },
@@ -374,6 +374,19 @@
         "intercept_rate": 0.78,
         "sources": ["https://mezha.net/eng/news/917c7e51_ukraine-s_air_defenses/", "https://www.ukrinform.net/rubric-ato/4167418-adf-neutralizes-four-zircon-missiles-three-ballistic-missiles-and-219-russian-uavs-used-to-attack-ukraine-overnight.html", "https://en.interfax.com.ua/news/general/1209321.html", "https://kyivindependent.com/russian-ballistic-missiles-rock-kyiv-as-air-defenses-engaged/"],
         "note": "2026-09-23 18:00~09-24 08:00 야간 공격 기준. Shahed/Gerbera/Banderol/Dan-T/Parodiya 등 드론 282기 중 219기 요격·제압(요격률 0.78) + 지르콘(Zircon) 대함미사일 4기, 이스칸데르 계열 탄도미사일 3기, Banderol/Dan-T 미사일형 1기 별도 요격(드론+미사일 통합 227개 표적 요격·제압). attacks_total/intercepted는 기존 관례대로 드론만 집계. 발사방향은 오룔·밀레로보·샤탈로보·쿠르스크·프리모르스코-아흐타르스크(러) 및 도네츠크·흐바르디이스케·차우다곶(크림반도 점령지)·아조프해 해상. 주요 표적은 오데사·키이우주(우크라이나 공군 발표 기준). 키이우 탄도미사일 타격으로 사망 2명·부상 8명(젤렌스키 대통령은 뉴욕 기자회견에서 이번 공격 중 탄도미사일의 약 60%를 요격했다고 언급). 직격 13개 지점, 잔해 낙하 10개 지점. 기종별 세부 수치 미확인 — by_type 비움."
+      },
+      {
+        "date": "2026-09-25",
+        "attacks_total": 295,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4167791-adf-down-267-out-of-295-drones-used-by-russia-to-attack-ukraine-overnight.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4167791-adf-down-267-out-of-295-drones-used-by-russia-to-attack-ukraine-overnight.html",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Kursk", "Millerovo", "Primorsko-Akhtarsk", "Shatalovo", "Donetsk(점령지)", "Crimea(점령지)"],
+        "target_areas": ["Kyiv", "Zaporizhzhia", "Odesa"],
+        "intercepted": 267,
+        "intercept_rate": 0.905,
+        "sources": ["https://www.ukrinform.net/rubric-ato/4167791-adf-down-267-out-of-295-drones-used-by-russia-to-attack-ukraine-overnight.html", "https://en.interfax.com.ua/news/general/1209770.html", "https://mezha.net/eng/news/c04a31c7_ukraine-s_air_defenses/", "https://unn.ua/en/news/russia-attacked-with-about-300-drones-approximately-one-in-six-of-them-jet-powered-how-many-were-shot-down", "https://www.usnews.com/news/world/articles/2026-09-25/russian-drone-hits-central-kyiv-killing-a-child-injuring-at-least-seven-people-ukrainian-officials-say", "https://meduza.io/en/news/2026/09/25/russian-drones-hit-residential-buildings-in-kyiv-killing-teenager-hospital-damaged-in-zaporizhzhia", "https://english.nv.ua/russian-war/department-of-the-state-emergency-service-of-ukraine-in-odesa-oblast-50644508.html"],
+        "note": "2026-09-24 18:00~09-25 07:30 시점 야간 공격 기준(공격 진행 중이었다고 보도되어 267/295는 잠정치일 가능성 있음). Shahed형 공격드론(295기 중 52기, 약 1/6이 제트추진형으로 보도)·Gerbera·Banderol/Dan-T·Parodiya 기만기 등 드론 295기 중 267기 요격·제압(요격률 약 0.905). 발사방향은 오룔·쿠르스크·밀레로보·프리모르스코-아흐타르스크·샤탈로보(러) 및 도네츠크·크림반도(점령지). 직격 16개 지점, 잔해 낙하 4개 지점. 키이우 페체르스크구 16층 아파트 피격으로 14세 소년 사망·7명 이상 부상(인근 솔로먄스키구 25층 건물 4층부 등 다른 건물도 피격), 오데사주에서 40세 여성 사망·18세·32세 남성 2명 부상(물류창고·트럭 등 민간 인프라 피해), 자포리자에서 병원 시설 피해 보도(Meduza). 기종별 세부 수치 미확인 — by_type 비움. [특이사항] 같은 날 저녁(09-24) 몰도바 국경 인근 브리체니(Briceni) 지역에서 게란-4로 추정되는 드론 잔해가 발견되고 항공물체 4건이 몰도바 영공을 침범한 것으로 보도됨(Mezha) — 본 통계와 별도 사안(우크라이나 공식 통계에는 미포함)이며 나토 인접국 영공 침범 사례가 반복되고 있음을 보여줌."
       }
     ],
     "monthly": []
