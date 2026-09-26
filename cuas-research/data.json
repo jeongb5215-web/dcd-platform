@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-25T22:22:32Z",
+    "last_daily_run": "2026-09-26T22:21:25Z",
     "last_weekly_run": "2026-09-20T22:07:43Z",
     "schema_version": 1
   },
@@ -387,6 +387,19 @@
         "intercept_rate": 0.905,
         "sources": ["https://www.ukrinform.net/rubric-ato/4167791-adf-down-267-out-of-295-drones-used-by-russia-to-attack-ukraine-overnight.html", "https://en.interfax.com.ua/news/general/1209770.html", "https://mezha.net/eng/news/c04a31c7_ukraine-s_air_defenses/", "https://unn.ua/en/news/russia-attacked-with-about-300-drones-approximately-one-in-six-of-them-jet-powered-how-many-were-shot-down", "https://www.usnews.com/news/world/articles/2026-09-25/russian-drone-hits-central-kyiv-killing-a-child-injuring-at-least-seven-people-ukrainian-officials-say", "https://meduza.io/en/news/2026/09/25/russian-drones-hit-residential-buildings-in-kyiv-killing-teenager-hospital-damaged-in-zaporizhzhia", "https://english.nv.ua/russian-war/department-of-the-state-emergency-service-of-ukraine-in-odesa-oblast-50644508.html"],
         "note": "2026-09-24 18:00~09-25 07:30 시점 야간 공격 기준(공격 진행 중이었다고 보도되어 267/295는 잠정치일 가능성 있음). Shahed형 공격드론(295기 중 52기, 약 1/6이 제트추진형으로 보도)·Gerbera·Banderol/Dan-T·Parodiya 기만기 등 드론 295기 중 267기 요격·제압(요격률 약 0.905). 발사방향은 오룔·쿠르스크·밀레로보·프리모르스코-아흐타르스크·샤탈로보(러) 및 도네츠크·크림반도(점령지). 직격 16개 지점, 잔해 낙하 4개 지점. 키이우 페체르스크구 16층 아파트 피격으로 14세 소년 사망·7명 이상 부상(인근 솔로먄스키구 25층 건물 4층부 등 다른 건물도 피격), 오데사주에서 40세 여성 사망·18세·32세 남성 2명 부상(물류창고·트럭 등 민간 인프라 피해), 자포리자에서 병원 시설 피해 보도(Meduza). 기종별 세부 수치 미확인 — by_type 비움. [특이사항] 같은 날 저녁(09-24) 몰도바 국경 인근 브리체니(Briceni) 지역에서 게란-4로 추정되는 드론 잔해가 발견되고 항공물체 4건이 몰도바 영공을 침범한 것으로 보도됨(Mezha) — 본 통계와 별도 사안(우크라이나 공식 통계에는 미포함)이며 나토 인접국 영공 침범 사례가 반복되고 있음을 보여줌."
+      },
+      {
+        "date": "2026-09-26",
+        "attacks_total": 173,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4168193-adf-neutralizes-134-russian-drones-used-to-attack-ukraine.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4168193-adf-neutralizes-134-russian-drones-used-to-attack-ukraine.html",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Kursk", "Millerovo", "Primorsko-Akhtarsk", "Shatalovo", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": ["Kyiv", "Zaporizhzhia"],
+        "intercepted": 134,
+        "intercept_rate": 0.77,
+        "sources": ["https://www.ukrinform.net/rubric-ato/4168193-adf-neutralizes-134-russian-drones-used-to-attack-ukraine.html", "https://en.interfax.com.ua/news/general/1210302.html", "https://mezha.net/eng/news/8493aa03_ukraine_downs_134/", "https://censor.net/en/news/4025326/russia-attacked-ukraine-with-173-drones-air-defenses-shot-down-and-suppressed-134-uavs", "https://kyivindependent.com/at-least-5-injured-in-ongoing-russian-drone-strikes-on-kyiv/", "https://censor.net/en/news/4025342/russian-attack-on-kyiv-on-26-september-5-people-injured-across-four-districts", "https://www.ukrinform.net/rubric-ato/4168195-russian-drone-hits-between-apartment-building-and-store-in-kyivs-solomianskyi-district-injuries-reported.html", "https://www.wsls.com/news/world/2026/09/26/7-dead-as-russia-ukraine-exchange-strikes-and-aerial-war-intensifies/"],
+        "note": "2026-09-25 18:00~09-26 07:30 시점 야간 공격 기준. Shahed형 공격드론 173기(그중 50기 이상 제트추진형으로 보도) + Gerbera/Parodiya 기만기 등 173기 중 134기 요격·제압(요격률 약 0.77). 발사방향은 오룔·쿠르스크·밀레로보·프리모르스코-아흐타르스크·샤탈로보(러) 및 도네츠크·흐바르디이스케/크림반도(점령지). 직격 19개 지점, 잔해 낙하 8개 지점. 키이우 4개 구(다르니츠키·오볼론·스뱌토신·솔로먄스키)에 걸쳐 피해 발생 — 솔로먄스키구 사무용 건물 피격·화재, 아파트 건물 피해로 26~77세 주민 4명 부상, 오볼론구 51세 주민 1명 부상 등 총 5명 부상. 자포리자에서는 (야간 통계와 별도로) 낮 시간대 러시아 공격으로 중앙시장이 피격되는 등 전국적으로 이틀 연속 공습이 이어짐(자포리자·크라스노다르 등 상호 공격 포함 전국 기준 사망 4~7명 보도, 매체별 편차 있어 교차검증 필요). 기종별 세부 수치 미확인 — by_type 비움."
       }
     ],
     "monthly": []
@@ -698,6 +711,15 @@
         "source": "https://thedefensepost.com/2026/09/22/ukraine-jet-interceptor-russian-drones/",
         "source_name": "The Defense Post / Militarnyi / Mezha",
         "significance": "Alexa Spatium(국방부, 08-21/09-14), STING S(Wild Hornets, 09-21/22), SPYS(QWI, 09-22)에 이어 같은 날 또 다른 개발사(Vluchnyk)의 신형 제트추진 요격드론이 공개됨 — SkyMap C2 연동과 AI 자동조준을 결합한 구체적 운용개념을 갖춘 후속 모델(v4→v5)이라는 점에서, 제트추진 게란 대응 요격체계 개발 경쟁이 기존 실전배치 계보를 갖춘 업체들의 세대교체(반복 개량)로도 확장되고 있음을 보여줌"
+      },
+      {
+        "date": "2026-09-13",
+        "system": "Yolka(러시아, 휴대형 요격드론)",
+        "event_type": "실전 배치",
+        "detail": "러시아 국방부가 2026-09-13 자국산 소형 휴대형 요격드론 'Yolka(전나무)'의 신규 실전 운용 영상을 공개. 중량 약 1.3kg, 최고속도 약 230km/h, 유효 교전거리 약 3km, EO+AI 기반 자율 표적포착(fire-and-forget) 유도방식이며 폭약 없이 표적에 고속 충돌하는 운동에너지(kinetic) 방식으로 요격 — 개발사에 따르면 대당 비용 약 500달러(2026년 기준), 주간·맑은 날씨에서만 운용 가능. 이번 공개 영상에서는 펜자 소재 Yumils사 제작 레이더와 Yolka 2기 탑재 발사대를 트레일러 마스트에 결합한 시스템형 프로토타입(레이더 큐잉 통합형)도 함께 확인됨. 러시아 측은 자국 제506근위차량화소총연대가 배치 직후 하루 만에 고정익 드론 약 11기를 격추했다고 주장(2026년 9월). 이에 앞서 2026-03-03에는 개발사가 TASS를 통해 브랸스크주에서 우크라이나 '류티(Lyuty)' 공격드론 약 50기 이상을 2시간 만에 요격했다고 주장한 바 있음(러시아측 발표로 교차검증 안 됨). 최초 보도는 2025년 7월.",
+        "source": "https://www.thedefensenews.com/news-details/New-Footage-Shows-Russian-Yolka-Interceptor-Drone-in-Integrated-Launcher-and-Radar-Configuration/",
+        "source_name": "The Defense News / 러시아 국방부(영상 공개) / TASS(성과 주장, 교차검증 필요)",
+        "significance": "우크라이나측 STING/BAGNET/Alexa Spatium/STING S 등 요격드론 계보에 대응해, 러시아측도 자체 저비용 휴대형 운동에너지 요격드론(Yolka)을 실전 배치하고 레이더 큐잉과 결합한 체계형으로 발전시키고 있음이 확인됨 — 드론 대 드론 요격 경쟁이 우크라이나 일방향이 아닌 양측 모두에서 진행되는 구도임을 보여주는 이 로그 최초의 러시아측 요격드론 항목. 성과 수치(격추량·요격률)는 러시아 국방부/개발사 발표에 의존해 신뢰도 '낮음~중간'으로 별도 교차검증 필요"
       }
     ]
   },
