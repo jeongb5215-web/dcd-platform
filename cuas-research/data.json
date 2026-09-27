@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-26T22:21:25Z",
+    "last_daily_run": "2026-09-27T22:23:29Z",
     "last_weekly_run": "2026-09-20T22:07:43Z",
     "schema_version": 1
   },
@@ -110,6 +110,18 @@
         "confidence": "중간",
         "status": "확인됨",
         "note": "기존에는 Shahed-136/Geran-2(구형 피스톤 계열)에만 메시모뎀 기반 FPV 수동유도가 적용되고 Geran-4(신형 제트)는 EO 자율 종말유도로 구분된다고 파악됐으나(2026-09-10 로그 참고), 이번 분석으로 Geran-4에도 GSM/메시망 기반 원격유도 경로가 EO 자율유도와 병행 탑재된 것이 확인되어 기존 구분을 갱신함. baseline.guidance 값(EO 시커 자율유도)은 상충이 아닌 보완 정보이므로 유지하고 세부 내용을 로그에 추가 기록"
+      },
+      {
+        "date": "2026-09-20",
+        "variant": "Geran-5",
+        "field": "engine",
+        "old_value": "Telefly TF-TJ2000A 터보젯, 동체 등면 외부 나셀 장착(추력 약 200kgf)",
+        "new_value": "9월 19일경 공개된 SBU/Wild Hornets 요격드론 교전 영상을 분석한 결과, 최신 게란-5 개량형은 터보젯 엔진을 기존 동체 등면 외부 나셀 방식에서 동체 내부(상부 공기흡입구 뒤쪽)로 이설한 것으로 확인됨. 외부 나셀 장착 시 추력선이 기체 종축보다 위쪽에 위치해 발생하던 하향 피칭모멘트(및 이를 상쇄하기 위한 조종면 트림에 따른 항력 증가) 문제가 내부 장착으로 해소되며, 항력 감소에 따른 속도·항속거리 증대 및 지상시험·엔진 정비 접근성 개선 효과가 기대된다는 분석",
+        "new_source": "https://militarnyi.com/en/news/geran-5-cruise-missile-adopts-a-revised-engine-configuration-to-enhance-speed-and-range/",
+        "new_source_name": "Militarnyi (SBU/Wild Hornets 요격 영상 분석 인용)",
+        "confidence": "중간",
+        "status": "확인됨",
+        "note": "기존 09-16 로그(TWZ 잔해분석, 원통형 동체+등면 외부 나셀 구조 최초 확인) 이후, 실제 요격 교전 영상 분석을 통해 엔진을 외부 나셀에서 동체 내부로 이설한 개량형의 존재가 추가로 확인됨. baseline.engine 값은 기존(외부 나셀형) 수치를 유지하되(양산 초기형과 개량형 혼재 가능성, 잔해로 직접 실측된 수치는 아직 없음) 개량 배경과 예상 성능상 이점을 로그에 기록"
       }
     ]
   },
@@ -400,6 +412,19 @@
         "intercept_rate": 0.77,
         "sources": ["https://www.ukrinform.net/rubric-ato/4168193-adf-neutralizes-134-russian-drones-used-to-attack-ukraine.html", "https://en.interfax.com.ua/news/general/1210302.html", "https://mezha.net/eng/news/8493aa03_ukraine_downs_134/", "https://censor.net/en/news/4025326/russia-attacked-ukraine-with-173-drones-air-defenses-shot-down-and-suppressed-134-uavs", "https://kyivindependent.com/at-least-5-injured-in-ongoing-russian-drone-strikes-on-kyiv/", "https://censor.net/en/news/4025342/russian-attack-on-kyiv-on-26-september-5-people-injured-across-four-districts", "https://www.ukrinform.net/rubric-ato/4168195-russian-drone-hits-between-apartment-building-and-store-in-kyivs-solomianskyi-district-injuries-reported.html", "https://www.wsls.com/news/world/2026/09/26/7-dead-as-russia-ukraine-exchange-strikes-and-aerial-war-intensifies/"],
         "note": "2026-09-25 18:00~09-26 07:30 시점 야간 공격 기준. Shahed형 공격드론 173기(그중 50기 이상 제트추진형으로 보도) + Gerbera/Parodiya 기만기 등 173기 중 134기 요격·제압(요격률 약 0.77). 발사방향은 오룔·쿠르스크·밀레로보·프리모르스코-아흐타르스크·샤탈로보(러) 및 도네츠크·흐바르디이스케/크림반도(점령지). 직격 19개 지점, 잔해 낙하 8개 지점. 키이우 4개 구(다르니츠키·오볼론·스뱌토신·솔로먄스키)에 걸쳐 피해 발생 — 솔로먄스키구 사무용 건물 피격·화재, 아파트 건물 피해로 26~77세 주민 4명 부상, 오볼론구 51세 주민 1명 부상 등 총 5명 부상. 자포리자에서는 (야간 통계와 별도로) 낮 시간대 러시아 공격으로 중앙시장이 피격되는 등 전국적으로 이틀 연속 공습이 이어짐(자포리자·크라스노다르 등 상호 공격 포함 전국 기준 사망 4~7명 보도, 매체별 편차 있어 교차검증 필요). 기종별 세부 수치 미확인 — by_type 비움."
+      },
+      {
+        "date": "2026-09-27",
+        "attacks_total": 170,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4168444-adf-neutralizes-147-russian-drones-used-to-attack-ukraine-overnight.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4168444-adf-neutralizes-147-russian-drones-used-to-attack-ukraine-overnight.html",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Kursk", "Primorsko-Akhtarsk", "Shatalovo", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": ["Odesa", "Kharkiv", "Sumy", "Mykolaiv", "Kherson", "Poltava", "Zhytomyr", "Kyiv"],
+        "intercepted": 147,
+        "intercept_rate": 0.865,
+        "sources": ["https://www.ukrinform.net/rubric-ato/4168444-adf-neutralizes-147-russian-drones-used-to-attack-ukraine-overnight.html", "https://mezha.net/eng/news/4ec62ed0_ukraine-s_air_defenses/", "https://kyivindependent.com/russian-attacks-kill-14-injure-57-across-ukraine-with-odesa-oblast-targeted-in-mass-strike/", "https://www.pravda.com.ua/eng/news/2026/09/27/8055224/", "https://112.ua/en/rosia-atakuvala-ukrainu-170-bezpilotnikami-27-veresna-ppo-zbila-147-droniv-187659"],
+        "note": "2026-09-26 18:00~09-27 07:30 시점 야간 공격 기준(잠정치). Shahed형 공격드론 170기(그중 76기 제트추진형으로 보도) + Gerbera/Parodiya 기만기 등 170기 중 147기 요격·제압(요격률 약 0.865). 발사방향은 오룔·쿠르스크·프리모르스코-아흐타르스크·샤탈로보(러) 및 도네츠크·흐바르디이스케/크림반도(점령지). 직격 18개 지점, 잔해 낙하 8개 지점. 전국 기준 사망 14명·부상 57명(교차검증 필요, 매체별 확정 전 잠정치일 가능성). 오데사주가 '대규모 타격(mass strike)'의 주요 표적으로 주거건물·의료시설·호텔·상점·곡물저장고 피해, 오데사주 기준 사망 1명·부상 2명. 젤렌스키 대통령 발표에 따르면 오데사·하르키우·수미·미콜라이우·케르손·폴타바·지토미르·키이우주의 주거·에너지·기타 민간 인프라가 공격받음. 키이우에서는 09-27 오전 데이터센터가 2차례 피격되고 최대 이동통신사 키이우스타(Kyivstar) 본사 건물도 피해를 입은 것으로 확인. 기종별 세부 수치 미확인 — by_type 비움."
       }
     ],
     "monthly": []
@@ -720,6 +745,15 @@
         "source": "https://www.thedefensenews.com/news-details/New-Footage-Shows-Russian-Yolka-Interceptor-Drone-in-Integrated-Launcher-and-Radar-Configuration/",
         "source_name": "The Defense News / 러시아 국방부(영상 공개) / TASS(성과 주장, 교차검증 필요)",
         "significance": "우크라이나측 STING/BAGNET/Alexa Spatium/STING S 등 요격드론 계보에 대응해, 러시아측도 자체 저비용 휴대형 운동에너지 요격드론(Yolka)을 실전 배치하고 레이더 큐잉과 결합한 체계형으로 발전시키고 있음이 확인됨 — 드론 대 드론 요격 경쟁이 우크라이나 일방향이 아닌 양측 모두에서 진행되는 구도임을 보여주는 이 로그 최초의 러시아측 요격드론 항목. 성과 수치(격추량·요격률)는 러시아 국방부/개발사 발표에 의존해 신뢰도 '낮음~중간'으로 별도 교차검증 필요"
+      },
+      {
+        "date": "2026-09-25",
+        "system": "C4I / 요격체계(제트추진 대응) 공급망",
+        "event_type": "체계 구축",
+        "detail": "젤렌스키 대통령이 2026-09-25 최고사령관참모회의(Staff meeting)를 열어 제트추진 게란(샤헤드) 대응 요격드론들의 시험 결과(요격률·운용 경험)를 보고받고 요격체계 생산 가속화를 지시. 아울러 우크라이나 내 다양한 종류의 제트엔진(터보젯) 자체 생산체계 구축에 관한 신규 결정이 내려짐 — 그동안 중국산(Telefly 등) 부품 수입에 의존하던 요격드론용 제트엔진의 국내 자체 생산 전환을 추진. 현재 67개 우크라이나 기업이 제트추진 요격드론을 개발 중이며 이 중 3~5개사가 이미 성과를 시연한 것으로 발표됨. 같은 회의에서 국방정보총국(GUR/HUR)이 러시아의 2027년 기술·생산 계획(생산능력, 부품 공급망 우회 경로) 관련 보고를 진행.",
+        "source": "https://www.ukrinform.net/rubric-ato/4168117-zelensky-holds-staff-meeting-ukraine-accelerates-production-of-interceptors-for-jetpowered-shaheds.html",
+        "source_name": "Ukrinform / 대통령실(젤렌스키 발표)",
+        "significance": "그동안 중국산 터보젯(Telefly 등) 수입 부품에 의존하던 우크라이나 요격드론용 제트엔진 공급망을 자체 생산으로 전환하려는 최초의 정책적 결정 — 2026년 8~9월 로그에서 다수 확인된 제트추진 요격체계(Alexa Spatium/STING S/SPYS/Zorelit v5 등)가 시험·초기 전력화 단계를 넘어 지속가능한 자국 공급망 기반 양산 체제로 전환되는 정책적 전환점"
       }
     ]
   },
