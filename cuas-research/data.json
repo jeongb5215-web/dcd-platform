@@ -1,7 +1,7 @@
 {
   "meta": {
     "last_daily_run": "2026-09-27T22:23:29Z",
-    "last_weekly_run": "2026-09-20T22:07:43Z",
+    "last_weekly_run": "2026-09-27T22:22:02Z",
     "schema_version": 1
   },
   "geran_drones": {
@@ -754,6 +754,60 @@
         "source": "https://www.ukrinform.net/rubric-ato/4168117-zelensky-holds-staff-meeting-ukraine-accelerates-production-of-interceptors-for-jetpowered-shaheds.html",
         "source_name": "Ukrinform / 대통령실(젤렌스키 발표)",
         "significance": "그동안 중국산 터보젯(Telefly 등) 수입 부품에 의존하던 우크라이나 요격드론용 제트엔진 공급망을 자체 생산으로 전환하려는 최초의 정책적 결정 — 2026년 8~9월 로그에서 다수 확인된 제트추진 요격체계(Alexa Spatium/STING S/SPYS/Zorelit v5 등)가 시험·초기 전력화 단계를 넘어 지속가능한 자국 공급망 기반 양산 체제로 전환되는 정책적 전환점"
+      },
+      {
+        "date": "2026-05-31",
+        "system": "Project Flytrap(NATO 동부전선 다층방어)",
+        "event_type": "신규 시험",
+        "detail": "미 육군과 나토 동맹군이 2026-04-27~05-31 리투아니아 파브라데(Pabradė) 훈련장에서 'Project Flytrap 5.0' 대드론 실기동훈련을 실시. 미 육군 2기병연대 등 8개국 약 8,000명이 Sword 26·Saber Strike·Immediate Response·Swift Response 등 연계훈련과 병행해 참가했으며, 50개 이상의 상용 C-UAS 기술을 AI 기반 지휘통제·실시간 데이터망과 결합해 실전 조건에서 통합 시험함. 벨라루스·러시아 칼리닌그라드·수바우키 회랑에 인접한 지역에서 진행됐으며, 나토의 '동부전선 억지 이니셔티브(Eastern Flank Deterrence Initiative)'가 추진하는 통합 다층 방공망 구축을 직접 지원하는 훈련으로 명시됨.",
+        "source": "https://www.army.mil/article/292622/defeating_the_swarm_project_flytrap_accelerates_natos_counter_drone_lethality",
+        "source_name": "U.S. Army / Army Recognition / Forbes",
+        "significance": "기존 로그의 나토 TIE 26(상호운용성 시험, 05-22)과 별개로, 나토 최전선 지역에서 다수 상용 C-UAS 체계를 AI 지휘통제와 결합해 '작전급 다층 방공망'으로 통합 시험한 사례 — 나토의 지역별 층위 방어체계 구축이 실기동 훈련 단계로 진입했음을 보여줌"
+      },
+      {
+        "date": "2026-05-20",
+        "system": "Draganfly/F4DI 통합 C-UAS",
+        "event_type": "체계 구축",
+        "detail": "Draganfly와 F4 Defense International(F4DI)이 미 육군 DEVCOM 산하 연구소로부터 통합형·다층·모듈형·신속전개형 C-UAS 체계 개발 계약자로 선정됐다고 2026-05-20 발표. 계류형(tethered) 공중감시, AI 기반 드론 식별, 지상·공중 통합 요격체계를 하나의 모듈형 플랫폼으로 결합해 접적지역에서 탐지-식별-추적-표적화-격퇴를 수행하도록 설계됨.",
+        "source": "https://www.globenewswire.com/news-release/2026/05/20/3298477/0/en/Draganfly-and-F4-Defense-International-F4DI-Selected-by-the-Department-of-War-for-Development-of-Integrated-Multi-Layered-Modular-and-Rapid-Deployable-Counter-UAS-C-UAS-System.html",
+        "source_name": "GlobeNewswire / Draganfly",
+        "significance": "미 육군이 '탐지-식별-요격'을 단일 모듈형 체계로 통합하는 방향으로 소요를 구체화하고 있음을 보여주는 조달 사례 — 기존 로그의 AeroVironment 다층체계 계약(2026-07-01)과 함께, 미군 C-UAS 조달이 개별 센서·이펙터 도입에서 통합 아키텍처 발주로 전환되는 흐름을 뒷받침"
+      },
+      {
+        "date": "2026-07-23",
+        "system": "CMI/SL-ASRAAM(MBDA)",
+        "event_type": "신규 시험",
+        "detail": "MBDA가 2026 판버러 국제에어쇼(7/20~24)에서 지상발사형 ASRAAM(SL-ASRAAM) 체계에 저비용 신형 요격체 'CMI(Counter Mass Interceptor)'를 결합한 이동형 대드론 방공체계를 공개. CMI는 MBDA UK와 폴란드 WITU가 공동 개발한 초음속 요격탄으로, 적외선 시커 기반 발사 후 망각(fire-and-forget) 자율교전 방식이며 사거리 6km 이상에서 Class 1~3급 드론과 저고도 헬기·아음속 순항미사일까지 교전 가능. Supacat 고기동 차량에 CMI와 고성능 ASRAAM 요격탄을 함께 탑재해, 저비용 CMI는 드론류에, 고성능 ASRAAM은 고속표적(전투기·순항미사일)에 배정하는 계층형 교전 구조를 구현.",
+        "source": "https://quwa.org/europe/defence-news-eu/mbda-launches-counter-mass-interceptor-a-low-cost-counter-drone-effector-for-surface-launched-asraam/",
+        "source_name": "Quwa / Aviation Week / Army Recognition",
+        "significance": "서방 진영에서 '저비용 요격체+고성능 요격체 혼합 탑재'라는 계층형(다층) 방공 개념을 단일 이동 플랫폼에 구현한 사례 — 우크라이나전에서 확인된 '저가 드론 격추에 고가 미사일 소모' 문제에 대한 서방 업계의 직접적 대응"
+      },
+      {
+        "date": "2026-07-29",
+        "system": "Anduril WISP/C-UAS(미 방위군)",
+        "event_type": "실전 배치",
+        "detail": "워싱턴주 방위군 마약단속프로그램(Counterdrug Program)과 제10민간지원팀(10th Civil Support Team)이 캠프 머레이(Camp Murray)에서 Anduril의 이동형 대드론 체계(WISP 센서 스위트 포함)에 대한 신규장비훈련(운용자 교육·성능평가 포함)을 완료하고 실전력화했다고 2026-07-29 발표. 국토방위·핵심기반시설·대규모 공공행사 보호를 위한 미승인 드론 탐지·식별·추적·대응조율 임무에 투입.",
+        "source": "https://www.armyrecognition.com/news/army-news/2026/u-s-deploys-anduril-counter-drone-system-to-strengthen-homeland-defense-against-drone-threats",
+        "source_name": "Army Recognition / U.S. Army / DVIDS",
+        "significance": "미 육군의 Anduril 200억 달러 규모 계약(2026-03)이 주방위군 단위의 국토방위 실전배치로 구체화된 초기 사례 — 해외전장(우크라이나) 중심이던 이 로그의 C-UAS 실전배치 범주가 미 본토 방위 임무로 확장됨을 보여줌"
+      },
+      {
+        "date": "2026-09-03",
+        "system": "델타체계",
+        "event_type": "기술 개선",
+        "detail": "우크라이나 국방부가 2026-09-03 DELTA 전장 지휘통제체계 내 AI 어시스턴트 기능을 전체 사용자에게 개방했다고 발표. 이용자가 문서 검색이나 지원 문의 없이 시스템 인터페이스 내에서 직접 질의응답을 받을 수 있으며, 기존 2026-07-31 로그에서 확인된 위성영상·드론 정사영상(1,700여 장)·3D 지형 데이터 통합 환경 위에서 작동함.",
+        "source": "https://www.globalsecurity.org/wmd/library/news/ukraine/2026/09/ukraine-260903-ukraine-mod01.htm",
+        "source_name": "Ukraine MoD / GlobalSecurity.org / Militarnyi",
+        "significance": "델타체계가 데이터 통합(위성·드론영상·3D)에 이어 생성형 AI 어시스턴트를 전군 사용자 인터페이스에 통합하는 단계로 진화 — 대량의 전장 데이터를 일선 지휘관이 자연어 질의로 즉시 활용하도록 하는 C4I 고도화의 다음 단계"
+      },
+      {
+        "date": "2026-01-18",
+        "system": "EAGLS(미군, 중동)",
+        "event_type": "실전 배치",
+        "detail": "미 중부사령부(CENTCOM)가 2026-01-18 자체 SNS 계정을 통해 'EAGLS(Electronic Advanced Ground Launcher System)'가 중동 내 복수 작전기지에 실전 배치됐다고 발표(구체 위치 비공개). EAGLS는 70mm 로켓발사기 기반으로 APKWS(레이저유도 로켓)를 발사하는 차량 탑재형 저비용 대드론체계이며, 2025년 12월 쿠웨이트에서 열린 다국적 훈련 'Sky Shield'에서 실사격 시험을 거친 뒤 실전 운용 단계로 전환됨.",
+        "source": "https://www.armyrecognition.com/news/army-news/2026/u-s-deploys-eagls-counter-drone-air-defense-system-to-protect-middle-east-bases",
+        "source_name": "Army Recognition / DefenseScoop / Militarnyi",
+        "significance": "중동 내 미군 기지·물류거점을 겨냥한 드론 공격 증가에 대응해, 고가 방공미사일 대신 레이저유도 로켓 기반 저비용 요격체계를 실전 전개한 사례 — 나토/서방권의 C-UAS 조달·시험이 유럽(CLWS·MBDA)과 중동(EAGLS) 양쪽 전구에서 동시에 진행되고 있음을 보여줌"
       }
     ]
   },
@@ -898,6 +952,46 @@
         "summary": "우크라이나 공군의 F-16/미라주 2000-5 서방 전투기가 러시아 순항미사일·정찰기 요격의 핵심 전력으로 자리잡았으나, 저가 일회용 공격드론(게란/샤헤드) 요격에 고가 전투기 비행시간을 소모하는 방식은 지속 불가능하다고 진단. 대안으로 헬기 및 고정익 터보프롭 개조 '건십' 요격기 등 저비용·확장 가능한 요격 수단을 제시.",
         "link": "https://my.rusi.org/resource/four-years-on-an-update-on-the-air-war-over-ukraine.html",
         "significance": "전투기 중심 대드론 요격의 비용·소모성 한계를 지적하며, 서방이 우크라이나 사례에서 배워야 할 저비용 요격체계(요격드론·건십) 확대 필요성을 제기한 정책 분석"
+      },
+      {
+        "date": "2026-05",
+        "title": "LER-YOLO: Reliability-Aware Expert Routing for Misaligned RGB-Infrared UAV Detection",
+        "authors": "Liming Hou 외 8인",
+        "venue": "arXiv",
+        "topic": "AI Vision",
+        "summary": "가시광(RGB)-적외선(IR) 센서 간 정렬 오차(misalignment)가 있는 상황에서의 드론 탐지 문제를 다룸. 불확실성 인지 표적정렬 모듈로 가시광 특징을 적외선 기준으로 재정합하고 공간별 신뢰도 맵을 추정한 뒤, 신뢰도 기반 희소 혼합전문가(MoE) 융합 모듈이 RGB우세·IR우세·상호융합 전문가 중 k개를 적응적으로 선택. YOLOv5s 계열 프로토콜의 MBU 벤치마크에서 AP50 89.7±0.2% 달성.",
+        "link": "https://arxiv.org/abs/2605.20667",
+        "significance": "실전에서 흔한 RGB-IR 센서 간 물리적 정렬 오차를 사전 보정 없이 신뢰도 기반 라우팅으로 처리하는 접근 — 기존 로그의 다중센서 융합 연구(레이더+음향 트랜스포머 등)와 달리 '정렬 불량'이라는 실전 배치 시 흔한 실패조건 자체를 모델링한 점이 새로움"
+      },
+      {
+        "date": "2026-09",
+        "title": "Drone Detection Using Noise-Suppressed Acoustic Features in Low-SNR Environments",
+        "authors": "N. N. Zaidi, S. Verma, D. Biswas, O. P. Verma",
+        "venue": "Springer (book chapter)",
+        "topic": "음향탐지",
+        "summary": "저신호대잡음비(low-SNR) 환경을 위한 잡음억제 음향 드론탐지 시스템. 스펙트럼 필터링·잡음저감 전처리 파이프라인을 갖추고, 공개 데이터셋·온라인 녹음·합성증강을 결합한 2,069개 오디오 파일로 MFCC 및 델타 특징 기반 BiLSTM 분류기를 학습. 5-fold 교차검증에서 평균 정확도 98.05%(최고 폴드 98.20%) 달성.",
+        "link": "https://link.springer.com/chapter/10.1007/978-3-032-26376-6_9",
+        "significance": "기존 로그의 우크라이나 실전 소음 데이터 기반 연구(2026-08, F1 78.6%)와 달리 정확도 지표를 전면에 내세운 잡음억제 전처리+BiLSTM 조합 사례 — 저비용 마이크 어레이 기반 음향탐지의 실용 정확도 벤치마크로 비교 참고 가치"
+      },
+      {
+        "date": "2026-09",
+        "title": "Game-Theoretic Drone Swarm Defense: A Case Study in Applied Differential Game Theory",
+        "authors": "Ross E. Allen (MIT Lincoln Laboratory)",
+        "venue": "arXiv (2609.04394)",
+        "topic": "자율요격",
+        "summary": "드론 군집의 표적할당·중간유도 문제를 미분게임 이론으로 정식화, 침입 군집을 합리적 행위자로 취급해 방어자-침입자 간 내시균형을 탐색하는 전술을 제시. 침입군집이 회피기동을 하는 조건에서 몬테카를로 시뮬레이션과 베이지안 분석 결과, 게임이론 기반 전술이 기준(단방향 최적화) 전술 대비 전체요격 성공률을 94.6%→96.8%로 개선(완전방어 대비 잔여격차의 약 41% 해소), 사후확률 99.9%로 우위 확인.",
+        "link": "https://arxiv.org/abs/2609.04394",
+        "significance": "기존 로그의 강화학습 기반 요격 연구들과 달리, 침입군집을 '전략적으로 회피기동하는 합리적 상대'로 모델링하는 미분게임 접근을 적용 — 회피기동 능력을 갖춘 군집 표적에 대한 방어 성공률 개선을 정량적으로 입증"
+      },
+      {
+        "date": "2026-09",
+        "title": "Project SCOUT: Interceptor Drone for Perimeter Defense",
+        "authors": "Azmain Yousuf, Siwei Cai, Knut Peterson, Lifeng Zhou, David Han (Drexel University)",
+        "venue": "arXiv (2609.21005)",
+        "topic": "자율요격",
+        "summary": "SCOUT(Spatial Computation for Optimized UAV Tracking)는 외부 센싱 인프라나 지상국 연산 없이 요격드론 자체 탑재 컴퓨팅만으로 시각 탐지-표적연계-추적필터링-제어명령 생성을 수행하는 ROS 통합 프레임워크. TensorRT 가속 드론탐지와 ByteTrack 기반 추적연계, 경량 트랙유지 상태머신을 결합. 실비행 시험에서 실시간 탑재 탐지속도로 92.2%의 프레임에서 유효 표적탐지를 유지.",
+        "link": "https://arxiv.org/abs/2609.21005",
+        "significance": "지상국·외부 센서 의존 없이 요격드론 자체 탑재 연산만으로 실시간 시각추적·폐루프 제어를 구현·실비행 검증한 사례 — 우크라이나 로그의 컴퓨터비전 '라스트마일 유도'(2026-06-25) 개념을 학계에서 독립적으로 재현·검증한 결과로 참고 가치"
       }
     ]
   }
