@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-27T22:23:29Z",
+    "last_daily_run": "2026-09-28T22:21:28Z",
     "last_weekly_run": "2026-09-27T22:22:02Z",
     "schema_version": 1
   },
@@ -122,6 +122,30 @@
         "confidence": "중간",
         "status": "확인됨",
         "note": "기존 09-16 로그(TWZ 잔해분석, 원통형 동체+등면 외부 나셀 구조 최초 확인) 이후, 실제 요격 교전 영상 분석을 통해 엔진을 외부 나셀에서 동체 내부로 이설한 개량형의 존재가 추가로 확인됨. baseline.engine 값은 기존(외부 나셀형) 수치를 유지하되(양산 초기형과 개량형 혼재 가능성, 잔해로 직접 실측된 수치는 아직 없음) 개량 배경과 예상 성능상 이점을 로그에 기록"
+      },
+      {
+        "date": "2026-09-28",
+        "variant": "Geran-4",
+        "field": "engine",
+        "old_value": "Telefly LX-WP-160 (추력 160kgf) 또는 TF-TJ2000A (추력 200kgf) 터보젯 (중국산)",
+        "new_value": "RFE/RL 탐사보도팀 Schemes의 잔해 정밀분해분석(2026-09-19 최초 보도, 09-25 영문 티어다운 영상 공개) 결과, 중국산 상용(하비급) 터보젯 단가가 약 2만 5천 달러 수준으로 확인됨(월 약 3,000기 생산). 위성항법(GNSS) 재밍 방어용 CRPA(재밍저항) 안테나가 16채널로 확인되어, 기존 Geran-3에서 확인된 12소자 배열(우크라이나 국방정보국 HUR 발표) 대비 채널 수가 증가함. 중국산 메시모뎀(반경 약 300km 무선·영상 중계, 인접 게란 간 릴레이 가능)과 GSM 모뎀 2개(우크라이나·러시아·벨라루스·카자흐스탄 및 일부 EU 통신사 유심 확인)도 재확인됨",
+        "new_source": "https://dronexl.co/2026/09/28/russia-geran-4-teardown-hobby-jet-texas-instruments/",
+        "new_source_name": "DroneXL (RFE/RL Schemes 탐사보도팀 잔해분해분석 인용)",
+        "confidence": "중간",
+        "status": "확인됨",
+        "note": "기존 09-18 로그(Mezha.net, GSM 모뎀 2개·TI 부품 혼용·메시망 리피터 기능 확인)를 재확인하는 동시에, 이번 분석에서 위성항법 재밍 방어용 CRPA 안테나 채널 수(16채널, Geran-3의 12소자 대비 증가)와 터보젯 단가(약 2.5만 달러)라는 구체 신규 수치가 추가로 확인됨. baseline.engine 값(터보젯 모델명)은 기존 유지, 세부 신규 수치는 로그에 기록"
+      },
+      {
+        "date": "2026-09-28",
+        "variant": "Geran-5",
+        "field": "baseline_new",
+        "old_value": null,
+        "new_value": "신형 하위변종 'Geran-5 K5' 등장 보도 — 기존 baseline Geran-5(최고속도 600km/h) 대비 더 빠른 속도, 재설계된 동체를 가지며, 위성항법(GPS) 재밍에 영향받지 않는 전자광학 DSMAC(디지털 지형영상대조, Kh-101 순항미사일과 유사한 방식)식 종말유도 시스템을 탑재한 것으로 보도됨. 러시아 군사블로거 안드레이 필라토프는 게란 계열에 'Susanin'이라는 자율 광학항법 체계가 이미 적용 중이라고 주장, 이와 연관된 것으로 추정. 고속 비행으로 인해 Dan-T 순항미사일로 오인되는 경우가 많다고 보도됨",
+        "new_source": "https://euromaidanpress.com/2026/09/28/russia-is-launching-a-faster-geran-5-at-ukraine-that-satellite-jamming-may-no-longer-knock-off-course-a-monitoring-channel-says/",
+        "new_source_name": "Euromaidan Press(모니터링 채널 Polkovnyk GSh 인용) / Militarnyi(안드레이 필라토프 발언 인용)",
+        "confidence": "낮음",
+        "status": "검증 필요",
+        "note": "'K5' 명칭 및 DSMAC급 시스템 탑재 여부는 우크라이나 공식(공군·GUR 등) 출처의 확인을 받지 못한 상태 — 민간 모니터링 채널과 러시아측 군사블로거 발언이 간접 근거. 기존 baseline Geran-5(엔진 Telefly TF-TJ2000A, 속도 600km/h, 09-16/09-20 로그의 엔진 개량형과도 구분되는 별도 고속 하위변종으로 보이나 baseline에는 미반영, 로그에만 기록하고 추가 교차검증 대기"
       }
     ]
   },
@@ -425,6 +449,19 @@
         "intercept_rate": 0.865,
         "sources": ["https://www.ukrinform.net/rubric-ato/4168444-adf-neutralizes-147-russian-drones-used-to-attack-ukraine-overnight.html", "https://mezha.net/eng/news/4ec62ed0_ukraine-s_air_defenses/", "https://kyivindependent.com/russian-attacks-kill-14-injure-57-across-ukraine-with-odesa-oblast-targeted-in-mass-strike/", "https://www.pravda.com.ua/eng/news/2026/09/27/8055224/", "https://112.ua/en/rosia-atakuvala-ukrainu-170-bezpilotnikami-27-veresna-ppo-zbila-147-droniv-187659"],
         "note": "2026-09-26 18:00~09-27 07:30 시점 야간 공격 기준(잠정치). Shahed형 공격드론 170기(그중 76기 제트추진형으로 보도) + Gerbera/Parodiya 기만기 등 170기 중 147기 요격·제압(요격률 약 0.865). 발사방향은 오룔·쿠르스크·프리모르스코-아흐타르스크·샤탈로보(러) 및 도네츠크·흐바르디이스케/크림반도(점령지). 직격 18개 지점, 잔해 낙하 8개 지점. 전국 기준 사망 14명·부상 57명(교차검증 필요, 매체별 확정 전 잠정치일 가능성). 오데사주가 '대규모 타격(mass strike)'의 주요 표적으로 주거건물·의료시설·호텔·상점·곡물저장고 피해, 오데사주 기준 사망 1명·부상 2명. 젤렌스키 대통령 발표에 따르면 오데사·하르키우·수미·미콜라이우·케르손·폴타바·지토미르·키이우주의 주거·에너지·기타 민간 인프라가 공격받음. 키이우에서는 09-27 오전 데이터센터가 2차례 피격되고 최대 이동통신사 키이우스타(Kyivstar) 본사 건물도 피해를 입은 것으로 확인. 기종별 세부 수치 미확인 — by_type 비움."
+      },
+      {
+        "date": "2026-09-28",
+        "attacks_total": 165,
+        "attacks_total_source": "https://www.pravda.com.ua/eng/news/2026/09/28/8055308/",
+        "intercepted_source": "https://www.pravda.com.ua/eng/news/2026/09/28/8055308/",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Millerovo", "Primorsko-Akhtarsk", "Shatalovo", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": ["Kyiv", "Kharkiv", "Dnipro"],
+        "intercepted": 112,
+        "intercept_rate": 0.679,
+        "sources": ["https://www.pravda.com.ua/eng/news/2026/09/28/8055308/", "https://unn.ua/en/news/russia-attacked-ukraine-with-165-drones-how-many-were-destroyed-by-air-defense", "https://mezha.net/eng/news/f20702b4_ukraine_downs_112/", "https://en.interfax.com.ua/news/general/1210302.html", "https://euromaidanpress.com/2026/09/28/russia-hits-a-kharkiv-high-rise-overnight-injuring-43-people-then-strikes-central-kyiv-and-dnipro-in-broad-daylight/", "https://www.washingtonpost.com/world/2026/09/28/russias-jet-powered-drones-are-turning-kyiv-into-daytime-war-zone/"],
+        "note": "2026-09-27 18:00(추정)~09-28 07:00 시점 야간 공격 기준. Shahed형 공격드론(제트추진형 79기 포함)·Gerbera·Parodiya 기만기 등 165기 중 112기 요격·제압(요격률 0.679). 발사방향은 오룔·밀레로보·프리모르스코-아흐타르스크·샤탈로보(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 직격 14개 지점, 잔해 낙하 7개 지점. 키이우 스톨리치니 시장 피격 2명 사망·10명 가까이 부상, 포딜스키·셰브첸키우스키·오볼론스키 구에서 아파트·업무용 건물·주유소 피격(미성년자 3명 부상 포함). 하르키우 고층아파트 피격 43명 부상(Euromaidan Press). 기종별 세부 수치 미확인(제트추진 79기라는 총계만 확인, Geran 세부 변종별 구분 미보도) — by_type 비움. [특이사항] 이와 별개로 같은 날(09-28) 06:30~18:30 주간 시간대에 별도의 대규모 드론 공습 발생: 공격드론 124기 발사, 86기 요격·제압(Mezha.net/Ukrinform), 키이우가 주요 표적으로 직격 27개 지점·잔해 낙하 4개 지점. 키이우 중심가에서 국립과학아카데미·대형 의료센터가 제트추진 드론에 피격돼 1명 사망·26명 부상, 키이우주 전체로는 별도 민간인 3명 사망·민간시설 21곳 피해 보고(Kyiv Independent/Pravda). 이 주간 공습 수치는 야간 정례 집계(165/112)와는 별도이며 위 attacks_total/intercepted에는 미포함(합산 보도 출처 없어 임의 합산하지 않음) — 09-12·09-13 로그에서 지적된 '주간 대규모 드론 공습으로의 전술적 확장' 추세가 재확인됨."
       }
     ],
     "monthly": []
