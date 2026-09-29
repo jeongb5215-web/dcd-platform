@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-28T22:21:28Z",
+    "last_daily_run": "2026-09-29T22:20:20Z",
     "last_weekly_run": "2026-09-27T22:22:02Z",
     "schema_version": 1
   },
@@ -146,6 +146,18 @@
         "confidence": "낮음",
         "status": "검증 필요",
         "note": "'K5' 명칭 및 DSMAC급 시스템 탑재 여부는 우크라이나 공식(공군·GUR 등) 출처의 확인을 받지 못한 상태 — 민간 모니터링 채널과 러시아측 군사블로거 발언이 간접 근거. 기존 baseline Geran-5(엔진 Telefly TF-TJ2000A, 속도 600km/h, 09-16/09-20 로그의 엔진 개량형과도 구분되는 별도 고속 하위변종으로 보이나 baseline에는 미반영, 로그에만 기록하고 추가 교차검증 대기"
+      },
+      {
+        "date": "2026-09-25",
+        "variant": "Geran-5",
+        "field": "engine",
+        "old_value": "Telefly TF-TJ2000A 터보젯(추력 약 200kgf) — 중국산 상용(하비급) 터보젯 단가 약 2.5만 달러로 보고(2026-09-28 로그, RFE/RL Schemes 잔해분석 인용 DroneXL)",
+        "new_value": "Euronews(2026-09-25, 우크라이나 HUR 자료 인용)에 따르면 동일 엔진(중국 선전 소재 Telefly社 TF-TJ2000A, 추력 약 200kgf/1,960N)의 도매가가 약 3만 유로로 보고됨. HUR 자체 추산으로는 대당 3만5천~4만 달러로 더 높게 제시 — 기존 09-28 로그의 약 2.5만 달러 추산치 대비 두 출처 모두 상당히 높은 가격 제시(상충). 아울러 일부 물량은 러시아 알라부가(Alabuga) 특구 내에서 '추가 검수(additional inspection)' 공정을 거쳐 조립되고 있으나, HUR에 따르면 러시아는 여전히 이 중국산 엔진을 대체할 자체 국산 엔진을 보유하지 못한 상태로 확인됨",
+        "new_source": "https://militaeraktuell.at/en/chinese-microjet-engines-power-russias-new-geran-5-drones/",
+        "new_source_name": "Euronews / Militäraktuell (우크라이나 HUR 자료 인용)",
+        "confidence": "중간",
+        "status": "검증 필요",
+        "note": "터보젯 단가 수치가 출처별로 상이(2.5만 달러 vs 3만 유로/3.5~4만 달러)해 baseline.engine 값(엔진 모델명)은 유지하고 단가는 로그에만 병기, 교차검증 필요. 알라부가에서의 부분 조립·검수 공정이 확인된 것은 신규 사실이나, 엔진 자체는 여전히 중국산 부품 수입에 의존(국산 대체 엔진 없음)하고 있어 기존 09-28 로그의 '중국산 상용 터보젯 의존' 구도에서 근본적 변화는 아님"
       }
     ]
   },
@@ -462,6 +474,19 @@
         "intercept_rate": 0.679,
         "sources": ["https://www.pravda.com.ua/eng/news/2026/09/28/8055308/", "https://unn.ua/en/news/russia-attacked-ukraine-with-165-drones-how-many-were-destroyed-by-air-defense", "https://mezha.net/eng/news/f20702b4_ukraine_downs_112/", "https://en.interfax.com.ua/news/general/1210302.html", "https://euromaidanpress.com/2026/09/28/russia-hits-a-kharkiv-high-rise-overnight-injuring-43-people-then-strikes-central-kyiv-and-dnipro-in-broad-daylight/", "https://www.washingtonpost.com/world/2026/09/28/russias-jet-powered-drones-are-turning-kyiv-into-daytime-war-zone/"],
         "note": "2026-09-27 18:00(추정)~09-28 07:00 시점 야간 공격 기준. Shahed형 공격드론(제트추진형 79기 포함)·Gerbera·Parodiya 기만기 등 165기 중 112기 요격·제압(요격률 0.679). 발사방향은 오룔·밀레로보·프리모르스코-아흐타르스크·샤탈로보(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 직격 14개 지점, 잔해 낙하 7개 지점. 키이우 스톨리치니 시장 피격 2명 사망·10명 가까이 부상, 포딜스키·셰브첸키우스키·오볼론스키 구에서 아파트·업무용 건물·주유소 피격(미성년자 3명 부상 포함). 하르키우 고층아파트 피격 43명 부상(Euromaidan Press). 기종별 세부 수치 미확인(제트추진 79기라는 총계만 확인, Geran 세부 변종별 구분 미보도) — by_type 비움. [특이사항] 이와 별개로 같은 날(09-28) 06:30~18:30 주간 시간대에 별도의 대규모 드론 공습 발생: 공격드론 124기 발사, 86기 요격·제압(Mezha.net/Ukrinform), 키이우가 주요 표적으로 직격 27개 지점·잔해 낙하 4개 지점. 키이우 중심가에서 국립과학아카데미·대형 의료센터가 제트추진 드론에 피격돼 1명 사망·26명 부상, 키이우주 전체로는 별도 민간인 3명 사망·민간시설 21곳 피해 보고(Kyiv Independent/Pravda). 이 주간 공습 수치는 야간 정례 집계(165/112)와는 별도이며 위 attacks_total/intercepted에는 미포함(합산 보도 출처 없어 임의 합산하지 않음) — 09-12·09-13 로그에서 지적된 '주간 대규모 드론 공습으로의 전술적 확장' 추세가 재확인됨."
+      },
+      {
+        "date": "2026-09-29",
+        "attacks_total": 152,
+        "attacks_total_source": "https://unn.ua/en/news/launched-russian-zircon-and-ballistic-missiles-neutralized-over-ukraine-details-from-the-air-force-of-the-armed-forces-of-ukraine",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4169057-russian-attacks-continue-adf-neutralizes-one-antiship-missile-two-ballistic-missiles-and-106-drones.html",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Millerovo", "Kursk", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)", "Chauda/Crimea(점령지)"],
+        "target_areas": ["Kyiv"],
+        "intercepted": 106,
+        "intercept_rate": 0.697,
+        "sources": ["https://unn.ua/en/news/launched-russian-zircon-and-ballistic-missiles-neutralized-over-ukraine-details-from-the-air-force-of-the-armed-forces-of-ukraine", "https://www.ukrinform.net/rubric-ato/4169057-russian-attacks-continue-adf-neutralizes-one-antiship-missile-two-ballistic-missiles-and-106-drones.html", "https://censor.net/en/news/4025722/russian-nighttime-attack-air-defense-forces-shot-down-106-drones-and-three-missiles", "https://112.ua/en/nicna-ataka-rf-na-ukrainu-zbito-109-cilej-iz-152-raket-i-bezpilotnikiv-188049"],
+        "note": "2026-09-28 18:00(추정)~09-29 08:00 시점 야간 공격 기준. Zircon/Onyx 대함미사일 1기·이스칸데르-M/S-400 탄도미사일 2기(모두 쿠르스크 발사)는 별도 요격(3기 모두 요격), Shahed형 공격드론(152기 중 82기가 제트추진형으로 보도)·Gerbera·Parodiya 기만기 등 드론 152기 중 106기 요격·제압(요격률 0.697, attacks_total/intercepted는 기존 관례대로 드론만 집계). 발사방향은 오룔·밀레로보·쿠르스크·프리모르스코-아흐타르스크(러) 및 도네츠크·흐바르디이스케·차우다곶(크림반도 점령지). 피격 24개 지점, 잔해 낙하 16개 지점. 키이우 솔로먄스키·홀로시이우·오볼론·페체르스크 등 여러 구에 걸쳐 피해(6층 아파트 피격으로 10가구 대피, 개인주택 2채 파손, 교육시설 피해), 홀로시이우구 1명 부상, 키이우주 부차 지역 개인주택 피격 2명 부상·화재 발생. 야간 공격 기준 키이우·주 전역 6명 부상(2명 입원). 기종별 세부 수치 미확인 — by_type 비움. [특이사항] 같은 날(09-29) 06:30~18:00 주간 시간대에 별도의 대규모 드론 공습 발생: 공격드론 112기(그중 29기 제트추진형) 발사, 95기 요격·제압(제트추진 18기 포함, 출처: Mezha.net/Ukrinform/Interfax/Censor.net), 18:00 시점 일부 미요격 잔존. 이 주간 공습 수치는 야간 정례 집계(152/106)와는 별도이며 위 attacks_total/intercepted에는 미포함(합산 보도 출처 없어 임의 합산하지 않음) — 09-12·09-13·09-28 로그에서 지적된 '주간 대규모 드론 공습으로의 전술적 확장' 추세가 재확인됨. 전국 기준(9/28~9/29 24시간) 사망 1명·부상 56명 집계(Kyiv Independent, 교차검증 필요·확정치 아님). 참고: 09-28 야간 항목에 이미 기록된 국립과학아카데미(사망 1→후속 보도로 2명 상향)·드니프로 비즈니스센터(3명 사망·12~19명 부상) 피해는 09-28 주간 공습에 속한 사상자로, 일부 매체(Al Jazeera 등)가 09-29자 기사로 재보도하며 발생일 혼동 소지가 있어 09-29 통계에는 중복 반영하지 않음."
       }
     ],
     "monthly": []
