@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-29T22:20:20Z",
+    "last_daily_run": "2026-09-30T22:21:09Z",
     "last_weekly_run": "2026-09-27T22:22:02Z",
     "schema_version": 1
   },
@@ -158,6 +158,18 @@
         "confidence": "중간",
         "status": "검증 필요",
         "note": "터보젯 단가 수치가 출처별로 상이(2.5만 달러 vs 3만 유로/3.5~4만 달러)해 baseline.engine 값(엔진 모델명)은 유지하고 단가는 로그에만 병기, 교차검증 필요. 알라부가에서의 부분 조립·검수 공정이 확인된 것은 신규 사실이나, 엔진 자체는 여전히 중국산 부품 수입에 의존(국산 대체 엔진 없음)하고 있어 기존 09-28 로그의 '중국산 상용 터보젯 의존' 구도에서 근본적 변화는 아님"
+      },
+      {
+        "date": "2026-09-30",
+        "variant": "Geran-5",
+        "field": "length_m / wingspan_m",
+        "old_value": "전장 약 6m / 날개폭 약 5.5m (TWZ, 2026-09-16, 잔해분석 기반)",
+        "new_value": "우크라이나 국방정보국(HUR) 공식 제원(Ukrinform 인용, SkyFall사 'P1-SUN JetKiller' 요격 보도에서 병기)으로는 전장 약 6.5m, 날개폭 약 3.2m — 기존 baseline(TWZ 잔해분석, 전장 6m/날개폭 5.5m)과 날개폭 수치가 상당히 상이(5.5m vs 3.2m)",
+        "new_source": "https://united24media.com/war-in-ukraine/russias-geran-5-is-jet-powered-ukraine-built-p1-sun-jetkiller-to-hunt-it-23001",
+        "new_source_name": "UNITED24 Media / Ukrinform (우크라이나 국방정보국 HUR 공식 제원 인용)",
+        "confidence": "중간",
+        "status": "검증 필요",
+        "note": "전장(6m vs 6.5m)은 대체로 일치하나 날개폭은 두 출처 간 편차가 커(TWZ 잔해분석 5.5m vs HUR 공식자료 3.2m) 어느 쪽이 정확한지 단정하기 어려움 — 잔해 개체차(변종별 상이) 또는 측정기준 차이(익폭 vs 동체 폭 등) 가능성. baseline.wingspan_m 값은 유지하고 상충 사실만 로그에 기록, 추가 교차검증 필요"
       }
     ]
   },
@@ -487,6 +499,19 @@
         "intercept_rate": 0.697,
         "sources": ["https://unn.ua/en/news/launched-russian-zircon-and-ballistic-missiles-neutralized-over-ukraine-details-from-the-air-force-of-the-armed-forces-of-ukraine", "https://www.ukrinform.net/rubric-ato/4169057-russian-attacks-continue-adf-neutralizes-one-antiship-missile-two-ballistic-missiles-and-106-drones.html", "https://censor.net/en/news/4025722/russian-nighttime-attack-air-defense-forces-shot-down-106-drones-and-three-missiles", "https://112.ua/en/nicna-ataka-rf-na-ukrainu-zbito-109-cilej-iz-152-raket-i-bezpilotnikiv-188049"],
         "note": "2026-09-28 18:00(추정)~09-29 08:00 시점 야간 공격 기준. Zircon/Onyx 대함미사일 1기·이스칸데르-M/S-400 탄도미사일 2기(모두 쿠르스크 발사)는 별도 요격(3기 모두 요격), Shahed형 공격드론(152기 중 82기가 제트추진형으로 보도)·Gerbera·Parodiya 기만기 등 드론 152기 중 106기 요격·제압(요격률 0.697, attacks_total/intercepted는 기존 관례대로 드론만 집계). 발사방향은 오룔·밀레로보·쿠르스크·프리모르스코-아흐타르스크(러) 및 도네츠크·흐바르디이스케·차우다곶(크림반도 점령지). 피격 24개 지점, 잔해 낙하 16개 지점. 키이우 솔로먄스키·홀로시이우·오볼론·페체르스크 등 여러 구에 걸쳐 피해(6층 아파트 피격으로 10가구 대피, 개인주택 2채 파손, 교육시설 피해), 홀로시이우구 1명 부상, 키이우주 부차 지역 개인주택 피격 2명 부상·화재 발생. 야간 공격 기준 키이우·주 전역 6명 부상(2명 입원). 기종별 세부 수치 미확인 — by_type 비움. [특이사항] 같은 날(09-29) 06:30~18:00 주간 시간대에 별도의 대규모 드론 공습 발생: 공격드론 112기(그중 29기 제트추진형) 발사, 95기 요격·제압(제트추진 18기 포함, 출처: Mezha.net/Ukrinform/Interfax/Censor.net), 18:00 시점 일부 미요격 잔존. 이 주간 공습 수치는 야간 정례 집계(152/106)와는 별도이며 위 attacks_total/intercepted에는 미포함(합산 보도 출처 없어 임의 합산하지 않음) — 09-12·09-13·09-28 로그에서 지적된 '주간 대규모 드론 공습으로의 전술적 확장' 추세가 재확인됨. 전국 기준(9/28~9/29 24시간) 사망 1명·부상 56명 집계(Kyiv Independent, 교차검증 필요·확정치 아님). 참고: 09-28 야간 항목에 이미 기록된 국립과학아카데미(사망 1→후속 보도로 2명 상향)·드니프로 비즈니스센터(3명 사망·12~19명 부상) 피해는 09-28 주간 공습에 속한 사상자로, 일부 매체(Al Jazeera 등)가 09-29자 기사로 재보도하며 발생일 혼동 소지가 있어 09-29 통계에는 중복 반영하지 않음."
+      },
+      {
+        "date": "2026-09-30",
+        "attacks_total": 188,
+        "attacks_total_source": "https://www.pravda.com.ua/eng/news/2026/09/30/8055705/",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4169428-adf-neutralizes-five-ballistic-missiles-155-russian-drones-used-to-attack-ukraine-overnight.html",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Millerovo", "Kursk", "Voronezh", "Bryansk"],
+        "target_areas": ["Kyiv"],
+        "intercepted": 155,
+        "intercept_rate": 0.824,
+        "sources": ["https://www.pravda.com.ua/eng/news/2026/09/30/8055705/", "https://www.ukrinform.net/rubric-ato/4169428-adf-neutralizes-five-ballistic-missiles-155-russian-drones-used-to-attack-ukraine-overnight.html", "https://www.kyivpost.com/post/85695", "https://www.intellinews.com/missile-war-monitor-russian-missiles-hit-kyiv-again-kill-child-in-vyshhorod-as-estonia-blames-moscow-for-arson-472228/", "https://kyivindependent.com/russian-drones-missiles-continue-to-batter-kyiv-for-fourth-consecutive-night-of-strikes/"],
+        "note": "2026-09-29 18:00~09-30 08:00 시점 야간 공격 기준. Shahed(188기 중 86기가 제트추진형으로 보도)·Gerbera·Parodiya 기만기 등 드론 188기 중 155기 요격·제압(요격률 0.824) + Zircon/Onyx 대함미사일·이스칸데르-M/S-400 탄도미사일 등 5기 별도 전량 요격(드론과 별도 집계, attacks_total/intercepted는 기존 관례대로 드론만 집계 — 드론+미사일 합계는 188+5=193기 중 160기 요격/제압). 드론 발사방향은 오룔·밀레로보(러), 미사일은 쿠르스크(Zircon/Onyx)·보로네시·브랸스크(탄도미사일)에서 발사. 주요 표적은 키이우주(메인 타격방향). 피격 18개 지점. 키이우 시내 2명 사망·4명 이상 부상 외에, 인근 비시호로드에서 개인주택 붕괴로 아동 1명 사망·성인 2명 구조(부상). 전국 기준 사망 4~5명 집계(매체별 편차, 교차검증 필요). 전력·수도 공급 등 인프라 피해 동반. 기종별 세부 수치 미확인(제트추진 86기라는 수치만 확인, Geran-4/5 개별 구분 없음) — by_type 비움. 모스크바측 드론이 몰도바 영공을 하루 3차례 침범·추락하는 사례도 함께 보도됨(별도 집계 대상 아님). [특이사항] 같은 날(09-30) 06:30~18:00 주간 시간대에도 별도의 대규모 드론 공습 발생: 공격드론 285기(그중 174기 제트추진형) 발사, 254기 요격·제압(제트추진 146기 포함, 요격률 약 0.891, 제트추진만 보면 약 0.839) — 이 주간 공습 수치는 야간 정례 집계(188/155)와는 별도이며 위 attacks_total/intercepted에는 미포함(합산 보도 출처 없어 임의 합산하지 않음, 출처: Mezha.net/news.liga.net). 09-12·09-13·09-28·09-29 로그에 이어 주간 대규모 공습이 5일 연속 확인됨. 특히 이번 주간 공습은 제트추진 드론 비중이 174/285(약 61%)로 이 로그에 기록된 수치 중 가장 높아, 제트추진 게란 계열의 운용 비중이 급격히 확대되는 추세를 시사 — 09-25 로그(요격체계 생산가속화 지시)·cuas_tech 09-30 로그(JetKiller 등 신형 요격체계 확인)와 맥락이 연결됨."
       }
     ],
     "monthly": []
@@ -870,6 +895,24 @@
         "source": "https://www.armyrecognition.com/news/army-news/2026/u-s-deploys-eagls-counter-drone-air-defense-system-to-protect-middle-east-bases",
         "source_name": "Army Recognition / DefenseScoop / Militarnyi",
         "significance": "중동 내 미군 기지·물류거점을 겨냥한 드론 공격 증가에 대응해, 고가 방공미사일 대신 레이저유도 로켓 기반 저비용 요격체계를 실전 전개한 사례 — 나토/서방권의 C-UAS 조달·시험이 유럽(CLWS·MBDA)과 중동(EAGLS) 양쪽 전구에서 동시에 진행되고 있음을 보여줌"
+      },
+      {
+        "date": "2026-09-29",
+        "system": "STING S(Wild Hornets)",
+        "event_type": "실전 배치",
+        "detail": "방공군 1020 대공미사일연대 신규 승무조 '야스트룹(Yastrub, 매)'이 신형 STING S 요격드론으로 체르니히우주 상공에서 고도 3km 이상·속도 425km/h로 비행 중이던 제트추진 게란-5를 요격 성공(해당 요격기 첫 실전 교전). 이와 함께 보도에 따르면 우크라이나 방공부대는 현재 구형 피스톤 계열(샤헤드) 대비 90%대 요격률을 기록 중인 반면, 제트추진 게란 계열에 대해서는 절반을 약간 웃도는 수준의 요격률에 그치고 있다고 언급됨.",
+        "source": "https://militarnyi.com/en/news/interceptor-destroyed-geran-5-speed-425-kmh/",
+        "source_name": "Militarnyi / Euromaidan Press (Serhiy Prytula Foundation 인용)",
+        "significance": "기존 09-21/22 로그(STING S의 게란-4/5 첫 격추 확인)에 이어 425km/h급 고속 요격 성공사례가 추가로 확인됨과 동시에, 제트추진 게란 계열의 요격률이 구형 피스톤 계열(90%대) 대비 크게 낮은 수준(절반 남짓)이라는 정량적 격차가 처음 명시적으로 보도됨 — 제트추진 대응 요격체계 고도화·양산 가속화(09-25 로그)의 시급성을 뒷받침하는 근거"
+      },
+      {
+        "date": "2026-09-30",
+        "system": "P1-SUN JetKiller(SkyFall)",
+        "event_type": "기술 개선",
+        "detail": "기존 로그(2026-08-21 등)에서 '개발사 미공개'로만 언급되던 제트추진 요격체계 'JetKiller'의 정체가 우크라이나 업체 SkyFall이 개발한 'P1-SUN'으로 공식 확인됨. 2026년 7월 최초 공개된 이 요격드론은 최고속도 약 370km/h, 항속거리 약 30km, 운용고도 최대 9,000m, 체공시간 최대 15분, 탄두 중량 약 500g이며, 세계 어디서든 원격으로 조종할 수 있는 원격통제 시스템을 갖춘 것이 특징. 9월 29~30일경 우크라이나 국가근위대 'Lasar's Group' 운용팀이 이 체계로 러시아 제트추진 게란-5를 요격·격추했다고 SkyFall이 Ukrinform에 확인.",
+        "source": "https://united24media.com/war-in-ukraine/russias-geran-5-is-jet-powered-ukraine-built-p1-sun-jetkiller-to-hunt-it-23001",
+        "source_name": "UNITED24 Media / Ukrinform / Militarnyi (SkyFall사 확인)",
+        "significance": "기존 08-21/08-29/09-02 로그에서 익명으로만 존재가 확인됐던 JetKiller의 개발사(SkyFall)·정식 명칭(P1-SUN)·구체 제원이 처음으로 공식 공개됨 — 아울러 '전 세계 어디서든 원격조종 가능'이라는 신규 운용 개념이 확인되어, 국방부(Alexa Spatium)·Wild Hornets(STING S)·QWI(SPYS)·Vluchnyk(Zorelit v5)에 이어 제트추진 요격체계 개발 경쟁 구도에 참여한 또 다른 확인된 업체·기종 사례로 등재"
       }
     ]
   },
