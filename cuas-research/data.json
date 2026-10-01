@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-09-30T22:21:09Z",
+    "last_daily_run": "2026-10-01T22:21:40Z",
     "last_weekly_run": "2026-09-27T22:22:02Z",
     "schema_version": 1
   },
@@ -512,9 +512,24 @@
         "intercept_rate": 0.824,
         "sources": ["https://www.pravda.com.ua/eng/news/2026/09/30/8055705/", "https://www.ukrinform.net/rubric-ato/4169428-adf-neutralizes-five-ballistic-missiles-155-russian-drones-used-to-attack-ukraine-overnight.html", "https://www.kyivpost.com/post/85695", "https://www.intellinews.com/missile-war-monitor-russian-missiles-hit-kyiv-again-kill-child-in-vyshhorod-as-estonia-blames-moscow-for-arson-472228/", "https://kyivindependent.com/russian-drones-missiles-continue-to-batter-kyiv-for-fourth-consecutive-night-of-strikes/"],
         "note": "2026-09-29 18:00~09-30 08:00 시점 야간 공격 기준. Shahed(188기 중 86기가 제트추진형으로 보도)·Gerbera·Parodiya 기만기 등 드론 188기 중 155기 요격·제압(요격률 0.824) + Zircon/Onyx 대함미사일·이스칸데르-M/S-400 탄도미사일 등 5기 별도 전량 요격(드론과 별도 집계, attacks_total/intercepted는 기존 관례대로 드론만 집계 — 드론+미사일 합계는 188+5=193기 중 160기 요격/제압). 드론 발사방향은 오룔·밀레로보(러), 미사일은 쿠르스크(Zircon/Onyx)·보로네시·브랸스크(탄도미사일)에서 발사. 주요 표적은 키이우주(메인 타격방향). 피격 18개 지점. 키이우 시내 2명 사망·4명 이상 부상 외에, 인근 비시호로드에서 개인주택 붕괴로 아동 1명 사망·성인 2명 구조(부상). 전국 기준 사망 4~5명 집계(매체별 편차, 교차검증 필요). 전력·수도 공급 등 인프라 피해 동반. 기종별 세부 수치 미확인(제트추진 86기라는 수치만 확인, Geran-4/5 개별 구분 없음) — by_type 비움. 모스크바측 드론이 몰도바 영공을 하루 3차례 침범·추락하는 사례도 함께 보도됨(별도 집계 대상 아님). [특이사항] 같은 날(09-30) 06:30~18:00 주간 시간대에도 별도의 대규모 드론 공습 발생: 공격드론 285기(그중 174기 제트추진형) 발사, 254기 요격·제압(제트추진 146기 포함, 요격률 약 0.891, 제트추진만 보면 약 0.839) — 이 주간 공습 수치는 야간 정례 집계(188/155)와는 별도이며 위 attacks_total/intercepted에는 미포함(합산 보도 출처 없어 임의 합산하지 않음, 출처: Mezha.net/news.liga.net). 09-12·09-13·09-28·09-29 로그에 이어 주간 대규모 공습이 5일 연속 확인됨. 특히 이번 주간 공습은 제트추진 드론 비중이 174/285(약 61%)로 이 로그에 기록된 수치 중 가장 높아, 제트추진 게란 계열의 운용 비중이 급격히 확대되는 추세를 시사 — 09-25 로그(요격체계 생산가속화 지시)·cuas_tech 09-30 로그(JetKiller 등 신형 요격체계 확인)와 맥락이 연결됨."
+      },
+      {
+        "date": "2026-10-01",
+        "attacks_total": 107,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4169850-ukrainian-air-defense-neutralizes-87-of-107-russian-drones-launched-overnight.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4169850-ukrainian-air-defense-neutralizes-87-of-107-russian-drones-launched-overnight.html",
+        "by_type": {},
+        "launch_areas": ["Oryol", "Millerovo", "Bryansk", "Shatalovo", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": ["Kyiv", "Mykolaiv"],
+        "intercepted": 87,
+        "intercept_rate": 0.813,
+        "sources": ["https://www.ukrinform.net/rubric-ato/4169850-ukrainian-air-defense-neutralizes-87-of-107-russian-drones-launched-overnight.html", "https://en.interfax.com.ua/news/general/1212602.html", "https://unn.ua/en/news/russia-attacked-ukraine-with-107-drones-how-many-were-neutralized-by-air-defenses", "https://www.ukrinform.net/rubric-ato/4169855-man-killed-in-russian-drone-attack-on-mykolaiv-region-this-morning.html"],
+        "note": "2026-09-30 18:00~10-01 08:00 시점 야간 공격 기준. Shahed형 공격드론(107기 중 63기가 제트추진형으로 보도)·Gerbera·Parodiya 기만기 등 107기 중 87기 요격·제압(요격률 약 0.813). 발사방향은 오룔·밀레로보·브랸스크·샤탈로보(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 직격 11개 지점, 잔해 낙하 4개 지점. 미콜라이우주 베스니아네 공동체에서 샤헤드형 드론 공격으로 50세 남성 1명 사망·트랙터 파손. 키이우에서는 학교 건물에 드론이 명중했으나 탄두 불발로 인명피해 없음(대피소 대피 중이던 학생·교직원 전원 무사). 기종별 세부 수치 미확인 — by_type 비움. [특이사항] 같은 날(10-01) 06:30~18:00 주간 시간대에 별도의 드론 공습 발생: 공격드론 97기 발사, 78기 요격·제압(출처: Ukrinform) — 이 주간 공습 수치는 야간 정례 집계(107/87)와는 별도이며 위 attacks_total/intercepted에는 미포함(합산 보도 출처 없어 임의 합산하지 않음). 이 주간 공습 중 키이우 남부교(Southern Bridge) 교각 인근에 드론 2기가 명중해 동서를 잇는 지하철 핵심 구간 운행에 지장이 발생했고, 페초르스크구 파르코비 국제전시센터 소재 데이터센터가 직격으로 가동 중단되는 피해가 발생(Kyiv Independent 보도)."
       }
     ],
-    "monthly": []
+    "monthly": [
+      { "month": "2026-09", "attacks_total": 5259, "intercepted_total": 4406, "intercept_rate": 0.838, "note": "2026-09-05~09-30 daily 데이터 기준 합산(09-01~09-04 미수집, 이 기간은 합계에서 제외됨)" }
+    ]
   },
   "cuas_tech": {
     "log": [
@@ -913,6 +928,24 @@
         "source": "https://united24media.com/war-in-ukraine/russias-geran-5-is-jet-powered-ukraine-built-p1-sun-jetkiller-to-hunt-it-23001",
         "source_name": "UNITED24 Media / Ukrinform / Militarnyi (SkyFall사 확인)",
         "significance": "기존 08-21/08-29/09-02 로그에서 익명으로만 존재가 확인됐던 JetKiller의 개발사(SkyFall)·정식 명칭(P1-SUN)·구체 제원이 처음으로 공식 공개됨 — 아울러 '전 세계 어디서든 원격조종 가능'이라는 신규 운용 개념이 확인되어, 국방부(Alexa Spatium)·Wild Hornets(STING S)·QWI(SPYS)·Vluchnyk(Zorelit v5)에 이어 제트추진 요격체계 개발 경쟁 구도에 참여한 또 다른 확인된 업체·기종 사례로 등재"
+      },
+      {
+        "date": "2026-09-30",
+        "system": "Mangal(Phantom Defence)",
+        "event_type": "신규 시험",
+        "detail": "우크라이나 방산업체 Phantom Defence가 리비우 IT Arena 2026(9/30)에서 신형 모듈형 FPV 드론 요격체계 'Mangal'을 최초 공개. 발사 시 추(싱커)가 달린 그물이 펼쳐지며 접근하는 FPV 드론을 물리적으로 포획·격추하는 방식(충돌/폭발형이 아닌 net-capture 방식). 모듈당 6발 장전, 카메라 2대 탑재 및 자동표적탐지(autodetect) 기능 지원, 거치형(검문소·참호·시설 방어)과 차량 탑재형 모두 가능. 예상 가격은 대당 약 12만 흐리브냐(약 2,900달러)부터, 몇 개월 내 정식 양산 출시 예정(2026-09-30 기준 시제품 단계).",
+        "source": "https://militarnyi.com/en/news/ukraine-develops-mangal-modular-fpv-drone-interceptor-system/",
+        "source_name": "Militarnyi / Euromaidan Press / dev.ua",
+        "significance": "기존 로그의 제트추진 게란 대응 고속 요격드론(STING S/SPYS/Zorelit v5 등, 충돌·폭발형)과 달리, 저가·근거리 FPV 드론을 그물로 포획하는 비폭발성 요격 방식의 신규 모듈형 체계 — 최전선 검문소·참호 등 지점방어용 저비용 대FPV 요격수단의 다변화 사례"
+      },
+      {
+        "date": "2026-09-30",
+        "system": "P1-SUN(SkyFall) / Bullet(General Cherry) 수출·양산 확대",
+        "event_type": "체계 구축",
+        "detail": "영국 런던 ExCeL에서 열린 DroneX 2026(9/29~30) 전시회에서 우크라이나 요격드론 업체들의 전시 규모가 가장 크고 주목받았다고 보도됨. SkyFall의 3D프린팅 기반 요격드론 'P1-SUN'(대당 약 1,000달러, 최고속도 300km/h 이상)은 월 최대 5만 기 생산 능력을 갖췄다고 공개. General Cherry의 'Bullet' 요격드론은 우크라이나·유럽·미국에 걸친 분산 생산체계 구축을 추진 중이며, 두 업체 모두 서방 국가向 수출을 적극 확대하고 있는 것으로 확인됨.",
+        "source": "https://www.unmannedairspace.info/counter-uas-systems-and-policies/counter-uas-technology-at-dronex-ukraine-shines-and-china-surprises/",
+        "source_name": "Unmanned Airspace",
+        "significance": "기존 09-25 로그(젤렌스키의 요격체계 생산 가속화 지시, 67개 기업 개발 중)에 이어, 선도 업체(SkyFall/General Cherry)의 생산능력·공급망이 우크라이나 자국 수요를 넘어 서방 수출·분산생산(현지생산) 단계로 구체화되고 있음을 국제 전시회를 통해 확인 — 요격드론 산업이 전시 양산에서 평시 수출산업으로 전환되는 조짐을 보여주는 사례"
       }
     ]
   },
