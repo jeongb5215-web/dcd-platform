@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-02T22:16:39Z",
+    "last_daily_run": "2026-10-03T22:21:54Z",
     "last_weekly_run": "2026-09-27T22:22:02Z",
     "schema_version": 1
   },
@@ -182,6 +182,30 @@
         "confidence": "중간",
         "status": "확인됨",
         "note": "기존 baseline에 없던 완전히 새로운 탄두 유형 — 그동안 보고된 Geran 계열 탄두(고폭/열압력, 09-30 로그 이전까지 baseline 참고)와 달리 발전·송전 인프라(철탑)·교량 등 '구조물 절단'에 특화된 전용 탄두라는 점에서 전술적 전환점. 구체적으로 어느 Geran 변종(4 또는 5)에 탑재됐는지는 출처에 명시되지 않아 baseline에는 미반영, 로그에만 기록. 우크라이나측 공식(공군/HUR) 확인이 아닌 대통령 자문관 개인 발표 기반이라 신뢰도 '중간'으로 표시, 추가 교차검증 필요"
+      },
+      {
+        "date": "2026-10-02",
+        "variant": "Geran-4",
+        "field": "range_km / speed_kmh",
+        "old_value": "사거리 450km(2026-08-02, 낮음) / 속도 최대 500km/h(기동시 300~400) — 참고로 08-28 로그에서는 OSINT 분석 기반 실측 비행거리 약 960km도 별도 보고된 바 있음",
+        "new_value": "2026-10-02 러시아 Center-2026 군사훈련(첼랴빈스크, 10/2 종료) 현장에서 알라부가 특별경제구역(SEZ) 부총괄 일다르 타주트디노프(Ildar Tazutdinov)가 푸틴 대통령에게 직접 보고한 공식 제원: 최고속도 약 350km/h, 탄두 50kg(기존과 일치), 사거리 750~800km — 기존 baseline(450km) 및 08-28 로그의 실측 추정치(960km)와 모두 다른 세 번째 수치",
+        "new_source": "https://united24media.com/war-in-ukraine/putin-hugged-the-man-behind-russias-jet-powered-shahed-program-osint-identifies-him-23086",
+        "new_source_name": "United24 Media (우크라이나 OSINT 분석 인용)",
+        "confidence": "중간",
+        "status": "검증 필요",
+        "note": "러시아측이 대규모 군사훈련에서 최고 통수권자에게 공개 과시하기 위해 발표한 공식 제원으로, 선전 목적의 과장·축소 가능성을 배제할 수 없음. baseline.range_km(450km)·speed_kmh(최대 500km/h)와 상충하며 08-28 로그의 OSINT 실측 비행거리(960km)와도 상이해 세 수치가 모두 다름 — 어느 쪽도 단정하지 않고 baseline.value는 유지, 추가 교차검증 필요"
+      },
+      {
+        "date": "2026-10-02",
+        "variant": "Geran-5",
+        "field": "speed_kmh / range_km",
+        "old_value": "속도 600km/h, 사거리 950km(2026-05-09 baseline, 중간)",
+        "new_value": "동일 Center-2026 발표에서 러시아측이 공개한 공식 제원: 최고속도 약 450km/h, 탄두 90kg(기존과 일치), 사거리 약 900km(기존 950km와 근접) — 속도는 baseline(600km/h) 대비 낮게 제시되어 상충",
+        "new_source": "https://united24media.com/war-in-ukraine/putin-hugged-the-man-behind-russias-jet-powered-shahed-program-osint-identifies-him-23086",
+        "new_source_name": "United24 Media (우크라이나 OSINT 분석 인용)",
+        "confidence": "중간",
+        "status": "검증 필요",
+        "note": "사거리(900km)는 baseline(950km)과 큰 차이 없으나 속도(450km/h)는 baseline(600km/h) 및 09-28 로그의 'K5' 고속 하위변종 보도와 상이 — 러시아 공식 발표가 오히려 보수적인 수치를 제시한 점이 특이. Center-2026 훈련 현장 과시용 발표라는 맥락을 고려해 baseline.value는 유지, 추가 교차검증 필요"
       }
     ]
   },
@@ -550,6 +574,19 @@
         "intercept_rate": 0.815,
         "sources": ["https://mezha.net/eng/news/eb877203_russia_attacked_ukraine/", "https://english.nv.ua/nation/october-2-overnight-raid-russian-forces-launch-drone-attack-against-ukraine-50646452.html", "https://censor.net/en/news/4026294/shahed-drone-attack-on-october-2-how-did-air-defense-perform", "https://112.ua/en/rosijska-armia-atakuvala-ukrainu-108-dronami-2-zovtna-zbito-88-bezpilotnikiv-188756", "https://unn.ua/en/news/russia-attacked-ukraine-with-108-drones-how-many-were-destroyed"],
         "note": "2026-10-01 18:00~10-02 08:00 시점 야간 공격 기준(08:00 시점 공격이 여전히 진행 중이었다고 보도되어 88/108은 잠정치일 가능성 있음). Shahed형 공격드론(108기 중 47기가 제트추진형으로 보도)·Gerbera·Parodiya 기만기 등 108기 중 88기 요격·제압(요격률 약 0.815). 발사방향은 브랸스크·프리모르스코-아흐타르스크(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 직격 11개 지점, 잔해 낙하 5개 지점. 키이우 다르니치키구 25층 아파트가 드론에 피격돼 1명 사망·2명 부상, 남부교(Southern Bridge)가 재차 드론에 피격되며 핵심 교통축 운행 차질 지속(09-30/10-01 로그에 이어 반복 피격). 기종별 세부 수치 미확인 — by_type 비움."
+      },
+      {
+        "date": "2026-10-03",
+        "attacks_total": 157,
+        "attacks_total_source": "https://en.interfax.com.ua/news/general/1213890.html",
+        "intercepted_source": "https://en.interfax.com.ua/news/general/1213890.html",
+        "by_type": {},
+        "launch_areas": ["Bryansk", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": ["Kyiv"],
+        "intercepted": 131,
+        "intercept_rate": 0.834,
+        "sources": ["https://en.interfax.com.ua/news/general/1213890.html", "https://www.ukrinform.net/rubric-ato/4170631-air-defense-intercepts-131-of-157-drones-used-by-russia-to-attack-ukraine-overnight.html", "https://unn.ua/en/news/russia-attacked-ukraine-with-157-drones-how-many-were-destroyed-and-what-is-known-about-the-strikes", "https://news.liga.net/en/war/news/the-ministry-of-defense-confirmed-a-strike-on-a-launch-site-for-jet-powered-shahed-drones-in-russias-oryol-region"],
+        "note": "2026-10-02 18:00~10-03 09:00 시점 야간 공격 기준. Shahed(제트추진형 포함)·Gerbera·Parodiya 기만기 등 드론 157기 중 131기 요격·제압(요격률 약 0.834). 발사방향은 브랸스크·프리모르스코-아흐타르스크(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 직격 12개 지점, 잔해 낙하 5개 지점. 키이우가 주요 표적(최근 1주일간 에너지·통신·도로·철도 인프라 지속 공격 보도). 별도로 오데사주에 Banderol(반데롤)형 배회형 자탄 공격이 추가로 진행 중이었다고 보도(이 수치는 attacks_total에 미포함). 우크라이나 국방부는 같은 날 밤 러시아 오룔주 Tsymbulova 제트추진 샤헤드 발사기지 및 도네츠크 점령지 내 샤헤드 발사거점 3곳에 대한 대규모 타격을 공식 확인·영상 공개 — 공격원점(발사기지) 자체를 겨냥한 우크라이나측 역타격 사례로 특이사항 기록. 기종별 세부 수치 미확인 — by_type 비움."
       }
     ],
     "monthly": [
@@ -980,6 +1017,15 @@
         "source": "https://english.nv.ua/nation/spain-belgium-poland-send-ukraine-f-16-ammo-50646390.html",
         "source_name": "NV(New Voice of Ukraine) / Euromaidan Press / Interfax-Ukraine (외무장관 안드리 시비하 발표 인용)",
         "significance": "제트추진 게란 대응 전용 요격드론 계보(STING S/SPYS/Zorelit v5/JetKiller 등)의 요격률 한계(09-29 로그)에 대한 별도 보완책으로, 전용 요격드론이 아닌 기존 유인 전투기(F-16) 기총사격이 서방의 실질적 탄약 지원을 통해 본격적인 대응수단으로 확보되기 시작한 사례 — C-UAS 대응이 신형 요격드론 개발 한 축에서 기존 유인기 자산 활용으로도 확장되고 있음을 보여주는 전환점"
+      },
+      {
+        "date": "2026-10-02",
+        "system": "요격드론(제트추진 대응) 생산·요격률",
+        "event_type": "체계 구축",
+        "detail": "젤렌스키 대통령이 Financial Times 인터뷰(10/2 공개)에서 현재 러시아가 발사하는 공격드론의 약 절반이 제트엔진을 탑재하고 있으며, 제트추진 드론에 대한 우크라이나측 요격률은 약 57%(기존 피스톤계열 드론 요격률 85~90% 대비 크게 낮음)라고 처음으로 구체적 수치를 공개. 현재 5종의 신형 고속 요격드론을 시험 중이며, 이 중 1개 모델은 10월 말까지 400기 양산을 목표로 하고 나머지 4종은 여전히 시험단계라고 발표. 요격드론용 엔진의 상당수를 수입에 의존하고 있어 자체 생산량 부족이 개발·양산의 주요 제약요인이라고 언급",
+        "source": "https://kyivindependent.com/ukraine-aims-to-produce-up-to-400-interceptor-drones-as-russian-jet-powered-drone-use-grows-zelensky-says/",
+        "source_name": "Kyiv Independent / Financial Times (젤렌스키 대통령 인터뷰 인용)",
+        "significance": "기존 09-29 로그에서 '제트추진 계열 요격률이 피스톤계열(90%대) 대비 절반을 약간 웃도는 수준'이라는 정성적 평가로만 보고됐던 내용이, 대통령 본인의 공식 발언을 통해 구체적 수치(제트추진 요격률 약 57% vs 피스톤계열 85~90%)로 처음 확인됨. 아울러 09-25 로그(생산 가속화 지시)의 후속조치로 특정 모델의 10월 말 400기 양산 목표 및 엔진 수입 의존이라는 구체적 제약요인이 추가로 공개되어 요격체계 전력화의 현황과 한계를 함께 보여주는 업데이트"
       }
     ]
   },
