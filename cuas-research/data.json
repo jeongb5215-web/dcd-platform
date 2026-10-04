@@ -1,7 +1,7 @@
 {
   "meta": {
     "last_daily_run": "2026-10-04T22:23:56Z",
-    "last_weekly_run": "2026-09-27T22:22:02Z",
+    "last_weekly_run": "2026-10-04T22:31:42Z",
     "schema_version": 1
   },
   "geran_drones": {
@@ -1083,6 +1083,33 @@
         "source": "https://dronexl.co/2026/10/04/germany-merz-kyiv-interceptor-drones-30-percent/",
         "source_name": "DroneXL / Kyiv Independent (독일 정부·우크라이나 국방부 발표 인용)",
         "significance": "'Bars'라는 신규 요격드론 기종이 처음 로그에 등재되며, 서방(독일) 정부 자금이 특정 업체(Quantum Systems)를 통해 우크라이나 현지 요격드론 대량생산에 직접 투입되는 구조가 공식화됨 — 기존 우크라이나 자체 산업(SkyFall/General Cherry/Wild Hornets 등) 중심에서 서방 정부-업체 합작 양산으로 공급망이 확장되는 전환점"
+      },
+      {
+        "date": "2026-03-09",
+        "system": "델타체계",
+        "event_type": "기술 개선",
+        "detail": "실시간 전장 영상분석 모듈 'Vezha'와 AI 기반 적 장비 자동탐지 플랫폼 'Avengers'를 포함한 DELTA 전체 체계가 국제 전문기업의 2개월간 독립 사이버보안 평가(정보보호 요구사항 160개 이상 점검)를 통과. 전군 확산(스케일링) 이후에도 보안 기준을 그대로 유지하고 있음을 제3자가 확인.",
+        "source": "https://mod.gov.ua/en/news/independent-assessment-confirms-delta-remains-compliant-with-all-cybersecurity-standards-after-scaling",
+        "source_name": "우크라이나 국방부(mod.gov.ua) / Armyinform",
+        "significance": "델타체계가 영상분석(Vezha)·AI 표적탐지(Avengers) 등 복합 모듈로 계속 확장되는 와중에도 국제 기준의 보안성을 유지하고 있음을 독립 평가로 검증 — 나토 등 동맹국과의 수출·연동 논의에 신뢰성 기반을 제공"
+      },
+      {
+        "date": "2026-03-10",
+        "system": "델타체계",
+        "event_type": "기술 개선",
+        "detail": "DELTA Mobile 앱에 신규 모듈 '레이더(Radar)'가 추가되어, 사용자가 지정한 구역 내 적 공중위협(드론·미사일 등)의 이동을 지도 위에 실시간 표시하고 음성·오디오 경보를 제공. 통신이 불안정한 환경에서도 작동하도록 설계되어 일선 병력이 여러 서비스를 오가지 않고 한 화면에서 공중위협을 파악 가능.",
+        "source": "https://united24media.com/latest-news/ukraine-launches-out-delta-mobile-feature-showing-air-threat-movement-in-real-time-16753",
+        "source_name": "UNITED24 Media / 우크라이나 국방부",
+        "significance": "델타체계가 지휘소 중심 상황인식을 넘어 개별 병사 단말기에서도 공중위협을 실시간 경보하는 C-UAS 조기경보 기능으로 확장되고 있음을 보여주는 사례"
+      },
+      {
+        "date": "2026-04-22",
+        "system": "Merops/Surveyor(Perennial Autonomy)",
+        "event_type": "체계 구축",
+        "detail": "미국 Perennial Autonomy(구 Project Eagle)가 개발한 트럭 탑재형 저가 요격드론체계 'Merops'(요격체 'Surveyor', 최고속도 약 282km/h, 대당 약 1만5천 달러)가 우크라이나 전장에서 러시아 샤헤드급 드론 1,000기 이상을 격추(약 2억 달러 상당 피해, 교전비 13:1 이상)한 실적을 바탕으로 나토 동부전선 국가들로 빠르게 확산 중. 폴란드(2025-11-18 데바 사격장 실사격 시범)에 이어 루마니아·덴마크가 도입을 추진했고, 리투아니아 정부는 2026-04-22 열적외선 시커 24기·RF 시커 24기로 구성된 Merops AS-3 Surveyor 48기의 표준 조달절차를 생략한 시범 긴급구매를 승인.",
+        "source": "https://militarnyi.com/en/news/lithuania-purchases-merops-tested-ukraine/",
+        "source_name": "Militarnyi / 리투아니아 국방부",
+        "significance": "우크라이나 전장에서 실전 검증된 저가 요격드론체계가 나토 동부전선 다수 국가(폴란드·루마니아·덴마크·리투아니아)로 표준조달 절차를 생략한 긴급도입 형태로 빠르게 확산되고 있음을 보여주는, 지역별 다층 방어체계 구축의 구체적 사례"
       }
     ]
   },
@@ -1267,6 +1294,36 @@
         "summary": "SCOUT(Spatial Computation for Optimized UAV Tracking)는 외부 센싱 인프라나 지상국 연산 없이 요격드론 자체 탑재 컴퓨팅만으로 시각 탐지-표적연계-추적필터링-제어명령 생성을 수행하는 ROS 통합 프레임워크. TensorRT 가속 드론탐지와 ByteTrack 기반 추적연계, 경량 트랙유지 상태머신을 결합. 실비행 시험에서 실시간 탑재 탐지속도로 92.2%의 프레임에서 유효 표적탐지를 유지.",
         "link": "https://arxiv.org/abs/2609.21005",
         "significance": "지상국·외부 센서 의존 없이 요격드론 자체 탑재 연산만으로 실시간 시각추적·폐루프 제어를 구현·실비행 검증한 사례 — 우크라이나 로그의 컴퓨터비전 '라스트마일 유도'(2026-06-25) 개념을 학계에서 독립적으로 재현·검증한 결과로 참고 가치"
+      },
+      {
+        "date": "2026-01",
+        "title": "Perception-to-Pursuit: Track-Centric Temporal Reasoning for Open-World Drone Detection and Autonomous Chasing",
+        "authors": "Venkatakrishna Reddy Oruganti (Sithara Inc.)",
+        "venue": "arXiv",
+        "topic": "자율요격",
+        "summary": "드론 탐지를 추적·추격(pursuit)까지 연결하는 'track-centric' 프레임워크 P2P를 제안. 드론의 속도·가속도·크기·움직임의 매끄러움을 포착하는 8차원 토큰으로 표현하고 12프레임 causal transformer로 미래 거동을 예측. 기존 추적 기법이 예측 정확도만 최적화해 물리적으로 요격 불가능한 궤적을 99.9%의 경우 만들어낸다는 문제를 지적하고, 요격 가능성을 직접 측정하는 'Intercept Success Rate(ISR)' 지표를 새로 제시. Anti-UAV-RGBT 데이터셋(실제 드론 시퀀스 226개)에서 궤적예측 오차 77% 개선, ISR 기준 597배 개선을 달성.",
+        "link": "https://arxiv.org/abs/2601.19318",
+        "significance": "기존 드론 추적 연구가 '얼마나 정확히 예측하는가'에만 집중했던 것과 달리, '요격기가 실제로 잡을 수 있는 궤적인가'를 직접 측정하는 지표를 제시 — 탐지와 자율요격 경로계획 사이의 간극을 메우려는 시도"
+      },
+      {
+        "date": "2026-06",
+        "title": "Planar-Sector LOS Guidance for Interception of Agile Targets with Lifting-Wing Quadcopters",
+        "authors": "Liu Linkai, Yang Kun, Zou Han, Min Chen, Lv Shuli, Wang Shuai, Quan Quan",
+        "venue": "arXiv / IEEE ICRA 2026 (Field and Service Robotics 부문 최우수논문상 수상)",
+        "topic": "자율요격",
+        "summary": "스트랩다운 단안(monocular) 카메라만 장착한 리프팅윙 쿼드콥터로 민첩한 표적을 요격하기 위한 'Planar-Sector LOS(PS-LOS)' 유도 기법을 제안. 영상오차 중 횡방향은 엄격히 제한하고 종방향은 안전한 시야각(FOV) 여유 내에서 완화하는 방식으로 지속적인 시각 추적을 유지하면서 요격 성공률을 높임. 최대 138m 거리에서 지속적 시각 추적을 유지한 채 실제 요격에 성공.",
+        "link": "https://arxiv.org/abs/2606.10639",
+        "significance": "GPS·레이더 없이 단일 카메라만으로 민첩한 소형 표적을 요격하는 저비용 유도 기법을 제시 — IEEE ICRA 2026 최우수논문상 수상으로 학계에서 기술적 완성도를 인정받음"
+      },
+      {
+        "date": "2026-06",
+        "title": "DroneDAR: Long-Range Drone Distance Estimation Using Monocular Vision and Bounding-Box Features",
+        "authors": "Knut Peterson, Zaid Mayers, David Han",
+        "venue": "IEEE AVSS 2026 (채택)",
+        "topic": "AI Vision",
+        "summary": "단일 카메라 영상 크롭과 바운딩박스 기하 정보를 결합해 장거리에서 소형 드론까지의 거리를 추정하는 모델 'DroneDAR'을 제안. CNN 백본과 바운딩박스 특징을 결합하는 경량 게이팅 메커니즘을 사용하며, 백본 용량·크롭 해상도·회귀 손실함수가 거리 구간별 성능에 미치는 영향과 장거리에서의 실패 유형(바운딩박스 잡음, 질감 손실에 취약)을 분석.",
+        "link": "https://arxiv.org/abs/2606.07756",
+        "significance": "탐지(detection)에서 한 단계 더 나아가 단일 카메라만으로 표적까지의 거리까지 추정, 요격체계의 사격통제 입력으로 활용할 수 있는 실용적 비전 기법을 제시"
       }
     ]
   }
