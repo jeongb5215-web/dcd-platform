@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-03T22:21:54Z",
+    "last_daily_run": "2026-10-04T22:23:56Z",
     "last_weekly_run": "2026-09-27T22:22:02Z",
     "schema_version": 1
   },
@@ -206,6 +206,30 @@
         "confidence": "중간",
         "status": "검증 필요",
         "note": "사거리(900km)는 baseline(950km)과 큰 차이 없으나 속도(450km/h)는 baseline(600km/h) 및 09-28 로그의 'K5' 고속 하위변종 보도와 상이 — 러시아 공식 발표가 오히려 보수적인 수치를 제시한 점이 특이. Center-2026 훈련 현장 과시용 발표라는 맥락을 고려해 baseline.value는 유지, 추가 교차검증 필요"
+      },
+      {
+        "date": "2026-09-29",
+        "variant": "Geran-4",
+        "field": "altitude_km / guidance",
+        "old_value": null,
+        "new_value": "The War Zone(TWZ) 분석에 따르면 Geran-4는 터보젯 엔진 덕분에 기존 피스톤 계열(Shahed-136/Geran-2, 통상 약 4km 비행고도) 대비 두 배인 최대 약 8km 고도로 비행 가능 — 저가 요격드론(프로펠러 기반)의 상승한도·속도를 벗어나는 효과. 아울러 기존 Kometa-M8 위성항법 안테나에 더해 신형 'Kometa-M12'(3x4 배열, 12소자) 재밍저항(CRPA) 안테나가 혼용 장착된 것으로 확인됨",
+        "new_source": "https://www.twz.com/news-features/russias-jet-powered-shahed-drones-are-quickly-evolving-as-ukraine-scrambles-to-blunt-their-damage",
+        "new_source_name": "The War Zone (TWZ)",
+        "confidence": "중간",
+        "status": "확인됨",
+        "note": "기존 baseline에 운용고도 수치가 없어 신규 필드로 추가 기록(baseline 미반영, 로그만). 고고도 비행이 저비용 프로펠러형 요격드론의 요격률을 떨어뜨리는 핵심 요인으로 분석됨(09-29/10-01/10-02 cuas_tech 로그의 '제트추진 계열 요격률 저하' 맥락과 연결). Kometa-M12 안테나(12소자 3x4 배열)는 09-28 로그(DroneXL/RFE-RL Schemes, '16채널 CRPA')와 소자 수 표기가 상이해 동일 부품의 다른 표기인지 별도 개량형인지는 불명확 — 교차검증 필요"
+      },
+      {
+        "date": "2026-10-01",
+        "variant": "Geran-4",
+        "field": "warhead",
+        "old_value": "40kg 주탄두 + 4개 추가 파괴모듈(절단용), 변종 미확정 (2026-09-30 로그, Kyiv Independent/Beskrestnov)",
+        "new_value": "Militarnyi(DIU 분석 인용) 및 Mezha.net(Beskrestnov 추가 설명)이 09-30 로그의 송전탑·교량 절단용 신형 탄두를 'Geran-4' 탑재로 특정·확인. 탄두는 40kg 주탄두 주위에 리볼버 실린더형으로 배치된 선형성형작약(linear shaped charge) 절단모듈 4개로 구성되며, 기수에 돌출된 금속 막대('whiskers')가 전선 등 얇은 표적에 접촉 시 전기회로를 닫아 격발시키는 기계식 접촉신관 역할을 하는 것으로 구체적 작동방식이 확인됨",
+        "new_source": "https://militarnyi.com/en/news/geran-4-fitted-with-a-new-shaped-charge-warhead-for-severing-power-transmission-lines/",
+        "new_source_name": "Militarnyi (DIU 분석 인용) / Mezha.net (Beskrestnov 설명 인용)",
+        "confidence": "중간",
+        "status": "확인됨",
+        "note": "09-30 로그에서 변종 미확정이던 신형 절단탄두가 이번 보도로 Geran-4 탑재로 특정되고, 'whisker'형 기계식 접촉신관이라는 구체적 격발 메커니즘이 추가로 확인됨 — 동일 사건의 반복 보도가 아닌 변종 확정+작동원리 규명이라는 실질적 정보 추가로 판단해 로그에 기록. baseline.warhead_kg 값(기존 50/90kg 2종)과는 별도 특수탄두로 간주, baseline 미반영"
       }
     ]
   },
@@ -595,6 +619,20 @@
         "intercept_rate": 0.834,
         "sources": ["https://en.interfax.com.ua/news/general/1213890.html", "https://www.ukrinform.net/rubric-ato/4170631-air-defense-intercepts-131-of-157-drones-used-by-russia-to-attack-ukraine-overnight.html", "https://unn.ua/en/news/russia-attacked-ukraine-with-157-drones-how-many-were-destroyed-and-what-is-known-about-the-strikes", "https://news.liga.net/en/war/news/the-ministry-of-defense-confirmed-a-strike-on-a-launch-site-for-jet-powered-shahed-drones-in-russias-oryol-region"],
         "note": "2026-10-02 18:00~10-03 09:00 시점 야간 공격 기준. Shahed(제트추진형 포함)·Gerbera·Parodiya 기만기 등 드론 157기 중 131기 요격·제압(요격률 약 0.834). 발사방향은 브랸스크·프리모르스코-아흐타르스크(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 직격 12개 지점, 잔해 낙하 5개 지점. 키이우가 주요 표적(최근 1주일간 에너지·통신·도로·철도 인프라 지속 공격 보도). 별도로 오데사주에 Banderol(반데롤)형 배회형 자탄 공격이 추가로 진행 중이었다고 보도(이 수치는 attacks_total에 미포함). 우크라이나 국방부는 같은 날 밤 러시아 오룔주 Tsymbulova 제트추진 샤헤드 발사기지 및 도네츠크 점령지 내 샤헤드 발사거점 3곳에 대한 대규모 타격을 공식 확인·영상 공개 — 공격원점(발사기지) 자체를 겨냥한 우크라이나측 역타격 사례로 특이사항 기록. 기종별 세부 수치 미확인 — by_type 비움."
+      },
+      {
+        "date": "2026-10-04",
+        "attacks_total": 135,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4170824-air-defense-intercepts-123-drones-two-banderols-used-by-russia-to-attack-ukraine-overnight.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4170824-air-defense-intercepts-123-drones-two-banderols-used-by-russia-to-attack-ukraine-overnight.html",
+        "by_type": {},
+        "composition": { "jet_propelled": { "count": 52, "source": "https://ua.news/en/war-vs-rf/rosiiani-za-nich-atakuvali-ukrayinu-135-dronami-ie-vluchannia-na-piati-lokatsiiakh" } },
+        "launch_areas": ["Oryol", "Kursk", "Millerovo", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": ["Kyiv"],
+        "intercepted": 125,
+        "intercept_rate": 0.926,
+        "sources": ["https://www.ukrinform.net/rubric-ato/4170824-air-defense-intercepts-123-drones-two-banderols-used-by-russia-to-attack-ukraine-overnight.html", "https://www.pravda.com.ua/eng/news/2026/10/04/8056364/", "https://unn.ua/en/news/the-russian-federation-attacked-ukraine-with-135-drones-the-number-of-downed-targets-is-increasing-with-hits-recorded-at-5-locations", "https://ua.news/en/war-vs-rf/rosiiani-za-nich-atakuvali-ukrayinu-135-dronami-ie-vluchannia-na-piati-lokatsiiakh", "https://112.ua/en/rosia-atakuvala-ukrainu-135-bpla-za-nic-3-4-zovtna-zbito-125-droniv-e-zertvi-sered-civilnih-189121", "https://mezha.net/eng/news/cf27550b_ukraine_neutralizes_123/"],
+        "note": "2026-10-03 18:00~10-04 08:30 시점 야간 공격 기준. 이번 발표는 기존 관례(미사일/반데롤을 드론과 별도 집계)와 달리 Banderol/Dan-T 2기를 attacks_total·intercepted에 포함해 집계(135기 중 123기 드론(Shahed/Gerbera 등)+2기 Banderol/Dan-T = 125기 요격, 요격률 약 0.926) — 이에 composition.missiles는 별도로 채우지 않음(이중집계 방지). 135기 중 52기가 제트추진형으로 명시적으로 보도됨(jet_propelled에 기록). 발사방향은 오룔·쿠르스크·밀레로보·프리모르스코-아흐타르스크(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 직격 5개 지점, 잔해 낙하 5개 지점(이 중 키이우 드니프로구 2개 지점 포함). 키이우가 밤사이 및 10/4 아침까지 반복 피격, 데스니얀스키구 비주거 건물 화재 발생. 기종별 세부 수치 미확인(제트추진 합계 외) — by_type 비움."
       }
     ],
     "monthly": [
@@ -1036,6 +1074,15 @@
         "source": "https://kyivindependent.com/ukraine-aims-to-produce-up-to-400-interceptor-drones-as-russian-jet-powered-drone-use-grows-zelensky-says/",
         "source_name": "Kyiv Independent / Financial Times (젤렌스키 대통령 인터뷰 인용)",
         "significance": "기존 09-29 로그에서 '제트추진 계열 요격률이 피스톤계열(90%대) 대비 절반을 약간 웃도는 수준'이라는 정성적 평가로만 보고됐던 내용이, 대통령 본인의 공식 발언을 통해 구체적 수치(제트추진 요격률 약 57% vs 피스톤계열 85~90%)로 처음 확인됨. 아울러 09-25 로그(생산 가속화 지시)의 후속조치로 특정 모델의 10월 말 400기 양산 목표 및 엔진 수입 의존이라는 구체적 제약요인이 추가로 공개되어 요격체계 전력화의 현황과 한계를 함께 보여주는 업데이트"
+      },
+      {
+        "date": "2026-10-04",
+        "system": "Bars / Quantum Systems-우크라이나 요격드론 양산",
+        "event_type": "체계 구축",
+        "detail": "독일 총리 프리드리히 메르츠가 2026-10-04 키이우를 방문해 13억 유로(약 14.6억 달러) 규모의 신규 지원 패키지를 발표, 이 중 10억 유로는 군사지원으로 제트추진 드론 대응 요격드론 양산 자금 지원이 핵심 항목. 독일-우크라이나 합작 Quantum Systems(뮌헨 소재)가 독일 정부 자금 지원을 받아 우크라이나 현지에서 수만 대 규모 요격드론을 양산하는 계약을 우크라이나 국방부와 체결. 아울러 현재 우크라이나 요격드론 중 신규 모델 'Bars'가 제트추진 표적 대비 약 30% 요격률로 가장 우수한 성과를 보이고 있다고 보도됨(기존 09-29/10-02 로그의 제트추진 계열 전체 요격률 약 57%와는 별도의 개별 기종 성과 수치)",
+        "source": "https://dronexl.co/2026/10/04/germany-merz-kyiv-interceptor-drones-30-percent/",
+        "source_name": "DroneXL / Kyiv Independent (독일 정부·우크라이나 국방부 발표 인용)",
+        "significance": "'Bars'라는 신규 요격드론 기종이 처음 로그에 등재되며, 서방(독일) 정부 자금이 특정 업체(Quantum Systems)를 통해 우크라이나 현지 요격드론 대량생산에 직접 투입되는 구조가 공식화됨 — 기존 우크라이나 자체 산업(SkyFall/General Cherry/Wild Hornets 등) 중심에서 서방 정부-업체 합작 양산으로 공급망이 확장되는 전환점"
       }
     ]
   },
