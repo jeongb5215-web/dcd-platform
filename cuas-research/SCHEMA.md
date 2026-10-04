@@ -65,6 +65,12 @@
           "Geran-2": { "attacks": 80, "intercepted": 65, "source": "https://..." },
           "Lancet":  { "attacks": 30, "intercepted": 20, "source": "https://..." }
         },
+        // 실제로 거의 매일 보도되는, 현실적으로 얻을 수 있는 세부 수준의 구성 데이터.
+        // by_type(기종 완전 구분)은 거의 비어 있으므로, 이 필드가 월간 원형 그래프의 주 데이터 소스다.
+        "composition": {
+          "jet_propelled": { "count": 79, "source": "https://..." },   // "제트추진형 N기" 식으로 정확한 숫자가 보도된 경우만. "절반 정도"처럼 어림값뿐이면 생략
+          "missiles": { "count": 5, "intercepted": 5, "types": ["Iskander-M","Zircon"], "source": "https://..." } // 드론과 별도 집계되는 순항·탄도미사일. 발사량과 요격량이 둘 다 명확히 보도된 경우만 기록
+        },
         "launch_areas": ["Kursk", "Bryansk"],
         "target_areas": ["Kyiv", "Odesa"],
         "intercepted": 95,
@@ -72,9 +78,13 @@
         "sources": ["https://..."]
       }
     ],
-    // 월별 집계는 daily가 쌓이면 에이전트가 매월 초 자동 계산해 추가
+    // 월별 집계는 daily가 쌓이면 에이전트가 매월 초 자동 계산해 추가.
+    // composition은 그 달 daily 항목들의 jet_propelled.count / missiles.count·intercepted 합산치
+    // (값이 있는 날짜만 더하고, days_with_data로 몇 개의 날짜가 반영됐는지 함께 남긴다 — 전수조사가 아님을 명시)
     "monthly": [
-      { "month": "2026-08", "attacks_total": 3400, "intercepted_total": 2700, "intercept_rate": 0.79 }
+      { "month": "2026-08", "attacks_total": 3400, "intercepted_total": 2700, "intercept_rate": 0.79,
+        "composition": { "jet_propelled_total": 820, "jet_days_with_data": 10,
+                          "missiles_total": 42, "missiles_intercepted_total": 35, "missile_days_with_data": 6 } }
     ]
   },
 
@@ -89,7 +99,15 @@
      3. by_type 각 항목의 attacks/intercepted 값도 각자 source를 갖는다. 여러 기종이 같은 발표문
         하나에서 함께 나오면 동일 URL을 반복 사용해도 된다.
      4. by_type 합계가 attacks_total보다 작아도 정상이다(미상 물량 = attacks_total 그대로 신뢰).
-        by_type 합계가 attacks_total을 초과하면 상충으로 보고 note에 "검증 필요"로 남긴다. */
+        by_type 합계가 attacks_total을 초과하면 상충으로 보고 note에 "검증 필요"로 남긴다.
+     5. composition.jet_propelled는 "제트추진형 OO기"처럼 정확한 정수가 보도된 날에만 채운다.
+        "절반 정도", "다수"처럼 어림값만 있으면 필드 자체를 생략한다(0이나 추정치를 넣지 않는다).
+     6. composition.missiles는 그날 미사일(순항·탄도·대함 등)의 발사량과 요격량이 둘 다 명확한 숫자로
+        보도된 경우에만 채운다. 발사량은 모르고 요격량만 아는 등 한쪽이 불명확하면 생략한다.
+        missiles.count/intercepted는 attacks_total/intercepted에 합산하지 않는다(기존 관례 유지 — 드론과
+        미사일은 별개 집계). types에는 보도된 미사일 종류를 콤마 없이 배열로 나열한다.
+     7. jet_propelled/missiles 모두 "거의 매일 비어 있는 게 정상"이다 — 숫자가 분명하지 않은 날 억지로
+        채우지 않는다. 월간 집계의 *_days_with_data가 그 달의 실제 데이터 커버리지를 보여준다. */
 
   "cuas_tech": {
     "log": [

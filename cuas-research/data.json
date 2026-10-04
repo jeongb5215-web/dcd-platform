@@ -230,6 +230,7 @@
         "attacks_total_source": "https://unn.ua/en/news/russia-launched-108-attack-uavs-at-ukraine-air-defense-shot-down-88-targets",
         "intercepted_source": "https://unn.ua/en/news/russia-launched-108-attack-uavs-at-ukraine-air-defense-shot-down-88-targets",
         "by_type": {},
+        "composition": { "missiles": { "count": 6, "intercepted": 6, "types": ["S8000 Banderol"], "source": "https://www.ukrinform.net/rubric-ato/4161307-air-defense-neutralizes-82-russian-drones-six-banderol-missiles-overnight.html" } },
         "launch_areas": ["Millerovo", "Orel", "Kursk", "Donetsk(점령지)", "Hvardiyske/Crimea(점령지)"],
         "target_areas": [],
         "intercepted": 88,
@@ -243,6 +244,7 @@
         "attacks_total_source": "https://english.nv.ua/nation/russia-launches-record-810-drones-and-decoys-in-massive-attack-on-ukraine-50543009.html",
         "intercepted_source": "https://english.nv.ua/nation/russia-launches-record-810-drones-and-decoys-in-massive-attack-on-ukraine-50543009.html",
         "by_type": {},
+        "composition": { "missiles": { "count": 13, "intercepted": 4, "types": ["Iskander-K(순항)","Iskander-M/KN-23(탄도)"], "source": "https://english.nv.ua/nation/russia-launches-record-810-drones-and-decoys-in-massive-attack-on-ukraine-50543009.html" } },
         "launch_areas": ["Kursk", "Bryansk", "Millerovo", "Oryol", "Shatalovo", "Primorsko-Akhtarsk", "Hvardiyske/Crimea(점령지)", "Chauda/Crimea(점령지)"],
         "target_areas": ["Odesa", "Kyiv", "Dnipropetrovsk", "Poltava", "Zhytomyr", "Sumy", "Kharkiv"],
         "intercepted": 747,
@@ -449,6 +451,7 @@
         "date": "2026-09-23",
         "attacks_total": 161,
         "attacks_total_source": "https://www.pravda.com.ua/eng/news/2026/09/23/8054680/",
+        "composition": { "jet_propelled": { "count": 82, "source": "https://www.pravda.com.ua/eng/news/2026/09/23/8054680/" } },
         "intercepted_source": "https://www.pravda.com.ua/eng/news/2026/09/23/8054680/",
         "by_type": {},
         "launch_areas": ["Oryol", "Kursk", "Primorsko-Akhtarsk", "Millerovo", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
@@ -464,6 +467,7 @@
         "attacks_total_source": "https://mezha.net/eng/news/917c7e51_ukraine-s_air_defenses/",
         "intercepted_source": "https://www.ukrinform.net/rubric-ato/4167418-adf-neutralizes-four-zircon-missiles-three-ballistic-missiles-and-219-russian-uavs-used-to-attack-ukraine-overnight.html",
         "by_type": {},
+        "composition": { "missiles": { "count": 8, "intercepted": 8, "types": ["Zircon(대함)","이스칸데르 계열(탄도)","Banderol/Dan-T"], "source": "https://www.ukrinform.net/rubric-ato/4167418-adf-neutralizes-four-zircon-missiles-three-ballistic-missiles-and-219-russian-uavs-used-to-attack-ukraine-overnight.html" } },
         "launch_areas": ["Oryol", "Millerovo", "Shatalovo", "Kursk", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)", "Chauda/Crimea(점령지)", "Sea of Azov(해상)"],
         "target_areas": ["Odesa", "Kyiv"],
         "intercepted": 219,
@@ -477,6 +481,7 @@
         "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4167791-adf-down-267-out-of-295-drones-used-by-russia-to-attack-ukraine-overnight.html",
         "intercepted_source": "https://www.ukrinform.net/rubric-ato/4167791-adf-down-267-out-of-295-drones-used-by-russia-to-attack-ukraine-overnight.html",
         "by_type": {},
+        "composition": { "jet_propelled": { "count": 52, "source": "https://www.ukrinform.net/rubric-ato/4167791-adf-down-267-out-of-295-drones-used-by-russia-to-attack-ukraine-overnight.html" } },
         "launch_areas": ["Oryol", "Kursk", "Millerovo", "Primorsko-Akhtarsk", "Shatalovo", "Donetsk(점령지)", "Crimea(점령지)"],
         "target_areas": ["Kyiv", "Zaporizhzhia", "Odesa"],
         "intercepted": 267,
@@ -516,6 +521,7 @@
         "attacks_total_source": "https://www.pravda.com.ua/eng/news/2026/09/28/8055308/",
         "intercepted_source": "https://www.pravda.com.ua/eng/news/2026/09/28/8055308/",
         "by_type": {},
+        "composition": { "jet_propelled": { "count": 79, "source": "https://www.pravda.com.ua/eng/news/2026/09/28/8055308/" } },
         "launch_areas": ["Oryol", "Millerovo", "Primorsko-Akhtarsk", "Shatalovo", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
         "target_areas": ["Kyiv", "Kharkiv", "Dnipro"],
         "intercepted": 112,
@@ -529,6 +535,7 @@
         "attacks_total_source": "https://unn.ua/en/news/launched-russian-zircon-and-ballistic-missiles-neutralized-over-ukraine-details-from-the-air-force-of-the-armed-forces-of-ukraine",
         "intercepted_source": "https://www.ukrinform.net/rubric-ato/4169057-russian-attacks-continue-adf-neutralizes-one-antiship-missile-two-ballistic-missiles-and-106-drones.html",
         "by_type": {},
+        "composition": { "jet_propelled": { "count": 82, "source": "https://unn.ua/en/news/launched-russian-zircon-and-ballistic-missiles-neutralized-over-ukraine-details-from-the-air-force-of-the-armed-forces-of-ukraine" }, "missiles": { "count": 3, "intercepted": 3, "types": ["Zircon/Onyx(대함)","이스칸데르-M/S-400(탄도)"], "source": "https://www.ukrinform.net/rubric-ato/4169057-russian-attacks-continue-adf-neutralizes-one-antiship-missile-two-ballistic-missiles-and-106-drones.html" } },
         "launch_areas": ["Oryol", "Millerovo", "Kursk", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)", "Chauda/Crimea(점령지)"],
         "target_areas": ["Kyiv"],
         "intercepted": 106,
@@ -542,6 +549,7 @@
         "attacks_total_source": "https://www.pravda.com.ua/eng/news/2026/09/30/8055705/",
         "intercepted_source": "https://www.ukrinform.net/rubric-ato/4169428-adf-neutralizes-five-ballistic-missiles-155-russian-drones-used-to-attack-ukraine-overnight.html",
         "by_type": {},
+        "composition": { "jet_propelled": { "count": 86, "source": "https://www.pravda.com.ua/eng/news/2026/09/30/8055705/" }, "missiles": { "count": 5, "intercepted": 5, "types": ["Zircon/Onyx(대함)","Iskander-M/S-400(탄도)"], "source": "https://www.ukrinform.net/rubric-ato/4169428-adf-neutralizes-five-ballistic-missiles-155-russian-drones-used-to-attack-ukraine-overnight.html" } },
         "launch_areas": ["Oryol", "Millerovo", "Kursk", "Voronezh", "Bryansk"],
         "target_areas": ["Kyiv"],
         "intercepted": 155,
@@ -590,7 +598,9 @@
       }
     ],
     "monthly": [
-      { "month": "2026-09", "attacks_total": 5259, "intercepted_total": 4406, "intercept_rate": 0.838, "note": "2026-09-05~09-30 daily 데이터 기준 합산(09-01~09-04 미수집, 이 기간은 합계에서 제외됨)" }
+      { "month": "2026-09", "attacks_total": 5259, "intercepted_total": 4406, "intercept_rate": 0.838,
+        "composition": { "jet_propelled_total": 381, "jet_days_with_data": 5, "missiles_total": 35, "missiles_intercepted_total": 26, "missile_days_with_data": 5 },
+        "note": "2026-09-05~09-30 daily 데이터 기준 합산(09-01~09-04 미수집, 이 기간은 합계에서 제외됨). composition은 jet_propelled/missiles 수치가 명확히 보도된 날짜만 합산한 것으로 29일 중 각 5일분 — 전수조사 아님" }
     ]
   },
   "cuas_tech": {

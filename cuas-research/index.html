@@ -83,6 +83,28 @@ table.spec td.num{font-family:var(--mono)}
 .stat-box .num{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--blue)}
 .stat-box .lbl{font-size:11px;color:var(--muted);margin-top:4px}
 
+/* 월간 구성 카드 (원형 그래프) */
+.month-card{padding:18px 20px}
+.month-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.month-head h3{font-size:16px;font-weight:800;font-family:var(--mono)}
+.month-head .rate{font-size:12px;font-weight:700;color:var(--blue);background:rgba(47,125,224,.1);padding:4px 10px;border-radius:20px}
+.month-body{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.donut{width:120px;height:120px;border-radius:50%;flex-shrink:0;position:relative}
+.donut-hole{position:absolute;inset:16px;background:var(--panel);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.donut-n{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--text)}
+.donut-lbl{font-size:10px;color:var(--muted);margin-top:2px}
+.month-stats{flex:1;min-width:240px;display:flex;flex-direction:column;gap:6px}
+.bar{display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.bar-l{color:var(--sub)}
+.bar-n{font-family:var(--mono);font-weight:700}
+.legend{font-size:12px;color:var(--sub);display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px}
+.legend b{color:var(--text)}
+.sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-left:8px}
+.sw:first-child{margin-left:0}
+.sw-gold{background:var(--gold)}
+.sw-gray{background:var(--panel3);border:1px solid var(--line)}
+.hint{font-size:11.5px;color:var(--muted);line-height:1.6}
+
 footer{text-align:center;color:var(--dim);font-size:11px;padding:30px 0 10px}
 </style>
 </head>
@@ -220,23 +242,43 @@ function renderGeranBaseline(baseline) {
   $('geranBaseline').innerHTML = html;
 }
 
-function byTypeCompact(byType) {
+function byTypeCompact(byType, composition) {
   const keys = byType ? Object.keys(byType) : [];
-  if (!keys.length) return '—';
-  return keys.map(k => {
+  const parts = keys.map(k => {
     const v = byType[k] || {};
     const label = `${esc(k)} ${esc(v.attacks ?? '?')}(${esc(v.intercepted ?? '?')})`;
     return v.source ? `<a href="${esc(v.source)}" target="_blank" rel="noopener" title="출처 보기">${label}</a>` : label;
-  }).join(', ');
+  });
+  const c = composition || {};
+  if (c.jet_propelled) {
+    const v = c.jet_propelled;
+    const label = `제트추진형 ${esc(v.count)}기`;
+    parts.push(v.source ? `<a href="${esc(v.source)}" target="_blank" rel="noopener" title="출처 보기">${label}</a>` : label);
+  }
+  if (c.missiles) {
+    const v = c.missiles;
+    const label = `미사일 ${esc(v.count)}(${esc(v.intercepted)})`;
+    parts.push(v.source ? `<a href="${esc(v.source)}" target="_blank" rel="noopener" title="출처 보기">${label}</a>` : label);
+  }
+  return parts.length ? parts.join(', ') : '—';
 }
-function renderByType(byType) {
+function renderByType(byType, composition) {
   const keys = byType ? Object.keys(byType) : [];
-  if (!keys.length) return '';
   const rows = keys.map(k => {
     const v = byType[k] || {};
     const label = `${esc(k)}: 공격 ${esc(v.attacks ?? '—')} · 요격 ${esc(v.intercepted ?? '—')}`;
     return v.source ? `<a href="${esc(v.source)}" target="_blank" rel="noopener">${label}</a>` : label;
   });
+  const c = composition || {};
+  if (c.jet_propelled) {
+    const v = c.jet_propelled, label = `제트추진형: ${esc(v.count)}기`;
+    rows.push(v.source ? `<a href="${esc(v.source)}" target="_blank" rel="noopener">${label}</a>` : label);
+  }
+  if (c.missiles) {
+    const v = c.missiles, label = `미사일: ${esc(v.count)}기 중 ${esc(v.intercepted)}기 요격`;
+    rows.push(v.source ? `<a href="${esc(v.source)}" target="_blank" rel="noopener">${label}</a>` : label);
+  }
+  if (!rows.length) return '';
   return `<div style="margin-top:8px;font-size:12px;color:var(--muted)">기종별: ${rows.join(' &nbsp;·&nbsp; ')}</div>`;
 }
 function renderStats(stats) {
@@ -253,7 +295,7 @@ function renderStats(stats) {
         <div class="stat-box"><div class="num">${srcLink(latest.intercepted, latest.intercepted_source)}</div><div class="lbl">요격량</div></div>
         <div class="stat-box"><div class="num">${latest.intercept_rate != null ? Math.round(latest.intercept_rate*100)+'%' : '—'}</div><div class="lbl">요격률</div></div>
       </div>
-      ${renderByType(latest.by_type)}`;
+      ${renderByType(latest.by_type, latest.composition)}`;
   }
   if (!daily.length) {
     $('statsDaily').innerHTML = emptyState('일별 데이터 없음');
@@ -266,7 +308,7 @@ function renderStats(stats) {
         <td class="num">${srcLink(d.attacks_total, d.attacks_total_source)}</td>
         <td class="num">${srcLink(d.intercepted, d.intercepted_source)}</td>
         <td class="num">${d.intercept_rate != null ? Math.round(d.intercept_rate*100)+'%' : '—'}</td>
-        <td style="font-size:12px">${byTypeCompact(d.by_type)}</td>
+        <td style="font-size:12px">${byTypeCompact(d.by_type, d.composition)}</td>
         <td>${esc((d.launch_areas||[]).join(', ') || '—')}</td>
         <td>${esc((d.target_areas||[]).join(', ') || '—')}</td>
       </tr>`;
@@ -277,13 +319,46 @@ function renderStats(stats) {
   if (!monthly.length) {
     $('statsMonthly').innerHTML = emptyState('월별 집계 없음 (일별 데이터가 누적되면 자동 생성됩니다)');
   } else {
-    let html = '<table class="spec"><thead><tr><th>월</th><th>총 공격</th><th>총 요격</th><th>요격률</th></tr></thead><tbody>';
-    monthly.slice().reverse().forEach(m => {
-      html += `<tr><td class="num">${esc(m.month)}</td><td class="num">${esc(m.attacks_total)}</td><td class="num">${esc(m.intercepted_total)}</td><td class="num">${m.intercept_rate != null ? Math.round(m.intercept_rate*100)+'%' : '—'}</td></tr>`;
-    });
-    html += '</tbody></table>';
-    $('statsMonthly').innerHTML = html;
+    $('statsMonthly').innerHTML = monthly.slice().reverse().map(monthCard).join('');
   }
+}
+
+/* 월간 구성 원형(도넛) 그래프 — 외부 라이브러리 없이 conic-gradient로 그린다.
+   제트추진형(jet_propelled) vs 피스톤형·미상(attacks_total 중 나머지, 커버리지가 낮은 날은 여기 섞여 들어감)을 보여주고,
+   미사일(missiles)은 드론 집계와 별도이므로 도넛에 넣지 않고 곁에 숫자로만 표기한다. */
+function monthCard(m) {
+  const c = m.composition || {};
+  const jet = c.jet_propelled_total || 0;
+  const jetDays = c.jet_days_with_data || 0;
+  const rest = Math.max(0, (m.attacks_total || 0) - jet);
+  const jetPct = m.attacks_total ? (jet / m.attacks_total * 100) : 0;
+  const rate = m.intercept_rate != null ? Math.round(m.intercept_rate * 100) + '%' : '—';
+  const donut = m.attacks_total
+    ? `<div class="donut" style="background:conic-gradient(var(--gold) 0 ${jetPct.toFixed(1)}%, var(--panel3) ${jetPct.toFixed(1)}% 100%)">
+         <div class="donut-hole"><div class="donut-n">${esc(m.attacks_total)}</div><div class="donut-lbl">드론 공격</div></div>
+       </div>`
+    : `<div class="donut" style="background:var(--panel3)"><div class="donut-hole"><div class="donut-n">—</div></div></div>`;
+  const missileLine = c.missiles_total
+    ? `미사일(드론과 별도 집계): <b>${esc(c.missiles_total)}</b>기 중 <b>${esc(c.missiles_intercepted_total)}</b>기 요격 (${esc(c.missile_days_with_data)}일분 확인)`
+    : '미사일 구성 데이터 없음';
+  const coverage = jetDays
+    ? `제트추진형 수치는 그 달 중 ${jetDays}일분만 명확히 보도되어 합산한 값입니다(나머지 날짜·수량은 "피스톤형·미상"에 포함)`
+    : '제트추진형 구성 데이터 없음 — 이번 달은 기종 구성이 명확히 보도된 날이 없었습니다';
+  return `<div class="card month-card">
+    <div class="month-head"><h3>${esc(m.month)}</h3><span class="rate">요격률 ${rate}</span></div>
+    <div class="month-body">
+      ${donut}
+      <div class="month-stats">
+        <div class="bar"><span class="bar-l">총 공격</span><span class="bar-n">${esc(m.attacks_total)}</span></div>
+        <div class="bar"><span class="bar-l">총 요격</span><span class="bar-n">${esc(m.intercepted_total)}</span></div>
+        <div class="legend"><span class="sw sw-gold"></span>제트추진형 <b>${esc(jet)}</b>기 (${jetPct.toFixed(0)}%)
+          <span class="sw sw-gray"></span>피스톤형·미상 <b>${esc(rest)}</b>기</div>
+        <div class="hint">${coverage}</div>
+        <div class="hint">${missileLine}</div>
+        ${m.note ? `<div class="hint" style="margin-top:4px">${esc(m.note)}</div>` : ''}
+      </div>
+    </div>
+  </div>`;
 }
 
 function renderTech(entries) {
