@@ -89,6 +89,8 @@
   },
 
   /* attack_stats.daily 작성 규칙 (2026-09-08 추가)
+     0. sources[]는 레퍼런스를 최대 2개까지만 둔다 (attacks_total_source, intercepted_source를 우선).
+        cuas_tech.log / research_papers.log는 항상 date 오름차순으로 정렬해 저장한다.
      1. attacks_total_source / intercepted_source는 필수다. 그 날의 attacks_total·intercepted 수치를
         실제로 보도한 단일 출처 URL을 적는다 (여러 출처가 같은 수치를 보도하면 그중 가장 1차에 가까운
         쪽 — 우크라이나 공군/합참 발표를 직접 인용한 매체 — 을 고른다). sources[]는 교차검증용 전체
