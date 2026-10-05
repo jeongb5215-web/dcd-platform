@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-04T22:23:56Z",
+    "last_daily_run": "2026-10-05T22:30:00Z",
     "last_weekly_run": "2026-10-04T22:31:42Z",
     "schema_version": 1
   },
@@ -230,6 +230,30 @@
         "confidence": "중간",
         "status": "확인됨",
         "note": "09-30 로그에서 변종 미확정이던 신형 절단탄두가 이번 보도로 Geran-4 탑재로 특정되고, 'whisker'형 기계식 접촉신관이라는 구체적 격발 메커니즘이 추가로 확인됨 — 동일 사건의 반복 보도가 아닌 변종 확정+작동원리 규명이라는 실질적 정보 추가로 판단해 로그에 기록. baseline.warhead_kg 값(기존 50/90kg 2종)과는 별도 특수탄두로 간주, baseline 미반영"
+      },
+      {
+        "date": "2026-10-05",
+        "variant": "Geran-4",
+        "field": "engine / guidance",
+        "old_value": "Telefly LX-WP-160(160kgf)/TF-TJ2000A(200kgf) 중국산 터보젯, 단가 약 2.5만 달러(2026-09-28 로그) — 'Susanin' 광학상관항법은 09-28 로그에서 러시아 군사블로거(필라토프)의 미확인 주장으로 Geran-5 'K5' 변종에 연관지어서만 보고됨",
+        "new_value": "우크라이나 국방정보국(DIU)이 War & Sanctions 포털을 통해 2026년 가을부터 실전 투입된 Geran-4 개량형의 세부 정보를 공식 공개: ① 기존 중국산 Telefly 터보젯이 알라부가(Alabuga) 특구 생산 러시아 국산화 엔진으로 교체, ② 미국 PNI Sensor社의 고정밀 자기유도센서(magnetometer) PNI5GA 기반 신형 'MOKh' 모듈이 SADRA 관성항법모듈과 연동해 자이로 드리프트 보정, ③ 위성·관성항법 외에 광학영상을 기준영상과 대조하는 'Susanin' 광학상관항법(지형영상대조, DSMAC 유사방식)이 Geran-4에 탑재된 것으로 확인",
+        "new_source": "https://militarnyi.com/en/news/geran-4-gets-russian-engine-and-new-navigation-system-diu/",
+        "new_source_name": "Militarnyi (우크라이나 국방정보국 DIU, War & Sanctions 포털 발표 인용)",
+        "confidence": "중간",
+        "status": "확인됨",
+        "note": "엔진을 중국산 수입 터보젯에서 러시아 국내(알라부가) 생산으로 전환한 것이 사실이면 09-25/09-28 로그에서 이어지던 '중국산 엔진 전적 의존' 구도의 전환점이나, DIU는 '2026년 가을부터 투입된 개량형'이라고만 밝혀 기존 중국산 엔진 탑재 물량과 병행 생산인지 전면 대체인지는 불명확 — baseline.engine 값은 기존(중국산 Telefly) 유지, 신규 모디피케이션 정보는 로그에만 기록. 'Susanin' 광학상관항법은 09-28 로그에서 Geran-5 'K5' 변종과 연관지어 미확인 상태로만 보고됐던 것이, 이번에 DIU 공식분석으로 Geran-4 탑재가 처음 확인됨 — 적용 변종과 신뢰도가 모두 갱신된 사례로 별도 기록. 같은 DIU 발표에 포함된 탄두 명칭(KRSN) 확인 내용은 아래 별도 로그(field: warhead)에 기록"
+      },
+      {
+        "date": "2026-10-05",
+        "variant": "Geran-4",
+        "field": "warhead",
+        "old_value": "40kg 주탄두 + 4개 선형성형작약 절단모듈, 'whisker'형 기계식 접촉신관 — 명칭 미확인 (2026-10-01 로그)",
+        "new_value": "DIU가 War & Sanctions 포털을 통해 이 송전탑·교량 절단용 탄두의 정식 명칭이 'KRSN'(전용 성형작약 절단 탄두)임을 공식 확인",
+        "new_source": "https://www.pravda.com.ua/eng/news/2026/10/05/8056498/index.amp",
+        "new_source_name": "Ukrainska Pravda (우크라이나 국방정보국 DIU 발표 인용)",
+        "confidence": "중간",
+        "status": "확인됨",
+        "note": "09-30/10-01 로그에서 명칭 미확인 상태로 기록됐던 절단용 특수탄두의 정식 명칭(KRSN)이 DIU 공식발표로 확인됨 — 작동방식(선형성형작약) 자체는 기존 보도와 동일하나 명칭이 처음 특정돼 로그에 추가 기록. baseline 미반영(기존 10-01 로그와 동일 기준)"
       }
     ]
   },
@@ -633,6 +657,20 @@
         "intercept_rate": 0.926,
         "sources": ["https://www.ukrinform.net/rubric-ato/4170824-air-defense-intercepts-123-drones-two-banderols-used-by-russia-to-attack-ukraine-overnight.html", "https://www.pravda.com.ua/eng/news/2026/10/04/8056364/", "https://unn.ua/en/news/the-russian-federation-attacked-ukraine-with-135-drones-the-number-of-downed-targets-is-increasing-with-hits-recorded-at-5-locations", "https://ua.news/en/war-vs-rf/rosiiani-za-nich-atakuvali-ukrayinu-135-dronami-ie-vluchannia-na-piati-lokatsiiakh", "https://112.ua/en/rosia-atakuvala-ukrainu-135-bpla-za-nic-3-4-zovtna-zbito-125-droniv-e-zertvi-sered-civilnih-189121", "https://mezha.net/eng/news/cf27550b_ukraine_neutralizes_123/"],
         "note": "2026-10-03 18:00~10-04 08:30 시점 야간 공격 기준. 이번 발표는 기존 관례(미사일/반데롤을 드론과 별도 집계)와 달리 Banderol/Dan-T 2기를 attacks_total·intercepted에 포함해 집계(135기 중 123기 드론(Shahed/Gerbera 등)+2기 Banderol/Dan-T = 125기 요격, 요격률 약 0.926) — 이에 composition.missiles는 별도로 채우지 않음(이중집계 방지). 135기 중 52기가 제트추진형으로 명시적으로 보도됨(jet_propelled에 기록). 발사방향은 오룔·쿠르스크·밀레로보·프리모르스코-아흐타르스크(러) 및 도네츠크·흐바르디이스케(크림반도) 점령지. 직격 5개 지점, 잔해 낙하 5개 지점(이 중 키이우 드니프로구 2개 지점 포함). 키이우가 밤사이 및 10/4 아침까지 반복 피격, 데스니얀스키구 비주거 건물 화재 발생. 기종별 세부 수치 미확인(제트추진 합계 외) — by_type 비움."
+      },
+      {
+        "date": "2026-10-05",
+        "attacks_total": 205,
+        "attacks_total_source": "https://unn.ua/en/news/russia-attacked-ukraine-with-205-drones-how-the-air-defense-performed",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4171071-adf-neutralizes-172-russian-drones-used-to-attack-ukraine-overnight.html",
+        "by_type": {},
+        "composition": { "jet_propelled": { "count": 49, "source": "https://www.kyivpost.com/post/86099" } },
+        "launch_areas": ["Oryol", "Kursk", "Shatalovo", "Millerovo", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": ["Kyiv", "Kharkiv", "Zaporizhzhia", "Sumy", "Dnipropetrovsk", "Chernihiv"],
+        "intercepted": 172,
+        "intercept_rate": 0.839,
+        "sources": ["https://unn.ua/en/news/russia-attacked-ukraine-with-205-drones-how-the-air-defense-performed", "https://www.ukrinform.net/rubric-ato/4171071-adf-neutralizes-172-russian-drones-used-to-attack-ukraine-overnight.html", "https://www.pravda.com.ua/eng/news/2026/10/05/8056487/", "https://www.kyivpost.com/post/86099", "https://ua.news/en/war-vs-rf/protiagom-nochi-5-zhovtnia-rosiia-zapustila-po-ukrayini-ponad-200-droniv-povitriani-sili", "https://kyivindependent.com/kharkiv-targeted-in-deadly-banderol-strike-as-russia-kills-5-injures-61-across-ukraine-over-past-day/"],
+        "note": "2026-10-04 18:00경~10-05 08:00 시점 야간 공격 기준. 드론(Shahed계열/Gerbera/Parodiya 기만기 등) 205기 중 49기가 제트추진형으로 명시 보도(jet_propelled에 기록), Banderol 2기 포함 총 172기 요격·제압(요격률 약 0.839). 피격 13개 지점, 잔해 낙하 3개 지점. 특히 키이우에서는 10/3~10/4에 이어 10/4~10/5 야간에도 제트추진 드론이 드니프로강 교량(Northern Bridge 등)을 반복 표적으로 삼는 양상이 다수 매체(NPR/CNN/Euromaidan Press)에 보도됨 — 핵심 기반시설(교량)을 노린 표적전환 패턴으로 별도 기록. 전국 기준 사망 5명·부상 61명 보도(하르키우 Banderol 피격 1명 사망·8명 부상, 자포리자 FPV 드론 공격 2명 사망, 수미주 1명 사망, 드니프로페트로우스크주 니코폴 1명 사망, 체르니히우주 부상자 포함 등) — 이 집계가 이번 야간 드론공격만의 피해인지 같은 기간 다른 공격 포함치인지 매체별로 명확하지 않아 교차검증 필요, 확정 수치 아님. 기종별 세부 수치 미확인(제트추진 합계 외) — by_type 비움."
       }
     ],
     "monthly": [
