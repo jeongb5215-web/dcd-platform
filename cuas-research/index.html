@@ -366,7 +366,7 @@ function renderTech(entries) {
     $('techLog').innerHTML = emptyState('아직 감지된 C-UAS 기술 동향이 없습니다.<br>STING·BAGNET·YOLKA, 음향/RF/레이더/EO-IR/AI Vision, C4I·델타 체계 등을 추적합니다.');
     return;
   }
-  $('techLog').innerHTML = entries.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(e => `
+  $('techLog').innerHTML = entries.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(e => `
     <div class="card change-item">
       <div class="change-head">
         <span class="badge-system">${esc(e.system)}</span>
@@ -384,7 +384,7 @@ function renderPapers(entries) {
     $('papersLog').innerHTML = emptyState('아직 수집된 신규 연구자료가 없습니다.<br>매주 C-UAS·AI Vision·자율요격·음향탐지 관련 논문을 추적합니다.');
     return;
   }
-  $('papersLog').innerHTML = entries.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(e => `
+  $('papersLog').innerHTML = entries.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(e => `
     <div class="card change-item">
       <div class="change-head">
         <span class="topic-tag">${esc(e.topic)}</span>
