@@ -138,6 +138,8 @@ footer{text-align:center;color:var(--dim);font-size:11px;padding:30px 0 10px}
 
   <!-- ① Geran drones -->
   <div class="panel active" id="panel-geran">
+    <div class="section-title">통계 분석</div>
+    <div id="geranSummary"></div>
     <div class="section-title">변경 감지 로그</div>
     <div id="geranLog"></div>
     <div class="section-title">현재 확인된 제원 (베이스라인)</div>
@@ -156,12 +158,16 @@ footer{text-align:center;color:var(--dim);font-size:11px;padding:30px 0 10px}
 
   <!-- ③ C-UAS tech -->
   <div class="panel" id="panel-tech">
+    <div class="section-title">통계 분석</div>
+    <div id="techSummary"></div>
     <div class="section-title">기술/전력화 동향 로그</div>
     <div id="techLog"></div>
   </div>
 
   <!-- ④ Research papers -->
   <div class="panel" id="panel-papers">
+    <div class="section-title">통계 분석</div>
+    <div id="papersSummary"></div>
     <div class="section-title">신규 연구자료</div>
     <div id="papersLog"></div>
   </div>
@@ -331,6 +337,53 @@ function renderStats(stats) {
 /* 월간 구성 원형(도넛) 그래프 — 외부 라이브러리 없이 conic-gradient로 그린다.
    제트추진형(jet_propelled) vs 피스톤형·미상(attacks_total 중 나머지, 커버리지가 낮은 날은 여기 섞여 들어감)을 보여주고,
    미사일(missiles)은 드론 집계와 별도이므로 도넛에 넣지 않고 곁에 숫자로만 표기한다. */
+/* 탭 상단 통계 분석 — 항목 종류별 원형 도표 (상위 5개 + 기타) */
+function countShares(pairs) {
+  const sorted = pairs.slice().sort((a, b) => b[1] - a[1]);
+  const total = sorted.reduce((s, x) => s + x[1], 0);
+  if (!total) return null;
+  const top = sorted.slice(0, 5);
+  const etc = sorted.slice(5).reduce((s, x) => s + x[1], 0);
+  if (etc) top.push(['기타', etc]);
+  return { total, items: top };
+}
+function summaryCard(title, share, unit, note, pick) {
+  if (!share) return emptyState(title + ' — 집계할 데이터가 아직 없습니다.');
+  let acc = 0;
+  const stops = share.items.map((it, i) => {
+    const from = acc, pct = it[1] / share.total * 100; acc += pct;
+    return `${CITY_COLORS[i % CITY_COLORS.length]} ${from.toFixed(1)}% ${acc.toFixed(1)}%`;
+  }).join(', ');
+  const legend = share.items.map((it, i) =>
+    `<div class="legend"><span class="sw" style="background:${CITY_COLORS[i % CITY_COLORS.length]}"></span>${esc(it[0])} <b>${it[1]}</b>${unit} (${(it[1] / share.total * 100).toFixed(0)}%)</div>`).join('');
+  return `<div class="card month-card">
+    <div class="month-head"><h3>${esc(title)}</h3><span class="rate">총 ${share.total}${unit}</span></div>
+    <div class="month-body">
+      <div class="donut" style="background:conic-gradient(${stops})"><div class="donut-hole"><div class="donut-n">${share.total}</div><div class="donut-lbl">${esc(pick)}</div></div></div>
+      <div class="month-stats">${legend}<div class="hint">${esc(note)}</div></div>
+    </div>
+  </div>`;
+}
+function renderSummaries(data) {
+  const geran = (data.geran_drones || {}).log || [];
+  const gCount = {};
+  geran.forEach(e => { const k = e.variant || '미상'; gCount[k] = (gCount[k] || 0) + 1; });
+  $('geranSummary').innerHTML = summaryCard('Geran/Shahed 계열 변화 로그 분석', countShares(Object.entries(gCount)), '건',
+    '변경 감지 로그 항목을 기종(variant)별로 나눈 분포입니다. 로그가 쌓인 기종이 많을수록 변화가 빈번한 기종으로 볼 수 있습니다.', '로그 건수');
+
+  const tech = (data.cuas_tech || {}).log || [];
+  const tCount = {};
+  tech.forEach(e => { const k = e.event_type || '기타'; tCount[k] = (tCount[k] || 0) + 1; });
+  $('techSummary').innerHTML = summaryCard('C-UAS 요격기술 동향 분석', countShares(Object.entries(tCount)), '건',
+    '동향 로그를 사건 유형(신규 시험·실전 배치·기술 개선·체계 구축 등)별로 나눈 분포입니다.', '동향 건수');
+
+  const papers = (data.research_papers || {}).log || [];
+  const pCount = {};
+  papers.forEach(e => { const k = e.topic || '기타'; pCount[k] = (pCount[k] || 0) + 1; });
+  $('papersSummary').innerHTML = summaryCard('연구자료/논문 주제 분석', countShares(Object.entries(pCount)), '건',
+    '수집된 연구자료를 주제(AI Vision·음향탐지·RF/Radar·자율요격 등)별로 나눈 분포입니다.', '논문 건수');
+}
+
 /* 도시별 공격 집중도: 공격 목표로 보도된 날짜 기준(같은 날 같은 도시는 1회) — 기사에 도시별 공격 횟수는 없으므로 '집중 일수'로 집계 */
 function cityShares(days) {
   const cnt = {};
@@ -445,6 +498,7 @@ fetch('./data.json?t=' + Date.now())
     renderStats(data.attack_stats);
     renderTech((data.cuas_tech || {}).log);
     renderPapers((data.research_papers || {}).log);
+    renderSummaries(data);
   })
   .catch(() => {
     ['geranLog','statsLatest','techLog','papersLog'].forEach(id => {
