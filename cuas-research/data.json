@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-05T22:30:00Z",
+    "last_daily_run": "2026-10-06T22:24:07Z",
     "last_weekly_run": "2026-10-04T22:31:42Z",
     "schema_version": 1
   },
@@ -1281,6 +1281,20 @@
         "intercept_rate": 0.839,
         "sources": ["https://unn.ua/en/news/russia-attacked-ukraine-with-205-drones-how-the-air-defense-performed", "https://www.ukrinform.net/rubric-ato/4171071-adf-neutralizes-172-russian-drones-used-to-attack-ukraine-overnight.html", "https://www.pravda.com.ua/eng/news/2026/10/05/8056487/", "https://www.kyivpost.com/post/86099", "https://ua.news/en/war-vs-rf/protiagom-nochi-5-zhovtnia-rosiia-zapustila-po-ukrayini-ponad-200-droniv-povitriani-sili", "https://kyivindependent.com/kharkiv-targeted-in-deadly-banderol-strike-as-russia-kills-5-injures-61-across-ukraine-over-past-day/"],
         "note": "2026-10-04 18:00경~10-05 08:00 시점 야간 공격 기준. 드론(Shahed계열/Gerbera/Parodiya 기만기 등) 205기 중 49기가 제트추진형으로 명시 보도(jet_propelled에 기록), Banderol 2기 포함 총 172기 요격·제압(요격률 약 0.839). 피격 13개 지점, 잔해 낙하 3개 지점. 특히 키이우에서는 10/3~10/4에 이어 10/4~10/5 야간에도 제트추진 드론이 드니프로강 교량(Northern Bridge 등)을 반복 표적으로 삼는 양상이 다수 매체(NPR/CNN/Euromaidan Press)에 보도됨 — 핵심 기반시설(교량)을 노린 표적전환 패턴으로 별도 기록. 전국 기준 사망 5명·부상 61명 보도(하르키우 Banderol 피격 1명 사망·8명 부상, 자포리자 FPV 드론 공격 2명 사망, 수미주 1명 사망, 드니프로페트로우스크주 니코폴 1명 사망, 체르니히우주 부상자 포함 등) — 이 집계가 이번 야간 드론공격만의 피해인지 같은 기간 다른 공격 포함치인지 매체별로 명확하지 않아 교차검증 필요, 확정 수치 아님. 기종별 세부 수치 미확인(제트추진 합계 외) — by_type 비움."
+      },
+      {
+        "date": "2026-10-06",
+        "attacks_total": 137,
+        "attacks_total_source": "https://gazeta.ua/articles/np/_sili-oboroni-zbili-114-zi-137-rosijskih-droniv/1259754",
+        "intercepted_source": "https://gazeta.ua/articles/np/_sili-oboroni-zbili-114-zi-137-rosijskih-droniv/1259754",
+        "by_type": {},
+        "composition": { "jet_propelled": { "count": 49, "source": "https://www.rbc.ua/rus/news/nichniy-udar-ukrayini-droni-letili-vosmi-1791264277.html" } },
+        "launch_areas": ["Oryol", "Kursk", "Shatalovo", "Millerovo", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)", "Sea of Azov(해상)"],
+        "target_areas": [],
+        "intercepted": 114,
+        "intercept_rate": 0.832,
+        "sources": ["https://gazeta.ua/articles/np/_sili-oboroni-zbili-114-zi-137-rosijskih-droniv/1259754", "https://www.rbc.ua/rus/news/nichniy-udar-ukrayini-droni-letili-vosmi-1791264277.html"],
+        "note": "2026-10-05 20:00경~10-06 08:00 시점 야간 공격 기준. Shahed계열(49기 제트추진형으로 명시 보도, jet_propelled에 기록)/Gerbera/Banderol·Dan-T/Parodiya 기만기 혼합 137기 중 114기 요격·제압(요격률 약 0.832) — 다수 매체(gazeta.ua/lb.ua/dsnews.ua/kyiv24.news/slovoidilo.ua)가 일치하여 보도. Interfax는 동일 공격을 '125기 격추·제압'으로 보도해 수치가 상충 — 교차검증 필요, baseline 성격의 attacks_total/intercepted는 다수 일치 수치(137/114)로 기록. 피격 17개 지점, 잔해 낙하 4개 지점. 발사방향에 아조우해 해상이 추가로 포함(기존 러시아 본토·크림반도·돈바스 점령지 외 신규 발사축). 기종별 세부 수치는 제트추진형 외 미확인 — by_type 비움, 피격 지역명은 출처에 구체적으로 명시되지 않아 target_areas 비움."
       }
     ],
     "monthly": [
