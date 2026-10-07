@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-06T22:24:07Z",
+    "last_daily_run": "2026-10-07T22:22:18Z",
     "last_weekly_run": "2026-10-04T22:31:42Z",
     "schema_version": 1
   },
@@ -1295,6 +1295,30 @@
         "intercept_rate": 0.832,
         "sources": ["https://gazeta.ua/articles/np/_sili-oboroni-zbili-114-zi-137-rosijskih-droniv/1259754", "https://www.rbc.ua/rus/news/nichniy-udar-ukrayini-droni-letili-vosmi-1791264277.html"],
         "note": "2026-10-05 20:00경~10-06 08:00 시점 야간 공격 기준. Shahed계열(49기 제트추진형으로 명시 보도, jet_propelled에 기록)/Gerbera/Banderol·Dan-T/Parodiya 기만기 혼합 137기 중 114기 요격·제압(요격률 약 0.832) — 다수 매체(gazeta.ua/lb.ua/dsnews.ua/kyiv24.news/slovoidilo.ua)가 일치하여 보도. Interfax는 동일 공격을 '125기 격추·제압'으로 보도해 수치가 상충 — 교차검증 필요, baseline 성격의 attacks_total/intercepted는 다수 일치 수치(137/114)로 기록. 피격 17개 지점, 잔해 낙하 4개 지점. 발사방향에 아조우해 해상이 추가로 포함(기존 러시아 본토·크림반도·돈바스 점령지 외 신규 발사축). 기종별 세부 수치는 제트추진형 외 미확인 — by_type 비움, 피격 지역명은 출처에 구체적으로 명시되지 않아 target_areas 비움."
+      },
+      {
+        "date": "2026-10-07",
+        "attacks_total": 130,
+        "attacks_total_source": "https://www.kyivpost.com/post/86307",
+        "intercepted_source": "https://ukrinform.net/rubric-ato/4171798-massive-attack-air-defenses-neutralize-117-drones-five-ballistic-missiles-39-cruise-missiles.html",
+        "by_type": {},
+        "composition": {
+          "missiles": {
+            "count": 48,
+            "intercepted": 39,
+            "types": ["Kh-101", "Iskander-K", "Kalibr"],
+            "source": "https://ukrinform.net/rubric-ato/4171798-massive-attack-air-defenses-neutralize-117-drones-five-ballistic-missiles-39-cruise-missiles.html"
+          }
+        },
+        "launch_areas": [],
+        "target_areas": ["Pryluky", "Kremenchuk", "Kyiv", "Oleksandriia"],
+        "intercepted": 117,
+        "intercept_rate": 0.9,
+        "sources": [
+          "https://ukrinform.net/rubric-ato/4171798-massive-attack-air-defenses-neutralize-117-drones-five-ballistic-missiles-39-cruise-missiles.html",
+          "https://www.kyivpost.com/post/86307"
+        ],
+        "note": "2026-10-06 18:00~10-07 10:00 시점 야간~이튿날 오전 집계(푸틴 대통령 74세 생일과 겹친 대규모 복합공격). 우크라이나 공군 발표(09:00 기준) 기준 총 161개 표적(드론+미사일) 요격·제압 — 드론 130기 중 117기 요격(요격률 0.9), 이스칸데르-M/KN-23/S-400/지르콘/오닉스 탄도·대함미사일 5기 요격(로스토프/브랸스크/보로네시 발사, 발사량 미상이라 composition에는 미기재), Kh-101/이스칸데르-K/칼리브르 순항미사일(공중·지상·해상 발사, 볼로그다·쿠르스크·카스피해) 48기 중 39기 요격(추가 6기는 집계 확인 중이라고 보도, composition.missiles에 반영). 드론 자체의 구체적 발사방향(러시아 본토 방면)은 확인된 출처에 명시되지 않아 launch_areas 비움. 젤렌스키 대통령은 별도로 탄도미사일 포함 총 70기의 미사일이 발사됐다고 언급했으나 공군의 상세 집계(미사일 합계 48+5=53)와 차이가 있어 임의로 합산하지 않음 — 교차검증 참고. 최대 피해 지점은 체르니히우주 프릴루키(Pryluky) 5층 아파트 직격(순항미사일 추정)으로 사망자 수가 보도 시점별로 14→18~19명까지 상향되며 계속 집계 중, 폴타바주 크레멘추크(Kremenchuk)도 주거지역 피격으로 사망 2명·부상 47~55명(고층건물 4개동 피해), 전국 기준 사망 24~25명·부상 100~134명(매체·집계시점별 편차 큼, 확정치 아님). 전력 등 에너지 인프라가 핵심 표적으로 보도됨. 기종별(Geran/Shahed 세부) 수치 미확인 — by_type 비움."
       }
     ],
     "monthly": [
@@ -1783,6 +1807,15 @@
         "source": "https://militarnyi.com/en/news/lithuania-purchases-merops-tested-ukraine/",
         "source_name": "Militarnyi / 리투아니아 국방부",
         "significance": "우크라이나 전장에서 실전 검증된 저가 요격드론체계가 나토 동부전선 다수 국가(폴란드·루마니아·덴마크·리투아니아)로 표준조달 절차를 생략한 긴급도입 형태로 빠르게 확산되고 있음을 보여주는, 지역별 다층 방어체계 구축의 구체적 사례"
+      },
+      {
+        "date": "2026-10-05",
+        "system": "AI Vision / 자동 기관총 포탑(Robotic Gun Turret)",
+        "event_type": "신규 시험",
+        "detail": "우크라이나 공군 대변인 유리 이흐나트(Yurii Ihnat)가 전국 텔레톤 방송에서, 머신비전·AI 기반 자동조준 기관총 포탑이 제트추진 게란-5(Geran-5)를 요격한 사례가 이미 있다고 처음 공개 확인. 해당 포탑은 사람의 수동 조준 없이 AI가 표적의 궤적을 계산해 중기관총을 자동 조준·사격하는 방식이며, 하루 전 젤렌스키 대통령은 제트추진 드론 활동이 활발한 지역(키이우 등)에 12기 이상이 이미 배치됐고 교량 방어용으로 키이우주에 8기를 추가 배치할 예정이라고 밝힘. 다만 유효사거리가 약 1km 미만으로 짧아 고속표적 요격의 상당 부분은 여전히 유인전투기(F-16 등)가 담당. 이흐나트는 기존 피스톤계열 샤헤드 요격률이 85~90%대인 반면, 최근 러시아가 야간 하루 약 50기 수준의 제트추진 드론을 투입하고 있다고 언급",
+        "source": "https://www.yahoo.com/news/world/articles/automatic-gun-turrets-successfully-down-122615201.html",
+        "source_name": "Kyiv Independent (Yahoo News 재게재) / Hromadske / United24 Media (우크라이나 공군 대변인 유리 이흐나트 발언 인용)",
+        "significance": "그동안 제트추진 게란 계열(Geran-4/5) 요격은 전용 고속 요격드론(STING S/SPYS/Zorelit v5/P1-SUN 등, 09-29/10-02 로그 참고 — 요격률 약 50~57%대로 보고)과 F-16 기총사격(10-01 로그)에 의존해 왔으나, 이번에 AI 자동조준 고정형 포탑이 제트추진 표적(Geran-5) 요격에 처음 성공한 사례가 확인됨 — 유인조종이 필요 없는 완전자동 거치형 요격수단이 제트추진 드론 대응 체계에 추가된 전환점. 다만 유효사거리가 짧아(1km 미만) 전용 요격드론·유인기를 대체하기보다는 근접 지점방어(교량 등)용 보완수단으로 운용되는 것으로 분석됨"
       }
     ]
   },
