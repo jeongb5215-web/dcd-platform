@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-08T22:17:18Z",
+    "last_daily_run": "2026-10-09T22:20:44Z",
     "last_weekly_run": "2026-10-04T22:31:42Z",
     "schema_version": 1
   },
@@ -1335,6 +1335,25 @@
           "https://unn.ua/en/news/russia-attacked-ukraine-with-142-drones-more-than-half-of-them-jet-powered-how-many-were-shot-down"
         ],
         "note": "2026-10-07 18:00~10-08 09:30 시점 집계(공군 잠정치). 샤헤드계열(이 중 82기가 제트추진형으로 명시 보도)/Gerbera/Parodiya 기만기 혼합 142기 중 126기 요격·제압(요격률 0.887). 발사지역: 러시아 오룔·쿠르스크·샤탈로보, 점령지 도네츠크·크림반도 흐바르디이스케. 피격 7개 지점, 격추 잔해 낙하 4개 지점(구체 지역명 미확인 — target_areas 비움). 기종별(Geran/Shahed 세부) 수치는 '제트추진형 82기'까지만 확인되고 Geran-2/4/5 등 모델별 구분은 보도되지 않아 by_type은 비움. 사상자 수치는 보도마다 전일(10-06~07 프릴루키 공격) 누적치와 혼재돼 혼란이 있어 본 항목에는 별도 기록하지 않음."
+      },
+      {
+        "date": "2026-10-09",
+        "attacks_total": 136,
+        "attacks_total_source": "https://mezha.net/eng/news/26590655_russia_launches_136/",
+        "intercepted_source": "https://mezha.net/eng/news/26590655_russia_launches_136/",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": { "count": 93, "source": "https://mezha.net/eng/news/26590655_russia_launches_136/" }
+        },
+        "launch_areas": ["Oryol", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": [],
+        "intercepted": 114,
+        "intercept_rate": 0.838,
+        "sources": [
+          "https://mezha.net/eng/news/26590655_russia_launches_136/",
+          "https://cdm.press/news/europe/2026/10/09/russia-launches-136-drones-overnight-as-zelensky-rules-out-talks-and-ukrainians-pay-the-price/"
+        ],
+        "note": "2026-10-08 저녁~10-09 08:00 시점 집계(공군 발표). 샤헤드계열(이 중 93기가 제트추진형으로 명시 보도, 그중 77기가 요격된 것으로 별도 보도)/Gerbera/Parodiya 기만기 혼합 136기 중 114기 요격·제압(요격률 약 0.838). 발사지역: 러시아 오룔·프리모르스코-아흐타르스크, 점령지 도네츠크·크림반도 흐바르디이스케. 피격 8개 지점, 잔해 낙하 7개 지점(구체 지역명 미확인 — target_areas 비움). 기종별(Geran/Shahed 세부) 모델별 구분은 보도되지 않아 by_type은 비움. 사상자 수치는 보도마다 최근 며칠간(프릴루키·크라마토르스크 등) 누적치와 혼재돼 이번 공격만의 피해로 특정하기 어려워 별도 기록하지 않음."
       }
     ],
     "monthly": [
