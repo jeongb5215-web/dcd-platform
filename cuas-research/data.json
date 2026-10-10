@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-09T22:20:44Z",
+    "last_daily_run": "2026-10-10T22:16:48Z",
     "last_weekly_run": "2026-10-04T22:31:42Z",
     "schema_version": 1
   },
@@ -1354,6 +1354,24 @@
           "https://cdm.press/news/europe/2026/10/09/russia-launches-136-drones-overnight-as-zelensky-rules-out-talks-and-ukrainians-pay-the-price/"
         ],
         "note": "2026-10-08 저녁~10-09 08:00 시점 집계(공군 발표). 샤헤드계열(이 중 93기가 제트추진형으로 명시 보도, 그중 77기가 요격된 것으로 별도 보도)/Gerbera/Parodiya 기만기 혼합 136기 중 114기 요격·제압(요격률 약 0.838). 발사지역: 러시아 오룔·프리모르스코-아흐타르스크, 점령지 도네츠크·크림반도 흐바르디이스케. 피격 8개 지점, 잔해 낙하 7개 지점(구체 지역명 미확인 — target_areas 비움). 기종별(Geran/Shahed 세부) 모델별 구분은 보도되지 않아 by_type은 비움. 사상자 수치는 보도마다 최근 며칠간(프릴루키·크라마토르스크 등) 누적치와 혼재돼 이번 공격만의 피해로 특정하기 어려워 별도 기록하지 않음."
+      },
+      {
+        "date": "2026-10-10",
+        "attacks_total": 160,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4172907-ukraines-adf-down-117-out-of-160-drones-used-by-russia-to-attack-ukraine-overnight.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4172907-ukraines-adf-down-117-out-of-160-drones-used-by-russia-to-attack-ukraine-overnight.html",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": { "count": 110, "source": "https://www.ukrinform.net/rubric-ato/4172907-ukraines-adf-down-117-out-of-160-drones-used-by-russia-to-attack-ukraine-overnight.html" }
+        },
+        "launch_areas": [],
+        "target_areas": [],
+        "intercepted": 117,
+        "intercept_rate": 0.73,
+        "sources": [
+          "https://www.ukrinform.net/rubric-ato/4172907-ukraines-adf-down-117-out-of-160-drones-used-by-russia-to-attack-ukraine-overnight.html"
+        ],
+        "note": "2026-10-09 저녁~10-10 09:00 시점 집계(공군 발표, Ukrinform 보도). 샤헤드계열(이 중 110기가 제트추진형으로 명시 보도)/Gerbera/Parodiya 기만기 혼합 160기 중 117기 요격·제압(요격률 약 0.73 — 제트추진 비중이 높아 최근치 대비 낮은 편). 발사지역은 '러시아 및 점령지 내 여러 지점'으로만 보도되어 구체 지명 미확인(launch_areas 비움). 피격 14개 지점, 잔해 낙하 10개 지점(구체 지역명 미확인 — target_areas 비움). 기종별(Geran/Shahed 세부) 모델별 구분은 보도되지 않아 by_type은 비움."
       }
     ],
     "monthly": [
