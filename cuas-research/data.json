@@ -1,7 +1,7 @@
 {
   "meta": {
     "last_daily_run": "2026-10-11T22:19:21Z",
-    "last_weekly_run": "2026-10-04T22:31:42Z",
+    "last_weekly_run": "2026-10-11T22:24:43Z",
     "schema_version": 1
   },
   "geran_drones": {
@@ -1888,6 +1888,33 @@
         "source": "https://www.yahoo.com/news/world/articles/automatic-gun-turrets-successfully-down-122615201.html",
         "source_name": "Kyiv Independent (Yahoo News 재게재) / Hromadske / United24 Media (우크라이나 공군 대변인 유리 이흐나트 발언 인용)",
         "significance": "그동안 제트추진 게란 계열(Geran-4/5) 요격은 전용 고속 요격드론(STING S/SPYS/Zorelit v5/P1-SUN 등, 09-29/10-02 로그 참고 — 요격률 약 50~57%대로 보고)과 F-16 기총사격(10-01 로그)에 의존해 왔으나, 이번에 AI 자동조준 고정형 포탑이 제트추진 표적(Geran-5) 요격에 처음 성공한 사례가 확인됨 — 유인조종이 필요 없는 완전자동 거치형 요격수단이 제트추진 드론 대응 체계에 추가된 전환점. 다만 유효사거리가 짧아(1km 미만) 전용 요격드론·유인기를 대체하기보다는 근접 지점방어(교량 등)용 보완수단으로 운용되는 것으로 분석됨"
+      },
+      {
+        "date": "2026-01-26",
+        "system": "C4I / Elysion Mission Core(Hensoldt·Tytan)",
+        "event_type": "체계 구축",
+        "detail": "독일 센서·방산기업 Hensoldt와 우크라이나 전장에서 요격드론을 실전 운용 중인 헝가리·독일계 스타트업 Tytan Technologies가 2026-01-26 뮌헨 Tytan 신규 본사 개소식에서 전략적 파트너십 MoU를 체결(바이에른주 총리 마르쿠스 죄더 참석). 협력 범위는 (1) Tytan 요격드론을 Hensoldt의 지휘통제(C4I) 소프트웨어 'Elysion Mission Core'(탐지-대응-방호 기능, 개방형 아키텍처, 위협분석·대응방안 제시·효과기 발동·다중센서 상황공유 지원)에 통합, (2) 핵심기반시설 방호 공동 프로젝트, (3) 우크라이나·나토 대공방어 지원 국제 프로젝트 3가지. Tytan은 신규 거점을 통해 2026년 말까지 월 3,000기 요격드론 생산을 목표로 제시.",
+        "source": "https://www.hensoldt.net/news/hensoldt-and-tytan-agree-on-strategic-partnership-in-counter-uas-and-critical-infrastructure-protection",
+        "source_name": "Hensoldt 공식 발표 / Janes",
+        "significance": "유럽 대형 센서·C2 방산기업과 우크라이나 전장검증 요격드론 스타트업이 공식 파트너십을 맺고 민간 C4I 소프트웨어 표준(Elysion Mission Core)에 요격체계를 통합하는 구체적 사례 — 요격드론 생산능력과 지휘통제 소프트웨어가 결합되는 C4I 통합체계의 실제 계약 사례"
+      },
+      {
+        "date": "2026-01-30",
+        "system": "SAN(폴란드, East Shield 하위 대드론체계)",
+        "event_type": "체계 구축",
+        "detail": "폴란드 정부가 2026-01-30 자국 방산 컨소시엄(PGZ 주도, APS·노르웨이 Kongsberg 참여)과 약 150억 즐로티(약 35억 유로) 규모의 다층 대드론체계 'SAN' 계약을 체결. 기존 로그(2025-12-28, 벨라루스 국경 Krynki 레이더타워 설치)에서 소개된 East Shield(Tarcza Wschód) 프로그램 내에서 최하위(초근접) 대공방어 계층으로 자리매김하며, 비슬라(장거리, Patriot)·나레브(단거리)·필리차(초단거리) 체계와 연동되는 네트워크의 일부. 계약 규모는 18개 포대 모듈·약 700대 차량·52개 사격소대로 구성되며 레이더·30mm 기관포·미사일·전자전·요격드론을 단일 지휘통제망으로 통합. 2025년 9월 러시아 드론의 폴란드 영공 침범 사건을 계기로 조달이 가속화됐으며, 올해 초기 포대 구축 후 약 2년 내 완전운용능력(FOC) 확보를 목표.",
+        "source": "https://www.polskieradio.pl/395/7784/Artykul/3641174,poland-signs-contract-for-multirole-antidrone-system",
+        "source_name": "Polskie Radio / PAP",
+        "significance": "기존에 '레이더 설치' 수준으로만 기록됐던 East Shield 프로그램의 대드론 계층이 레이더·기관포·미사일·전자전·요격드론을 통합한 구체적 계약(컨소시엄·규모·일정)으로 확정됨에 따라, 나토 동부전선 국가의 다층 방어체계 구축 사례가 한 단계 구체화됨"
+      },
+      {
+        "date": "2026-10-08",
+        "system": "EU 대드론 프로그램 조달(European Defence Agency)",
+        "event_type": "체계 구축",
+        "detail": "Euronews가 2026-10-08 입수한 유럽방위청(EDA)의 비공개 연례 국방태세평가 보고서에 따르면, EU 회원국의 대드론·초근접대공방어(VSHORAD) 프로그램 중 2030년까지 전력화가 예상되는 비율은 약 3분의 1에 불과. 2024~2025년 사이 관련 투자가 6배로 급증했고 2024~2029년 드론기술 투자 총액이 약 189억 유로로 전망됨에도, 보고서는 회원국별 조달 분절화(fragmented national procurement), 상호운용성 부족, 실험·시험 역량 부족, 특히 무장 드론 분야의 산업 생산능력(서지 capacity) 부족을 구조적 원인으로 지적. 격차 해소에 드는 비용은 다른 국방역량 확충 대비 상대적으로 저렴하나 지속적 재원 확보가 필요하다고 평가.",
+        "source": "https://www.euronews.com/2026/10/08/only-a-third-of-eu-counter-drone-programmes-will-deliver-by-2030-leaked-report-warns",
+        "source_name": "Euronews (유출된 EDA 비공개 보고서 인용)",
+        "significance": "각국이 대드론 투자를 급격히 늘리고 있다는 개별 발표들과 달리, EU 자체 평가기관이 조달 분절화·상호운용성 부족을 구조적 문제로 처음 공식 인정(유출)한 비판적 평가 — 나토·서방 C-UAS 조달의 실제 이행 속도에 대한 기준선을 제공"
       }
     ]
   },
@@ -2102,6 +2129,16 @@
         "summary": "단일 카메라 영상 크롭과 바운딩박스 기하 정보를 결합해 장거리에서 소형 드론까지의 거리를 추정하는 모델 'DroneDAR'을 제안. CNN 백본과 바운딩박스 특징을 결합하는 경량 게이팅 메커니즘을 사용하며, 백본 용량·크롭 해상도·회귀 손실함수가 거리 구간별 성능에 미치는 영향과 장거리에서의 실패 유형(바운딩박스 잡음, 질감 손실에 취약)을 분석.",
         "link": "https://arxiv.org/abs/2606.07756",
         "significance": "탐지(detection)에서 한 단계 더 나아가 단일 카메라만으로 표적까지의 거리까지 추정, 요격체계의 사격통제 입력으로 활용할 수 있는 실용적 비전 기법을 제시"
+      },
+      {
+        "date": "2026-03",
+        "title": "Agile Interception of a Flying Target using Competitive Reinforcement Learning",
+        "authors": "Timothée Gavin, Simon Lacroix, Murat Bronz (ENAC-LAB, LAAS-RIS)",
+        "venue": "arXiv (2025-11 AMIAD, Conference on AI for Defence, Rennes 발표)",
+        "topic": "자율요격",
+        "summary": "그물(net)을 탑재한 요격드론이 민첩하게 기동하는 표적 드론을 포획하는 문제를, 요격기와 표적이 각자 별도의 정책(policy)을 학습하는 경쟁적(competitive) 멀티에이전트 강화학습(PPO) 문제로 정식화. JAX 기반 저수준 쿼드콥터 동역학 시뮬레이터를 GPU 병렬로 구축해 양 에이전트가 집단추력·각속도(body-rate) 명령을 직접 학습하도록 했으며, 포획률·포획시간·충돌률 기준으로 휴리스틱 베이스라인을 능가. 실내 축소 실환경 아레나에서도 정책을 검증.",
+        "link": "https://arxiv.org/abs/2603.16279",
+        "significance": "기존 로그의 유사 연구(2026-07 미분가능 쿼드콥터 동역학 기반 연구, net-carrying 경쟁 MARL 연구)와 달리 요격기·표적 양쪽을 모두 PPO 학습 에이전트로 모델링하고 GPU 병렬 고정밀 시뮬레이터와 실환경 아레나 검증까지 거친 독립적 접근 — 적대적(adversarial) 훈련 방식의 재현성을 보여주는 사례"
       }
     ]
   }
