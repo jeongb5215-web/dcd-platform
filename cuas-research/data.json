@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-10T22:16:48Z",
+    "last_daily_run": "2026-10-11T22:19:21Z",
     "last_weekly_run": "2026-10-04T22:31:42Z",
     "schema_version": 1
   },
@@ -1372,6 +1372,25 @@
           "https://www.ukrinform.net/rubric-ato/4172907-ukraines-adf-down-117-out-of-160-drones-used-by-russia-to-attack-ukraine-overnight.html"
         ],
         "note": "2026-10-09 저녁~10-10 09:00 시점 집계(공군 발표, Ukrinform 보도). 샤헤드계열(이 중 110기가 제트추진형으로 명시 보도)/Gerbera/Parodiya 기만기 혼합 160기 중 117기 요격·제압(요격률 약 0.73 — 제트추진 비중이 높아 최근치 대비 낮은 편). 발사지역은 '러시아 및 점령지 내 여러 지점'으로만 보도되어 구체 지명 미확인(launch_areas 비움). 피격 14개 지점, 잔해 낙하 10개 지점(구체 지역명 미확인 — target_areas 비움). 기종별(Geran/Shahed 세부) 모델별 구분은 보도되지 않아 by_type은 비움."
+      },
+      {
+        "date": "2026-10-11",
+        "attacks_total": 116,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4173175-ukraines-air-defenses-down-94-of-116-russian-drones-launched-against-ukraine-overnight.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4173175-ukraines-air-defenses-down-94-of-116-russian-drones-launched-against-ukraine-overnight.html",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": { "count": 95, "source": "https://www.ukrinform.net/rubric-ato/4173175-ukraines-air-defenses-down-94-of-116-russian-drones-launched-against-ukraine-overnight.html" }
+        },
+        "launch_areas": ["Oryol", "Kursk", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": [],
+        "intercepted": 94,
+        "intercept_rate": 0.81,
+        "sources": [
+          "https://www.ukrinform.net/rubric-ato/4173175-ukraines-air-defenses-down-94-of-116-russian-drones-launched-against-ukraine-overnight.html",
+          "https://mezha.net/eng/news/mezha-4d36c8e30515d8aa5a2af665_air_defenses_neutralize/"
+        ],
+        "note": "2026-10-10 18:00~10-11 08:30 시점 집계(공군 발표, 보도 시점 기준 잠정치 — 교전 지속 중이라 밝힘, 약 10기가 당시 영공 내 체류 중이었음). 샤헤드계열(이 중 95기가 제트추진형으로 명시 보도)/Gerbera/Parodiya 기만기 혼합 116기 중 94기 요격·제압(요격률 약 0.81). 발사지역: 러시아 오룔·쿠르스크·프리모르스코-아흐타르스크, 점령지 도네츠크·크림반도 흐바르디이스케(Ukrinform). 피격 7개 지점, 잔해 낙하 9개 지점(구체 지역명 미확인 — target_areas 비움). Mezha는 요격된 94기 중 제트추진형이 74기였다고 별도 보도(발사량 95기와는 다른 지표인 요격 결과 수치로 상충 아님). 기종별(Geran/Shahed 세부) 모델별 구분은 보도되지 않아 by_type은 비움."
       }
     ],
     "monthly": [
