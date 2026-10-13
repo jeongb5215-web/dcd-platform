@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-11T22:19:21Z",
+    "last_daily_run": "2026-10-13T23:10:00Z",
     "last_weekly_run": "2026-10-11T22:24:43Z",
     "schema_version": 1
   },
@@ -1391,6 +1391,44 @@
           "https://mezha.net/eng/news/mezha-4d36c8e30515d8aa5a2af665_air_defenses_neutralize/"
         ],
         "note": "2026-10-10 18:00~10-11 08:30 시점 집계(공군 발표, 보도 시점 기준 잠정치 — 교전 지속 중이라 밝힘, 약 10기가 당시 영공 내 체류 중이었음). 샤헤드계열(이 중 95기가 제트추진형으로 명시 보도)/Gerbera/Parodiya 기만기 혼합 116기 중 94기 요격·제압(요격률 약 0.81). 발사지역: 러시아 오룔·쿠르스크·프리모르스코-아흐타르스크, 점령지 도네츠크·크림반도 흐바르디이스케(Ukrinform). 피격 7개 지점, 잔해 낙하 9개 지점(구체 지역명 미확인 — target_areas 비움). Mezha는 요격된 94기 중 제트추진형이 74기였다고 별도 보도(발사량 95기와는 다른 지표인 요격 결과 수치로 상충 아님). 기종별(Geran/Shahed 세부) 모델별 구분은 보도되지 않아 by_type은 비움."
+      },
+      {
+        "date": "2026-10-12",
+        "attacks_total": 121,
+        "attacks_total_source": "https://www.pravda.com.ua/eng/news/2026/10/12/8057541/",
+        "intercepted_source": "https://www.pravda.com.ua/eng/news/2026/10/12/8057541/",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": { "count": 76, "source": "https://www.pravda.com.ua/eng/news/2026/10/12/8057541/" }
+        },
+        "launch_areas": ["Oryol", "Kursk", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": [],
+        "intercepted": 89,
+        "intercept_rate": 0.74,
+        "sources": [
+          "https://www.pravda.com.ua/eng/news/2026/10/12/8057541/",
+          "https://glavnoe.in.ua/en/news-en/air-defense-neutralizes-89-of-121-russian-drones-strikes-recorded-at-15-locations"
+        ],
+        "note": "2026-10-11 18:00~10-12 09:00 시점 집계(공군 발표). 샤헤드(제트추진 76기 포함)/Gerbera/Parodiya 기만기 혼합 121기 중 89기 요격·제압(요격률 약 0.74) — 이 중 제트추진형은 76기 중 55기 요격으로 별도 보도(제트추진 요격률 약 72%). Kh-59 공대지미사일 1발이 흑해 상공에서 별도 발사됐으나 요격 여부가 명확히 보도되지 않아 composition.missiles는 비움(attacks_total·intercepted에도 미포함). 피격 15개 지점, 잔해 낙하 4개 지점(구체 지역명 미확인 — target_areas 비움). 기종별(Geran/Shahed 모델) 세부 구분 미보도로 by_type 비움."
+      },
+      {
+        "date": "2026-10-13",
+        "attacks_total": 108,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4173801-adf-neutralizes-88-russian-drones-used-to-attack-ukraine-overnight.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4173801-adf-neutralizes-88-russian-drones-used-to-attack-ukraine-overnight.html",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": { "count": 74, "source": "https://glavnoe.in.ua/en/news-en/air-defense-neutralized-88-russian-drones-strikes-recorded-at-17-locations" }
+        },
+        "launch_areas": ["Oryol", "Kursk", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": [],
+        "intercepted": 88,
+        "intercept_rate": 0.81,
+        "sources": [
+          "https://www.ukrinform.net/rubric-ato/4173801-adf-neutralizes-88-russian-drones-used-to-attack-ukraine-overnight.html",
+          "https://glavnoe.in.ua/en/news-en/air-defense-neutralized-88-russian-drones-strikes-recorded-at-17-locations"
+        ],
+        "note": "2026-10-12 18:00~10-13 08:00 시점 집계(공군 발표, 보도 시점 잠정치). 공격드론 108기(이 중 74기 제트추진형) 외에 이스칸데르-M/S-400 탄도미사일 5발(브랸스크 발사)과 반데롤/단-T 순항미사일형 9기가 별도 동원됐으나, 둘 다 발사량만 확인되고 요격량이 명확히 보도되지 않아 composition.missiles에는 미기재(생략) — attacks_total·intercepted(드론 기준)에도 미포함. 드론 88기 요격·제압(이 중 제트추진 58기, 요격률 약 78%). 키이우 등 17개 지점 피격, 잔해 낙하 7개 지점. 기종별(Geran/Shahed 모델) 세부 구분 미보도로 by_type 비움."
       }
     ],
     "monthly": [
@@ -1915,6 +1953,42 @@
         "source": "https://www.euronews.com/2026/10/08/only-a-third-of-eu-counter-drone-programmes-will-deliver-by-2030-leaked-report-warns",
         "source_name": "Euronews (유출된 EDA 비공개 보고서 인용)",
         "significance": "각국이 대드론 투자를 급격히 늘리고 있다는 개별 발표들과 달리, EU 자체 평가기관이 조달 분절화·상호운용성 부족을 구조적 문제로 처음 공식 인정(유출)한 비판적 평가 — 나토·서방 C-UAS 조달의 실제 이행 속도에 대한 기준선을 제공"
+      },
+      {
+        "date": "2026-10-08",
+        "system": "요격드론(Serhiy Prytula 재단 지원, 1020여단)",
+        "event_type": "실전 배치",
+        "detail": "방공군 1020 대공미사일연대가 세르히 프리툴라 자선재단(Serhiy Prytula Charity Foundation)이 공급한 제트추진 요격드론으로 체르니히우주 상공, 고도 780m·속도 약 430km/h로 비행 중이던 제트추진 게란-5를 요격 성공. 재단측은 이번이 재단 장비를 이용한 두 번째 격추 사례라고 밝힘. 재단은 복수의 제조사와 계약해 제트추진 위협 대응 요격체계를 확보하고 있으며, 향후 생산·부대 보급 규모 확대가 과제라고 설명.",
+        "source": "https://militarnyi.com/en/news/1020-brigade-jet-drone-down-geran-5-430-kmh/",
+        "source_name": "Militarnyi / Serhiy Prytula Charity Foundation",
+        "significance": "기존 09-29 로그(Wild Hornets STING S, 1020여단 '야스트룹' 조가 425km/h 게란-5 요격, 해당 요격기 첫 실전 교전)와 별도로, 같은 1020여단이 운용하는 다른 민간 지원 제조사(Serhiy Prytula 재단 계약 업체) 장비로도 제트추진 게란-5 요격이 재현됨 — 복수의 독립적 공급망·제조사가 병행해 제트추진 대응 요격드론을 실전에 공급하고 있음을 보여주는 사례"
+      },
+      {
+        "date": "2026-10-11",
+        "system": "Bars(요격형) / 요격드론 전력화 현황",
+        "event_type": "실전 배치",
+        "detail": "국방장관 예우헨 흐마라가 한 부대가 Bars 요격드론 5기를 투입해 공중표적 5기 전원을 격추(성공률 100%)한 단일 전투 사례를 공개. 다만 공군 대변인은 '아직 요격드론에 의존할 수 없다'며 이런 성공이 아직 국지적·소규모 사례에 불과하다고 선을 그었고, 공군 부사령관 체레바셴코는 필요한 물량 수준의 요격드론 인도는 '11월 말 이전에는 어렵다'고 발표.",
+        "source": "https://www.pravda.com.ua/eng/news/2026/10/11/8057503/",
+        "source_name": "Ukrainska Pravda (국방장관 흐마라 / 공군 발표 인용)",
+        "significance": "10-04 로그(Bars 요격률 약 30%, 독일 공동생산)에 이어, 단일 부대 단위의 완전 성공(5/5) 사례가 처음 공개됐으나 공군 스스로 '아직 의존 불가' 단계라고 명시하고 양산 물량의 실제 전력화 시점(11월 말 이후)을 밝혀, 개별 성공사례와 체계 전반의 전력화 속도 사이의 간극을 보여주는 균형적 업데이트"
+      },
+      {
+        "date": "2026-10-12",
+        "system": "신형 요격드론(Lasar's Group, 명칭 미공개)",
+        "event_type": "신규 시험",
+        "detail": "전 국방장관 미하일로 페도로프가 파블로 옐리자로프(Lasar's Group 지휘관) 및 군·엔지니어들과 함께 개발한 신형 요격드론이 키이우 상공에서 제트추진 게란-5 2기를 격추한 첫 실전 결과를 발표. 개발 착수부터 첫 격추까지 약 1개월이 소요됐으며, 현재는 사람이 직접 조종하는 방식이나 향후 AI 기반 자율비행 전환을 추진 중이고, 연말까지 월 수백 기 생산을 목표로 한다고 밝힘.",
+        "source": "https://en.interfax.com.ua/news/general/1218785.html",
+        "source_name": "Interfax-Ukraine / Mykhailo Fedorov(텔레그램)",
+        "significance": "기존 요격체계(STING S, P1-SUN JetKiller, SPYS, Bars 등)와는 별도로 완전히 새로운 명칭 미공개 요격드론이 처음 등장·실전 검증됨 — 단기간(1개월) 개발, 유인조종→AI 자율화 전환 계획이라는 점에서 요격드론 개발 속도와 자율화 추세를 보여주는 신규 사례"
+      },
+      {
+        "date": "2026-10-13",
+        "system": "제트추진 계열 요격률 추세",
+        "event_type": "기술 개선",
+        "detail": "공군 대변인 유리 이흐나트가 제트추진 드론에 대한 요격률이 러시아가 이를 처음 투입한 2026년 7월경 약 40%에서 8월 약 60%로, 최근(10월)에는 일부 날짜 기준 최대 약 85%까지 상승했다고 발표. 다만 이는 상승 추세의 '최고치'이며, 요격체계(요격드론·공대공미사일 등) 물량 자체가 늘지 않아 공급 부족이 여전히 핵심 제약요인이라고 언급.",
+        "source": "https://unn.ua/en/news/ukraine-shoots-down-up-to-85percent-of-russian-jet-powered-drones-air-force",
+        "source_name": "UNN (공군 대변인 유리 이흐나트 인용)",
+        "significance": "기존 09-29/10-02/10-04 로그에서 약 50~57%로 보고되던 제트추진 계열 요격률이, 공식 발표 기준 최근 최대 약 85%까지 상승한 것으로 처음 확인됨 — 다만 같은 시기(10-11 로그)의 '아직 요격드론에 의존할 수 없다'는 공군 발언과 함께 보면, 요격률 상승이 신형 요격드론 양산 확대보다는 기존 수단(유인기·대공포 등) 운용 숙련도 향상에 주로 기인할 가능성을 시사"
       }
     ]
   },
