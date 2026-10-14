@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-13T23:10:00Z",
+    "last_daily_run": "2026-10-14T22:30:00Z",
     "last_weekly_run": "2026-10-11T22:24:43Z",
     "schema_version": 1
   },
@@ -1429,6 +1429,26 @@
           "https://glavnoe.in.ua/en/news-en/air-defense-neutralized-88-russian-drones-strikes-recorded-at-17-locations"
         ],
         "note": "2026-10-12 18:00~10-13 08:00 시점 집계(공군 발표, 보도 시점 잠정치). 공격드론 108기(이 중 74기 제트추진형) 외에 이스칸데르-M/S-400 탄도미사일 5발(브랸스크 발사)과 반데롤/단-T 순항미사일형 9기가 별도 동원됐으나, 둘 다 발사량만 확인되고 요격량이 명확히 보도되지 않아 composition.missiles에는 미기재(생략) — attacks_total·intercepted(드론 기준)에도 미포함. 드론 88기 요격·제압(이 중 제트추진 58기, 요격률 약 78%). 키이우 등 17개 지점 피격, 잔해 낙하 7개 지점. 기종별(Geran/Shahed 모델) 세부 구분 미보도로 by_type 비움."
+      },
+      {
+        "date": "2026-10-14",
+        "attacks_total": 128,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4174200-ukraine-downs-four-ballistic-missiles-115-drones-in-massive-russian-overnight-attack.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4174200-ukraine-downs-four-ballistic-missiles-115-drones-in-massive-russian-overnight-attack.html",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": { "count": 77, "source": "https://www.ukrinform.net/rubric-ato/4174200-ukraine-downs-four-ballistic-missiles-115-drones-in-massive-russian-overnight-attack.html" },
+          "missiles": { "count": 39, "intercepted": 4, "types": [], "source": "https://unn.ua/en/news/four-ballistic-missiles-out-of-39-launched-by-russia-and-90percent-of-the-drones-were-neutralized-overnight-ukraines-air-force" }
+        },
+        "launch_areas": ["Millerovo", "Oryol", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)", "Sea of Azov(해상)"],
+        "target_areas": ["Kyiv", "Kyiv Oblast", "Kharkiv"],
+        "intercepted": 115,
+        "intercept_rate": 0.9,
+        "sources": [
+          "https://www.ukrinform.net/rubric-ato/4174200-ukraine-downs-four-ballistic-missiles-115-drones-in-massive-russian-overnight-attack.html",
+          "https://unn.ua/en/news/four-ballistic-missiles-out-of-39-launched-by-russia-and-90percent-of-the-drones-were-neutralized-overnight-ukraines-air-force"
+        ],
+        "note": "2026-10-13 저녁~10-14 아침 집계(공군 발표). 공격드론 128기(이 중 77기 제트추진형) 중 115기 요격·제압(이 중 제트추진 59기, 제트추진 요격률 약 77%). 별도로 탄도미사일 39발이 발사되어 4발만 요격(요격률 약 10% — 공군 대변인에 따르면 파트너국의 탄도미사일 위협 경보가 이번 4개 파상 공격 중 3개에만 사전 전달됨). 미사일 기종은 명시적으로 보도되지 않아 types 비움. 키이우 3개 열병합발전소(CHP) 전부 피격 등 키이우·키이우주·하르키우주 에너지 기반시설이 집중 타격받아 약 60만 명 정전, 키이우에서 최소 5명 사망·36명 부상. 평소 대비 극히 낮은 미사일 요격률과 트럼프발 '에너지 휴전' 발표 직후에도 공세가 지속·강화된 점이 특징적 — 전술적 전환점으로 기록."
       }
     ],
     "monthly": [
