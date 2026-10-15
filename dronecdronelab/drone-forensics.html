@@ -117,9 +117,18 @@ button,input,select,textarea{font:inherit;color:inherit}
 .how p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.65}
 
 .xv .sec-h{max-width:none}
-.xv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;position:relative}
-@media (max-width:820px){.xv .sec-h{max-width:none}
-.xv-grid{grid-template-columns:minmax(0,1fr)}}
+.xv .sec-h{max-width:none}
+.xv-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;position:relative}
+@media (max-width:980px){.xv-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.xv-grid{grid-template-columns:minmax(0,1fr)}}
+.xv-m{font-size:11px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.xv-note{margin:20px 0 0;max-width:72ch;color:var(--muted);font-size:13.5px;line-height:1.7;border-left:3px solid var(--hazard);padding-left:12px}
+.rvsel{min-width:84px}
+tr.rv-확인 td:first-child{box-shadow:inset 3px 0 0 var(--ok)}
+tr.rv-수정 td:first-child{box-shadow:inset 3px 0 0 var(--warn)}
+tr.rv-기각 td:first-child{box-shadow:inset 3px 0 0 var(--bad)}
+tr.rv-미확인 td:first-child{box-shadow:inset 3px 0 0 var(--line)}
+.warn-msg{border-color:var(--warn);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .xv-c{display:grid;gap:8px;align-content:start;padding:24px;border-radius:12px;border:1px solid var(--line);background:var(--bg)}
 .xv-c3{border-color:var(--accent);background:var(--accent-soft)}
 .xv-n{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:600;background:var(--surface);border:1px solid var(--line);color:var(--accent)}
@@ -213,6 +222,7 @@ tr:last-child td{border-bottom:0}
 td[contenteditable]:focus{background:var(--accent-soft);outline:none}
 td.c-name{font-weight:600;min-width:150px}
 td.c-wide{min-width:180px}
+td.c-cat{white-space:nowrap}
 .conf{display:inline-grid;grid-template-columns:44px auto;align-items:center;gap:6px;font-family:var(--f-mono);font-size:11.5px}
 .bar{height:5px;border-radius:3px;background:var(--line);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--accent)}
@@ -427,12 +437,14 @@ td.c-wide{min-width:180px}
 
 <section class="sec sec-alt" id="xv">
   <div class="in xv">
-    <div class="sec-h"><div class="kicker">교차검증</div><h2>한 번의 추정이 아니라, 서로 모르게 내린 두 판단을 대조합니다</h2></div>
+    <div class="sec-h"><div class="kicker">교차검증</div><h2>서로 다른 두 모델의 판단을 대조하고, 감식관이 최종 확정합니다</h2></div>
     <div class="xv-grid">
-      <div class="xv-c"><div class="xv-n mono">A</div><h3>분석관 A · 부품 식별</h3><p>PCB 실크 인쇄, 라벨, 커넥터, 모터 치수, 안테나 형상으로 부품과 제조사를 판독합니다.</p></div>
-      <div class="xv-c"><div class="xv-n mono">B</div><h3>분석관 B · 구조·무장</h3><p>프레임 형상, 결속 방식, 파편, 그을음, 식별부 훼손 흔적으로 기체와 탑재물을 추정합니다.</p></div>
-      <div class="xv-c xv-c3"><div class="xv-n mono">C</div><h3>검증관 C · 대조·판정</h3><p>사진을 다시 보며 항목마다 일치·부분일치·불일치·단독관찰을 판정하고 채택 근거를 남깁니다.</p></div>
+      <div class="xv-c"><div class="xv-n mono">A</div><div class="xv-m mono">Opus</div><h3>분석관 A · 부품 식별</h3><p>PCB 실크 인쇄, 라벨, 커넥터, 모터 치수, 안테나 형상으로 부품과 제조사를 판독합니다.</p></div>
+      <div class="xv-c"><div class="xv-n mono">B</div><div class="xv-m mono">Sonnet</div><h3>분석관 B · 구조·무장</h3><p>다른 모델로 따로 분석합니다. 프레임 형상, 결속 방식, 파편, 그을음, 식별부 훼손 흔적으로 기체와 탑재물을 추정합니다.</p></div>
+      <div class="xv-c"><div class="xv-n mono">C</div><div class="xv-m mono">AI 검증</div><h3>검증관 C · 대조·판정</h3><p>사진을 다시 보며 항목마다 일치·부분일치·불일치·단독관찰을 판정하고 채택 근거를 남깁니다.</p></div>
+      <div class="xv-c xv-c3"><div class="xv-n">✓</div><div class="xv-m mono">사람</div><h3>감식관 · 최종 확정</h3><p>AI 판정 항목마다 확인·수정·기각을 기록하고 메모를 남깁니다. 보고서에는 이 확인 결과가 함께 실립니다.</p></div>
     </div>
+    <p class="xv-note">세 AI 역할이 같은 방향으로 틀리면 "일치"로 보일 수 있습니다. 그래서 "일치"는 정답 보증이 아니라 독립된 두 관점의 결론이 모였다는 뜻으로 쓰고, 확정은 감식관 확인으로 합니다.</p>
   </div>
 </section>
 
@@ -614,12 +626,13 @@ const EXAMPLE = {
     altitude:"지상 5–50m 저고도 접근"
   },
   crossCheck:[
-    {item:"기체 형태",a:"쿼드콥터 (7인치)",b:"쿼드콥터 (7인치)",status:"일치",resolution:"두 분석 모두 X형 4암 프레임 확인"},
-    {item:"비행제어기",a:"SpeedyBee F405 V4",b:"F405급 FC (제조사 미확정)",status:"부분일치",resolution:"A의 실크 판독 근거 채택, 신뢰도 소폭 하향"},
-    {item:"탑재 폭약",a:"성형작약 0.4–0.7kg",b:"성형작약 0.5–0.9kg",status:"부분일치",resolution:"겹치는 범위 0.5–0.7kg 중심, 보수적 상한 0.7kg"},
-    {item:"통신 링크",a:"Crossfire 900MHz",b:"ELRS 915MHz 가능성",status:"불일치",resolution:"수축튜브 색상·안테나 형상으로 A 채택, 확정에는 실물 확인 필요"},
-    {item:"시리얼 훼손",a:"—",b:"FC·프레임 식별부 고의 훼손",status:"단독관찰",resolution:"B 관찰을 사진 #2에서 재확인, 반영"}
+    {item:"기체 형태",a:"쿼드콥터 (7인치)",b:"쿼드콥터 (7인치)",status:"일치",resolution:"두 분석 모두 X형 4암 프레임 확인",review:"확인",reviewNote:"실물 암 4개 확인"},
+    {item:"비행제어기",a:"SpeedyBee F405 V4",b:"F405급 FC (제조사 미확정)",status:"부분일치",resolution:"A의 실크 판독 근거 채택, 신뢰도 소폭 하향",review:"확인",reviewNote:"확대 사진으로 실크 재판독"},
+    {item:"탑재 폭약",a:"성형작약 0.4–0.7kg",b:"성형작약 0.5–0.9kg",status:"부분일치",resolution:"겹치는 범위 0.5–0.7kg 중심, 보수적 상한 0.7kg",review:"수정",reviewNote:"화학분석 전까지 상한 0.9kg로 보고 권고"},
+    {item:"통신 링크",a:"Crossfire 900MHz",b:"ELRS 915MHz 가능성",status:"불일치",resolution:"수축튜브 색상·안테나 형상으로 A 채택, 확정에는 실물 확인 필요",review:"미확인",reviewNote:""},
+    {item:"시리얼 훼손",a:"—",b:"FC·프레임 식별부 고의 훼손",status:"단독관찰",resolution:"B 관찰을 사진 #2에서 재확인, 반영",review:"미확인",reviewNote:""}
   ],
+  models:{A:"Opus (claude-opus-5-5)",B:"Sonnet (claude-sonnet-5-5)",C:"Opus급",split:true},
   overallConfidence:68,
   limitations:["사진 해상도와 열손상으로 다수 라벨 판독 불가","폭약 종류는 라이너 형상 기반 추정이며 잔류물 화학분석 필요"]
 };
@@ -762,6 +775,32 @@ function flash(m){ flashMsg = m; render(); setTimeout(()=>{ if(flashMsg===m){fla
 
 /* ---------------- analysis pipeline ---------------- */
 const run = {A:"wait", B:"wait", C:"wait", t0:0, err:"", busy:false};
+/* A and B run on different models so their errors are less correlated */
+const MODELS = {
+  A:{model:"claude-opus-5-5", tier:"complex", label:"Opus"},
+  B:{model:"claude-sonnet-5-5", tier:"default", label:"Sonnet"},
+  C:{model:null, tier:"complex", label:"자동(상위 등급)"}
+};
+const TIER_LABEL = {quick:"Haiku급", default:"Sonnet급", complex:"Opus급"};
+function parseJSONLoose(t){
+  const tryP = x => { try { return JSON.parse(x); } catch { return undefined; } };
+  let v = tryP(t.trim()); if (v!==undefined) return v;
+  const fence = t.match(/```(?:json)?\s*([\s\S]*?)```/i); if (fence) { v = tryP(fence[1].trim()); if (v!==undefined) return v; }
+  const i = Math.min(...["{","["].map(c=>{const k=t.indexOf(c); return k<0?Infinity:k;}));
+  const j = Math.max(t.lastIndexOf("}"), t.lastIndexOf("]"));
+  if (i!==Infinity && j>i) { v = tryP(t.slice(i, j+1)); if (v!==undefined) return v; }
+  throw {code:"invalid_json", message:"JSON 해석 실패", text:t};
+}
+// returns {data, applied}: which model actually answered, for the record
+async function askRole(role, prompt, base){
+  const m = MODELS[role];
+  const opts = {...base, modelTier:m.tier};
+  if (m.model) opts.model = m.model;
+  const r = await sample(prompt + "\n\n반드시 JSON 하나만 출력하라.", opts);
+  if (r.truncated) throw {code:"invalid_json", message:"응답이 길이 제한으로 잘렸습니다."};
+  const applied = r.modelApplied ? m.label + " (" + r.modelApplied + ")" : (TIER_LABEL[r.modelTierApplied] || r.modelTierApplied || "자동") + (m.model ? " · 지정 모델 대체" : "");
+  return {data: parseJSONLoose(r.text), applied, named: !!r.modelApplied, tier: r.modelTierApplied};
+}
 let tick = null;
 async function analyze(){
   if (!sample || !imgLimits) return;
@@ -771,17 +810,19 @@ async function analyze(){
   Object.assign(run, {A:"run", B:"run", C:"wait", t0:Date.now(), err:"", busy:true});
   tick = setInterval(()=>{ const e=$("#elapsed"); if(e) e.textContent = Math.round((Date.now()-run.t0)/1000)+"초"; }, 1000);
   render();
-  const opts = {images: blobs, modelTier:"complex", signal: ctl.signal};
+  const base = {images: blobs, signal: ctl.signal};
+  run.mA = run.mB = run.mC = "";
   try {
-    const [a, b] = await Promise.all([
-      sample.json(promptA(), opts).then(r=>{ run.A="ok"; render(); return r; }, e=>{ run.A="err"; throw e; }),
-      sample.json(promptB(), opts).then(r=>{ run.B="ok"; render(); return r; }, e=>{ run.B="err"; throw e; })
+    const [ra, rb] = await Promise.all([
+      askRole("A", promptA(), base).then(r=>{ run.A="ok"; run.mA=r.applied; render(); return r; }, e=>{ run.A="err"; throw e; }),
+      askRole("B", promptB(), base).then(r=>{ run.B="ok"; run.mB=r.applied; render(); return r; }, e=>{ run.B="err"; throw e; })
     ]);
-    S.passA = a; S.passB = b;
+    S.passA = ra.data; S.passB = rb.data;
     run.C = "run"; render();
-    const c = await sample.json(promptC(a, b), opts);
-    run.C = "ok";
-    S.final = normalize(c);
+    const rc = await askRole("C", promptC(ra.data, rb.data), base);
+    run.C = "ok"; run.mC = rc.applied;
+    S.final = normalize(rc.data);
+    S.final.models = {A:ra.applied, B:rb.applied, C:rc.applied, split: ra.named && rb.named};
     S.report = null;
     applyPayloadDefaults(S);
     S.done = {0:1,1:1,2:1,3:1,4:1};
@@ -799,7 +840,7 @@ function normalize(f){
   f.airframe = f.airframe || {}; f.candidates = Array.isArray(f.candidates)?f.candidates:[];
   f.payload = f.payload || {}; f.intent = f.intent || {};
   f.observations = Array.isArray(f.observations)?f.observations:[];
-  f.crossCheck = Array.isArray(f.crossCheck)?f.crossCheck:[];
+  f.crossCheck = (Array.isArray(f.crossCheck)?f.crossCheck:[]).map(c=>({review:"미확인", reviewNote:"", ...c}));
   f.limitations = Array.isArray(f.limitations)?f.limitations:[];
   const sg = f.signature = f.signature || {};
   sg.links = Array.isArray(sg.links)?sg.links:[];
@@ -950,7 +991,8 @@ function vPhoto(){
     <div class="f wide"><label class="lbl" for="m-sit">상황 메모</label><textarea id="m-sit" data-meta="situation" placeholder="추락/폭발 여부, 피해, 목격 진술, 비행 방향 등">${esc(S.meta.situation)}</textarea></div>
   </div>
   <div class="ph"><div><h2 style="font-size:16px">AI 교차검증 분석</h2><p>분석관 A(부품 식별)와 B(구조·무장)가 같은 사진을 서로 모르게 분석하고, 검증관 C가 사진을 다시 보며 두 결과를 대조해 최종 판단을 내립니다.</p></div></div>
-  <div class="pipe">${node("A","분석관 A","전자부품·라벨·제원 식별")}${node("B","분석관 B","기체구조·탑재물·폭발흔적")}${node("C","검증관 C","항목별 대조·최종 판정")}</div>
+  <div class="pipe">${node("A","분석관 A · Opus","전자부품·라벨·제원 식별"+(run.mA?`<br><span class="mono">응답: ${esc(run.mA)}</span>`:""))}${node("B","분석관 B · Sonnet","기체구조·탑재물·폭발흔적"+(run.mB?`<br><span class="mono">응답: ${esc(run.mB)}</span>`:""))}${node("C","검증관 C","항목별 대조·최종 판정"+(run.mC?`<br><span class="mono">응답: ${esc(run.mC)}</span>`:""))}</div>
+  <p class="note">A와 B는 서로 다른 모델로 따로 분석해 같은 방향의 오판 가능성을 줄입니다. 지정 모델을 쓸 수 없는 계정에서는 다른 모델로 대체되며, 실제 응답 모델이 기록됩니다.</p>
   ${run.err?`<div class="msg err">${esc(run.err)}</div>`:""}
   ${!canAI ? `<div class="msg">${sample===null?"AI 분석은 claude.ai에서 이 페이지를 열었을 때 사용할 수 있습니다. 예시 결과와 수동 입력·위협 범위 계산·보고서 작성은 그대로 쓸 수 있습니다.":"이 화면에서는 이미지를 AI로 보낼 수 없습니다."}</div>`:""}
   <div class="row">
@@ -959,19 +1001,29 @@ function vPhoto(){
   </div>`;
 }
 
+const REVIEW = ["미확인","확인","수정","기각"];
+const pendingReview = f => (f?.crossCheck||[]).filter(c=>(c.review||"미확인")==="미확인").length;
+function reviewText(f){ const n=(f?.crossCheck||[]).length; if(!n) return "대조 항목 없음"; const k=c=>f.crossCheck.filter(x=>(x.review||"미확인")===c).length; return `${n}건 중 확인 ${k("확인")} · 수정 ${k("수정")} · 기각 ${k("기각")} · 미확인 ${k("미확인")}`; }
+function reviewBadge(f){ const n=(f?.crossCheck||[]).length, p=pendingReview(f); return n?`<span class="pill" style="color:${p?"var(--warn)":"var(--ok)"}">${p?`감식관 확인 ${n-p}/${n}`:"감식관 확인 완료"}</span>`:""; }
+function modelLine(f){ const m=f?.models; if(!m) return "분석 모델 기록 없음"; return `분석관 A ${m.A} · 분석관 B ${m.B} · 검증관 C ${m.C}${m.split?"":" (A·B 모델 분리 미적용)"}`; }
 function vParts(){
   const f = S.final;
   if (!f) return emptyView("2. 부품 분석");
-  const cols = [["name","부품 명칭","c-name"],["category","분류"],["purpose","용도","c-wide"],["country","제조국"],["manufacturer","제조사"],["features","특징","c-wide"],["specs","주요 제원","c-wide"],["price","추정 가격"]];
+  const cols = [["name","부품 명칭","c-name"],["category","분류","c-cat"],["purpose","용도","c-wide"],["country","제조국"],["manufacturer","제조사"],["features","특징","c-wide"],["specs","주요 제원","c-wide"],["price","추정 가격"]];
   return `
   <div class="ph"><div><h2>2. 부품 분석</h2><p>셀을 눌러 직접 수정할 수 있습니다. 수정 내용은 위협 범위와 보고서에 반영됩니다.</p></div>
   <div class="row"><button class="btn sm" id="addPart" type="button">부품 행 추가</button></div></div>
   ${f.parts.length?`<div class="tw"><table><thead><tr><th>#</th>${cols.map(c=>`<th>${c[1]}</th>`).join("")}<th>신뢰도</th><th>관찰 근거</th></tr></thead><tbody>
   ${f.parts.map((p,i)=>`<tr><td class="mono">${i+1}</td>${cols.map(c=>`<td class="${c[2]||""}" contenteditable="true" data-part="${i}" data-f="${c[0]}">${esc(p[c[0]])}</td>`).join("")}<td>${confCell(p.confidence)}</td><td class="c-wide" contenteditable="true" data-part="${i}" data-f="evidence">${esc(p.evidence)}</td></tr>`).join("")}
   </tbody></table></div>`:`<div class="empty">식별된 부품이 없습니다.</div>`}
-  <div><h3 style="font-size:15px;margin-bottom:8px">교차검증 결과 <span class="note">· 종합 신뢰도 <b class="mono">${num(f.overallConfidence)}%</b></span></h3>
-  ${f.crossCheck.length?`<div class="tw"><table><thead><tr><th>대조 항목</th><th>분석관 A</th><th>분석관 B</th><th>판정</th><th>최종 채택 근거</th></tr></thead><tbody>
-  ${f.crossCheck.map(c=>`<tr><td class="c-name">${esc(c.item)}</td><td>${esc(c.a)}</td><td>${esc(c.b)}</td><td><span class="st ${esc(c.status)}">${esc(c.status)}</span></td><td class="c-wide">${esc(c.resolution)}</td></tr>`).join("")}
+  <div style="display:grid;gap:10px">
+  <div class="ph"><div><h3 style="font-size:15px">교차검증 결과 <span class="note">· 종합 신뢰도 <b class="mono">${num(f.overallConfidence)}%</b></span></h3>
+    <p class="note" style="margin-top:4px">${esc(modelLine(f))} · "일치"는 두 관점의 결론이 같다는 뜻이며 정답 보증이 아닙니다. 항목마다 감식관이 확인해 확정하세요.</p></div>
+    ${reviewBadge(f)}</div>
+  ${f.crossCheck.length?`<div class="tw"><table><thead><tr><th>대조 항목</th><th>분석관 A</th><th>분석관 B</th><th>AI 판정</th><th>최종 채택 근거</th><th>감식관 확인</th><th>확인 메모</th></tr></thead><tbody>
+  ${f.crossCheck.map((c,i)=>`<tr class="rv-${esc(c.review)}"><td class="c-name">${esc(c.item)}</td><td>${esc(c.a)}</td><td>${esc(c.b)}</td><td><span class="st ${esc(c.status)}">${esc(c.status)}</span></td><td class="c-wide">${esc(c.resolution)}</td>
+    <td><select class="cell rvsel" id="rv-${i}" data-rv="${i}" aria-label="${esc(c.item)} 감식관 확인">${REVIEW.map(r=>`<option${r===c.review?" selected":""}>${r}</option>`).join("")}</select></td>
+    <td class="c-wide"><input class="cell" id="rvn-${i}" data-rvn="${i}" value="${esc(c.reviewNote)}" placeholder="실물 확인 내용, 수정 사유"></td></tr>`).join("")}
   </tbody></table></div>`:`<div class="empty">교차검증 기록이 없습니다.</div>`}</div>
   ${f.limitations.length?`<div class="msg"><b>판단 한계</b><ul style="margin:4px 0 0;padding-left:18px">${f.limitations.map(l=>`<li>${esc(l)}</li>`).join("")}</ul></div>`:""}`;
 }
@@ -1157,7 +1209,7 @@ function reportBlocks(editable){
   const B = [];
   const h = t => B.push(`<h3>${t}</h3>`);
   h("1. 개요");
-  B.push(`<dl class="rkv"><dt>발견 장소</dt><dd>${esc(m.location||"—")}</dd><dt>발견 일시</dt><dd>${esc(m.datetime||"—")}</dd><dt>상황</dt><dd>${esc(m.situation||"—")}</dd><dt>판단 신뢰도</dt><dd>${num(f.overallConfidence)}% (AI 분석관 2인 독립 분석 + 검증관 교차검증)</dd></dl>`);
+  B.push(`<dl class="rkv"><dt>발견 장소</dt><dd>${esc(m.location||"—")}</dd><dt>발견 일시</dt><dd>${esc(m.datetime||"—")}</dd><dt>상황</dt><dd>${esc(m.situation||"—")}</dd><dt>판단 신뢰도</dt><dd>${num(f.overallConfidence)}% (AI 분석관 2인 독립 분석 + 검증관 교차검증)</dd><dt>분석 모델</dt><dd>${esc(modelLine(f))}</dd><dt>감식관 확인</dt><dd>${esc(reviewText(f))}</dd></dl>`);
   B.push(`<div><b>핵심 결론</b>${edText("summary", r.summary, "AI 본문 작성을 누르거나 직접 입력하세요.", editable)}</div>`);
   if (imgs.length) B.push(`<div class="rimgs">${imgs.slice(0,8).map(im=>`<figure><div class="rimg" style="background-image:url('${im.url}')"></div><figcaption>#${S.images.indexOf(im)+1} ${esc(im.kind)}</figcaption></figure>`).join("")}</div>`);
   h("2. 드론 종류");
@@ -1180,7 +1232,8 @@ function reportBlocks(editable){
   h("7. C-UAS 관점"); B.push(edList("cuasView", r.cuasView, "탐지·식별·무력화 고려사항", editable));
   h("8. 향후 대응방안"); B.push(edList("countermeasures", r.countermeasures, "[즉시/단기/중장기] 대응방안", editable));
   h("9. 교차검증 및 판단 근거");
-  if (f.crossCheck.length) B.push(`<table data-split="1"><thead><tr><th>항목</th><th>분석관 A</th><th>분석관 B</th><th>판정</th><th>채택 근거</th></tr></thead><tbody>${f.crossCheck.map(c=>`<tr><td>${esc(c.item)}</td><td>${esc(c.a)}</td><td>${esc(c.b)}</td><td>${esc(c.status)}</td><td>${esc(c.resolution)}</td></tr>`).join("")}</tbody></table>`);
+  B.push(`<div class="rsmall" style="margin-top:0">${esc(modelLine(f))}. AI 판정의 "일치"는 정답 보증이 아니며, 최종 확정은 감식관 확인 열에 따름. 확인자: ${esc(S.meta.analyst||"미기재")}</div>`);
+  if (f.crossCheck.length) B.push(`<table data-split="1"><thead><tr><th>항목</th><th>분석관 A</th><th>분석관 B</th><th>AI 판정</th><th>채택 근거</th><th>감식관 확인</th></tr></thead><tbody>${f.crossCheck.map(c=>`<tr><td>${esc(c.item)}</td><td>${esc(c.a)}</td><td>${esc(c.b)}</td><td>${esc(c.status)}</td><td>${esc(c.resolution)}</td><td><b style="color:${({확인:"#15803d",수정:"#b45309",기각:"#b91c1c"})[c.review]||"#55625f"}">${esc(c.review||"미확인")}</b>${c.reviewNote?`<br>${esc(c.reviewNote)}`:""}</td></tr>`).join("")}</tbody></table>`);
   B.push(edList("evidenceBasis", r.evidenceBasis, "판단 근거", editable));
   if (f.limitations.length) B.push(`<div><b>판단 한계</b><ul>${f.limitations.map(l=>`<li>${esc(l)}</li>`).join("")}</ul></div>`);
   B.push(`<div class="foot">본 보고서는 사진 기반 AI 보조 분석 결과이며, 최종 판단은 실물 감식·잔류물 화학분석·전문가 검토로 확정해야 함.</div>`);
@@ -1222,6 +1275,7 @@ function vReport(){
     <button class="btn pri" id="pdf" type="button" ${pdfState.busy?"disabled":""}>${pdfState.busy?`<span class="spin"></span> ${esc(pdfState.stage||"PDF 생성 중")}`:"최종 PDF 생성"}</button>
   </div></div>
   ${rep.err?`<div class="msg err">${esc(rep.err)}</div>`:""}
+  ${pendingReview(S.final)?`<div class="msg warn-msg">감식관 확인이 끝나지 않은 교차검증 항목이 <b>${pendingReview(S.final)}건</b> 있습니다. 그대로 PDF를 만들면 해당 항목은 "미확인"으로 표기됩니다. <button class="btn sm" type="button" data-goto="1">확인하러 가기</button></div>`:""}
   ${pdfState.pages.length?`<div class="pdfout"><div class="ph"><div><b>최종 PDF · ${pdfState.pages.length}쪽</b> <span class="note">${esc(pdfState.name)}</span>${pdfState.msg?`<div class="note">${esc(pdfState.msg)}</div>`:""}</div><button class="btn sm" id="pdfSave" type="button" ${pdfState.busy?"disabled":""}>PDF 다시 저장</button></div>
     <div class="pdfprev">${pdfState.pages.map((u,i)=>`<figure><img src="${u}" alt="${i+1}쪽 미리보기"><figcaption class="mono">${i+1}</figcaption></figure>`).join("")}</div></div>`:(pdfState.msg?`<div class="msg">${esc(pdfState.msg)}</div>`:"")}
   <div class="sheetwrap"><article id="report">
@@ -1270,6 +1324,7 @@ document.addEventListener("change", e => {
   const t = e.target;
   if (t.id==="file") { addFiles([...t.files]); t.value=""; }
   if (t.dataset.kind!=null) S.images[+t.dataset.kind].kind = t.value;
+  if (t.dataset.rv!=null && S.final) { S.final.crossCheck[+t.dataset.rv].review = t.value; render(); }
   if (t.dataset.link!=null && S.final) { S.final.signature.links[+t.dataset.link][t.dataset.lf] = t.value; render(); }
   if (t.dataset.sg && S.final) { const sg=S.final.signature, k=t.dataset.sg;
     if (k==="navigation") sg.navigation = t.value.split(/[,·\/]/).map(x=>x.trim()).filter(Boolean);
@@ -1281,6 +1336,7 @@ document.addEventListener("change", e => {
 document.addEventListener("input", e => {
   const t = e.target;
   if (t.dataset.meta) S.meta[t.dataset.meta] = t.value;
+  if (t.dataset.rvn!=null && S.final) S.final.crossCheck[+t.dataset.rvn].reviewNote = t.value;
 });
 document.addEventListener("focusout", e => {
   const t = e.target;
