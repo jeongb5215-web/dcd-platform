@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>추락드론 감식 시스템</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: product homepage — sticky nav, dark radar-grid hero with annotated drone, process + cross-check sections, then the full-width workbench (step tabs over one working panel) */
+:root{
+  --bg:#e9eeec; --surface:#ffffff; --sunk:#f3f6f5; --ink:#13201e; --muted:#5a6b67; --line:#cfd9d6;
+  --accent:#0d6b61; --accent-ink:#ffffff; --accent-soft:#d6ece8;
+  --hazard:#b45309; --hazard-soft:#fbecd9;
+  --ok:#15803d; --warn:#b45309; --bad:#b91c1c; --info:#1d4ed8;
+  --z1:#7f1d1d; --z2:#dc2626; --z3:#f97316; --z4:#eab308;
+  --f-display:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  /* report sheet is always print-light, by design */
+  /* hero band keeps one dark look in both themes */
+  --h-bg:#0d1b26; --h-ink:#e8f0ef; --h-muted:#93a8aa; --h-line:rgba(232,240,239,.12); --h-accent:#4fd1bf; --h-hazard:#f5a524;
+  --rp-bg:#ffffff; --rp-ink:#111a19; --rp-muted:#55625f; --rp-line:#c9d3d0; --rp-accent:#0d6b61; --rp-band:#eef3f2;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0c1312; --surface:#141e1c; --sunk:#101917; --ink:#e2ebe8; --muted:#93a5a0; --line:#263532;
+  --accent:#3bb5a4; --accent-ink:#06201c; --accent-soft:#163631;
+  --hazard:#f59e0b; --hazard-soft:#2f2210;
+  --ok:#4ade80; --warn:#fbbf24; --bad:#f87171; --info:#93c5fd;
+  --z1:#fca5a5; --z2:#f87171; --z3:#fb923c; --z4:#facc15; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c1312; --surface:#141e1c; --sunk:#101917; --ink:#e2ebe8; --muted:#93a5a0; --line:#263532;
+  --accent:#3bb5a4; --accent-ink:#06201c; --accent-soft:#163631;
+  --hazard:#f59e0b; --hazard-soft:#2f2210;
+  --ok:#4ade80; --warn:#fbbf24; --bad:#f87171; --info:#93c5fd;
+  --z1:#fca5a5; --z2:#f87171; --z3:#fb923c; --z4:#facc15; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* site shell: full-bleed bands, inner wrapper carries the gutter */
+.in{max-width:1200px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.kicker{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:500}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--h-bg) 92%,transparent);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--h-line);color:var(--h-ink);padding-top:env(safe-area-inset-top,0px)}
+.nav-in{display:flex;align-items:center;gap:24px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--h-ink);text-decoration:none;margin-right:auto;min-width:0}
+.brand svg{width:28px;height:28px;color:var(--h-accent);flex:none}
+.brand b{display:block;font-size:14.5px;font-weight:700;letter-spacing:-.01em;white-space:nowrap}
+.brand small{display:block;font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;color:var(--h-muted);text-transform:uppercase}
+.links{display:flex;gap:4px}
+.links a{color:var(--h-muted);text-decoration:none;font-size:13.5px;font-weight:500;padding:8px 12px;border-radius:6px}
+.links a:hover{color:var(--h-ink);background:var(--h-line)}
+.nav-cta{background:var(--h-accent)!important;border-color:var(--h-accent)!important;color:var(--h-bg)!important}
+@media (max-width:760px){.links{display:none}}
+@media (max-width:420px){.brand small{display:none}.nav-in{gap:12px}}
+
+/* hero (single deliberate dark look in both themes) */
+.hero{background:var(--h-bg);color:var(--h-ink);position:relative;overflow:hidden;border-bottom:1px solid var(--h-line)}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 80% at 78% 40%,color-mix(in srgb,var(--h-accent) 16%,transparent),transparent 70%);pointer-events:none}
+.hero-in{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:40px;align-items:center;padding-block:64px 72px}
+@media (max-width:900px){.hero-in{grid-template-columns:minmax(0,1fr);padding-block:44px 52px}}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--h-muted);border:1px solid var(--h-line);border-radius:999px;padding:5px 12px}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--h-accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--h-accent) 25%,transparent)}
+.hero h1{font-size:clamp(32px,4.6vw,54px);line-height:1.14;letter-spacing:-.03em;font-weight:700;margin:20px 0 18px}
+.hero h1 em{font-style:normal;color:var(--h-accent);background:linear-gradient(transparent 84%,color-mix(in srgb,var(--h-hazard) 55%,transparent) 0)}
+.hero-copy p{color:var(--h-muted);font-size:15.5px;line-height:1.75;max-width:54ch;margin:0}
+.hero-cta{margin-top:28px;gap:10px}
+.btn.hero-pri{background:var(--h-accent);color:var(--h-bg);border-color:var(--h-accent);padding:12px 20px;font-size:14.5px}
+.btn.hero-pri:hover{filter:brightness(1.08)}
+.btn.hero-ghost{background:transparent;color:var(--h-ink);border-color:var(--h-line);padding:12px 20px;font-size:14.5px}
+.btn.hero-ghost:hover{border-color:var(--h-muted)}
+.hero-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:40px 0 0;border-top:1px solid var(--h-line)}
+.hero-stats div{padding:16px 16px 0 0}
+.hero-stats div+div{padding-left:16px;border-left:1px solid var(--h-line)}
+.hero-stats dt{font-size:11px;color:var(--h-muted);letter-spacing:.06em}
+.hero-stats dd{margin:4px 0 2px;font-size:22px;font-weight:600;color:var(--h-ink);white-space:nowrap}
+.hero-stats span{font-size:11.5px;color:var(--h-muted)}
+@media (max-width:480px){.hero-stats dd{font-size:18px}.hero-stats div+div{padding-left:10px}}
+.hero-fig{margin:0;border:1px solid var(--h-line);border-radius:14px;background:color-mix(in srgb,var(--h-bg) 70%,#000 30%);padding:14px;display:grid;gap:8px;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
+.hero-fig svg{width:100%;height:auto;display:block;max-width:100%}
+.hero-fig figcaption{font-family:var(--f-mono);font-size:11px;color:var(--h-muted);text-align:right}
+@media (prefers-reduced-motion:no-preference){
+  .hero-fig .co{animation:co .7s ease both}
+  .hero-fig .co:nth-of-type(2){animation-delay:.12s}.hero-fig .co:nth-of-type(3){animation-delay:.24s}.hero-fig .co:nth-of-type(4){animation-delay:.36s}
+  @keyframes co{from{opacity:.25}to{opacity:1}}
+}
+
+/* sections */
+.sec{padding-block:72px}
+@media (max-width:700px){.sec{padding-block:48px}}
+.sec-alt{background:var(--surface);border-block:1px solid var(--line)}
+.sec-h{display:grid;gap:10px;margin-bottom:32px;max-width:720px}
+.sec-h h2{font-size:clamp(22px,2.8vw,32px);letter-spacing:-.02em;line-height:1.25}
+.sec-h p{margin:0;color:var(--muted);font-size:15px;line-height:1.7}
+
+.how{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+@media (max-width:860px){.how{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.how{grid-template-columns:minmax(0,1fr)}}
+.how li{background:var(--surface)}
+.how button{all:unset;box-sizing:border-box;cursor:pointer;display:grid;gap:8px;padding:22px 22px 24px;width:100%;height:100%}
+.how button:hover{background:var(--sunk)}
+.how button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.how .hn{display:flex;justify-content:space-between;align-items:center;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.how .hn i{font-style:normal;font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--line)}
+.how .done .hn i{color:var(--accent);border-color:var(--accent)}
+.how h3{font-size:17px;letter-spacing:-.01em}
+.how p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.65}
+
+.xv .sec-h{max-width:none}
+.xv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;position:relative}
+@media (max-width:820px){.xv .sec-h{max-width:none}
+.xv-grid{grid-template-columns:minmax(0,1fr)}}
+.xv-c{display:grid;gap:8px;align-content:start;padding:24px;border-radius:12px;border:1px solid var(--line);background:var(--bg)}
+.xv-c3{border-color:var(--accent);background:var(--accent-soft)}
+.xv-n{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:600;background:var(--surface);border:1px solid var(--line);color:var(--accent)}
+.xv-c3 .xv-n{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.xv-c h3{font-size:16px}
+.xv-c p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.65}
+
+/* workbench */
+.work{padding-top:64px;scroll-margin-top:56px}
+.work .in{display:grid;gap:16px}
+.work-top{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:flex-end;justify-content:space-between}
+.work-h{font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;margin-top:6px}
+.case{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;font-size:12px}
+.case b{display:block;font-family:var(--f-mono);color:var(--ink);font-size:13px;font-weight:600}
+.banner{font-size:13px;color:var(--muted);background:var(--hazard-soft);border-radius:8px;padding:10px 14px}
+.banner b{color:var(--hazard);margin-right:6px}
+
+.rail{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px;gap:4px}
+@media (max-width:900px){.rail{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(140px,1fr);overflow-x:auto}}
+.step{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:28px minmax(0,1fr);gap:0 10px;align-items:center;padding:10px 12px;border-radius:8px}
+.step:hover{background:var(--sunk)}
+.step[aria-current="step"]{background:var(--ink);color:var(--surface)}
+.step[aria-current="step"] .s{color:color-mix(in srgb,var(--surface) 70%,transparent)}
+.step .n{grid-row:span 2;font-family:var(--f-mono);font-weight:600;font-size:12px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--line);color:var(--muted)}
+.step.done .n{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.step[aria-current="step"] .n{border-color:var(--surface);color:var(--surface)}
+.step[aria-current="step"].done .n{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.step .t{font-weight:600;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.step .s{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.step:focus-visible{outline:2px solid var(--accent)}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px;min-width:0;display:grid;gap:20px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 12px 32px -20px rgba(0,0,0,.18)}
+@media (max-width:520px){.panel{padding:16px}}
+.panel h2{font-size:20px;font-weight:700;letter-spacing:-.01em}
+.ph{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:flex-start}
+.ph p{margin:4px 0 0;color:var(--muted);max-width:68ch}
+
+.btn{cursor:pointer;border:1px solid var(--line);background:var(--surface);padding:9px 14px;border-radius:8px;font-weight:600;font-size:13.5px;display:inline-flex;gap:8px;align-items:center;transition:border-color .15s,filter .15s}
+.btn:hover{border-color:var(--muted)}
+.btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.pri:hover{filter:brightness(1.06)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.sm{padding:6px 11px;font-size:12.5px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+.foot-site{border-top:1px solid var(--line);margin-top:72px;padding-block:28px calc(28px + env(safe-area-inset-bottom,0px))}
+.foot-in{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.foot-in b{color:var(--ink);margin-right:10px}
+
+/* drop zone */
+.drop{border:1.5px dashed var(--line);border-radius:8px;padding:22px;text-align:center;background:var(--sunk);cursor:pointer;display:grid;gap:6px;place-items:center}
+.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop strong{font-size:15px}
+.drop span{color:var(--muted);font-size:12.5px}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.thumb{border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--sunk);display:grid}
+.thumb .img{aspect-ratio:4/3;max-width:100%;background:var(--line);position:relative}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb .tag{position:absolute;left:6px;top:6px;background:var(--ink);color:var(--surface);font-family:var(--f-mono);font-size:11px;padding:1px 6px;border-radius:3px}
+.thumb .ctl{display:flex;gap:6px;padding:6px}
+.thumb select{flex:1;min-width:0;font-size:12px;padding:4px;border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+.thumb button{all:unset;cursor:pointer;color:var(--muted);font-size:12px;padding:2px 6px;border-radius:4px}
+.thumb button:hover{color:var(--bad)}
+.ph-svg{width:100%;height:100%;display:block}
+
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.f{display:grid;gap:4px}
+.f input,.f select,.f textarea{border:1px solid var(--line);background:var(--sunk);border-radius:5px;padding:8px 10px;width:100%}
+.f textarea{min-height:64px;resize:vertical}
+.f.wide{grid-column:1/-1}
+
+/* pipeline */
+.pipe{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.pipe{grid-template-columns:minmax(0,1fr)}}
+.node{border:1px solid var(--line);border-radius:6px;padding:12px;background:var(--sunk);display:grid;gap:4px}
+.node .k{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.node .who{font-weight:600}
+.node .d{font-size:12px;color:var(--muted)}
+.pill{font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.pill.wait{color:var(--muted)}.pill.run{color:var(--info)}.pill.ok{color:var(--ok)}.pill.err{color:var(--bad)}
+.node.run{border-color:var(--info)}
+.msg{font-size:13px;padding:10px 12px;border-radius:6px;background:var(--sunk);border:1px solid var(--line)}
+.msg.err{border-color:var(--bad);color:var(--bad)}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{background:var(--sunk);font-size:11px;letter-spacing:.05em;color:var(--muted);font-weight:600;white-space:nowrap;position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td[contenteditable]:focus{background:var(--accent-soft);outline:none}
+td.c-name{font-weight:600;min-width:150px}
+td.c-wide{min-width:180px}
+.conf{display:inline-grid;grid-template-columns:44px auto;align-items:center;gap:6px;font-family:var(--f-mono);font-size:11.5px}
+.bar{height:5px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.st{font-size:11px;font-weight:600;padding:1px 7px;border-radius:3px;white-space:nowrap}
+.st.일치{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+.st.부분일치{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.st.불일치{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+.st.단독관찰{background:color-mix(in srgb,var(--info) 14%,transparent);color:var(--info)}
+.empty{padding:28px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:6px}
+
+/* airframe */
+.af{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:16px}
+@media (max-width:720px){.af{grid-template-columns:minmax(0,1fr)}}
+.types{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.type{border:1px solid var(--line);border-radius:6px;padding:8px 6px;text-align:center;font-size:12px;color:var(--muted);display:grid;gap:4px;justify-items:center}
+.type svg{width:56px;height:40px}
+.type.on{border-color:var(--accent);color:var(--ink);background:var(--accent-soft);font-weight:600}
+.cands{display:grid;gap:8px}
+.cand{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.cand .pct{font-family:var(--f-mono);font-size:18px;font-weight:600;color:var(--accent)}
+.cand .m{font-weight:600}
+.cand .r{font-size:12.5px;color:var(--muted)}
+.kv{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 14px;font-size:13px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+.intent{border-left:3px solid var(--hazard);background:var(--hazard-soft);padding:10px 14px;border-radius:0 6px 6px 0;display:grid;gap:4px}
+
+/* blast */
+.blast{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:18px}
+@media (max-width:820px){.blast{grid-template-columns:minmax(0,1fr)}}
+.zones{display:grid;gap:6px}
+.zone{display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:6px}
+.zone i{width:12px;height:12px;border-radius:50%}
+.zone .zn{font-weight:600;font-size:13px}
+.zone .zs{font-size:11.5px;color:var(--muted)}
+.zone .zr{font-family:var(--f-mono);font-size:15px;font-weight:600;text-align:right}
+.zone .zr small{display:block;font-size:10.5px;color:var(--muted);font-weight:400}
+.chartbox{overflow-x:auto}
+.chartbox svg{display:block;width:100%;min-width:480px;height:auto}
+.rings svg{display:block;width:100%;max-width:300px;height:auto;margin:0 auto}
+.calc{font-family:var(--f-mono);font-size:12px;background:var(--sunk);border:1px solid var(--line);border-radius:6px;padding:10px 12px;overflow-x:auto;white-space:pre}
+.note{font-size:12px;color:var(--muted)}
+.chk{display:flex;gap:8px;align-items:center;font-size:13px}
+
+/* report sheet */
+.sheetwrap{overflow-x:auto;background:var(--sunk);border:1px solid var(--line);border-radius:6px;padding:16px}
+#report{width:794px;margin:0 auto;background:var(--rp-bg);color:var(--rp-ink);font-family:var(--f-body);font-size:12.5px;line-height:1.6;padding:44px 48px;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+#report h3{font-size:14px;color:var(--rp-accent);border-bottom:1.5px solid var(--rp-accent);padding-bottom:4px;margin:22px 0 10px}
+#report .rh{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px double var(--rp-ink);padding-bottom:10px}
+#report .rh h2{font-size:22px;letter-spacing:-.01em}
+#report .rm{font-family:var(--f-mono);font-size:11px;color:var(--rp-muted);text-align:right}
+#report .cls{display:inline-block;border:1.5px solid #b91c1c;color:#b91c1c;font-weight:700;font-size:11px;padding:1px 8px;letter-spacing:.1em;margin-bottom:6px}
+#report table{font-size:11px}
+#report th{background:var(--rp-band);color:var(--rp-muted);position:static}
+#report th,#report td{border-bottom:1px solid var(--rp-line);padding:5px 7px}
+#report .rkv{display:grid;grid-template-columns:110px 1fr;gap:3px 12px}
+#report .rkv dt{color:var(--rp-muted)}
+#report .rkv dd{margin:0}
+#report ul{margin:4px 0;padding-left:18px}
+#report .ed{border-radius:3px}
+#report .ed:hover{background:#f3f7f6}
+#report .ed:focus{outline:1px dashed var(--rp-accent);background:#f3f7f6}
+#report .phd{color:#9aa6a3;font-style:italic}
+#report .rimgs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#report .rimgs figure{margin:0;font-size:10px;color:var(--rp-muted)}
+#report .rimgs img{width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid var(--rp-line)}
+#report .rblast{display:grid;grid-template-columns:220px 1fr;gap:14px;align-items:center}
+#report .foot{margin-top:24px;border-top:1px solid var(--rp-line);padding-top:8px;font-size:10px;color:var(--rp-muted)}
+
+/* countermeasures */
+.combo{border:1px solid var(--accent);background:var(--accent-soft);border-radius:6px;padding:10px 14px;display:grid;gap:2px;font-weight:600}
+.freq svg{min-width:520px;max-width:820px}
+.cell{width:100%;min-width:90px;border:1px solid var(--line);background:var(--sunk);border-radius:4px;padding:4px 6px;font-size:12.5px}
+.cm{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:18px}
+@media (max-width:820px){.cm{grid-template-columns:minmax(0,1fr)}}
+.scs{display:grid;gap:8px}
+.sc{border:1px solid var(--line);border-radius:6px;padding:9px 12px;display:grid;gap:4px}
+.sc-h{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.sc-h b{margin-right:auto;font-size:13px}
+.sc-h .mono{font-weight:600;font-size:14px}
+.sc-bar{height:6px}
+.prio{font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:3px}
+.prio.p1{background:var(--bad);color:var(--surface)}
+.prio.p2{background:color-mix(in srgb,var(--warn) 22%,transparent);color:var(--warn)}
+.prio.p보{background:var(--sunk);color:var(--muted);border:1px solid var(--line)}
+.chip{font-family:var(--f-mono);font-size:10.5px;padding:1px 6px;border:1px solid var(--line);border-radius:3px;color:var(--muted)}
+#report .rcombo,.pp-body .rcombo{background:var(--rp-band);border-left:3px solid var(--rp-accent);padding:6px 10px}
+#report .rfreq svg,.pp-body .rfreq svg{width:100%;height:auto;display:block}
+#report .rmut,.pp-page .rmut{color:var(--rp-muted)}
+#report .rsmall,.pp-page .rsmall{font-size:10px;color:var(--rp-muted);margin-top:4px}
+#report > *+*{margin-top:8px}
+
+/* PDF output preview */
+.pdfout{border:1px solid var(--accent);border-radius:6px;padding:12px 14px;display:grid;gap:10px;background:var(--sunk)}
+.pdfprev{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+.pdfprev figure{margin:0;flex:0 0 auto;display:grid;gap:3px;justify-items:center}
+.pdfprev img{width:119px;height:168px;border:1px solid var(--line);background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.pdfprev figcaption{font-size:11px;color:var(--muted)}
+
+/* PDF pages (offscreen, print colors) */
+.pdfhost{position:absolute;left:-12000px;top:0;width:794px;pointer-events:none}
+.pp-page{position:relative;width:794px;height:1123px;background:#fff;color:var(--rp-ink);font-family:var(--f-body);font-size:12px;line-height:1.6;overflow:hidden}
+.pp-head{position:absolute;left:56px;right:56px;top:28px;display:flex;justify-content:space-between;font-size:10px;color:var(--rp-muted);border-bottom:1px solid var(--rp-line);padding-bottom:6px;font-family:var(--f-mono)}
+.pp-foot{position:absolute;left:56px;right:56px;bottom:26px;display:flex;justify-content:space-between;font-size:10px;color:var(--rp-muted);border-top:1px solid var(--rp-line);padding-top:6px}
+.pp-no{font-family:var(--f-mono)}
+.pp-body{position:absolute;left:56px;right:56px;top:70px;bottom:64px;overflow:hidden;display:flex;flex-direction:column;gap:8px}
+.pp-body h3{font-size:14px;color:var(--rp-accent);border-bottom:1.5px solid var(--rp-accent);padding-bottom:3px;margin:10px 0 0;font-family:var(--f-display)}
+.pp-body table{border-collapse:collapse;width:100%;font-size:10.5px}
+.pp-body th{background:var(--rp-band);color:var(--rp-muted);text-align:left;font-weight:600;padding:5px 7px;border-bottom:1px solid var(--rp-line)}
+.pp-body td{padding:5px 7px;border-bottom:1px solid var(--rp-line);vertical-align:top}
+.pp-body ul{margin:0;padding-left:18px}
+.pp-body .rkv{display:grid;grid-template-columns:100px 1fr;gap:3px 12px;margin:0}
+.pp-body .rkv dt{color:var(--rp-muted)}.pp-body .rkv dd{margin:0}
+.pp-body .rimgs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.pp-body .rimgs figure{margin:0;font-size:9.5px;color:var(--rp-muted)}
+.rimg{width:100%;aspect-ratio:4/3;max-width:100%;background:var(--rp-band) center/cover no-repeat;border:1px solid var(--rp-line)}
+.pp-body .rblast{display:grid;grid-template-columns:210px 1fr;gap:14px;align-items:center}
+.pp-body .pp-none{color:#9aa6a3;font-style:italic}
+.pp-body .foot{font-size:10px;color:var(--rp-muted);border-top:1px solid var(--rp-line);padding-top:6px;margin-top:6px}
+.cls.sm{font-size:9px;padding:0 5px;border:1px solid #b91c1c;color:#b91c1c;margin-right:4px}
+.cover{padding:56px;display:flex;flex-direction:column;gap:22px}
+.cover .cls{display:inline-block;border:2px solid #b91c1c;color:#b91c1c;font-weight:700;font-size:12px;padding:2px 10px;letter-spacing:.12em}
+.cv-top{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--rp-muted)}
+.cv-title{border-top:6px solid var(--rp-ink);padding-top:22px}
+.cv-eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.18em;color:var(--rp-accent)}
+.cv-title h1{font-size:34px;letter-spacing:-.02em;margin:6px 0 8px;font-family:var(--f-display)}
+.cv-sub{font-size:15px;color:var(--rp-muted)}
+.cv-tiles{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--rp-line)}
+.cv-tile{padding:12px 14px;border-right:1px solid var(--rp-line)}.cv-tile:last-child{border-right:0}
+.cv-k{font-size:10px;color:var(--rp-muted);letter-spacing:.06em;font-weight:600}
+.cv-v{font-size:22px;font-weight:700;font-family:var(--f-mono);margin-top:2px}
+.cv-s{font-size:10px;color:var(--rp-muted)}
+.cv-body{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
+.cv-body p{margin:4px 0 0;font-size:13px;line-height:1.7}
+.cv-img{width:300px;height:225px;border:1px solid var(--rp-line)}
+.cv-noimg{display:grid;place-items:center;background:var(--rp-band)}.cv-noimg svg{width:200px;height:200px}
+.cv-meta{border-collapse:collapse;width:100%;font-size:11.5px}
+.cv-meta th{background:var(--rp-band);color:var(--rp-muted);text-align:left;padding:7px 10px;width:90px;font-weight:600;border:1px solid var(--rp-line)}
+.cv-meta td{padding:7px 10px;border:1px solid var(--rp-line)}
+.cv-ex{color:#b45309;font-weight:700;font-size:12px}
+.cv-foot{margin-top:auto;font-size:10px;color:var(--rp-muted);border-top:1px solid var(--rp-line);padding-top:8px}
+@media (prefers-reduced-motion:no-preference){.spin{animation:sp 1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%}
+</style>
+
+<header class="nav">
+  <div class="in nav-in">
+    <a class="brand" href="#top" data-scroll="top" aria-label="추락드론 감식 시스템 처음으로">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="16" r="8" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".6"/><path d="M16 1.5v6M16 24.5v6M1.5 16h6M24.5 16h6" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="16" r="2.4" fill="currentColor"/></svg>
+      <span><b>추락드론 감식 시스템</b><small>Downed UAS Forensics</small></span>
+    </a>
+    <nav class="links" aria-label="주요 메뉴">
+      <a href="#how" data-scroll="how">분석 절차</a>
+      <a href="#xv" data-scroll="xv">교차검증</a>
+      <a href="#work" data-scroll="work">감식 작업대</a>
+    </nav>
+    <button class="btn pri sm nav-cta" type="button" data-goto="0">사진 올려 분석</button>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="in hero-in">
+    <div class="hero-copy">
+      <div class="eyebrow"><span class="dot"></span>C-UAS 사후 감식 · 사진 기반 AI 교차검증</div>
+      <h1>잔해 사진으로<br>드론의 정체와<br><em>위협 반경</em>을 판독합니다</h1>
+      <p>추락하거나 폭발한 드론의 부품 사진을 올리면 제조국·제조사·제원을 추적하고, 기체를 추정하고, 홉킨슨-크랜츠 법칙으로 살상 범위를 계산해 표지가 있는 감식 보고서 PDF로 정리합니다.</p>
+      <div class="row hero-cta">
+        <button class="btn hero-pri" type="button" data-goto="0">사진 올리고 분석 시작</button>
+        <button class="btn hero-ghost" type="button" data-goto="5">예시 보고서 보기</button>
+      </div>
+      <dl class="hero-stats">
+        <div><dt>독립 분석</dt><dd class="mono">2+1</dd><span>분석관 2인 · 검증관 1인</span></div>
+        <div><dt>감식 단계</dt><dd class="mono">06</dd><span>사진부터 PDF까지</span></div>
+        <div><dt>위협 산정</dt><dd class="mono">Z=R/W<sup>⅓</sup></dd><span>홉킨슨-크랜츠 스케일링</span></div>
+      </dl>
+    </div>
+    <figure class="hero-fig" aria-label="감식 결과 예시 도해">
+      <svg viewBox="0 0 440 400" role="img" aria-label="쿼드콥터 잔해의 부품별 판독 예시">
+        <defs><pattern id="hg" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="var(--h-line)" stroke-width=".6"/></pattern></defs>
+        <rect width="440" height="400" fill="url(#hg)"/>
+        <g fill="none" stroke="var(--h-muted)" stroke-width="1"><circle cx="220" cy="210" r="150" stroke-dasharray="3 5"/><circle cx="220" cy="210" r="96" stroke-dasharray="3 5"/></g>
+        <g stroke="var(--h-ink)" stroke-width="2.2" fill="none">
+          <path d="M150 140L290 280M290 140L150 280"/>
+          <rect x="196" y="186" width="48" height="48" rx="6" fill="var(--h-bg)"/>
+          <circle cx="150" cy="140" r="34" stroke-width="1.4" opacity=".75"/><circle cx="290" cy="140" r="34" stroke-width="1.4" opacity=".75"/>
+          <circle cx="150" cy="280" r="34" stroke-width="1.4" opacity=".75"/><circle cx="290" cy="280" r="34" stroke-width="1.4" opacity=".75"/>
+          <circle cx="150" cy="140" r="7" fill="var(--h-ink)"/><circle cx="290" cy="140" r="7" fill="var(--h-ink)"/><circle cx="150" cy="280" r="7" fill="var(--h-ink)"/><circle cx="290" cy="280" r="7" fill="var(--h-ink)"/>
+        </g>
+        <rect x="208" y="238" width="24" height="40" rx="4" fill="var(--h-hazard)" opacity=".9"/>
+        <g font-family="IBM Plex Mono,monospace" font-size="11">
+          <g class="co"><path d="M220 198L220 70L250 70" stroke="var(--h-accent)" fill="none"/><circle cx="220" cy="198" r="3.5" fill="var(--h-accent)"/>
+            <text x="256" y="66" fill="var(--h-ink)" font-family="IBM Plex Sans KR,sans-serif" font-size="12.5" font-weight="600">비행제어기 F405</text><text x="256" y="82" fill="var(--h-muted)">중국 · 신뢰도 82%</text></g>
+          <g class="co"><path d="M150 140L60 60L40 60" stroke="var(--h-accent)" fill="none"/><circle cx="150" cy="140" r="3.5" fill="var(--h-accent)"/>
+            <text x="20" y="40" fill="var(--h-ink)" font-family="IBM Plex Sans KR,sans-serif" font-size="12.5" font-weight="600">모터 2807</text><text x="20" y="54" fill="var(--h-muted)">7인치급</text></g>
+          <g class="co"><path d="M244 222L350 222L370 240" stroke="var(--h-accent)" fill="none"/><circle cx="244" cy="222" r="3.5" fill="var(--h-accent)"/>
+            <text x="338" y="258" fill="var(--h-ink)" font-family="IBM Plex Sans KR,sans-serif" font-size="12.5" font-weight="600">링크</text><text x="338" y="272" fill="var(--h-muted)">915M · 5.8G</text></g>
+          <g class="co"><path d="M220 278L220 370L250 370" stroke="var(--h-hazard)" fill="none"/>
+            <text x="256" y="366" fill="var(--h-ink)" font-family="IBM Plex Sans KR,sans-serif" font-size="12.5" font-weight="600">성형작약 0.7kg</text><text x="256" y="382" fill="var(--h-hazard)">살상 3.5m · 위협 5.9m</text></g>
+        </g>
+      </svg>
+      <figcaption>예시 · 7인치 FPV 자폭드론 판독</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="sec" id="how">
+  <div class="in">
+    <div class="sec-h"><div class="kicker">분석 절차</div><h2>사진 첨부에서 최종 PDF까지 여섯 단계</h2><p>각 단계는 앞 단계 결과를 이어받습니다. 결과는 언제든 직접 고칠 수 있고, 고친 내용은 뒤 단계와 보고서에 반영됩니다.</p></div>
+    <ol class="how" id="how-list"></ol>
+  </div>
+</section>
+
+<section class="sec sec-alt" id="xv">
+  <div class="in xv">
+    <div class="sec-h"><div class="kicker">교차검증</div><h2>한 번의 추정이 아니라, 서로 모르게 내린 두 판단을 대조합니다</h2></div>
+    <div class="xv-grid">
+      <div class="xv-c"><div class="xv-n mono">A</div><h3>분석관 A · 부품 식별</h3><p>PCB 실크 인쇄, 라벨, 커넥터, 모터 치수, 안테나 형상으로 부품과 제조사를 판독합니다.</p></div>
+      <div class="xv-c"><div class="xv-n mono">B</div><h3>분석관 B · 구조·무장</h3><p>프레임 형상, 결속 방식, 파편, 그을음, 식별부 훼손 흔적으로 기체와 탑재물을 추정합니다.</p></div>
+      <div class="xv-c xv-c3"><div class="xv-n mono">C</div><h3>검증관 C · 대조·판정</h3><p>사진을 다시 보며 항목마다 일치·부분일치·불일치·단독관찰을 판정하고 채택 근거를 남깁니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec work" id="work">
+  <div class="in">
+    <div class="work-top">
+      <div><div class="kicker">감식 작업대</div><h2 class="work-h">사건 기록</h2></div>
+      <div class="case">
+        <div><span class="lbl">사건번호</span><b id="caseId">—</b></div>
+        <div><span class="lbl">작성일시</span><b id="caseDate">—</b></div>
+        <div><span class="lbl">교차검증</span><b id="caseConf">—</b></div>
+        <button class="btn sm" id="newCase" type="button">새 사건 시작</button>
+      </div>
+    </div>
+    <div class="banner" id="exBanner"><b>예시 사건</b> 7인치 FPV 자폭드론 가상 감식 결과를 표시하고 있습니다. 실제 사진을 올리면 새 사건으로 바뀝니다.</div>
+    <nav class="rail" id="rail" aria-label="감식 단계"></nav>
+    <main id="main"></main>
+  </div>
+</section>
+
+<footer class="foot-site">
+  <div class="in foot-in">
+    <div><b>추락드론 감식 시스템</b><span>사진 기반 AI 보조 분석 도구입니다. 최종 판단은 실물 감식·잔류물 화학분석·전문가 검토로 확정해야 합니다.</span></div>
+    <div class="mono">Hopkinson–Cranz · Kinney–Graham</div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(() => {
+"use strict";
+const $ = (s, r=document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const num = (v, d=0) => (v==null || isNaN(v)) ? "—" : Number(v).toFixed(d);
+
+/* ---------------- constants ---------------- */
+const STEPS = [
+  {k:"photo", t:"사진 첨부", s:"형태·부품·파편·폭발물"},
+  {k:"parts", t:"부품 분석", s:"명칭·국가·제조사·제원"},
+  {k:"frame", t:"기체 추정", s:"형태·후보 모델·의도"},
+  {k:"blast", t:"위협 범위", s:"홉킨슨-크랜츠 산정"},
+  {k:"counter", t:"대응수단", s:"센서·대역별 추천"},
+  {k:"report", t:"종합 보고서", s:"검토 후 최종 PDF"}
+];
+const HOW = [
+  "기체 전체, 부품 근접, 파편, 폭발성 물질 사진을 올리고 사진마다 종류와 발견 상황을 기록합니다.",
+  "부품별 명칭·용도·제조국·제조사·특징·제원·가격을 추적하고 관찰 근거와 신뢰도를 붙입니다.",
+  "프레임 형상으로 고정익·쿼드·헥사·옥토·헬기를 판별하고 후보 기종과 운용 의도를 좁힙니다.",
+  "폭약 충전량을 TNT로 환산해 치사·폐 손상·고막 파열·유리 파손 반경을 계산합니다.",
+  "식별된 주파수 대역과 비행 방식으로 탐지 센서와 무력화 수단의 우선순위를 정합니다.",
+  "검토용 보고서를 고친 뒤 표지와 쪽번호가 있는 A4 PDF로 저장합니다."
+];
+const KINDS = ["형태(전체)","부품","파편","폭발성 물질","표식·라벨","현장"];
+const RE = {"TNT":1.0,"RDX":1.6,"HMX":1.7,"PETN":1.66,"C-4":1.34,"Semtex":1.35,"Comp B":1.33,"ANFO":0.74,"TATP":0.83,"흑색화약":0.55,"미상":1.0};
+const ZONES = [
+  {k:"lethal", kpa:241, n:"치사 임계",   s:"35 psi · 폭압 직접 사망 가능", c:"--z1", grp:"살상"},
+  {k:"lung",   kpa:103, n:"폐 손상 임계", s:"15 psi · 중상",              c:"--z2", grp:"살상"},
+  {k:"ear",    kpa:34.5,n:"고막 파열 임계",s:"5 psi · 경상",               c:"--z3", grp:"위협"},
+  {k:"glass",  kpa:6.9, n:"유리창 파손",  s:"1 psi · 비산 유리 2차 피해",  c:"--z4", grp:"위협"}
+];
+const FRAME_TYPES = ["고정익","쿼드콥터","헥사콥터","옥토콥터","헬리콥터","VTOL 하이브리드"];
+
+/* ---------------- blast physics ---------------- */
+// Kinney–Graham free-air incident overpressure, Z = R / W^(1/3)  [m/kg^(1/3)]
+function psKpa(Z){
+  const a = 808*(1+(Z/4.5)**2);
+  const b = Math.sqrt((1+(Z/0.048)**2)*(1+(Z/0.32)**2)*(1+(Z/1.35)**2));
+  return 101.325*a/b;
+}
+function zFor(kpa){ let lo=0.05, hi=300; for(let i=0;i<80;i++){const m=(lo+hi)/2; psKpa(m)>kpa?lo=m:hi=m;} return (lo+hi)/2; }
+function blastCalc(p){
+  const re = RE[p.explosive] ?? 1;
+  const wTnt = Math.max(0, (+p.fillKg||0)*re);
+  const wEff = wTnt*(p.surface?1.8:1);
+  const cube = Math.cbrt(wEff);
+  const zones = ZONES.map(z => { const Z=zFor(z.kpa); return {...z, Z, R: Z*cube}; });
+  return {re, wTnt, wEff, cube, zones};
+}
+
+/* ---------------- countermeasure engine (sensor × band) ---------------- */
+const PURPOSES = ["조종","영상","텔레메트리","셀룰러","위성통신"];
+const AUTONOMY = ["수동 조종","웨이포인트 자율","영상 종말유도","완전 자율","미상"];
+const PROPULSION = ["전기","내연","하이브리드","미상"];
+const RCS = ["초소형","소형","중형","대형"];
+function parseBand(link){
+  const s = `${link.band||""} ${link.protocol||""}`;
+  if (/lte|4g|5g|셀룰러|cellular/i.test(s)) return {kind:"cell", lo:700, hi:2700, label:"LTE/5G 셀룰러"};
+  if (/위성|satcom|starlink|iridium|inmarsat|thuraya/i.test(s)) return {kind:"sat", lo:1600, hi:1660, label:"위성통신 L대역"};
+  const m = s.match(/(\d+(?:\.\d+)?)\s*(ghz|mhz)/i);
+  let f = m ? (+m[1]) * (/g/i.test(m[2]) ? 1000 : 1) : null;
+  if (!f) { if (/crossfire|tbs/i.test(s)) f = 915; else if (/ocusync|lightbridge|wi-?fi|o3|o4/i.test(s)) f = 2400; else if (/elrs|expresslrs/i.test(s)) f = 2400; else if (/fpv|vtx|아날로그/i.test(s)) f = 5800; }
+  if (!f) return {kind:"unk", label:link.band||"대역 미상"};
+  const name = f<500?"433MHz 대역":f<1050?"868/915MHz ISM":f<1450?"1.2–1.3GHz":f<1620?"GNSS L1 인근":f<2600?"2.4GHz ISM":f<5000?`${(f/1000).toFixed(1)}GHz`:f<6100?"5.8GHz":`${(f/1000).toFixed(1)}GHz`;
+  return {kind:"rf", f, label:name};
+}
+function counterplan(f){
+  const sg = f?.signature || {links:[],navigation:[]};
+  const links = (sg.links||[]).map(l=>({...l, b:parseBand(l)}));
+  const nav = (sg.navigation||[]).join(" ");
+  const auto = sg.autonomy || "미상";
+  const prop = sg.propulsion || "미상";
+  const vmax = +(sg.speedKmh?.max ?? 0) || 0;
+  const rcs = sg.rcs || "소형";
+  const type = f?.airframe?.type || "";
+  const role = f?.intent?.role || "";
+  const autonomous = auto==="완전 자율";
+  const hasGnss = /gnss|gps|glonass|beidou|galileo/i.test(nav);
+  const hasIns = /관성|ins|imu/i.test(nav);
+  const lowAlt = /저고도|지상|\b[0-9]{1,2}\s*m\b/i.test(sg.altitude||"");
+  const clamp = v => Math.max(5, Math.min(98, Math.round(v)));
+
+  const det = [];
+  { let v = autonomous ? 20 : links.length ? 88 : 40;
+    det.push({k:"RF 탐지·방향탐지", v:clamp(v), why: autonomous ? "완전 자율 비행이면 무선 송신이 없을 수 있어 RF 탐지만으로는 놓칠 수 있음" : links.length ? `${links.map(l=>l.b.label).join("·")} 송신을 수동 탐지하고 조종자 위치까지 방향탐지 가능` : "식별된 무선 링크가 없어 효과 판단 곤란"}); }
+  { let v = {초소형:35,소형:55,중형:80,대형:90}[rcs] ?? 55; if (vmax>150) v+=5; if (lowAlt) v-=10;
+    det.push({k:"레이더", v:clamp(v), why:`RCS ${rcs}${lowAlt?", 저고도 지형 클러터로 탐지거리 감소":""}${vmax?`, 최고속도 약 ${vmax}km/h`:""} — 소형 드론 전용(마이크로 도플러) 레이더 권장`}); }
+  { let v = prop==="내연"?85 : prop==="하이브리드"?75 : 60;
+    det.push({k:"EO/IR 광학·열상", v:clamp(v), why:`${prop==="내연"?"엔진 배기열로 열상 탐지 유리":"전기 추진이라 열신호가 약해 모터·배터리 발열에 의존"}. 최종 육안 식별·피아 판별에 필수`}); }
+  { let v = /콥터/.test(type) ? 50 : prop==="내연" ? 60 : 30;
+    det.push({k:"음향 탐지", v:clamp(v), why:`${/콥터/.test(type)?"멀티콥터 프로펠러 소음":prop==="내연"?"엔진 소음":"고정익 전기추진은 소음이 작음"}. 탐지거리 수백 m 이내, 보조 센서로 활용`}); }
+
+  const def = [];
+  const pr = v => v>=75?"1순위":v>=55?"2순위":"보조";
+  links.forEach(l => {
+    if (l.b.kind==="cell") def.push({k:"셀룰러 링크 차단", band:l.b.label, v:clamp(autonomous?20:55), why:"LTE/5G 망 경유 제어. 광대역 재밍은 주변 통신 피해가 커서 통신사 협조 차단 또는 국지 재밍 검토"});
+    else if (l.b.kind==="sat") def.push({k:"위성 링크 대응", band:l.b.label, v:25, why:"위성 링크는 지상 재밍 효율이 낮음 → 물리적 무력화 위주로 대응"});
+    else if (/영상/.test(l.purpose||"")) def.push({k:"영상 링크 재밍", band:l.b.label, v:clamp(auto==="영상 종말유도"||auto==="수동 조종"?84:42), why: auto==="영상 종말유도"||auto==="수동 조종" ? "조종자가 영상을 보며 최종 유도 → 영상 차단 시 표적 지향 불가, 명중률 급감" : "자율 비행 중에는 영상 차단 효과 제한"});
+    else def.push({k:`${l.purpose||"조종"} 링크 재밍`, band:l.b.label, v:clamp(autonomous?10 : auto==="웨이포인트 자율"?50 : 86), why: autonomous ? "자율 비행이라 조종 링크 차단 효과 거의 없음" : auto==="웨이포인트 자율" ? "링크 상실 시 사전 경로 계속 비행 또는 귀환 가능 → 단독 효과 제한" : `${l.protocol?l.protocol+" ":""}조종 신호 차단으로 수동 조종 불능, 페일세이프 동작 유도`});
+  });
+  if (hasGnss) def.push({k:"GNSS 재밍·스푸핑", band:"GNSS L1/L2 (1.2–1.6GHz)", v:clamp((auto==="웨이포인트 자율"||autonomous?82:35) - (hasIns?20:0)), why:`${auto==="웨이포인트 자율"||autonomous?"위성항법 경로 비행 → 항법 교란 효과 큼":"수동 조종 위주라 항법 교란 효과 제한"}${hasIns?". 관성항법 보조로 효과 감소":""}`});
+  const proto = links.map(l=>l.protocol||"").join(" ");
+  def.push({k:"프로토콜 탐지·제어권 탈취", band:"—", v:clamp(/ocusync|lightbridge|o3|o4|dji|wi-?fi|mavlink/i.test(proto)?70:18), why:/ocusync|lightbridge|o3|o4|dji|wi-?fi|mavlink/i.test(proto)?"상용 프로토콜이라 프로토콜 기반 탐지·착륙 유도 장비 적용 가능":"자작·암호화 링크는 제어권 탈취형 장비 적용 곤란"});
+  def.push({k:"요격드론", band:"—", v:clamp(vmax&&vmax<=150?72:vmax<=250?50:30), why:`표적 최고속도 ${vmax||"미상"}km/h → ${vmax&&vmax<=150?"상용 요격드론 추격 가능":"고속 표적이라 요격 성공률 저하"}`});
+  def.push({k:"고출력 마이크로파(HPM)", band:"광대역", v:clamp(prop==="전기"?66:50), why:"전자부품 기능 마비로 다수·군집 대응 유리. 주변 전자장비 영향 고려"});
+  def.push({k:"고에너지 레이저", band:"—", v:clamp(vmax&&vmax<=150?55:40), why:"정밀 무력화 가능하나 조사 유지시간 필요, 기상 영향 큼"});
+  def.push({k:"그물포·네트 포획", band:"—", v:clamp(vmax&&vmax<=80&&/초소형|소형/.test(rcs)?62:35), why:"증거물 보존 가능. 근거리·저속 표적에 한정"});
+  def.push({k:"물리적 방호 (그물망·케이지)", band:"—", v:clamp(/자폭|투하/.test(role)?86:45), why:/자폭|투하/.test(role)?"자폭·투하형은 모든 무력화 실패 시 최종 방어선. 초소·차량·출입구 상부 우선":"고가치 시설 보강용"});
+  def.forEach(d=>d.p=pr(d.v));
+  def.sort((a,b)=>b.v-a.v); det.sort((a,b)=>b.v-a.v);
+  const lead = def.filter(d=>!/물리적 방호/.test(d.k)).slice(0,2);
+  const backup = def.find(d=>!lead.includes(d) && /물리|요격/.test(d.k));
+  const combo = `${det[0]?.k||"—"} + ${det[1]?.k||"—"}로 탐지 → ${lead.map(d=>d.k+(d.band&&d.band!=="—"?`(${d.band})`:"")).join(", ")} 우선 적용, ${backup?.k||"물리 대응"} 병행`;
+  return {links, det, def, combo, hasGnss, auto};
+}
+
+/* ---------------- example case ---------------- */
+const EXAMPLE = {
+  parts:[
+    {name:"SpeedyBee F405 V4 비행제어기",category:"비행제어기",purpose:"자세 안정화, 수신기·VTX·ESC 통합 제어 (Betaflight 계열 펌웨어)",country:"중국",manufacturer:"SpeedyBee (Shenzhen)",features:"30.5mm 장착홀, 기판 실크 'SB F405 V4' 판독, 블루투스 모듈 탑재",specs:"STM32F405 MCU, ICM42688 IMU, 3–6S 입력",price:"약 US$40–55 (FC 단품)",confidence:82,evidence:"#2 기판 실크 인쇄와 장착홀 배치가 공개 제품 사진과 일치"},
+    {name:"4-in-1 ESC 55A급",category:"ESC",purpose:"4개 모터 전자속도제어",country:"중국",manufacturer:"SpeedyBee 추정",features:"FC와 동일 스택 구조, 8핀 커넥터",specs:"BLHeli_S/32, 3–6S, 연속 약 50–55A",price:"약 US$40–60",confidence:61,evidence:"#2 스택 하단 기판, 열손상으로 라벨 일부만 판독"},
+    {name:"2807 1300KV급 브러시리스 모터",category:"모터",purpose:"7인치 프로펠러 구동, 중량 탑재",country:"중국",manufacturer:"미상 (iFlight XING 계열과 형상 유사)",features:"벨 상단 냉각 패턴, 5mm 샤프트",specs:"스테이터 28×07mm, 6S 기준 추력 약 1.5–2kg/모터",price:"약 US$20–30/개",confidence:58,evidence:"#3 모터 벨 직경 실측 비교(파편 옆 자 표시)"},
+    {name:"7인치 3엽 프로펠러",category:"프로펠러",purpose:"추력 발생",country:"중국",manufacturer:"미상 (HQProp 계열 추정)",features:"폴리카보네이트, 파단면 다수",specs:"7×3.5×3 추정",price:"약 US$3–5/세트",confidence:55,evidence:"#3 프로펠러 잔해 직경 추정"},
+    {name:"TBS Crossfire Nano 수신기",category:"통신모듈",purpose:"915/868MHz 장거리 원격조종 링크",country:"미상(홍콩·스위스 법인)",features:"T자 안테나, 보라색 수축튜브",specs:"900MHz 대역, 수 km~10km 이상 링크",price:"약 US$30",confidence:74,evidence:"#4 안테나 형상과 수축튜브 색상"},
+    {name:"아날로그 5.8GHz 영상송신기(VTX)",category:"통신모듈",purpose:"FPV 실시간 영상 전송",country:"중국",manufacturer:"미상",features:"방열판 일체형, SMA 커넥터",specs:"5.8GHz, 출력 최대 1–1.6W급 추정",price:"약 US$20–40",confidence:63,evidence:"#4 방열 핀 구조와 SMA 단자"},
+    {name:"FPV 카메라 (19mm 마이크로)",category:"카메라/짐벌",purpose:"조종용 전방 영상",country:"중국",manufacturer:"Caddx 계열 추정",features:"19×19mm 하우징",specs:"1/1.8\" CMOS, 아날로그 출력",price:"약 US$20–30",confidence:52,evidence:"#2 카메라 마운트 치수"},
+    {name:"6S 리튬이온 배터리팩",category:"배터리",purpose:"비행 전원",country:"미상",manufacturer:"자작 추정 (21700 셀 조립)",features:"원통형 셀 6개 직렬, XT60 커넥터",specs:"22.2V, 약 4000–8000mAh",price:"약 US$40–90",confidence:66,evidence:"#5 셀 잔해 6개, 니켈 스트립 용접 흔적"},
+    {name:"성형작약 탄두 (RPG 계열 추정)",category:"폭발물/파편",purpose:"장갑·인원 타격 탄두로 전용",country:"미상",manufacturer:"미상",features:"원추형 라이너 동판 잔해, 케이블타이 고정 흔적",specs:"총중량 약 1.5–2.6kg 추정",price:"—",confidence:47,evidence:"#6 구리 라이너 파편, #1 프레임 하단 결속 흔적"}
+  ],
+  airframe:{type:"쿼드콥터",size:"축간거리 약 290–320mm (7인치급)",mtowKg:3.2,payloadCapacityKg:{min:1.0,max:2.5},confidence:80,evidence:"#1 X형 카본 프레임 암 4개, 모터 마운트 간격"},
+  candidates:[
+    {model:"자작 7인치 FPV 자폭드론",manufacturer:"상용 부품 조립",country:"—",match:72,reason:"상용 FPV 부품 조합, 탄두 외부 결속, 회수 장치 없음"},
+    {model:"Mark4 7인치 프레임 기반 기체",manufacturer:"오픈 설계(다수 제조)",country:"중국 제조 다수",match:55,reason:"암 형상·두께 일치, 프레임 각인은 판독 불가"},
+    {model:"군납형 FPV (예: 동유럽 지원 사업 표준기)",manufacturer:"미상",country:"미상",match:24,reason:"부품 구성 유사하나 식별번호·도색 등 근거 부족"}
+  ],
+  payload:{present:true,type:"성형작약 탄두 외부 결속",massKg:{min:1.5,max:2.6},explosive:"HMX",fillKg:{min:0.4,max:0.7},fragmentation:"구리 라이너 제트 + 케이싱 파편, 측방 파편은 제한적",fragmentRadiusM:{min:10,max:25},evidence:"#6 구리 라이너 조각, 폭심 주변 그을음"},
+  intent:{role:"자폭 공격",hostility:"높음",rationale:"회수 장치·낙하산 없음, 탄두 직결 구조, 장거리 조종 링크 → 표적 직접 충돌 목적"},
+  observations:["프레임 각인과 FC 시리얼 부위가 고의로 긁혀 있음","장거리 900MHz 링크 사용 → 조종자 위치가 1–10km 이격되었을 가능성"],
+  signature:{
+    links:[
+      {band:"915MHz",purpose:"조종",protocol:"TBS Crossfire",evidence:"#4 T자 안테나·수축튜브"},
+      {band:"5.8GHz",purpose:"영상",protocol:"아날로그 FPV",evidence:"#4 SMA VTX 방열판"}
+    ],
+    navigation:["영상 수동조종"],
+    autonomy:"영상 종말유도",
+    propulsion:"전기",
+    speedKmh:{min:80,max:150},
+    rcs:"초소형",
+    altitude:"지상 5–50m 저고도 접근"
+  },
+  crossCheck:[
+    {item:"기체 형태",a:"쿼드콥터 (7인치)",b:"쿼드콥터 (7인치)",status:"일치",resolution:"두 분석 모두 X형 4암 프레임 확인"},
+    {item:"비행제어기",a:"SpeedyBee F405 V4",b:"F405급 FC (제조사 미확정)",status:"부분일치",resolution:"A의 실크 판독 근거 채택, 신뢰도 소폭 하향"},
+    {item:"탑재 폭약",a:"성형작약 0.4–0.7kg",b:"성형작약 0.5–0.9kg",status:"부분일치",resolution:"겹치는 범위 0.5–0.7kg 중심, 보수적 상한 0.7kg"},
+    {item:"통신 링크",a:"Crossfire 900MHz",b:"ELRS 915MHz 가능성",status:"불일치",resolution:"수축튜브 색상·안테나 형상으로 A 채택, 확정에는 실물 확인 필요"},
+    {item:"시리얼 훼손",a:"—",b:"FC·프레임 식별부 고의 훼손",status:"단독관찰",resolution:"B 관찰을 사진 #2에서 재확인, 반영"}
+  ],
+  overallConfidence:68,
+  limitations:["사진 해상도와 열손상으로 다수 라벨 판독 불가","폭약 종류는 라이너 형상 기반 추정이며 잔류물 화학분석 필요"]
+};
+const EXAMPLE_REPORT = {
+  summary:"회수 기체는 상용 FPV 부품으로 조립한 7인치급 쿼드콥터에 성형작약 탄두를 외부 결속한 자폭형 드론으로 판단된다. 회수 장치가 없고 장거리 조종 링크를 사용했으며 식별부가 고의 훼손되어 적대적 의도가 높다.",
+  droneType:"7인치급 FPV 쿼드콥터 (자작·상용부품 조립형), 자폭 공격 운용",
+  partsAnalysis:"핵심 전자부품(FC·ESC·VTX·카메라·모터)은 중국산 상용 FPV 부품으로 구성되어 있으며 총 부품가는 약 US$350–500 수준으로 추정된다. 이는 저비용 대량 생산이 가능한 위협임을 의미한다.",
+  implications:["상용 부품만으로 장갑 관통형 정밀타격 능력 확보 가능","부품 공급망이 민수 시장에 개방되어 있어 수출통제 실효성 제한","식별부 훼손은 추적 회피 의도를 시사"],
+  cuasView:["900MHz 조종 링크와 5.8GHz 아날로그 영상 링크 → 두 대역 동시 재밍 필요","소형·저고도·고속 접근으로 레이더 탐지 거리 짧음, RF 탐지와 EO/IR 병행 필요","최종 접근 단계는 조종자가 영상으로 수동 유도 → 영상 링크 차단 시 명중률 급감"],
+  countermeasures:[
+    {horizon:"즉시",action:"주요 시설 주변 900MHz·5.8GHz 대역 RF 탐지 감시 강화"},
+    {horizon:"단기",action:"차량·초소 상부 그물망·케이지 등 물리적 방호 보강"},
+    {horizon:"중장기",action:"RF·레이더·EO/IR 융합 탐지와 재밍·요격드론을 결합한 다층 방어체계 구축"}
+  ],
+  evidenceBasis:["사진 #1–#6 판독 결과","공개 제품 사양과의 형상·치수 대조","AI 분석관 A·B 독립 분석과 검증관 C의 조정 결과"]
+};
+
+/* ---------------- state ---------------- */
+const fresh = () => ({
+  isExample:false, caseId: makeId(), createdAt: new Date(),
+  meta:{location:"", datetime:"", situation:"", analyst:""},
+  images:[], passA:null, passB:null, final:null,
+  payload:{massKg:0, fillKg:0, explosive:"TNT", surface:true, fragR:0},
+  report:null, step:0, done:{}
+});
+function makeId(){ const d=new Date(); const p=n=>String(n).padStart(2,"0"); return `DCA-${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}-${Math.random().toString(36).slice(2,6).toUpperCase()}`; }
+function exampleState(){
+  const s = fresh(); s.isExample=true; s.caseId="DCA-EXAMPLE-0001";
+  s.meta={location:"○○지역 외곽 도로변 (가상)",datetime:"2026-10-12 06:40",situation:"초소 인근 폭발 후 잔해 회수, 인명피해 없음 (가상 예시)",analyst:"예시"};
+  s.images = [["형태(전체)","프레임"],["부품","FC 스택"],["부품","모터·프롭"],["부품","안테나"],["부품","배터리"],["파편","탄두 잔해"]].map((k,i)=>({id:"ex"+i, kind:k[0], name:k[1], url:null}));
+  s.final = JSON.parse(JSON.stringify(EXAMPLE));
+  s.report = JSON.parse(JSON.stringify(EXAMPLE_REPORT));
+  applyPayloadDefaults(s);
+  s.done={0:1,1:1,2:1,3:1,4:1};
+  return s;
+}
+let S = exampleState();
+
+function mid(r){ if(!r) return 0; const a=+r.min, b=+r.max; if(isNaN(a)&&isNaN(b)) return 0; if(isNaN(a)) return b; if(isNaN(b)) return a; return (a+b)/2; }
+function applyPayloadDefaults(s){
+  const p = s.final?.payload || {};
+  s.payload.massKg = +mid(p.massKg).toFixed(2);
+  s.payload.fillKg = +((p.fillKg && !isNaN(+p.fillKg.max)) ? +p.fillKg.max : mid(p.fillKg)).toFixed(2); // conservative upper bound
+  s.payload.explosive = RE[p.explosive]!=null ? p.explosive : "TNT";
+  s.payload.fragR = +(p.fragmentRadiusM?.max ?? 0) || 0;
+}
+
+/* ---------------- capabilities ---------------- */
+let sample = null, imgLimits = null, downloads = null;
+let ctl = null;
+(async () => {
+  await null;
+  if (typeof claude === "undefined") { render(); return; }
+  try { sample = await claude.use("sample"); } catch { sample = null; }
+  if (sample) { try { imgLimits = (await sample.limits())?.images || null; } catch { imgLimits = null; } }
+  try { downloads = await claude.use("downloads"); } catch { downloads = null; }
+  render();
+})();
+
+const ERR = {
+  not_granted:"AI 사용이 허용되지 않았습니다. 이 페이지를 다시 열고 허용하면 분석할 수 있습니다.",
+  rate_limited:"요청이 몰렸습니다. 잠시 후 다시 시도하세요.",
+  usage_limit:"Claude 사용 한도에 도달했습니다.",
+  images_unavailable:"이 화면에서는 이미지를 AI로 보낼 수 없습니다.",
+  image_rejected:"이미지 형식·개수·크기가 허용 범위를 벗어났습니다. 장수를 줄이거나 JPG/PNG로 올려주세요.",
+  invalid_json:"AI 응답을 해석하지 못했습니다. 다시 시도하세요.",
+  cancelled:"분석을 중지했습니다.",
+  prompt_too_large:"입력이 너무 깁니다. 메모를 줄이세요."
+};
+const errText = e => ERR[e?.code] || (e?.message ? `오류: ${e.message}` : "알 수 없는 오류가 발생했습니다.");
+
+/* ---------------- prompts ---------------- */
+const SCHEMA = `{
+ "parts":[{"name":"부품 명칭","category":"비행제어기|모터|프로펠러|배터리|ESC|카메라/짐벌|GNSS|통신모듈|프레임|투하장치|폭발물/파편|기타","purpose":"용도","country":"제조 국가","manufacturer":"제조사","features":"특징·식별 표시","specs":"주요 제원","price":"추정 시중가(USD)","confidence":0-100,"evidence":"관찰 근거(사진 #번호 명시)"}],
+ "airframe":{"type":"고정익|쿼드콥터|헥사콥터|옥토콥터|헬리콥터|VTOL 하이브리드|미상","size":"추정 크기·축간거리·날개폭","mtowKg":숫자 또는 null,"payloadCapacityKg":{"min":숫자,"max":숫자},"confidence":0-100,"evidence":"근거"},
+ "candidates":[{"model":"후보 기종","manufacturer":"제조사","country":"국가","match":0-100,"reason":"근거"}],
+ "payload":{"present":true|false,"type":"탑재물 형태","massKg":{"min":숫자,"max":숫자},"explosive":"TNT|RDX|HMX|PETN|C-4|Semtex|Comp B|ANFO|TATP|흑색화약|미상","fillKg":{"min":숫자,"max":숫자},"fragmentation":"파편 특성","fragmentRadiusM":{"min":숫자,"max":숫자},"evidence":"근거"},
+ "intent":{"role":"정찰|자폭 공격|투하 공격|운반·밀수|전파 교란|미상","hostility":"높음|중간|낮음|판단불가","rationale":"근거"},
+ "observations":["추가 관찰사항"],
+ "signature":{"links":[{"band":"주파수(예: 915MHz, 2.4GHz, 5.8GHz, LTE, 위성)","purpose":"조종|영상|텔레메트리|셀룰러|위성통신","protocol":"추정 프로토콜(ELRS, Crossfire, OcuSync, Wi-Fi 등)","evidence":"근거(안테나 길이·모듈 라벨 등)"}],"navigation":["GNSS|관성항법|광학흐름|영상 수동조종"],"autonomy":"수동 조종|웨이포인트 자율|영상 종말유도|완전 자율|미상","propulsion":"전기|내연|하이브리드|미상","speedKmh":{"min":숫자,"max":숫자},"rcs":"초소형|소형|중형|대형","altitude":"운용 고도 추정"}
+}`;
+const RULES = `규칙:
+- 모든 답은 한국어. JSON 하나만 출력.
+- 사진에서 실제로 보이는 것만 근거로 삼고, 각 판단의 evidence에 사진 번호(#1, #2…)와 관찰 내용을 적을 것.
+- 확인되지 않는 값은 "미상" 또는 null. 추정은 추정임을 밝히고 범위로 제시.
+- confidence는 보수적으로 매길 것(라벨 판독=높음, 형상 유사=중간, 추측=낮음).
+- 공개된 제품 사양·일반적으로 알려진 기종 정보와 대조해 객관적 근거를 제시할 것.
+- signature(신호 특성)는 안테나 길이·형태, 통신·영상 모듈 라벨, GNSS 모듈 유무로 판단하고, 대응수단 선정에 쓰이므로 주파수 대역을 가능한 한 구체적으로 적을 것.`;
+function caseContext(){
+  const m=S.meta;
+  const list = S.images.map((im,i)=>`#${i+1} [${im.kind}] ${im.name||""}`).join("\n");
+  return `사건 정보: 장소=${m.location||"미기재"}, 일시=${m.datetime||"미기재"}, 상황=${m.situation||"미기재"}\n첨부 사진(순서대로):\n${list}`;
+}
+const promptA = () => `당신은 드론 잔해 감식팀의 분석관 A로, 전자부품·상용 드론 부품 식별 전문가다. 추락 또는 폭발 후 회수된 드론의 사진을 보고, PCB 실크 인쇄·라벨·커넥터·모터 치수·안테나 형상 등 미세 식별 표시를 중심으로 각 부품을 식별하라. 이어 기체 형태와 후보 기종, 탑재물, 운용 의도를 추정하라.\n\n${caseContext()}\n\n${RULES}\n\n출력 형식:\n${SCHEMA}`;
+const promptB = () => `당신은 드론 잔해 감식팀의 분석관 B로, 무인기 기체 구조·무장·폭발물 흔적 분석 전문가다. 다른 분석관과 독립적으로 판단하라. 프레임 형상·암 개수·날개 구조·투하장치·결속 방식·파편 형태·그을음·폭발 잔류물 등 구조적·물리적 근거를 중심으로 기체 형태, 탑재량, 폭약 종류·충전량을 추정하고, 식별 가능한 부품도 함께 정리하라. 식별부 훼손 등 반(反)감식 흔적도 확인하라.\n\n${caseContext()}\n\n${RULES}\n\n출력 형식:\n${SCHEMA}`;
+const promptC = (a,b) => `당신은 드론 잔해 감식팀의 검증관 C다. 같은 사진을 두 분석관(A: 부품 식별, B: 구조·무장)이 독립적으로 분석했다. 사진을 직접 다시 보며 두 결과를 항목별로 대조하고, 일치/부분일치/불일치/단독관찰을 판정하고, 사진 근거로 더 타당한 쪽을 채택하거나 범위를 조정해 최종 결론을 내려라. 근거 없는 주장은 제거하라.\n\n${caseContext()}\n\n[분석관 A 결과]\n${JSON.stringify(a)}\n\n[분석관 B 결과]\n${JSON.stringify(b)}\n\n${RULES}\n\n출력 형식: 아래 스키마에 다음 필드를 추가한 JSON 하나.\n"crossCheck":[{"item":"대조 항목","a":"A 판단","b":"B 판단","status":"일치|부분일치|불일치|단독관찰","resolution":"최종 채택 근거"}],\n"overallConfidence":0-100,\n"limitations":["판단의 한계·추가 확인 필요 사항"]\n\n${SCHEMA}`;
+function promptReport(){
+  const bc = blastCalc(S.payload);
+  const zones = bc.zones.map(z=>`${z.n}(${z.kpa}kPa): ${z.R.toFixed(1)}m`).join(", ");
+  const cpR = counterplan(S.final);
+  return `당신은 C-UAS(대드론) 분야 감식 보고서 작성관이다. 아래 최종 감식 결과와 폭발 위협 산정 결과로 종합 보고서 본문을 작성하라. 군·경찰·공공기관 실무자가 읽는다. 간결한 개조식 한국어, 사실과 추정을 구분하고 과장하지 말 것.\n\n${caseContext()}\n\n[최종 감식 결과]\n${JSON.stringify(S.final)}\n\n[폭발 위협 산정 — 홉킨슨-크랜츠 스케일링, Kinney-Graham 과압식]\n폭약 ${S.payload.explosive} ${S.payload.fillKg}kg, TNT 환산 ${bc.wTnt.toFixed(2)}kg, ${S.payload.surface?"지면 폭발(반사계수 1.8)":"공중 폭발"}\n${zones}\n파편 위험반경(추정): ${S.payload.fragR||"미상"}m\n\n[센서·대역별 대응수단 산정 결과]\n권장 조합: ${cpR.combo}\n탐지: ${cpR.det.map(d=>d.k+" "+d.v).join(", ")}\n무력화: ${cpR.def.map(d=>`${d.k}${d.band&&d.band!=="—"?"("+d.band+")":""} ${d.v} ${d.p}`).join(", ")}\ncuasView와 countermeasures는 위 산정 결과와 일관되게, 식별된 주파수 대역을 구체적으로 언급하여 작성할 것.\n\nJSON 하나만 출력:\n{"summary":"3문장 이내 핵심 결론","droneType":"드론 종류 한 줄","partsAnalysis":"부품 구성·공급망·비용 분석 2~3문장","implications":["시사점"],"cuasView":["C-UAS 관점 탐지·식별·무력화 고려사항"],"countermeasures":[{"horizon":"즉시|단기|중장기","action":"대응방안"}],"evidenceBasis":["판단 근거"]}`;
+}
+
+/* ---------------- image intake ---------------- */
+function downscale(file){
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onerror = () => rej(new Error("파일을 읽지 못했습니다."));
+    fr.onload = () => {
+      const img = new Image();
+      img.onerror = () => rej(new Error(`${file.name}: 이미지로 열 수 없습니다.`));
+      img.onload = () => {
+        const max = 1568, k = Math.min(1, max/Math.max(img.width, img.height));
+        const c = document.createElement("canvas"); c.width = Math.round(img.width*k); c.height = Math.round(img.height*k);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        const url = c.toDataURL("image/jpeg", 0.86);
+        c.toBlob(b => b ? res({blob:b, url}) : rej(new Error("변환 실패")), "image/jpeg", 0.86);
+      };
+      img.src = fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+async function addFiles(files){
+  if (S.isExample) { S = fresh(); }
+  const max = imgLimits?.maxCount ?? 20;
+  for (const f of files) {
+    if (!f.type.startsWith("image/")) continue;
+    if (S.images.length >= max) { flash(`이미지는 한 번에 최대 ${max}장까지 분석할 수 있습니다.`); break; }
+    try {
+      const {blob, url} = await downscale(f);
+      S.images.push({id:Math.random().toString(36).slice(2), blob, url, kind: guessKind(f.name), name: f.name.replace(/\.[^.]+$/,"").slice(0,40)});
+    } catch(e){ flash(e.message); }
+  }
+  render();
+}
+const guessKind = n => /part|부품|pcb|fc|motor/i.test(n) ? "부품" : /frag|파편/i.test(n) ? "파편" : /expl|폭/i.test(n) ? "폭발성 물질" : "형태(전체)";
+let flashMsg = "";
+function flash(m){ flashMsg = m; render(); setTimeout(()=>{ if(flashMsg===m){flashMsg=""; render();} }, 6000); }
+
+/* ---------------- analysis pipeline ---------------- */
+const run = {A:"wait", B:"wait", C:"wait", t0:0, err:"", busy:false};
+let tick = null;
+async function analyze(){
+  if (!sample || !imgLimits) return;
+  const blobs = S.images.map(i=>i.blob).filter(Boolean);
+  if (!blobs.length) return;
+  ctl = new AbortController();
+  Object.assign(run, {A:"run", B:"run", C:"wait", t0:Date.now(), err:"", busy:true});
+  tick = setInterval(()=>{ const e=$("#elapsed"); if(e) e.textContent = Math.round((Date.now()-run.t0)/1000)+"초"; }, 1000);
+  render();
+  const opts = {images: blobs, modelTier:"complex", signal: ctl.signal};
+  try {
+    const [a, b] = await Promise.all([
+      sample.json(promptA(), opts).then(r=>{ run.A="ok"; render(); return r; }, e=>{ run.A="err"; throw e; }),
+      sample.json(promptB(), opts).then(r=>{ run.B="ok"; render(); return r; }, e=>{ run.B="err"; throw e; })
+    ]);
+    S.passA = a; S.passB = b;
+    run.C = "run"; render();
+    const c = await sample.json(promptC(a, b), opts);
+    run.C = "ok";
+    S.final = normalize(c);
+    S.report = null;
+    applyPayloadDefaults(S);
+    S.done = {0:1,1:1,2:1,3:1,4:1};
+    S.step = 1;
+  } catch(e) {
+    if (run.C === "run") run.C = "err";
+    run.err = errText(e);
+  } finally {
+    clearInterval(tick); run.busy = false; ctl = null; render();
+  }
+}
+function normalize(f){
+  f = f || {};
+  f.parts = Array.isArray(f.parts) ? f.parts : [];
+  f.airframe = f.airframe || {}; f.candidates = Array.isArray(f.candidates)?f.candidates:[];
+  f.payload = f.payload || {}; f.intent = f.intent || {};
+  f.observations = Array.isArray(f.observations)?f.observations:[];
+  f.crossCheck = Array.isArray(f.crossCheck)?f.crossCheck:[];
+  f.limitations = Array.isArray(f.limitations)?f.limitations:[];
+  const sg = f.signature = f.signature || {};
+  sg.links = Array.isArray(sg.links)?sg.links:[];
+  sg.navigation = Array.isArray(sg.navigation)?sg.navigation:(sg.navigation?[String(sg.navigation)]:[]);
+  return f;
+}
+const rep = {busy:false, err:""};
+async function writeReport(){
+  if (!sample || !S.final) return;
+  ctl = new AbortController(); rep.busy = true; rep.err = ""; render();
+  try { S.report = await sample.json(promptReport(), {modelTier:"default", signal: ctl.signal}); S.done[5]=1; }
+  catch(e){ rep.err = errText(e); }
+  finally { rep.busy = false; ctl = null; render(); }
+}
+
+/* ---------------- PDF: separate paginated final document ---------------- */
+const pdfState = {busy:false, msg:"", stage:"", pages:[], blob:null, name:""};
+function newBodyPage(host){
+  const pg = document.createElement("div");
+  pg.className = "pp-page";
+  pg.innerHTML = `<div class="pp-head"><span>추락드론 감식 결과 보고서</span><span><b class="cls sm">대외주의</b> ${esc(S.caseId)}</span></div><div class="pp-body"></div><div class="pp-foot"><span>AI 보조 분석 · 최종 판단 전 실물 감식 필요</span><span class="pp-no"></span></div>`;
+  host.append(pg);
+  return pg.querySelector(".pp-body");
+}
+const over = b => b.scrollHeight > b.clientHeight + 1;
+function layoutPages(host){
+  const tmp = document.createElement("div");
+  let body = newBodyPage(host);
+  const next = () => { body = newBodyPage(host); return body; };
+  const place = el => {
+    body.append(el);
+    if (!over(body)) return;
+    el.remove();
+    // splittable table: repeat header, move rows across pages
+    if (el.tagName==="TABLE" && el.dataset.split) {
+      const rows = [...el.tBodies[0].rows];
+      const mk = () => { const t = el.cloneNode(false); t.append(el.tHead.cloneNode(true)); t.append(document.createElement("tbody")); return t; };
+      let t = mk(); body.append(t);
+      if (rows.length) { t.tBodies[0].append(rows[0]); if (over(body)) { t.remove(); keepHeading(); t = mk(); body.append(t); t.tBodies[0].append(rows[0]); } }
+      for (const r of rows.slice(1)) { t.tBodies[0].append(r); if (over(body)) { r.remove(); next(); t = mk(); body.append(t); t.tBodies[0].append(r); } }
+      return;
+    }
+    if (el.tagName==="UL") {
+      const items = [...el.children]; let u = el.cloneNode(false); body.append(u);
+      for (const li of items) { u.append(li); if (over(body)) { li.remove(); if (!u.children.length) { u.remove(); keepHeading(); } else next(); u = el.cloneNode(false); body.append(u); u.append(li); } }
+      return;
+    }
+    if (!body.children.length) { body.append(el); return; }
+    keepHeading();
+    body.append(el);
+  };
+  // move an orphaned heading at the bottom of a page onto the new page with its content
+  function keepHeading(){
+    const last = body.lastElementChild;
+    const prev = body;
+    next();
+    if (last && last.tagName==="H3") body.append(last);
+    return prev;
+  }
+  reportBlocks(false).forEach(html => { tmp.innerHTML = html.trim(); [...tmp.children].forEach(place); });
+}
+
+async function buildPdf(){
+  if (!window.html2canvas || !window.jspdf) { pdfState.msg = "PDF 라이브러리를 불러오지 못했습니다. 페이지를 새로고침하세요."; render(); return; }
+  document.querySelectorAll("#report [contenteditable]").forEach(n=>n.blur());
+  pdfState.busy = true; pdfState.msg = ""; pdfState.stage = "페이지 구성 중"; render();
+  const host = document.createElement("div");
+  host.className = "pdfhost";
+  document.body.append(host);
+  try {
+    try { await document.fonts?.ready; } catch {}
+    host.insertAdjacentHTML("beforeend", coverHtml());
+    layoutPages(host);
+    const pages = [...host.querySelectorAll(".pp-page")];
+    pages.forEach((p,i)=>{ const n=p.querySelector(".pp-no"); if(n) n.textContent = `${i+1} / ${pages.length}`; });
+    await Promise.all([...host.querySelectorAll("img")].map(im => im.complete ? 0 : new Promise(r=>{im.onload=im.onerror=r;})));
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({unit:"mm", format:"a4", orientation:"portrait", compress:true});
+    pdf.setProperties({title:`추락드론 감식 결과 보고서 ${S.caseId}`, subject:"Downed UAS forensic report", creator:"추락드론 감식 시스템"});
+    const thumbs = [];
+    for (let i=0;i<pages.length;i++){
+      pdfState.stage = `${i+1}/${pages.length}쪽 렌더링`; render();
+      const c = await html2canvas(pages[i], {scale:2, backgroundColor:"#ffffff", width:794, height:1123, windowWidth:900});
+      if (i) pdf.addPage();
+      pdf.addImage(c.toDataURL("image/jpeg", 0.9), "JPEG", 0, 0, 210, 297);
+      const t = document.createElement("canvas"); t.width = 238; t.height = 337; t.getContext("2d").drawImage(c, 0, 0, t.width, t.height);
+      thumbs.push(t.toDataURL("image/jpeg", 0.8));
+    }
+    pdfState.pages = thumbs;
+    pdfState.blob = pdf.output("blob");
+    pdfState.name = `${S.caseId}_추락드론_감식보고서.pdf`;
+  } catch(e) {
+    pdfState.msg = "PDF 생성 중 오류: " + (e?.message || "알 수 없음");
+    pdfState.blob = null;
+  } finally {
+    host.remove(); pdfState.busy = false; pdfState.stage = ""; render();
+  }
+  if (pdfState.blob) await savePdf();
+}
+async function savePdf(){
+  if (!pdfState.blob) return;
+  if (!downloads) { pdfState.msg = "이 화면에서는 파일 저장을 지원하지 않습니다. claude.ai에서 페이지를 열어주세요."; render(); return; }
+  try {
+    const r = await downloads.save({filename: pdfState.name, data: pdfState.blob});
+    pdfState.msg = r?.status === "delivered" ? "보고서를 전달했습니다." : `${pdfState.name} 저장을 마쳤습니다.`;
+  } catch(e) {
+    pdfState.msg = e?.code === "declined" || e?.code === "cancelled" ? "저장을 취소했습니다. 'PDF 다시 저장'으로 저장할 수 있습니다." : e?.code==="unavailable" ? "이 화면에서는 파일 저장을 지원하지 않습니다." : "저장 중 오류: " + (e?.message||e?.code||"알 수 없음");
+  }
+  render();
+}
+
+/* ---------------- render helpers ---------------- */
+const confCell = v => { const n=Math.max(0,Math.min(100,+v||0)); return `<span class="conf"><span class="bar"><i style="width:${n}%"></i></span>${n}%</span>`; };
+function placeholderSvg(i, label){
+  const hue = ["--accent","--hazard","--muted"][i%3];
+  return `<svg class="ph-svg" viewBox="0 0 160 120" aria-hidden="true"><rect width="160" height="120" fill="var(--sunk)"/>
+  <g stroke="var(${hue})" stroke-width="1.5" fill="none" opacity=".7"><circle cx="80" cy="56" r="22"/><path d="M58 56h-24M102 56h24M80 34V18M80 78v16"/><circle cx="34" cy="56" r="8"/><circle cx="126" cy="56" r="8"/></g>
+  <text x="80" y="110" text-anchor="middle" font-size="10" fill="var(--muted)" font-family="IBM Plex Sans KR,sans-serif">예시 · ${esc(label)}</text></svg>`;
+}
+function frameIcon(t){
+  const s = 'stroke="currentColor" stroke-width="2" fill="none"';
+  const rotor = (x,y)=>`<circle cx="${x}" cy="${y}" r="6" ${s}/>`;
+  if (t==="고정익") return `<svg viewBox="0 0 56 40"><path d="M28 4v32M6 18h44M20 34h16" ${s}/></svg>`;
+  if (t==="쿼드콥터") return `<svg viewBox="0 0 56 40"><path d="M14 8l28 24M42 8L14 32" ${s}/>${rotor(14,8)}${rotor(42,8)}${rotor(14,32)}${rotor(42,32)}</svg>`;
+  if (t==="헥사콥터") { let p=""; for(let i=0;i<6;i++){const a=i*Math.PI/3; const x=28+16*Math.cos(a), y=20+14*Math.sin(a); p+=`<path d="M28 20L${x.toFixed(1)} ${y.toFixed(1)}" ${s}/>`+rotor(x.toFixed(1),y.toFixed(1)).replace('r="6"','r="4.5"');} return `<svg viewBox="0 0 56 40">${p}</svg>`; }
+  if (t==="옥토콥터") { let p=""; for(let i=0;i<8;i++){const a=i*Math.PI/4; const x=28+17*Math.cos(a), y=20+15*Math.sin(a); p+=`<path d="M28 20L${x.toFixed(1)} ${y.toFixed(1)}" ${s}/>`+rotor(x.toFixed(1),y.toFixed(1)).replace('r="6"','r="3.5"');} return `<svg viewBox="0 0 56 40">${p}</svg>`; }
+  if (t==="헬리콥터") return `<svg viewBox="0 0 56 40"><path d="M6 8h44M28 8v8M18 16h16a6 6 0 010 12H22a6 6 0 01-4-6zM34 22h16" ${s}/></svg>`;
+  return `<svg viewBox="0 0 56 40"><path d="M28 6v28M8 20h40" ${s}/>${rotor(12,20)}${rotor(44,20)}</svg>`;
+}
+
+/* ---------------- views ---------------- */
+function vPhoto(){
+  const canAI = !!(sample && imgLimits);
+  const real = S.images.filter(i=>i.blob).length;
+  const node = (k, who, d) => `<div class="node ${run[k]}"><div class="k"><span class="who">${who}</span><span class="pill ${run[k]}">${{wait:"대기",run:"분석 중",ok:"완료",err:"오류"}[run[k]]}</span></div><div class="d">${d}</div></div>`;
+  return `
+  <div class="ph"><div><h2>1. 사진 첨부</h2><p>기체 전체 형태, 부품 근접 사진, 파편, 폭발성 물질 흔적을 올리고 각 사진의 종류를 지정하세요. 라벨·실크 인쇄가 보이는 근접 사진이 많을수록 식별 정확도가 올라갑니다.</p></div></div>
+  <label class="drop" id="drop" for="file"><strong>사진을 끌어다 놓거나 눌러서 선택</strong><span>JPG·PNG · 최대 ${imgLimits?.maxCount ?? "여러"}장 · 큰 사진은 자동 축소됩니다</span></label>
+  <input id="file" type="file" accept="image/*" multiple hidden>
+  ${flashMsg ? `<div class="msg err">${esc(flashMsg)}</div>` : ""}
+  ${S.images.length ? `<div class="thumbs">${S.images.map((im,i)=>`
+    <div class="thumb"><div class="img">${im.url?`<img src="${im.url}" alt="${esc(im.name)}">`:placeholderSvg(i, im.name)}<span class="tag">#${i+1}</span></div>
+    <div class="ctl"><select id="kind-${im.id}" data-kind="${i}" aria-label="사진 #${i+1} 종류">${KINDS.map(k=>`<option${k===im.kind?" selected":""}>${k}</option>`).join("")}</select>${S.isExample?"":`<button type="button" data-del="${i}" aria-label="사진 #${i+1} 삭제">삭제</button>`}</div></div>`).join("")}</div>` : ""}
+  <div class="fields">
+    <div class="f"><label class="lbl" for="m-loc">발견 장소</label><input id="m-loc" data-meta="location" value="${esc(S.meta.location)}" placeholder="예: ○○기지 북측 철책 인근"></div>
+    <div class="f"><label class="lbl" for="m-dt">발견 일시</label><input id="m-dt" data-meta="datetime" value="${esc(S.meta.datetime)}" placeholder="2026-10-15 06:30"></div>
+    <div class="f"><label class="lbl" for="m-an">분석관</label><input id="m-an" data-meta="analyst" value="${esc(S.meta.analyst)}" placeholder="소속·성명"></div>
+    <div class="f wide"><label class="lbl" for="m-sit">상황 메모</label><textarea id="m-sit" data-meta="situation" placeholder="추락/폭발 여부, 피해, 목격 진술, 비행 방향 등">${esc(S.meta.situation)}</textarea></div>
+  </div>
+  <div class="ph"><div><h2 style="font-size:16px">AI 교차검증 분석</h2><p>분석관 A(부품 식별)와 B(구조·무장)가 같은 사진을 서로 모르게 분석하고, 검증관 C가 사진을 다시 보며 두 결과를 대조해 최종 판단을 내립니다.</p></div></div>
+  <div class="pipe">${node("A","분석관 A","전자부품·라벨·제원 식별")}${node("B","분석관 B","기체구조·탑재물·폭발흔적")}${node("C","검증관 C","항목별 대조·최종 판정")}</div>
+  ${run.err?`<div class="msg err">${esc(run.err)}</div>`:""}
+  ${!canAI ? `<div class="msg">${sample===null?"AI 분석은 claude.ai에서 이 페이지를 열었을 때 사용할 수 있습니다. 예시 결과와 수동 입력·위협 범위 계산·보고서 작성은 그대로 쓸 수 있습니다.":"이 화면에서는 이미지를 AI로 보낼 수 없습니다."}</div>`:""}
+  <div class="row">
+    ${run.busy ? `<button class="btn" id="stop" type="button">중지</button><span class="note"><span class="spin"></span> 분석 진행 <span id="elapsed" class="mono">0초</span> · 보통 1~3분 소요</span>`
+      : `<button class="btn pri" id="go" type="button" ${(!canAI||!real)?"disabled":""}>교차검증 분석 시작 (${real}장)</button>`}
+  </div>`;
+}
+
+function vParts(){
+  const f = S.final;
+  if (!f) return emptyView("2. 부품 분석");
+  const cols = [["name","부품 명칭","c-name"],["category","분류"],["purpose","용도","c-wide"],["country","제조국"],["manufacturer","제조사"],["features","특징","c-wide"],["specs","주요 제원","c-wide"],["price","추정 가격"]];
+  return `
+  <div class="ph"><div><h2>2. 부품 분석</h2><p>셀을 눌러 직접 수정할 수 있습니다. 수정 내용은 위협 범위와 보고서에 반영됩니다.</p></div>
+  <div class="row"><button class="btn sm" id="addPart" type="button">부품 행 추가</button></div></div>
+  ${f.parts.length?`<div class="tw"><table><thead><tr><th>#</th>${cols.map(c=>`<th>${c[1]}</th>`).join("")}<th>신뢰도</th><th>관찰 근거</th></tr></thead><tbody>
+  ${f.parts.map((p,i)=>`<tr><td class="mono">${i+1}</td>${cols.map(c=>`<td class="${c[2]||""}" contenteditable="true" data-part="${i}" data-f="${c[0]}">${esc(p[c[0]])}</td>`).join("")}<td>${confCell(p.confidence)}</td><td class="c-wide" contenteditable="true" data-part="${i}" data-f="evidence">${esc(p.evidence)}</td></tr>`).join("")}
+  </tbody></table></div>`:`<div class="empty">식별된 부품이 없습니다.</div>`}
+  <div><h3 style="font-size:15px;margin-bottom:8px">교차검증 결과 <span class="note">· 종합 신뢰도 <b class="mono">${num(f.overallConfidence)}%</b></span></h3>
+  ${f.crossCheck.length?`<div class="tw"><table><thead><tr><th>대조 항목</th><th>분석관 A</th><th>분석관 B</th><th>판정</th><th>최종 채택 근거</th></tr></thead><tbody>
+  ${f.crossCheck.map(c=>`<tr><td class="c-name">${esc(c.item)}</td><td>${esc(c.a)}</td><td>${esc(c.b)}</td><td><span class="st ${esc(c.status)}">${esc(c.status)}</span></td><td class="c-wide">${esc(c.resolution)}</td></tr>`).join("")}
+  </tbody></table></div>`:`<div class="empty">교차검증 기록이 없습니다.</div>`}</div>
+  ${f.limitations.length?`<div class="msg"><b>판단 한계</b><ul style="margin:4px 0 0;padding-left:18px">${f.limitations.map(l=>`<li>${esc(l)}</li>`).join("")}</ul></div>`:""}`;
+}
+
+function vFrame(){
+  const f = S.final;
+  if (!f) return emptyView("3. 기체 추정");
+  const a = f.airframe, p = f.payload, it = f.intent;
+  const rng = r => r && (r.min!=null||r.max!=null) ? `${num(r.min,1)}–${num(r.max,1)}` : "—";
+  return `
+  <div class="ph"><div><h2>3. 기체 추정</h2><p>부품 구성과 프레임 형상으로 기체 형태를 판별하고, 이미지와 부품 근거로 후보 기종을 좁혔습니다.</p></div></div>
+  <div class="af">
+    <div style="display:grid;gap:14px">
+      <div class="types">${FRAME_TYPES.map(t=>`<div class="type${a.type===t?" on":""}">${frameIcon(t)}${t}</div>`).join("")}</div>
+      <dl class="kv">
+        <dt>판별 형태</dt><dd><b>${esc(a.type||"미상")}</b> ${confCell(a.confidence)}</dd>
+        <dt>크기</dt><dd>${esc(a.size||"—")}</dd>
+        <dt>최대이륙중량</dt><dd class="mono">${a.mtowKg!=null?num(a.mtowKg,1)+" kg":"—"}</dd>
+        <dt>탑재 가능량</dt><dd class="mono">${rng(a.payloadCapacityKg)} kg</dd>
+        <dt>판별 근거</dt><dd>${esc(a.evidence||"—")}</dd>
+      </dl>
+    </div>
+    <div style="display:grid;gap:10px;align-content:start">
+      <div class="lbl">후보 기종 (일치도 순)</div>
+      <div class="cands">${f.candidates.length? [...f.candidates].sort((x,y)=>(y.match||0)-(x.match||0)).map(c=>`
+        <div class="cand"><div class="pct">${num(c.match)}<small style="font-size:11px">%</small></div><div><div class="m">${esc(c.model)}</div><div class="note">${esc([c.manufacturer,c.country].filter(Boolean).join(" · "))}</div><div class="r">${esc(c.reason)}</div></div></div>`).join("") : `<div class="empty">후보 기종 없음</div>`}</div>
+    </div>
+  </div>
+  <div class="af">
+    <div><div class="lbl" style="margin-bottom:6px">탑재물(페이로드)</div>
+      <dl class="kv">
+        <dt>탑재 여부</dt><dd>${p.present?"<b>탑재 확인</b>":"확인 안 됨"}</dd>
+        <dt>형태</dt><dd>${esc(p.type||"—")}</dd>
+        <dt>탑재물 중량</dt><dd class="mono">${rng(p.massKg)} kg</dd>
+        <dt>폭약 추정</dt><dd>${esc(p.explosive||"미상")} · <span class="mono">${rng(p.fillKg)} kg</span></dd>
+        <dt>파편 특성</dt><dd>${esc(p.fragmentation||"—")}</dd>
+        <dt>근거</dt><dd>${esc(p.evidence||"—")}</dd>
+      </dl></div>
+    <div class="intent"><div class="lbl">운용 의도 · 적대성</div>
+      <div style="font-size:16px;font-weight:700">${esc(it.role||"미상")} <span class="pill" style="color:var(--hazard)">적대성 ${esc(it.hostility||"판단불가")}</span></div>
+      <div>${esc(it.rationale||"")}</div>
+      ${f.observations.length?`<ul style="margin:4px 0 0;padding-left:18px;font-size:13px">${f.observations.map(o=>`<li>${esc(o)}</li>`).join("")}</ul>`:""}
+    </div>
+  </div>`;
+}
+
+function chartSvg(bc){
+  const W=640,H=300,L=56,R=16,T=14,B=40;
+  const rMax = Math.max(10, bc.zones[3].R*1.6, (S.payload.fragR||0)*1.2);
+  const xMin=0.5, yMin=1, yMax=10000;
+  const lx = v => L + (Math.log10(v)-Math.log10(xMin))/(Math.log10(rMax)-Math.log10(xMin))*(W-L-R);
+  const ly = v => T + (1-(Math.log10(v)-Math.log10(yMin))/(Math.log10(yMax)-Math.log10(yMin)))*(H-T-B);
+  let d="", first=true;
+  if (bc.cube>0) for(let i=0;i<=160;i++){ const r = xMin*Math.pow(rMax/xMin,i/160); const p = psKpa(r/bc.cube); if(p<yMin||p>yMax) {first=true; continue;} d+=(first?"M":"L")+lx(r).toFixed(1)+" "+ly(p).toFixed(1); first=false; }
+  const xt=[]; for(const v of [0.5,1,2,5,10,20,50,100,200,500,1000]) if(v>=xMin&&v<=rMax) xt.push(v);
+  const yt=[1,10,100,1000,10000];
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="거리별 입사 과압 곡선">
+   <g font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--muted)">
+   ${yt.map(v=>`<line x1="${L}" x2="${W-R}" y1="${ly(v)}" y2="${ly(v)}" stroke="var(--line)"/><text x="${L-6}" y="${ly(v)+3}" text-anchor="end">${v>=1000?v/1000+"k":v}</text>`).join("")}
+   ${xt.map(v=>`<line y1="${T}" y2="${H-B}" x1="${lx(v)}" x2="${lx(v)}" stroke="var(--line)"/><text x="${lx(v)}" y="${H-B+14}" text-anchor="middle">${v}</text>`).join("")}
+   <text x="${(L+W-R)/2}" y="${H-6}" text-anchor="middle">폭심으로부터 거리 (m, 로그)</text>
+   <text transform="translate(12 ${(T+H-B)/2}) rotate(-90)" text-anchor="middle">입사 과압 (kPa, 로그)</text></g>
+   ${bc.zones.map(z=>`<line x1="${L}" x2="${W-R}" y1="${ly(z.kpa)}" y2="${ly(z.kpa)}" stroke="var(${z.c})" stroke-dasharray="4 3"/>
+     ${z.R<=rMax&&z.R>=xMin?`<circle cx="${lx(z.R)}" cy="${ly(z.kpa)}" r="4" fill="var(${z.c})"/><text x="${lx(z.R)+6}" y="${ly(z.kpa)-5}" font-size="10.5" font-family="IBM Plex Sans KR,sans-serif" fill="var(--ink)">${z.n} ${z.R.toFixed(1)}m</text>`:""}`).join("")}
+   <path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
+  </svg>`;
+}
+function ringsSvg(bc, frag, light){
+  const S2=300, c=S2/2, maxR = Math.max(bc.zones[3].R, frag||0, 0.1);
+  const k = (c-18)/maxR;
+  const col = z => light ? ({"--z1":"#7f1d1d","--z2":"#dc2626","--z3":"#f97316","--z4":"#eab308"})[z] : `var(${z})`;
+  const ink = light ? "#111a19" : "var(--ink)", mut = light ? "#55625f" : "var(--muted)";
+  const rings = [...bc.zones].reverse().map(z=>`<circle cx="${c}" cy="${c}" r="${Math.max(2,z.R*k).toFixed(1)}" fill="${col(z.c)}" fill-opacity=".18" stroke="${col(z.c)}" stroke-width="1.5"/>`).join("");
+  const fr = frag ? `<circle cx="${c}" cy="${c}" r="${(frag*k).toFixed(1)}" fill="none" stroke="${ink}" stroke-dasharray="5 4" stroke-width="1.2"/><text x="${c}" y="${(c-frag*k-4).toFixed(1)}" text-anchor="middle" font-size="10" fill="${ink}" font-family="IBM Plex Sans KR,sans-serif">파편 ${frag}m (추정)</text>` : "";
+  return `<svg viewBox="0 0 ${S2} ${S2}" role="img" aria-label="위협·살상 반경도">${rings}${fr}
+   <circle cx="${c}" cy="${c}" r="3" fill="${ink}"/>
+   <line x1="${c}" y1="${c}" x2="${(c+bc.zones[3].R*k).toFixed(1)}" y2="${c}" stroke="${mut}" stroke-width="1"/>
+   <text x="${(c+bc.zones[3].R*k/2).toFixed(1)}" y="${c+13}" text-anchor="middle" font-size="10" font-family="IBM Plex Mono,monospace" fill="${mut}">${bc.zones[3].R.toFixed(1)} m</text></svg>`;
+}
+
+function vBlast(){
+  if (!S.final && !S.isExample) return emptyView("4. 위협 범위");
+  const p = S.payload, bc = blastCalc(p);
+  const kill = bc.zones[1].R, threat = bc.zones[2].R;
+  return `
+  <div class="ph"><div><h2>4. 위협·살상 범위</h2><p>홉킨슨-크랜츠 3제곱근 스케일링(Z = R / W<sup>1/3</sup>)과 Kinney-Graham 입사 과압식으로 거리별 폭압을 계산합니다. 기본값은 AI 추정 충전량의 보수적 상한입니다.</p></div></div>
+  <div class="fields">
+    <div class="f"><label class="lbl" for="p-mass">탑재물 총중량 (kg)</label><input id="p-mass" type="number" step="0.05" min="0" data-pay="massKg" value="${p.massKg}"></div>
+    <div class="f"><label class="lbl" for="p-fill">폭약 충전량 (kg)</label><input id="p-fill" type="number" step="0.05" min="0" data-pay="fillKg" value="${p.fillKg}"></div>
+    <div class="f"><label class="lbl" for="p-exp">폭약 종류 (TNT 환산계수)</label><select id="p-exp" data-pay="explosive">${Object.keys(RE).map(k=>`<option value="${k}"${k===p.explosive?" selected":""}>${k} · ×${RE[k]}</option>`).join("")}</select></div>
+    <div class="f"><label class="lbl" for="p-frag">파편 위험반경 (m, AI 추정)</label><input id="p-frag" type="number" step="1" min="0" data-pay="fragR" value="${p.fragR}"></div>
+  </div>
+  <label class="chk"><input type="checkbox" id="p-surf" data-pay="surface" ${p.surface?"checked":""}> 지면 폭발로 계산 (지면 반사계수 1.8 적용 · 저고도 충돌형 드론에 적합)</label>
+  <div class="blast">
+    <div style="display:grid;gap:12px;align-content:start">
+      <div class="rings">${ringsSvg(bc, p.fragR)}</div>
+      <div class="zones">${bc.zones.map(z=>`<div class="zone"><i style="background:var(${z.c})"></i><div><div class="zn">${z.n} <span class="note">· ${z.grp} 범위</span></div><div class="zs">${z.s}</div></div><div class="zr">${z.R.toFixed(1)} m<small>Z=${z.Z.toFixed(2)}</small></div></div>`).join("")}</div>
+    </div>
+    <div style="display:grid;gap:12px;align-content:start;min-width:0">
+      <div class="row" style="gap:20px">
+        <div><div class="lbl">살상 범위</div><div class="mono" style="font-size:26px;font-weight:600;color:var(--z2)">${kill.toFixed(1)} m</div><div class="note">폐 손상 임계 이내</div></div>
+        <div><div class="lbl">위협 범위</div><div class="mono" style="font-size:26px;font-weight:600;color:var(--z3)">${threat.toFixed(1)} m</div><div class="note">고막 파열 임계 이내</div></div>
+        <div><div class="lbl">2차 피해 범위</div><div class="mono" style="font-size:26px;font-weight:600;color:var(--hazard)">${bc.zones[3].R.toFixed(1)} m</div><div class="note">유리 비산</div></div>
+      </div>
+      <div class="chartbox">${chartSvg(bc)}</div>
+      <div class="calc">W(TNT)  = ${num(p.fillKg,2)} kg × ${bc.re} (${esc(p.explosive)}) = ${bc.wTnt.toFixed(3)} kg
+W(eff)  = ${bc.wTnt.toFixed(3)} × ${p.surface?"1.8 (지면)":"1.0 (공중)"} = ${bc.wEff.toFixed(3)} kg
+W^(1/3) = ${bc.cube.toFixed(3)} kg^(1/3)
+R       = Z × W^(1/3),  Z는 목표 과압을 만족하는 환산거리</div>
+      <p class="note">폭압만 반영한 값입니다. 금속 케이싱·프리폼 파편이 있으면 실제 살상 범위는 파편 위험반경이 더 넓게 지배합니다. 지형·구조물 차폐, 실내 반사는 반영하지 않았습니다.</p>
+    </div>
+  </div>`;
+}
+
+function freqSvg(cp, light){
+  const W=640,H=118,L=20,R=20,y0=70;
+  const fl=300, fh=7000, x = f => L + (Math.log10(f)-Math.log10(fl))/(Math.log10(fh)-Math.log10(fl))*(W-L-R);
+  const ink = light?"#111a19":"var(--ink)", mut = light?"#55625f":"var(--muted)", line = light?"#c9d3d0":"var(--line)";
+  const pc = p => /영상/.test(p)?(light?"#b45309":"var(--hazard)"):/셀룰러|위성/.test(p)?(light?"#1d4ed8":"var(--info)"):(light?"#0d6b61":"var(--accent)");
+  const ticks=[433,915,1575,2400,5800].map(f=>`<line x1="${x(f)}" x2="${x(f)}" y1="${y0}" y2="${y0+5}" stroke="${mut}"/><text x="${x(f)}" y="${y0+18}" text-anchor="middle" font-size="10" fill="${mut}" font-family="IBM Plex Mono,monospace">${f>=1000?(f/1000)+"G":f+"M"}</text>`).join("");
+  let marks = "", lane = 0;
+  cp.links.forEach((l,i)=>{
+    const c = pc(l.purpose||"");
+    if (l.b.kind==="rf"){ const xx=x(Math.max(fl,Math.min(fh,l.b.f))); const yy = 22 + (lane++%2)*18;
+      marks += `<line x1="${xx}" x2="${xx}" y1="${yy+4}" y2="${y0}" stroke="${c}" stroke-width="2"/><circle cx="${xx}" cy="${y0}" r="4" fill="${c}"/><text x="${xx}" y="${yy}" text-anchor="middle" font-size="11" font-weight="600" fill="${c}" font-family="IBM Plex Sans KR,sans-serif">${esc(l.purpose||"링크")} ${esc(l.b.label)}</text>`; }
+    else if (l.b.lo){ const yy = 22 + (lane++%2)*18; marks += `<rect x="${x(l.b.lo)}" y="${y0-6}" width="${x(l.b.hi)-x(l.b.lo)}" height="12" fill="${c}" fill-opacity=".22" stroke="${c}"/><text x="${(x(l.b.lo)+x(l.b.hi))/2}" y="${yy}" text-anchor="middle" font-size="11" font-weight="600" fill="${c}" font-family="IBM Plex Sans KR,sans-serif">${esc(l.b.label)}</text>`; }
+  });
+  if (cp.hasGnss) marks += `<rect x="${x(1164)}" y="${y0-4}" width="${x(1610)-x(1164)}" height="8" fill="${mut}" fill-opacity=".3"/><text x="${x(1380)}" y="${y0+32}" text-anchor="middle" font-size="10" fill="${mut}" font-family="IBM Plex Sans KR,sans-serif">GNSS 수신</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="식별된 링크 주파수 분포"><line x1="${L}" x2="${W-R}" y1="${y0}" y2="${y0}" stroke="${line}" stroke-width="2"/>${ticks}${marks}
+  <text x="${W-R}" y="${H-4}" text-anchor="end" font-size="10" fill="${mut}" font-family="IBM Plex Sans KR,sans-serif">주파수 (로그 축)</text><text x="${L}" y="${H-4}" font-size="10" fill="${ink}" font-family="IBM Plex Sans KR,sans-serif">${cp.links.length?"":"식별된 링크 없음"}</text></svg>`;
+}
+const scoreRow = (d, extra="") => `<div class="sc"><div class="sc-h"><b>${esc(d.k)}</b>${extra}<span class="mono">${d.v}</span></div><div class="bar sc-bar"><i style="width:${d.v}%"></i></div><div class="note">${esc(d.why)}</div></div>`;
+function vCounter(){
+  if (!S.final) return emptyView("5. 대응수단");
+  const sg = S.final.signature = S.final.signature || {links:[],navigation:[]};
+  sg.links = sg.links||[]; sg.navigation = sg.navigation||[];
+  const cp = counterplan(S.final);
+  const opt = (arr, v) => arr.map(a=>`<option${a===v?" selected":""}>${a}</option>`).join("");
+  return `
+  <div class="ph"><div><h2>5. 센서·대역별 대응수단</h2><p>감식으로 식별한 통신 링크·항법 방식·추진 방식·크기·속도를 기준으로 탐지 센서와 무력화 수단의 적합도를 산정합니다. 신호 특성을 고치면 추천이 바로 바뀝니다.</p></div></div>
+  <div class="combo"><div class="lbl">권장 조합</div><div>${esc(cp.combo)}</div></div>
+  <div><div class="lbl" style="margin-bottom:6px">식별 신호 특성</div>
+    <div class="chartbox freq">${freqSvg(cp)}</div>
+    <div class="tw" style="margin-top:8px"><table><thead><tr><th>대역·주파수</th><th>용도</th><th>추정 프로토콜</th><th>근거</th><th></th></tr></thead><tbody>
+    ${sg.links.map((l,i)=>`<tr><td><input class="cell" id="lk-b-${i}" data-link="${i}" data-lf="band" value="${esc(l.band)}" aria-label="대역"></td>
+      <td><select class="cell" id="lk-p-${i}" data-link="${i}" data-lf="purpose" aria-label="용도">${opt(PURPOSES,l.purpose)}</select></td>
+      <td><input class="cell" id="lk-r-${i}" data-link="${i}" data-lf="protocol" value="${esc(l.protocol)}" aria-label="프로토콜"></td>
+      <td class="c-wide">${esc(l.evidence||"")}</td><td><button class="btn sm" type="button" data-dellink="${i}">삭제</button></td></tr>`).join("") || `<tr><td colspan="5" class="note">식별된 링크가 없습니다. 행을 추가하세요.</td></tr>`}
+    </tbody></table></div>
+    <div class="row" style="margin-top:8px"><button class="btn sm" type="button" id="addLink">링크 추가</button></div>
+  </div>
+  <div class="fields">
+    <div class="f"><label class="lbl" for="sg-auto">비행 방식</label><select id="sg-auto" data-sg="autonomy">${opt(AUTONOMY,sg.autonomy)}</select></div>
+    <div class="f"><label class="lbl" for="sg-nav">항법</label><input id="sg-nav" data-sg="navigation" value="${esc(sg.navigation.join(", "))}" placeholder="GNSS, 관성항법"></div>
+    <div class="f"><label class="lbl" for="sg-prop">추진</label><select id="sg-prop" data-sg="propulsion">${opt(PROPULSION,sg.propulsion)}</select></div>
+    <div class="f"><label class="lbl" for="sg-rcs">크기(RCS)</label><select id="sg-rcs" data-sg="rcs">${opt(RCS,sg.rcs)}</select></div>
+    <div class="f"><label class="lbl" for="sg-v">최고속도 (km/h)</label><input id="sg-v" type="number" min="0" step="10" data-sg="speedMax" value="${sg.speedKmh?.max ?? ""}"></div>
+    <div class="f"><label class="lbl" for="sg-alt">운용 고도</label><input id="sg-alt" data-sg="altitude" value="${esc(sg.altitude||"")}"></div>
+  </div>
+  <div class="cm">
+    <div><div class="lbl" style="margin-bottom:8px">탐지 센서 적합도</div><div class="scs">${cp.det.map(d=>scoreRow(d)).join("")}</div></div>
+    <div><div class="lbl" style="margin-bottom:8px">무력화 수단 적합도</div><div class="scs">${cp.def.map(d=>scoreRow(d, `<span class="prio p${d.p[0]}">${d.p}</span>${d.band&&d.band!=="—"?`<span class="chip">${esc(d.band)}</span>`:""}`)).join("")}</div></div>
+  </div>
+  <p class="note">적합도는 식별 특성에 근거한 규칙 기반 상대 점수입니다. 재밍·스푸핑·제어권 탈취는 전파법 등 관계 법령상 권한이 있는 기관만 운용할 수 있습니다.</p>`;
+}
+
+function edText(key, val, ph, editable, tag="div"){
+  if (!editable) return val ? `<${tag} class="pp-p">${esc(val)}</${tag}>` : `<${tag} class="pp-p pp-none">작성되지 않음</${tag}>`;
+  return `<${tag} class="ed${val?"":" phd"}" contenteditable="true" data-rep="${key}">${esc(val||ph)}</${tag}>`;
+}
+function edList(key, arr, ph, editable){
+  const a = Array.isArray(arr)&&arr.length ? arr : null;
+  const li = x => `<li>${esc(typeof x==="string"?x:`[${x.horizon}] ${x.action}`)}</li>`;
+  if (!editable) return a ? `<ul>${a.map(li).join("")}</ul>` : `<div class="pp-none">작성되지 않음</div>`;
+  return `<ul class="ed${a?"":" phd"}" contenteditable="true" data-replist="${key}">${a? a.map(li).join("") : `<li>${esc(ph)}</li>`}</ul>`;
+}
+function fmtDate(d){ d=new Date(d); const p=n=>String(n).padStart(2,"0"); return `${d.getFullYear()}.${p(d.getMonth()+1)}.${p(d.getDate())}`; }
+
+/* One source of truth for the report: returns blocks used by both the on-screen review sheet and the final PDF */
+function reportBlocks(editable){
+  const f=S.final, r=S.report||{}, bc=blastCalc(S.payload), m=S.meta, cp=counterplan(f);
+  const imgs = S.images.filter(i=>i.url);
+  const B = [];
+  const h = t => B.push(`<h3>${t}</h3>`);
+  h("1. 개요");
+  B.push(`<dl class="rkv"><dt>발견 장소</dt><dd>${esc(m.location||"—")}</dd><dt>발견 일시</dt><dd>${esc(m.datetime||"—")}</dd><dt>상황</dt><dd>${esc(m.situation||"—")}</dd><dt>판단 신뢰도</dt><dd>${num(f.overallConfidence)}% (AI 분석관 2인 독립 분석 + 검증관 교차검증)</dd></dl>`);
+  B.push(`<div><b>핵심 결론</b>${edText("summary", r.summary, "AI 본문 작성을 누르거나 직접 입력하세요.", editable)}</div>`);
+  if (imgs.length) B.push(`<div class="rimgs">${imgs.slice(0,8).map(im=>`<figure><div class="rimg" style="background-image:url('${im.url}')"></div><figcaption>#${S.images.indexOf(im)+1} ${esc(im.kind)}</figcaption></figure>`).join("")}</div>`);
+  h("2. 드론 종류");
+  B.push(edText("droneType", r.droneType, "드론 종류 요약", editable));
+  B.push(`<dl class="rkv"><dt>기체 형태</dt><dd>${esc(f.airframe.type||"미상")} (신뢰도 ${num(f.airframe.confidence)}%) · ${esc(f.airframe.size||"")}</dd><dt>후보 기종</dt><dd>${f.candidates.slice(0,3).map(c=>`${esc(c.model)} ${num(c.match)}%`).join(" / ")||"—"}</dd><dt>운용 의도</dt><dd>${esc(f.intent.role||"미상")} · 적대성 ${esc(f.intent.hostility||"판단불가")} — ${esc(f.intent.rationale||"")}</dd></dl>`);
+  h("3. 부품 분석");
+  B.push(edText("partsAnalysis", r.partsAnalysis, "부품 구성·공급망 분석", editable));
+  B.push(`<table data-split="1"><thead><tr><th>#</th><th>부품</th><th>제조국·제조사</th><th>주요 제원</th><th>가격</th><th>신뢰도</th></tr></thead><tbody>${f.parts.map((p,i)=>`<tr><td>${i+1}</td><td><b>${esc(p.name)}</b><br><span class="rmut">${esc(p.purpose)}</span></td><td>${esc(p.country)}<br>${esc(p.manufacturer)}</td><td>${esc(p.specs)}</td><td>${esc(p.price)}</td><td>${num(p.confidence)}%</td></tr>`).join("")}</tbody></table>`);
+  h("4. 탑재물 및 위협 범위");
+  B.push(`<div class="rblast"><div>${ringsSvg(bc, S.payload.fragR, true)}</div><div><dl class="rkv"><dt>탑재물</dt><dd>${esc(f.payload.type||"—")}</dd><dt>폭약</dt><dd>${esc(S.payload.explosive)} ${num(S.payload.fillKg,2)}kg → TNT 환산 ${bc.wTnt.toFixed(2)}kg</dd><dt>조건</dt><dd>${S.payload.surface?"지면 폭발(반사계수 1.8)":"공중 폭발"}</dd></dl>
+  <table><thead><tr><th>구분</th><th>기준 과압</th><th>환산거리 Z</th><th>반경</th></tr></thead><tbody>${bc.zones.map(z=>`<tr><td>${z.n} (${z.grp})</td><td>${z.kpa} kPa</td><td>${z.Z.toFixed(2)}</td><td><b>${z.R.toFixed(1)} m</b></td></tr>`).join("")}${S.payload.fragR?`<tr><td>파편 위험 (추정)</td><td>—</td><td>—</td><td><b>${S.payload.fragR} m</b></td></tr>`:""}</tbody></table>
+  <div class="rsmall">홉킨슨-크랜츠 스케일링(Z=R/W<sup>1/3</sup>), Kinney-Graham 입사 과압식. 차폐·반사 미반영.</div></div></div>`);
+  h("5. 센서·대역별 대응수단");
+  B.push(`<div class="rcombo"><b>권장 조합</b> ${esc(cp.combo)}</div>`);
+  B.push(`<div class="rfreq">${freqSvg(cp, true)}</div>`);
+  B.push(`<table data-split="1"><thead><tr><th>탐지 센서</th><th>적합도</th><th>판단 근거</th></tr></thead><tbody>${cp.det.map(d=>`<tr><td><b>${esc(d.k)}</b></td><td>${d.v}</td><td>${esc(d.why)}</td></tr>`).join("")}</tbody></table>`);
+  B.push(`<table data-split="1"><thead><tr><th>무력화 수단</th><th>대상 대역</th><th>우선순위</th><th>적합도</th><th>판단 근거</th></tr></thead><tbody>${cp.def.map(d=>`<tr><td><b>${esc(d.k)}</b></td><td>${esc(d.band||"—")}</td><td>${d.p}</td><td>${d.v}</td><td>${esc(d.why)}</td></tr>`).join("")}</tbody></table>`);
+  B.push(`<div class="rsmall">규칙 기반 상대 점수. 재밍·스푸핑·제어권 탈취는 관계 법령상 권한 있는 기관만 운용 가능.</div>`);
+  h("6. 시사점"); B.push(edList("implications", r.implications, "시사점", editable));
+  h("7. C-UAS 관점"); B.push(edList("cuasView", r.cuasView, "탐지·식별·무력화 고려사항", editable));
+  h("8. 향후 대응방안"); B.push(edList("countermeasures", r.countermeasures, "[즉시/단기/중장기] 대응방안", editable));
+  h("9. 교차검증 및 판단 근거");
+  if (f.crossCheck.length) B.push(`<table data-split="1"><thead><tr><th>항목</th><th>분석관 A</th><th>분석관 B</th><th>판정</th><th>채택 근거</th></tr></thead><tbody>${f.crossCheck.map(c=>`<tr><td>${esc(c.item)}</td><td>${esc(c.a)}</td><td>${esc(c.b)}</td><td>${esc(c.status)}</td><td>${esc(c.resolution)}</td></tr>`).join("")}</tbody></table>`);
+  B.push(edList("evidenceBasis", r.evidenceBasis, "판단 근거", editable));
+  if (f.limitations.length) B.push(`<div><b>판단 한계</b><ul>${f.limitations.map(l=>`<li>${esc(l)}</li>`).join("")}</ul></div>`);
+  B.push(`<div class="foot">본 보고서는 사진 기반 AI 보조 분석 결과이며, 최종 판단은 실물 감식·잔류물 화학분석·전문가 검토로 확정해야 함.</div>`);
+  return B;
+}
+
+function coverHtml(){
+  const f=S.final, r=S.report||{}, bc=blastCalc(S.payload), m=S.meta;
+  const lead = S.images.find(i=>i.url && i.kind==="형태(전체)") || S.images.find(i=>i.url);
+  const tile = (k,v,s) => `<div class="cv-tile"><div class="cv-k">${k}</div><div class="cv-v">${v}</div>${s?`<div class="cv-s">${s}</div>`:""}</div>`;
+  return `<div class="pp-page cover">
+    <div class="cv-top"><span class="cls">대외주의</span><span class="mono">${esc(S.caseId)}</span></div>
+    <div class="cv-title"><div class="cv-eyebrow">DOWNED UAS FORENSIC REPORT</div><h1>추락드론 감식 결과 보고서</h1>
+      <div class="cv-sub">${esc(r.droneType || `${f.airframe.type||"기체 미상"} · ${f.intent.role||"의도 미상"}`)}</div></div>
+    <div class="cv-tiles">
+      ${tile("운용 의도·적대성", esc(f.intent.role||"미상"), `적대성 ${esc(f.intent.hostility||"판단불가")}`)}
+      ${tile("살상 범위", `${bc.zones[1].R.toFixed(1)} m`, "폐 손상 임계(103 kPa)")}
+      ${tile("위협 범위", `${bc.zones[2].R.toFixed(1)} m`, "고막 파열 임계(34.5 kPa)")}
+      ${tile("교차검증 신뢰도", `${num(f.overallConfidence)}%`, "분석관 2인 + 검증관")}
+    </div>
+    <div class="cv-body">
+      ${lead?`<div class="cv-img" style="background:url('${lead.url}') center/cover no-repeat"></div>`:`<div class="cv-img cv-noimg">${ringsSvg(bc, S.payload.fragR, true)}</div>`}
+      <div><div class="cv-k">핵심 결론</div><p>${esc(r.summary || "핵심 결론이 작성되지 않았습니다.")}</p></div>
+    </div>
+    <table class="cv-meta"><tr><th>발견 장소</th><td>${esc(m.location||"—")}</td><th>발견 일시</th><td>${esc(m.datetime||"—")}</td></tr>
+    <tr><th>분석관</th><td>${esc(m.analyst||"—")}</td><th>작성일</th><td>${fmtDate(S.createdAt)}</td></tr></table>
+    ${S.isExample?`<div class="cv-ex">예시 데이터로 생성된 보고서</div>`:""}
+    <div class="cv-foot">추락드론 감식 시스템 · AI 보조 분석 결과로 최종 판단 전 실물 감식 필요</div>
+  </div>`;
+}
+
+function vReport(){
+  if (!S.final) return emptyView("6. 종합 보고서");
+  const canAI = !!sample;
+  return `
+  <div class="ph"><div><h2>6. 종합 보고서</h2><p>아래 검토용 보고서에서 문장을 직접 눌러 고친 뒤 <b>최종 PDF 생성</b>을 누르면, 표지·쪽번호·페이지 나눔이 들어간 별도 PDF 문서가 만들어지고 저장됩니다.</p></div>
+  <div class="row">
+    ${rep.busy?`<button class="btn" id="stopRep" type="button">중지</button><span class="note"><span class="spin"></span> 작성 중</span>`:`<button class="btn" id="genRep" type="button" ${canAI?"":"disabled"}>${S.report?"AI 본문 다시 작성":"AI 본문 작성"}</button>`}
+    <button class="btn pri" id="pdf" type="button" ${pdfState.busy?"disabled":""}>${pdfState.busy?`<span class="spin"></span> ${esc(pdfState.stage||"PDF 생성 중")}`:"최종 PDF 생성"}</button>
+  </div></div>
+  ${rep.err?`<div class="msg err">${esc(rep.err)}</div>`:""}
+  ${pdfState.pages.length?`<div class="pdfout"><div class="ph"><div><b>최종 PDF · ${pdfState.pages.length}쪽</b> <span class="note">${esc(pdfState.name)}</span>${pdfState.msg?`<div class="note">${esc(pdfState.msg)}</div>`:""}</div><button class="btn sm" id="pdfSave" type="button" ${pdfState.busy?"disabled":""}>PDF 다시 저장</button></div>
+    <div class="pdfprev">${pdfState.pages.map((u,i)=>`<figure><img src="${u}" alt="${i+1}쪽 미리보기"><figcaption class="mono">${i+1}</figcaption></figure>`).join("")}</div></div>`:(pdfState.msg?`<div class="msg">${esc(pdfState.msg)}</div>`:"")}
+  <div class="sheetwrap"><article id="report">
+    <div class="rh"><div><div class="cls">대외주의</div><h2>추락드론 감식 결과 보고서 <span class="rmut" style="font-size:12px;font-weight:400">· 검토용</span></h2></div>
+      <div class="rm">${esc(S.caseId)}<br>${fmtDate(S.createdAt)} 작성<br>분석관 ${esc(S.meta.analyst||"—")}${S.isExample?"<br><b style='color:#b45309'>예시 데이터</b>":""}</div></div>
+    ${reportBlocks(true).join("\n")}
+  </article></div>`;
+}
+
+function emptyView(t){ return `<div class="ph"><div><h2>${t}</h2></div></div><div class="empty">1단계에서 사진을 올리고 교차검증 분석을 실행하면 결과가 여기에 표시됩니다.<br><br><button class="btn" type="button" data-goto="0">사진 첨부로 이동</button></div>`; }
+
+/* ---------------- render ---------------- */
+function render(){
+  $("#caseId").textContent = S.caseId;
+  const d = new Date(S.createdAt);
+  $("#caseDate").textContent = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+  $("#caseConf").textContent = S.final?.overallConfidence!=null ? S.final.overallConfidence+"%" : "—";
+  $("#exBanner").hidden = !S.isExample;
+  $("#how-list").innerHTML = STEPS.map((s,i)=>`<li class="${S.done[i]?"done":""}"><button type="button" data-goto="${i}"><span class="hn">${String(i+1).padStart(2,"0")}<i>${S.done[i]?"완료":i===S.step?"진행 중":"대기"}</i></span><h3>${s.t}</h3><p>${HOW[i]}</p></button></li>`).join("");
+  $("#rail").innerHTML = STEPS.map((s,i)=>`<button type="button" class="step${S.done[i]?" done":""}" data-goto="${i}" ${S.step===i?'aria-current="step"':""}><span class="n">${S.done[i]?"✓":String(i+1).padStart(2,"0")}</span><span class="t">${s.t}</span><span class="s">${s.s}</span></button>`).join("");
+  const focusId = document.activeElement?.id; const sel = document.activeElement?.selectionStart;
+  const panel = [vPhoto,vParts,vFrame,vBlast,vCounter,vReport][S.step]();
+  $("#main").innerHTML = `<section class="panel">${panel}<div class="row" style="justify-content:space-between;border-top:1px solid var(--line);padding-top:14px">
+    ${S.step>0?`<button class="btn" type="button" data-goto="${S.step-1}">← ${STEPS[S.step-1].t}</button>`:"<span></span>"}
+    ${S.step<STEPS.length-1?`<button class="btn" type="button" data-goto="${S.step+1}">${STEPS[S.step+1].t} →</button>`:"<span></span>"}</div></section>`;
+  if (focusId) { const e=document.getElementById(focusId); if(e && e.tagName!=="BUTTON"){ e.focus(); try{ if(sel!=null) e.setSelectionRange(sel,sel);}catch{} } }
+}
+
+/* ---------------- events ---------------- */
+document.addEventListener("click", e => {
+  const sc = e.target.closest("[data-scroll]"); if (sc) { e.preventDefault(); const t=document.getElementById(sc.dataset.scroll); if (t) t.scrollIntoView({block:"start"}); return; }
+  const g = e.target.closest("[data-goto]"); if (g) { S.step = +g.dataset.goto; render(); $("#work").scrollIntoView({block:"start"}); return; }
+  const del = e.target.closest("[data-del]"); if (del) { S.images.splice(+del.dataset.del,1); render(); return; }
+  const id = e.target.closest("button")?.id;
+  if (id==="newCase") { S = fresh(); Object.assign(run,{A:"wait",B:"wait",C:"wait",err:""}); render(); }
+  if (id==="go") analyze();
+  if (id==="stop" || id==="stopRep") ctl?.abort();
+  if (id==="genRep") writeReport();
+  if (id==="pdf") buildPdf();
+  if (id==="pdfSave") savePdf();
+  if (id==="addLink" && S.final) { S.final.signature.links.push({band:"2.4GHz",purpose:"조종",protocol:"",evidence:"분석관 수동 입력"}); render(); }
+  const dl = e.target.closest("[data-dellink]"); if (dl && S.final) { S.final.signature.links.splice(+dl.dataset.dellink,1); render(); }
+  if (id==="addPart" && S.final) { S.final.parts.push({name:"새 부품",category:"기타",purpose:"",country:"",manufacturer:"",features:"",specs:"",price:"",confidence:50,evidence:"분석관 수동 입력"}); render(); }
+});
+document.addEventListener("change", e => {
+  const t = e.target;
+  if (t.id==="file") { addFiles([...t.files]); t.value=""; }
+  if (t.dataset.kind!=null) S.images[+t.dataset.kind].kind = t.value;
+  if (t.dataset.link!=null && S.final) { S.final.signature.links[+t.dataset.link][t.dataset.lf] = t.value; render(); }
+  if (t.dataset.sg && S.final) { const sg=S.final.signature, k=t.dataset.sg;
+    if (k==="navigation") sg.navigation = t.value.split(/[,·\/]/).map(x=>x.trim()).filter(Boolean);
+    else if (k==="speedMax") sg.speedKmh = {...(sg.speedKmh||{}), max: t.value===""?null:+t.value};
+    else sg[k] = t.value;
+    render(); }
+  if (t.dataset.pay) { const k=t.dataset.pay; S.payload[k] = k==="surface" ? t.checked : k==="explosive" ? t.value : Math.max(0, +t.value||0); render(); }
+});
+document.addEventListener("input", e => {
+  const t = e.target;
+  if (t.dataset.meta) S.meta[t.dataset.meta] = t.value;
+});
+document.addEventListener("focusout", e => {
+  const t = e.target;
+  if (t.dataset?.part!=null && S.final) S.final.parts[+t.dataset.part][t.dataset.f] = t.textContent.trim();
+  if (t.dataset?.rep) { S.report = S.report||{}; if(!t.classList.contains("phd")||t.textContent.trim()) { const v=t.textContent.trim(); S.report[t.dataset.rep] = v; } }
+  if (t.dataset?.replist) { S.report = S.report||{}; const items=[...t.querySelectorAll("li")].map(l=>l.textContent.trim()).filter(Boolean); S.report[t.dataset.replist] = items; }
+});
+document.addEventListener("focusin", e => { const t=e.target; if (t.classList?.contains("phd") && (t.dataset.rep||t.dataset.replist)) { t.classList.remove("phd"); if(t.dataset.rep) t.textContent=""; else t.innerHTML="<li></li>"; } });
+document.addEventListener("dragover", e => { const d=e.target.closest?.("#drop"); if(d){ e.preventDefault(); d.classList.add("over"); } });
+document.addEventListener("dragleave", e => { const d=e.target.closest?.("#drop"); if(d) d.classList.remove("over"); });
+document.addEventListener("drop", e => { const d=e.target.closest?.("#drop"); if(d){ e.preventDefault(); d.classList.remove("over"); addFiles([...e.dataTransfer.files]); } });
+document.addEventListener("paste", e => { if (S.step!==0) return; const fs=[...(e.clipboardData?.files||[])]; if(fs.length) addFiles(fs); });
+
+render();
+})();
+</script>
+</body>
+</html>
