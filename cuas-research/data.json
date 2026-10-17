@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-16T22:21:43Z",
+    "last_daily_run": "2026-10-17T22:12:39Z",
     "last_weekly_run": "2026-10-11T22:24:43Z",
     "schema_version": 1
   },
@@ -1499,6 +1499,30 @@
           "https://unn.ua/en/news/most-of-the-drones-launched-by-the-russian-federation-overnight-were-jet-powered-air-defense-neutralized-slightly-more-than-half"
         ],
         "note": "2026-10-15 18:00~10-16 09:30 집계(공군 발표, 09:30 시점 잠정치 — 공격 진행 중이라고 명시). Shahed·Gerbera 공격드론 및 Parodiya 기만기 총 149기(이 중 108기가 제트추진형으로 다수 보도) 중 114기 요격·제압(이 중 77기가 제트추진 Shahed/Geran 계열) — 전체 요격률 약 77%, 제트추진형만 보면 약 71%(77/108)로 전체 평균보다 낮음. 피격 27개 지점(24개 지점 기준 보도), 잔해 낙하 14개 지점. 기종별(Geran-2/4/5, Shahed-136 등) 명시적 세부 구분은 보도되지 않아 by_type 비움, composition.jet_propelled만 명확한 정수로 보도되어 기록. 발사지역은 오룔·크림반도 흐바르디이스케(점령지)·도네츠크(점령지). 목표지역(피격 지점의 구체 주/도시명)은 본 기사에서 명시되지 않아 target_areas 비움."
+      },
+      {
+        "date": "2026-10-17",
+        "attacks_total": 332,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4175336-ukraines-adf-down-four-kalibr-missiles-289-drones-in-overnight-russian-attack.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4175336-ukraines-adf-down-four-kalibr-missiles-289-drones-in-overnight-russian-attack.html",
+        "by_type": {},
+        "composition": {
+          "missiles": {
+            "count": 4,
+            "intercepted": 4,
+            "types": ["Kalibr"],
+            "source": "https://www.ukrinform.net/rubric-ato/4175336-ukraines-adf-down-four-kalibr-missiles-289-drones-in-overnight-russian-attack.html"
+          }
+        },
+        "launch_areas": ["Oryol", "Bryansk", "Kursk", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": [],
+        "intercepted": 289,
+        "intercept_rate": 0.87,
+        "sources": [
+          "https://www.ukrinform.net/rubric-ato/4175336-ukraines-adf-down-four-kalibr-missiles-289-drones-in-overnight-russian-attack.html",
+          "https://news.az/news/ukraine-says-it-shot-down-nearly-290-russian-drones-overnight"
+        ],
+        "note": "2026-10-16 18:00~10-17 08:00 집계(공군 발표, 08:00 시점 기준 공격 진행 중으로 명시). 공격드론 332기 중 289기 요격·제압(요격률 약 0.87). 노보로시스크에서 발사된 Kalibr 순항미사일 4발은 전량(4/4) 요격 확인되어 composition.missiles에 기록. 이와 별도로 이스칸데르-M/KN-23 탄도미사일 및 Kh-22/32 순항미사일도 발사됐으나 발사량·요격량이 명확히 보도되지 않아 attacks_total·intercepted·composition 어디에도 미포함(드론 기준 수치만 반영). 피격 22개 지점, 잔해 낙하 3개 지점. 젤렌스키 대통령은 이번 공세에서 에너지 시설에 제트추진·피스톤(휘발유엔진) 혼합형 샤헤드 등 320기 이상이 동원됐다고 별도 언급(RFE/RL 인용) — 공군 집계 332기와 유사한 범위로 상충 아님. 기종별(Geran/Shahed 모델) 세부 구분 미보도로 by_type 비움, 제트추진형 정확한 정수 집계도 미확인으로 composition.jet_propelled 비움. 목표지역(피격 지점의 구체 주/도시명)은 확인된 출처에 명시되지 않아 target_areas 비움."
       }
     ],
     "monthly": [
