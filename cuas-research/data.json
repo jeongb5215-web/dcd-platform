@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-18T22:15:56Z",
+    "last_daily_run": "2026-10-19T22:17:43Z",
     "last_weekly_run": "2026-10-18T22:21:13Z",
     "schema_version": 1
   },
@@ -1523,6 +1523,44 @@
           "https://news.az/news/ukraine-says-it-shot-down-nearly-290-russian-drones-overnight"
         ],
         "note": "2026-10-16 18:00~10-17 08:00 집계(공군 발표, 08:00 시점 기준 공격 진행 중으로 명시). 공격드론 332기 중 289기 요격·제압(요격률 약 0.87). 노보로시스크에서 발사된 Kalibr 순항미사일 4발은 전량(4/4) 요격 확인되어 composition.missiles에 기록. 이와 별도로 이스칸데르-M/KN-23 탄도미사일 및 Kh-22/32 순항미사일도 발사됐으나 발사량·요격량이 명확히 보도되지 않아 attacks_total·intercepted·composition 어디에도 미포함(드론 기준 수치만 반영). 피격 22개 지점, 잔해 낙하 3개 지점. 젤렌스키 대통령은 이번 공세에서 에너지 시설에 제트추진·피스톤(휘발유엔진) 혼합형 샤헤드 등 320기 이상이 동원됐다고 별도 언급(RFE/RL 인용) — 공군 집계 332기와 유사한 범위로 상충 아님. 기종별(Geran/Shahed 모델) 세부 구분 미보도로 by_type 비움, 제트추진형 정확한 정수 집계도 미확인으로 composition.jet_propelled 비움. 목표지역(피격 지점의 구체 주/도시명)은 확인된 출처에 명시되지 않아 target_areas 비움."
+      },
+      {
+        "date": "2026-10-18",
+        "attacks_total": 180,
+        "attacks_total_source": "https://english.nv.ua/russian-war/russia-attacks-ukraine-with-missile-180-drones-on-oct-18-50651047.html",
+        "intercepted_source": "https://unn.ua/en/news/russia-attacked-ukraine-with-180-drones-and-a-missile-how-many-were-managed-to-be-shot-down-and-how-many-hits-were-recorded",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": {
+            "count": 26,
+            "source": "https://unn.ua/en/news/russia-attacked-ukraine-with-180-drones-and-a-missile-how-many-were-managed-to-be-shot-down-and-how-many-hits-were-recorded"
+          }
+        },
+        "launch_areas": ["Oryol", "Bryansk", "Kursk", "Shatalovo", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": ["Poltava", "Zaporizhzhia", "Vinnytsia", "Rivne", "Volyn", "Ternopil", "Odesa"],
+        "intercepted": 152,
+        "intercept_rate": 0.84,
+        "sources": [
+          "https://www.pravda.com.ua/eng/news/2026/10/18/8058570/",
+          "https://unn.ua/en/news/russia-attacked-ukraine-with-180-drones-and-a-missile-how-many-were-managed-to-be-shot-down-and-how-many-hits-were-recorded"
+        ],
+        "note": "2026-10-17 18:00~10-18 08:00 집계(공군 발표, 08:00 시점 공격 진행 중으로 명시 — 최종 확정치 아닌 잠정치). 보로네시(Voronezh)에서 발사된 이스칸데르-M 탄도미사일 1발은 요격 여부가 명확히 보도되지 않아 attacks_total·intercepted·composition.missiles 어디에도 미포함(드론 기준 수치만 반영). 드론 180기 중 26기가 제트추진형으로 명시 보도(이 중 16기가 요격됨). 피격 20개 지점, 잔해 낙하 4개 지점. 폴타바·자포리자주에서 각 1명씩 총 2명 사망, 다수 부상, 빈니차주 등에서 비상 정전 발생. 같은 날 밤 우크라이나군은 상트페테르부르크 인근 레닌그라드주 에너지·물류 인프라에 대한 2022년 이래 최대 규모 반격 타격을 수행(별도 사안, 본 통계와 무관). 기종별(Geran/Shahed 모델) 세부 구분 미보도로 by_type 비움."
+      },
+      {
+        "date": "2026-10-19",
+        "attacks_total": 269,
+        "attacks_total_source": "https://en.interfax.com.ua/news/general/1222301.html",
+        "intercepted_source": "https://en.interfax.com.ua/news/general/1222301.html",
+        "by_type": {},
+        "launch_areas": [],
+        "target_areas": ["Kyiv/Kyiv Oblast"],
+        "intercepted": 243,
+        "intercept_rate": 0.9,
+        "sources": [
+          "https://en.interfax.com.ua/news/general/1222301.html",
+          "https://kyivindependent.com/3-killed-53-injured-in-russian-attacks-across-ukraine-over-past-day-as-550-000-households-lose-power/"
+        ],
+        "note": "2026-10-18 18:00~10-19 집계(공군 발표, 보도 시점 공격 진행 중으로 명시 — 잠정치). 드론 269기 중 243기 요격·제압(요격률 약 0.90). 이와 별도로 이스칸데르-K 순항미사일 4발 전량 요격 확인됐으나 발사량이 보도되지 않아 composition.missiles는 미기재(한쪽만 명확한 경우 생략 원칙). 이스칸데르-M/S-400 탄도미사일(스몰렌스크·브랸스크·쿠르스크 방면에서 발사 보도)도 동원됐으나 발사량·요격량 모두 불명확. 피격 25개 지점, 잔해 낙하 8개 지점. 제트추진형 드론 수에 대해 출처 간 상충(한 보도는 43기, 다른 보도는 59기로 제시)되어 교차검증 전까지 composition.jet_propelled 미기재. 키이우·키이우주 등 에너지시설 피해로 55만 가구 이상 정전, 지난 하루간 전국 기준 3명 사망·53명 부상 보도(이 공격만의 수치인지 같은 기간 다른 공격 포함 누계인지 명확하지 않아 교차검증 필요). 드론 발사지역은 출처에 명확히 특정되지 않아 launch_areas 비움(미사일만 스몰렌스크/브랸스크/쿠르스크 방면으로 보도). 기종별(Geran/Shahed 모델) 세부 구분 미보도로 by_type 비움."
       }
     ],
     "monthly": [
