@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-20T22:12:52Z",
+    "last_daily_run": "2026-10-22T22:20:51Z",
     "last_weekly_run": "2026-10-18T22:21:13Z",
     "schema_version": 1
   },
@@ -406,6 +406,18 @@
         "confidence": "중간",
         "status": "확인됨",
         "note": "기존 10-05 로그(DIU War & Sanctions 발표)에서는 Susanin이 Geran-4에만 탑재된 것으로 확인됐으나, 이번 보도로 Geran-5에도 동일 체계가 적용된 것이 추가로 확인됨 — 적용 범위가 Geran-4/5 계열 전반으로 확대됨. 다만 어느 Geran-5 하위변종(기존 baseline 표준형 또는 09-28 로그의 미확인 'K5' 고속형)에 해당하는지는 출처에 명시되지 않음. 운용상 한계(고정표적 전용, 저시야 취약)도 신규 확인 사항. baseline 미반영, 로그만 갱신"
+      },
+      {
+        "date": "2026-10-15",
+        "variant": "Geran-4",
+        "field": "components",
+        "old_value": "09-28 로그(DroneXL/RFE-RL Schemes 잔해분석)에서 중국산 부품과 Texas Instruments 등 미국산 부품 혼용만 확인, 비율 미수치화 — 10-05 로그는 DIU 발표로 미국 PNI Sensor 자기센서(magnetometer) 탑재만 별도 확인",
+        "new_value": "Militarnyi 보도(우크라이나군 1230 공병기술연대 'Athena' 소속 엔지니어 'Prop'의 잔해 분석 인용)에 따르면 Geran-4 탑재 비행컴퓨터(온보드 플라이트 컨트롤러)에서 식별된 전자부품 약 105개 중 80개 이상(75% 이상)이 미국산으로 확인됨 — 이 중 절반 이상이 Texas Instruments(및 TI에 인수된 National Semiconductor) 제품이며 Micron 메모리칩도 포함. 이들 부품은 항법데이터 처리, 엔진제어, 전력관리, 기판 간 신호교환 등 핵심 기능을 담당. 중국산 UC9810 GNSS 수신기와 Infineon 트랜지스터도 함께 확인됐으며, 기판 일련번호는 알라부가(Alabuga) 특구에서의 조립을 시사",
+        "new_source": "https://militarnyi.com/en/news/defence-intelligence-of-ukraine-finds-extensive-western-components-in-russian-geran-4-drone/",
+        "new_source_name": "Militarnyi (우크라이나군 1230공병기술연대 엔지니어 'Prop' 분석 인용)",
+        "confidence": "중간",
+        "status": "확인됨",
+        "note": "기존 09-28 로그(DroneXL, TI 부품 혼용 확인)와 10-05 로그(DIU, PNI Sensor 자기센서 확인)를 구체화·정량화하는 신규 분석 — 전체 부품의 75% 이상이 미국산이라는 구체 비율이 처음 제시됨. 서방 수출통제 우회 실태를 보여주는 자료로 판단해 로그에 기록. 원문(Militarnyi) 직접 열람은 환경 네트워크 제약으로 실패, WebSearch 스니펫 및 United24 Media/ZeroHedge 등 교차보도로 확인. baseline 미반영(기존 engine/guidance 필드와는 별도 분석)"
       }
     ]
   },
@@ -1584,6 +1596,50 @@
           "https://english.nv.ua/nation/russian-drone-attack-on-october-20-air-force-reports-on-aftermath-of-strikes-50651700.html"
         ],
         "note": "2026-10-19 18:00~10-20 집계(공군 발표, 보도 시점 공격 진행 중으로 명시 — 잠정치). 드론 165기 중 105기(60% 이상)가 제트추진형으로 명시 보도, 115기 요격·제압(요격률 약 0.70), 보도 시점 기준 약 20기 추가 비행 중으로 명시(최종 확정치 아님). 피격 30개 지점, 잔해 낙하 13개 지점. 키이우주 키이우-오데사 간 고속도로 피격으로 3명 사망, 르비우주 에너지 인프라 피격, 흐멜니츠키주 교회·산업시설 피해, 수미 아파트 피격 보도. 이와 별도로 초기 보도(보도 시점 09:00)에서는 이스칸데르-M/KN-23 탄도미사일 3발과 드론 60기(38기 요격)로 더 작은 규모가 보도됐으나, 이후 공군 공식 집계가 드론 165기/105기 제트추진형/115기 요격으로 확정되어 해당 수치를 채택(미사일 3발의 요격 여부는 명확히 보도되지 않아 미포함). 기종별(Geran/Shahed 모델) 세부 구분 미보도로 by_type 비움."
+      },
+      {
+        "date": "2026-10-21",
+        "attacks_total": 186,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4176547-air-defenses-intercept-150-drones-used-by-russia-to-attack-ukraine-overnight.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4176547-air-defenses-intercept-150-drones-used-by-russia-to-attack-ukraine-overnight.html",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": {
+            "count": 88,
+            "source": "https://unn.ua/en/news/russia-attacked-ukraine-with-iskander-k-missiles-up-to-73percent-of-the-jet-powered-drones-were-destroyed"
+          }
+        },
+        "launch_areas": ["Oryol", "Kursk", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Chauda(Crimea, 점령지)"],
+        "target_areas": ["Kramatorsk", "Kyiv"],
+        "intercepted": 150,
+        "intercept_rate": 0.81,
+        "sources": [
+          "https://www.ukrinform.net/rubric-ato/4176547-air-defenses-intercept-150-drones-used-by-russia-to-attack-ukraine-overnight.html",
+          "https://unn.ua/en/news/russia-attacked-ukraine-with-iskander-k-missiles-up-to-73percent-of-the-jet-powered-drones-were-destroyed"
+        ],
+        "note": "2026-10-20 18:00~10-21 야간 공격 기준(08:30 시점, 10기 추가 비행 중으로 명시된 잠정치). 드론 186기 중 150기 요격·제압(요격률 약 0.81). 제트추진형 Shahed 88기 중 63기(약 72%) 요격 명시 보도(unn.ua). 이스칸데르-K 순항미사일도 동반 발사됐으나 발사량 불명(요격여부 미보도로 집계 미포함). 피격 27개 지점, 잔해 낙하 13개 지점. 크라마토르스크 4명 사망, 키이우 스비아토신스키구 주거건물 피격 보도. 기종별(Geran/Shahed 세부모델) 완전 구분 미보도로 by_type 비움."
+      },
+      {
+        "date": "2026-10-22",
+        "attacks_total": 210,
+        "attacks_total_source": "https://www.pravda.com.ua/eng/news/2026/10/22/8059193/",
+        "intercepted_source": "https://www.pravda.com.ua/eng/news/2026/10/22/8059193/",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": {
+            "count": 110,
+            "source": "https://www.pravda.com.ua/eng/news/2026/10/22/8059193/"
+          }
+        },
+        "launch_areas": ["Kursk", "Bryansk", "Rostov"],
+        "target_areas": ["Kyiv"],
+        "intercepted": 181,
+        "intercept_rate": 0.86,
+        "sources": [
+          "https://www.pravda.com.ua/eng/news/2026/10/22/8059193/",
+          "https://english.nv.ua/nation/russia-attacks-ukraine-with-zircon-onyx-and-iskander-missiles-and-210-drones-overnight-50652357.html"
+        ],
+        "note": "2026-10-21~10-22 야간 공격 기준(09:00 시점, 10기 추가 비행 중으로 명시된 잠정치), 키이우 집중 타격. 드론 210기(제트추진형 Shahed 110기 포함, Gerbera/Italmas/Parodiya 기만기 혼합) 중 181기 요격·제압(요격률 약 0.86). 제트추진형 요격량은 출처 간 상충(87기 vs 63기 보도)으로 미기재. 이스칸데르-M·S-400·지르콘·오닉스 미사일 동반 발사(발사량은 비공식 OSINT 추정 22~25발·요격 0건 주장뿐이라 검증 안 돼 집계 미포함). 발사지역은 쿠르스크·브랸스크·로스토프주(미사일 기준, 드론 발사지는 세부 미보도). 피격 32개 지점, 잔해 낙하 8개 지점. 사상자 수치는 출처별 상이 — 키이우시 당국 기준 1명 사망·22~24명 부상 vs 전국 기준(Kyiv Independent) 9명 사망·57명 부상, 범위로 병기."
       }
     ],
     "monthly": [
@@ -2198,6 +2254,15 @@
         "source": "https://www.edrmagazine.eu/?p=54894",
         "source_name": "European Defence Review / ynetnews / Breaking Defense",
         "significance": "폭발 탄두 없는 운동 요격(넷 포획) 방식을 다층 C-UAS 아키텍처에 통합한 사례로, 민간지역·우군 인근에서의 2차 피해(파편·오인사격) 우려를 낮추려는 요격 설계 트렌드를 보여줌"
+      },
+      {
+        "date": "2026-10-19",
+        "system": "델타체계(DELTA)",
+        "event_type": "체계 구축",
+        "detail": "우크라이나 국방부 발표에 따르면 DELTA의 '미션 컨트롤' 모듈이 2026년 3월~10월 1일 사이 드론 조작병의 타격 임무 300만 건 이상을 기록. 같은 기간 정찰 임무 약 360만 건, 보급(물류) 임무 약 102만 건, 공중요격(대드론) 임무 약 50만 건, 원격 지뢰설치 임무 약 37만 건이 각각 별도 집계됨. 월간 기록 건수는 2026년 초 약 19만6천 건에서 9월 한 달 180만 건 이상으로 급증.",
+        "source": "https://mod.gov.ua/en/news/drone-warfare-in-ukraine-what-does-delta-record",
+        "source_name": "우크라이나 국방부(mod.gov.ua) / United24 Media",
+        "significance": "DELTA로 집계된 공중요격(대드론) 임무 건수(약 50만 건)가 처음으로 별도 지표로 공개됨 — 기존 07-31 로그의 '드론 격파 건수' 집계와 달리 요격 임무 자체의 규모를 보여주며, 통합 C4I 체계로서 DELTA 활용도가 급증하고 있음을 시사"
       }
     ]
   },
