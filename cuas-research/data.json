@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-22T22:20:51Z",
+    "last_daily_run": "2026-10-23T22:12:50Z",
     "last_weekly_run": "2026-10-18T22:21:13Z",
     "schema_version": 1
   },
@@ -1640,6 +1640,28 @@
           "https://english.nv.ua/nation/russia-attacks-ukraine-with-zircon-onyx-and-iskander-missiles-and-210-drones-overnight-50652357.html"
         ],
         "note": "2026-10-21~10-22 야간 공격 기준(09:00 시점, 10기 추가 비행 중으로 명시된 잠정치), 키이우 집중 타격. 드론 210기(제트추진형 Shahed 110기 포함, Gerbera/Italmas/Parodiya 기만기 혼합) 중 181기 요격·제압(요격률 약 0.86). 제트추진형 요격량은 출처 간 상충(87기 vs 63기 보도)으로 미기재. 이스칸데르-M·S-400·지르콘·오닉스 미사일 동반 발사(발사량은 비공식 OSINT 추정 22~25발·요격 0건 주장뿐이라 검증 안 돼 집계 미포함). 발사지역은 쿠르스크·브랸스크·로스토프주(미사일 기준, 드론 발사지는 세부 미보도). 피격 32개 지점, 잔해 낙하 8개 지점. 사상자 수치는 출처별 상이 — 키이우시 당국 기준 1명 사망·22~24명 부상 vs 전국 기준(Kyiv Independent) 9명 사망·57명 부상, 범위로 병기."
+      },
+      {
+        "date": "2026-10-23",
+        "attacks_total": 176,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4177331-ukraines-air-defenses-down-140-out-of-176-russian-drones-overnight.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4177331-ukraines-air-defenses-down-140-out-of-176-russian-drones-overnight.html",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": {
+            "count": 92,
+            "source": "https://www.ukrinform.net/rubric-ato/4177331-ukraines-air-defenses-down-140-out-of-176-russian-drones-overnight.html"
+          }
+        },
+        "launch_areas": [],
+        "target_areas": [],
+        "intercepted": 140,
+        "intercept_rate": 0.8,
+        "sources": [
+          "https://www.ukrinform.net/rubric-ato/4177331-ukraines-air-defenses-down-140-out-of-176-russian-drones-overnight.html",
+          "https://www.pravda.com.ua/eng/news/2026/10/23/8059345/"
+        ],
+        "note": "2026-10-22 18:00~10-23 08:00 야간 공격 기준(08:00 시점 집계, 10기 추가 비행 중으로 명시된 잠정치). Shahed계열 공격드론(Gerbera/Parodiya 기만기 혼합) 176기 중 140기 요격·제압(요격률 0.80). 이 중 92기가 제트추진형으로 명시 보도(jet_propelled에 기록)되었으며, 제트추진형 중 68기(약 74%)가 요격된 것으로 별도 보도(UNN) — 구형 피스톤 계열 대비 제트추진형 요격률이 여전히 낮은 경향이 이어짐. 직격 19개 지점, 잔해 낙하 13개 지점. 발사지역·표적지역 세부 정보는 확인된 출처에 명시되지 않아 비움."
       }
     ],
     "monthly": [
@@ -2263,6 +2285,15 @@
         "source": "https://mod.gov.ua/en/news/drone-warfare-in-ukraine-what-does-delta-record",
         "source_name": "우크라이나 국방부(mod.gov.ua) / United24 Media",
         "significance": "DELTA로 집계된 공중요격(대드론) 임무 건수(약 50만 건)가 처음으로 별도 지표로 공개됨 — 기존 07-31 로그의 '드론 격파 건수' 집계와 달리 요격 임무 자체의 규모를 보여주며, 통합 C4I 체계로서 DELTA 활용도가 급증하고 있음을 시사"
+      },
+      {
+        "date": "2026-10-22",
+        "system": "Sargan 3000(USV) + STING(Wild Hornets)",
+        "event_type": "실전 배치",
+        "detail": "우크라이나 해군이 무인수상정(USV) 'Sargan 3000'에서 Wild Hornets의 요격드론 'STING'을 발사해 러시아 샤헤드(Shahed/Geran)를 요격·격추한 사례가 확인됨(2026-10-22 보도, 우크라이나 국방부 X 계정 공식 확인). 기존 10-07 로그의 Sargan 3000 터릿(12.7mm 기관총) 직접 사격 요격과는 별도로, 이번에는 USV가 공중 요격드론의 해상 발사플랫폼 역할을 수행하는 방식으로 확인됨.",
+        "source": "https://euromaidanpress.com/2026/10/22/ukraines-navy-killed-russian-shahed-one-drone-boat-launched-another-drone-which-shot-down-third-all-unmanned-all-at-sea/",
+        "source_name": "Euromaidan Press / 우크라이나 국방부(Defense of Ukraine, X 계정) 발표 인용",
+        "significance": "해상 무인정(USV)이 공중 요격드론(STING)의 발사플랫폼으로 쓰인 사례가 처음 구체 기종명과 함께 확인됨 — 기존 09-11 로그(MAC Dead Fly/Katran, 해상 플랫폼을 요격드론 이동식 발사대로 활용)와 유사한 개념이 서로 다른 개발사·플랫폼(Sargan 3000/STING) 조합으로도 구현되고 있음을 보여주며, 해상-공중 통합 요격체계가 복수 계보로 확산되는 추세를 뒷받침함"
       }
     ]
   },
