@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-23T22:12:50Z",
+    "last_daily_run": "2026-10-24T22:12:37Z",
     "last_weekly_run": "2026-10-18T22:21:13Z",
     "schema_version": 1
   },
@@ -1662,6 +1662,28 @@
           "https://www.pravda.com.ua/eng/news/2026/10/23/8059345/"
         ],
         "note": "2026-10-22 18:00~10-23 08:00 야간 공격 기준(08:00 시점 집계, 10기 추가 비행 중으로 명시된 잠정치). Shahed계열 공격드론(Gerbera/Parodiya 기만기 혼합) 176기 중 140기 요격·제압(요격률 0.80). 이 중 92기가 제트추진형으로 명시 보도(jet_propelled에 기록)되었으며, 제트추진형 중 68기(약 74%)가 요격된 것으로 별도 보도(UNN) — 구형 피스톤 계열 대비 제트추진형 요격률이 여전히 낮은 경향이 이어짐. 직격 19개 지점, 잔해 낙하 13개 지점. 발사지역·표적지역 세부 정보는 확인된 출처에 명시되지 않아 비움."
+      },
+      {
+        "date": "2026-10-24",
+        "attacks_total": 126,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4177712-air-defense-neutralizes-101-out-of-126-drones-used-by-russia-to-attack-ukraine-overnight.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4177712-air-defense-neutralizes-101-out-of-126-drones-used-by-russia-to-attack-ukraine-overnight.html",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": {
+            "count": 61,
+            "source": "https://en.interfax.com.ua/news/general/1225581.html"
+          }
+        },
+        "launch_areas": [],
+        "target_areas": [],
+        "intercepted": 101,
+        "intercept_rate": 0.8,
+        "sources": [
+          "https://www.ukrinform.net/rubric-ato/4177712-air-defense-neutralizes-101-out-of-126-drones-used-by-russia-to-attack-ukraine-overnight.html",
+          "https://en.interfax.com.ua/news/general/1225581.html"
+        ],
+        "note": "2026-10-23 저녁~10-24 08:00 시점 야간 공격 기준. 126기 중 61기가 제트추진형(Shahed/Geran 계열)으로 명시 보도(jet_propelled에 기록), Interfax에 따르면 제트추진형 요격률 약 82%(제트추진 기종별 요격 정수는 비보도, 비율만 보도되어 by_type에는 미기재). S8000 Banderol/Dan-T·Gerbera·Parodiya 혼합 공격으로 보도, 직격 14개 지점/잔해낙하 5개 지점. 발사지역·표적지역 세부 정보는 확인된 출처에 명시되지 않아 비움."
       }
     ],
     "monthly": [
@@ -2294,6 +2316,24 @@
         "source": "https://euromaidanpress.com/2026/10/22/ukraines-navy-killed-russian-shahed-one-drone-boat-launched-another-drone-which-shot-down-third-all-unmanned-all-at-sea/",
         "source_name": "Euromaidan Press / 우크라이나 국방부(Defense of Ukraine, X 계정) 발표 인용",
         "significance": "해상 무인정(USV)이 공중 요격드론(STING)의 발사플랫폼으로 쓰인 사례가 처음 구체 기종명과 함께 확인됨 — 기존 09-11 로그(MAC Dead Fly/Katran, 해상 플랫폼을 요격드론 이동식 발사대로 활용)와 유사한 개념이 서로 다른 개발사·플랫폼(Sargan 3000/STING) 조합으로도 구현되고 있음을 보여주며, 해상-공중 통합 요격체계가 복수 계보로 확산되는 추세를 뒷받침함"
+      },
+      {
+        "date": "2026-10-04",
+        "system": "Nika(소형 대드론 미사일)",
+        "event_type": "체계 구축",
+        "detail": "젤렌스키 대통령이 독일 총리 프리드리히 메르츠와의 공동 기자회견(10/4, 키이우)에서 제트추진 샤헤드(게란-4/5) 대응용 신형 소형 미사일 'Nika'를 개발 중이라고 처음 공개. 아직 시험 전 단계이며 구체 제원(사거리·속도·단가·생산사)은 미공개. 같은 자리에서 독일-우크라이나 합작 요격드론 'SPYS'(Quantum WIY Industries, 기존 2026-09-22 로그 참고. 일부 매체는 'Spear'로 표기)의 시험 성공 사례도 재언급됨. 현재 제트추진 드론 요격률은 약 50~60%(기존 피스톤계열 85~92% 대비 저조)라고 발표.",
+        "source": "https://united24media.com/war-in-ukraine/ukraine-develops-new-nika-missile-to-shoot-down-jet-powered-shahed-drones-23115",
+        "source_name": "UNITED24 Media / Euromaidan Press",
+        "significance": "기존 요격드론(STING/SPYS/Bars 등) 외에 미사일 계열의 신규 저비용 대드론 체계 개발이 처음 공개됨 — 제트추진 드론 대응 수단이 요격드론·유인기관포·AI비전 포탑에 이어 소형 미사일로까지 다변화되는 양상을 보여줌"
+      },
+      {
+        "date": "2026-10-17",
+        "system": "F-16(루마니아 공군, 공대공미사일)",
+        "event_type": "실전 배치",
+        "detail": "루마니아 국방부 발표에 따르면 10/17(토) 보르체아 제86비행단 소속 F-16 2기가 영공초계 임무 중 설네(Sulina) 인근 루마니아 영공에 진입한 제트추진 게란 계열 드론 2기를 공대공미사일로 격추. 레이더가 스네이크 아일랜드 동쪽 약 120km 지점에서 비행체 무리를 최초 포착, 영공 진입 약 2분 만에 1기를 설네 남동쪽에서 격추, 이어 2기째를 설네 동쪽에서 격추(18:05경). 발사지점·표적은 미공개, 사용 미사일 종류도 미공개(발사 장면 사진만 공개).",
+        "source": "https://www.romania-insider.com/romanian-f-16s-shoot-down-two-geran-drones-black",
+        "source_name": "Romania Insider / 루마니아 국방부",
+        "significance": "루마니아(NATO 회원국) F-16이 자국 영공에서 제트추진 게란 드론을 공대공미사일로 직접 격추한 사례 — 우크라이나 자체 F-16 기총사격 대응(2026-10-01 로그)과 별도로, NATO 회원국이 영공방어 차원에서 제트추진 게란을 실전 격추한 최초 확인 사례로 흑해 주변 위협 확산에 대한 NATO측 대응을 보여줌"
       }
     ]
   },
