@@ -1,7 +1,7 @@
 {
   "meta": {
     "last_daily_run": "2026-10-24T22:12:37Z",
-    "last_weekly_run": "2026-10-18T22:21:13Z",
+    "last_weekly_run": "2026-10-25T22:12:24Z",
     "schema_version": 1
   },
   "geran_drones": {
@@ -2334,6 +2334,24 @@
         "source": "https://www.romania-insider.com/romanian-f-16s-shoot-down-two-geran-drones-black",
         "source_name": "Romania Insider / 루마니아 국방부",
         "significance": "루마니아(NATO 회원국) F-16이 자국 영공에서 제트추진 게란 드론을 공대공미사일로 직접 격추한 사례 — 우크라이나 자체 F-16 기총사격 대응(2026-10-01 로그)과 별도로, NATO 회원국이 영공방어 차원에서 제트추진 게란을 실전 격추한 최초 확인 사례로 흑해 주변 위협 확산에 대한 NATO측 대응을 보여줌"
+      },
+      {
+        "date": "2026-05-30",
+        "system": "에스토니아 국경 드론탐지체계(Drone Wall)",
+        "event_type": "체계 구축",
+        "detail": "에스토니아 내무부가 2026-05-30 러시아 접경 약 294km 구간 중 남동부(루하마 통과소 인근 등) 3개 구간에서 고정형 드론탐지장비 가동을 발표. 레이더(장거리 포착)·EO/IR 카메라(식별·추적)·RF센서(드론·조종자 위치추적)를 결합한 다층 감시체계로, 고정 설비와 트레일러 탑재 이동형 레이더를 병행 운용. 국경경비청(PPA)이 나머지 구간(북쪽 나르바 방향) 장비 조달을 2026년 말까지 완료할 목표로 진행 중. 현재는 탐지 기능 중심이며, 요격(무력화) 플랫폼 통합은 추후 단계로 계획됨.",
+        "source": "https://euromaidanpress.com/2026/05/30/estonia-switches-on-first-border-sensors-to-detect-drones-as-baltic-incursions-mount",
+        "source_name": "Euromaidan Press / 에스토니아 내무부",
+        "significance": "발트 3국이 구상해 온 '드론월(Drone Wall)'이 탐지 장비 가동이라는 형태로 실제 국경 현장에 처음 구현된 사례 — EU·나토 차원 다층방어 구상이 회원국별 실제 배치로 이어지는 진행 단계를 보여줌(일일 스캔에서 누락된 2026년 5월 사건을 주간 심층분석에서 보완, 요격 플랫폼 통합 여부는 미확정이라 추가 확인 필요)"
+      },
+      {
+        "date": "2026-10-12",
+        "system": "FD-1(Mountain Horse Solutions, 미육군 G-TEAD)",
+        "event_type": "체계 구축",
+        "detail": "미 육군 Global Tactical Edge Acquisition Directorate(G-TEAD)가 2026-10-12 Mountain Horse Solutions(Global Ordnance 계열)의 쿼드콥터형 요격체계 'FD-1'에 대한 2차 주문을 발표. 2026년 봄 체결된 1차 OTA(약 300기)에 이은 추가 물량으로, Janes는 385기로 보도했으나 Unmanned Airspace는 수량·계약금액 비공개로 보도하는 등 출처 간 수치가 상이함(일부 보도는 추가 500기 조달 계획으로 언급). FD-1은 그룹1~3+급 드론 요격 외에 지상표적(장갑차량 등) 타격도 가능하다고 소개되며, G-TEAD·미육군 제52방공포병여단·미육군시험평가사령부(ATEC) 평가를 거쳤고 잔여 물량은 2026년 11월까지 인도 예정.",
+        "source": "https://www.janes.com/defence-intelligence-insights/defence-news/air/ausa-2026-us-army-buys-more-air-to-air-c-uas-interceptors",
+        "source_name": "Janes / Unmanned Airspace",
+        "significance": "미 육군이 저비용 쿼드콥터형 요격체계를 평가-1차 조달-2차 추가조달로 반복 확대하는 패턴을 보여주는 사례 — 수량 등 세부 수치는 출처마다 상이해 교차검증 필요(status: 검증 필요에 준함)"
       }
     ]
   },
@@ -2578,6 +2596,26 @@
         "summary": "자율성(autonomy)의 실체는 탄두나 드론 플랫폼 자체가 아니라 표적획득·교전 결정을 수행하는 AI 소프트웨어(킬체인)에 있다고 주장. 미 국방부 지침 3000.09가 '무기체계가 무엇을 하는지'를 기준으로 자율무기를 정의해 소프트웨어 중심 자율성을 놓치고 있다고 비판하며, 2026년 6월 NSPM-11 대통령각서가 지침 개정을 지시한 데 대응해 정의 자체를 소프트웨어·킬체인 중심으로 바꿔야 한다고 제언.",
         "link": "https://www.csis.org/analysis/defining-autonomy-why-software-not-drones-will-decide-next-war",
         "significance": "C-UAS/요격체계 논의가 하드웨어 성능 경쟁에서 AI 소프트웨어·킬체인 중심의 정책·규제 프레임 전환으로 이동하고 있음을 보여주는 싱크탱크발 정책 분석"
+      },
+      {
+        "date": "2026-06",
+        "title": "SynthSwarm: A controllable synthetic dataset for UAV Swarm detection",
+        "authors": "Chaowen Zheng, Limin Liu, Luyi Zhang, Haojie Yang, Jianyu Liu, Qiang Fu, Qing Yang, Xiwei Guo (중국 육군공정대학)",
+        "venue": "Journal of the European Optical Society: Rapid Publications (Vol.22, Art.49)",
+        "topic": "AI Vision",
+        "summary": "Unity 엔진 기반 제어 가능한 시뮬레이션 파이프라인으로 군집밀도·대형(포메이션)·표적 스케일·환경조건을 다양화한 7,000장(1920x1080)·UAV 인스턴스 31,542개 규모의 합성 드론군집 탐지 데이터셋 'SynthSwarm'을 공개(표적의 67.3%가 소형 객체). YOLOX·YOLOv6·YOLOv12·YOLOv13·Faster R-CNN·RT-DETR 등 최신 탐지기로 벤치마크한 결과, 고밀도·소형표적 상황에서 기존 모델들의 성능이 크게 저하됨을 확인. 데이터셋·생성 파이프라인을 GitHub에 공개.",
+        "link": "https://jeos.edpsciences.org/articles/jeos/full_html/2026/01/jeos20260026/jeos20260026.html",
+        "significance": "실측 드론군집 데이터 확보가 어려운 상황에서, 군집 밀도·대형까지 세밀하게 제어 가능한 합성 데이터셋으로 AI Vision 탐지기의 군집 대응 성능 한계를 정량적으로 드러낸 신규 벤치마크"
+      },
+      {
+        "date": "2026-09",
+        "title": "Fight Drones with Drones: Detecting Aerial Perimeter Intrusion using Drone-mounted Microphones",
+        "authors": "Vincenzo Sammartino, Nathanael Denis, Omar Badreldin, Roberto Di Pietro",
+        "venue": "ESORICS 2026 (로마, 9/14~16)",
+        "topic": "음향탐지",
+        "summary": "지상 고정형 음향센서 위주였던 기존 음향탐지 방식과 달리, 마이크로폰을 탑재한 방어측 드론 군집이 공항·발전소·국경 등 보호구역 상공을 순찰하며 적응형 음향 탐지 장벽을 형성하는 프레임워크를 제시. 드론 탑재 마이크를 이용해 정적 탐지 범위를 이동 가능한 커버리지 레이어로 전환하는 것이 핵심 아이디어라고 주장.",
+        "link": "https://arpi.unipi.it/handle/11568/1362908",
+        "significance": "기존 음향탐지 연구 대부분이 지상 고정 센서를 전제한 것과 달리, 탐지 플랫폼 자체를 드론화해 이동형 음향탐지 장벽을 구성한 접근으로 국경·시설 경계 감시에 특화된 신규 음향탐지 방식을 제시"
       }
     ]
   }
