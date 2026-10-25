@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-24T22:12:37Z",
+    "last_daily_run": "2026-10-25T22:12:43Z",
     "last_weekly_run": "2026-10-25T22:12:24Z",
     "schema_version": 1
   },
@@ -1684,6 +1684,28 @@
           "https://en.interfax.com.ua/news/general/1225581.html"
         ],
         "note": "2026-10-23 저녁~10-24 08:00 시점 야간 공격 기준. 126기 중 61기가 제트추진형(Shahed/Geran 계열)으로 명시 보도(jet_propelled에 기록), Interfax에 따르면 제트추진형 요격률 약 82%(제트추진 기종별 요격 정수는 비보도, 비율만 보도되어 by_type에는 미기재). S8000 Banderol/Dan-T·Gerbera·Parodiya 혼합 공격으로 보도, 직격 14개 지점/잔해낙하 5개 지점. 발사지역·표적지역 세부 정보는 확인된 출처에 명시되지 않아 비움."
+      },
+      {
+        "date": "2026-10-25",
+        "attacks_total": 153,
+        "attacks_total_source": "https://112.ua/en/rosia-25-zovtna-atakuvala-ukrainu-153-bezpilotnikami-ppo-zbili-119-iz-nih-193692",
+        "intercepted_source": "https://112.ua/en/rosia-25-zovtna-atakuvala-ukrainu-153-bezpilotnikami-ppo-zbili-119-iz-nih-193692",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": {
+            "count": 92,
+            "source": "https://112.ua/en/rosia-25-zovtna-atakuvala-ukrainu-153-bezpilotnikami-ppo-zbili-119-iz-nih-193692"
+          }
+        },
+        "launch_areas": [],
+        "target_areas": ["Vinnytsia"],
+        "intercepted": 119,
+        "intercept_rate": 0.78,
+        "sources": [
+          "https://112.ua/en/rosia-25-zovtna-atakuvala-ukrainu-153-bezpilotnikami-ppo-zbili-119-iz-nih-193692",
+          "https://kyivindependent.com/russian-attacks-kill-8-injure-51-across-ukraine-over-past-day-as-drone-strikes-residential-building-in-vinnytsia/"
+        ],
+        "note": "2026-10-24 야간~10-25 아침 공격 기준. 153기 중 92기가 제트추진형(Shahed/Geran 계열)으로 보도, 요격 119기 중 64기가 제트추진형으로 보도(기종별 세부 구분 없음 — by_type 미기재). 비니치아(Vinnytsia)주 주거건물 피격으로 6명 부상(Kyiv Independent 별도 확인), 드니프로페트로우스크주 시넬니코베 등 피해 보도 있으나 본 에이전트가 직접 접근 가능한 1차 출처로 교차검증하지 못해 target_areas에는 비냐치아만 반영. 발사지역(브리얀스크·오룔·쿠르스크·밀레로보·크림 등 언급)도 동일한 이유로 launch_areas 비움 — 상태: 검증 필요."
       }
     ],
     "monthly": [
