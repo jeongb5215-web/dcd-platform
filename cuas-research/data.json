@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-29T22:18:19Z",
+    "last_daily_run": "2026-10-30T22:12:54Z",
     "last_weekly_run": "2026-10-25T22:12:24Z",
     "schema_version": 1
   },
@@ -1800,6 +1800,34 @@
           "https://glavnoe.in.ua/en/news-en/russia-launches-112-uavs-at-ukraine-including-40-jet-powered-drones"
         ],
         "note": "2026-10-28 야간~10-29 08:00 공격 기준(잠정치). 드론 112기(샤헤드 계열, 제트추진형 40기 포함, Gerbera·Parodiya 혼합) 중 97기 요격·제압(요격률 약 0.87), 이 중 제트추진형 약 75%(약 30기) 요격 별도 보도(UNN). 발사지역·표적지역·인명피해 세부사항은 교차검증된 1차 출처에 명확히 특정되지 않아 비움. 환경 네트워크 제약으로 원문 직접 열람(WebFetch)이 불가해 WebSearch 결과 스니펫만으로 확인했으며, 복수 매체(112.ua/glavnoe.in.ua/UNN)에서 핵심 수치(112/97/40)가 일치하나 통상 대비 교차검증 수준은 중간으로 간주."
+      },
+      {
+        "date": "2026-10-30",
+        "attacks_total": 113,
+        "attacks_total_source": "https://www.pravda.com.ua/news/2026/10/30/8060391/",
+        "intercepted_source": "https://www.pravda.com.ua/news/2026/10/30/8060391/",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": {
+            "count": 83,
+            "source": "https://www.pravda.com.ua/news/2026/10/30/8060391/"
+          },
+          "missiles": {
+            "count": 4,
+            "intercepted": 3,
+            "types": ["Kh-59/69"],
+            "source": "https://www.pravda.com.ua/news/2026/10/30/8060391/"
+          }
+        },
+        "launch_areas": ["Oryol", "Kursk", "Shatalovo", "occupied territories"],
+        "target_areas": ["Kyiv", "Poltava", "Dnipropetrovsk"],
+        "intercepted": 96,
+        "intercept_rate": 0.85,
+        "sources": [
+          "https://www.pravda.com.ua/news/2026/10/30/8060391/",
+          "https://apostrophe.ua/society/rosija-atakuvala-ukrajinu-balistikoju-ta-113-dronami-skilki-tsilej-zbila-ppo.html"
+        ],
+        "note": "2026-10-29 야간~10-30 07:30 공격 기준(잠정치). 러시아가 이스칸데르-M/S-400/KN-23 탄도미사일, Kh-59/69 유도항공미사일 4발, 드론 113기(샤헤드 계열 중 제트추진형 83기 포함, Gerbera·Parodiya 혼합)로 공격. ПВО가 Kh-59/69 3발 및 드론 96기(제트추진형 71기 포함)를 요격·제압(드론 요격률 약 0.85). 탄도미사일은 발사량·요격여부 불명확해 missiles 집계에서 제외. 피격 17개 지점(키이우·폴타바·드니프로페트롭스크주 중심), 잔해낙하 5개 지점. 복수 매체(Ukrainska Pravda/Apostrophe/Racurs/우아홀로스/인쉐.tv)에서 핵심 수치(113/96/83/71/4/3) 일치 확인. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증으로 확인."
       }
     ],
     "monthly": [
