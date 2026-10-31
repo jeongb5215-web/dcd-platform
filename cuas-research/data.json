@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-30T22:12:54Z",
+    "last_daily_run": "2026-10-31T22:13:59Z",
     "last_weekly_run": "2026-10-25T22:12:24Z",
     "schema_version": 1
   },
@@ -418,6 +418,18 @@
         "confidence": "중간",
         "status": "확인됨",
         "note": "기존 09-28 로그(DroneXL, TI 부품 혼용 확인)와 10-05 로그(DIU, PNI Sensor 자기센서 확인)를 구체화·정량화하는 신규 분석 — 전체 부품의 75% 이상이 미국산이라는 구체 비율이 처음 제시됨. 서방 수출통제 우회 실태를 보여주는 자료로 판단해 로그에 기록. 원문(Militarnyi) 직접 열람은 환경 네트워크 제약으로 실패, WebSearch 스니펫 및 United24 Media/ZeroHedge 등 교차보도로 확인. baseline 미반영(기존 engine/guidance 필드와는 별도 분석)"
+      },
+      {
+        "date": "2026-10-23",
+        "variant": "Geran-5",
+        "field": "baseline_new",
+        "old_value": null,
+        "new_value": "Militarnyi(우크라이나 국방군 소식통 인용, 10/23 보도)에 따르면 Geran-5 계열에서 서로 다른 두 종의 신형 하위변종이 추가로 식별됨. ① 'K5-K' 변종: 날개끝 수직판(윙팁 핀렛)을 제거하고 날개폭을 축소한 후퇴익(swept-back wing) 설계, 엔진을 동체 내부에 매립해 최고속도 약 900km/h까지 끌어올리는 것이 목적으로 추정됨. ② 두 번째 변종: 다이아몬드형(마름모) 주익과 V자형 미익을 채택하고, 흡기구를 동체 상단에서 측면으로 이전해 미익 작동 공간을 확보한 설계. 대통령실 자문관 Serhii 'Flash' Beskrestnov가 10/22 해당 변종들의 최초 사진을 공개하며 'Geran-5 K5-K'로 명명했으나, Militarnyi/Euromaidan Press 보도 간에는 어느 사진이 어느 변종(스웹트윙형 vs 다이아몬드윙형)에 해당하는지 명칭이 서로 엇갈려 있음. Euromaidan Press(10/28)는 오데사주에 거의 완전한 형태로 낙하한 미사일형 잔해(각진 박스형 동체)가 'K5-K'로 불리는 후퇴익 기체와도 외형이 다르다고 보도, 변종 간 명칭·외형 매칭이 아직 불확실한 상태",
+        "new_source": "https://militarnyi.com/en/news/russia-deploys-two-new-variants-of-geran-5/",
+        "new_source_name": "Militarnyi (우크라이나 국방군 소식통 인용) / Euromaidan Press(10/28, 오데사 잔해 보도)",
+        "confidence": "낮음",
+        "status": "검증 필요",
+        "note": "09-28 로그('Geran-5 K5' 고속 하위변종, DSMAC급 종말유도 탑재설)와 연속선상의 후속 보도로 추정되나, 본 10/23 보도는 공기역학적 설계 변경(후퇴익/엔진 매립 vs 다이아몬드익/V자미익) 위주로 09-28 로그와는 별개의 구체적 신규 정보 — 두 변종이 동일 계열의 하위분기인지, 명칭(K5 vs K5-K)이 같은 기체를 가리키는지 우크라이나 공식 출처(DIU/공군) 확인 전까지 baseline 미반영. 원문(Militarnyi) 직접 열람은 환경 네트워크 제약으로 실패, WebSearch 스니펫으로만 확인"
       }
     ]
   },
