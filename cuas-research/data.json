@@ -1,7 +1,7 @@
 {
   "meta": {
     "last_daily_run": "2026-10-31T22:13:59Z",
-    "last_weekly_run": "2026-10-25T22:12:24Z",
+    "last_weekly_run": "2026-11-01T22:13:43Z",
     "schema_version": 1
   },
   "geran_drones": {
@@ -2508,6 +2508,42 @@
         "source": "https://www.janes.com/defence-intelligence-insights/defence-news/air/ausa-2026-us-army-buys-more-air-to-air-c-uas-interceptors",
         "source_name": "Janes / Unmanned Airspace",
         "significance": "미 육군이 저비용 쿼드콥터형 요격체계를 평가-1차 조달-2차 추가조달로 반복 확대하는 패턴을 보여주는 사례 — 수량 등 세부 수치는 출처마다 상이해 교차검증 필요(status: 검증 필요에 준함)"
+      },
+      {
+        "date": "2026-02-06",
+        "system": "BLAZE(Origin Robotics, 발트 3국 국경 요격드론)",
+        "event_type": "실전 배치",
+        "detail": "라트비아 국방부가 2026-02-06 발표를 통해 에스토니아·라트비아·벨기에 3국이 자율 요격드론 'BLAZE'(Origin Robotics 개발)의 1차 물량을 인도받았다고 공개. 3국 모두 동부 국경 지역에 배치하며, 라트비아는 Origin Robotics와 다년간 프레임워크 계약을 체결해 지속 공급받기로 함. 벨기에는 별도로 대드론체계 예산 5000만 유로를 배정한 바 있음.",
+        "source": "https://eng.lsm.lv/article/society/defence/06.02.2026-latvia-estonia-and-belgium-receive-first-blaze-military-drones.a633457/",
+        "source_name": "LSM(Latvian Public Broadcasting) / Baltic Times / EDR Magazine",
+        "significance": "EU/나토 '드론 장벽' 구상 중 발트 3국 동부국경에 실제 요격드론 전력이 전력화된 지역별 배치 사례(일일 스캔에서 누락된 2026년 2월 사건을 주간 심층분석에서 보완)"
+      },
+      {
+        "date": "2026-05-22",
+        "system": "IonStrike(DZYNE, 미육군 동부전선억제구상)",
+        "event_type": "신규 시험",
+        "detail": "미 육군 52방공포병여단이 2026-05-21~22 공개한 바에 따르면, '동부전선억제구상(Eastern Flank Deterrence Initiative)' 산하 'Project Bullfrog' 시험에서 DZYNE Technologies의 저비용 요격체계 'IonStrike'를 유럽 내 미공개 장소에서 평가. 미육군유럽아프리카사령부 및 나토 동맹지상군사령부 고위 인사들이 참관했으며, 현재 4연발 발사대 구성을 운용 중이고 대규모 공격에 대응하기 위해 12연발 구성으로 확장할 계획. 통합·레이더 큐잉·요격능력을 종합평가하는 후속 '2026년 여름' 평가가 예정되어 있었으나 그 결과는 2026-11-01 기준 확인되지 않음.",
+        "source": "https://www.dvidshub.net/news/566032/52d-ada-bde-assesses-ionstrike-interceptors-support-efdi",
+        "source_name": "army.mil / DVIDS / Defence Blog",
+        "significance": "나토 동부전선 실전환경에서 저비용 요격체계를 평가해 조달 결정으로 이어질 가능성이 있는 단계에 진입한 사례(일일 스캔에서 누락된 2026년 5월 사건을 주간 심층분석에서 보완)"
+      },
+      {
+        "date": "2026-08-18",
+        "system": "음향센서(Fraunhofer IDMT, 'The Hearing Car')",
+        "event_type": "신규 시험",
+        "detail": "독일 프라운호퍼 IDMT 올덴부르크 연구팀이 2026년 8월 'Drone Days 2026'(하텐)에서 시선 확보 없이도 드론 고유 음향 패턴으로 실시간 탐지·위치추정이 가능한 차량 탑재형 시연체계 'The Hearing Car'를 공개. 탐지거리는 주변잡음에 따라 약 50~200m이며, 저전력으로 상시 가동하다 드론 음향을 감지하면 레이더·카메라 등 다른 센서를 깨우는 트리거 역할을 하도록 설계됨. 다수 센서를 분산 배치하면 정밀 위치추정도 가능.",
+        "source": "https://www.idmt.fraunhofer.de/en/Press_and_Media/press_releases/2026/Detecting_drones_early_EN.html",
+        "source_name": "Fraunhofer IDMT",
+        "significance": "저비용·저전력 음향센서를 레이더/EO-IR의 상시가동 보완·트리거로 쓰는 다층 센서융합 개념의 실증 사례(일일 스캔에서 누락된 2026년 8월 사건을 주간 심층분석에서 보완)"
+      },
+      {
+        "date": "2026-10-09",
+        "system": "NiDAR(MARSS/EOS, 쿠웨이트 국가급 대드론망)",
+        "event_type": "체계 구축",
+        "detail": "Janes가 2026-10-09 보도한 바에 따르면 쿠웨이트 정부가 영국 MARSS Systems(호주 EOS 산하)와 약 3.7억 파운드(약 4.9억 달러) 규모의 조건부 계약을 체결, MARSS의 AI 지휘통제 플랫폼 'NiDAR'를 중심으로 전자광학·레이더·소나 등 제3자 센서를 연동하고 하드킬 요격체·소프트킬 재머를 포함하는 국가 단위 대드론망을 구축하기로 함. 2027년까지 단계적으로 통합할 예정이며, NiDAR는 무인수상체계(USV) 대응 기능도 포함. EOS 측은 이를 회사 역대 최대 규모 계약이라고 설명.",
+        "source": "https://www.janes.com/defence-intelligence-insights/defence-news/c4isr/kuwait-signs-conditional-gbp370-million-deal-for-counter-unmanned-network-from-marss",
+        "source_name": "Janes / EDR Magazine / UK Defence Journal",
+        "significance": "서방(영·호주계) AI 지휘통제 기반 국가급 다층 대드론 체계가 중동 역내 실제 조달로 이어진 사례 — 서방 C-UAS 업체의 비유럽권 수출 확대를 보여줌"
       }
     ]
   },
@@ -2772,6 +2808,26 @@
         "summary": "지상 고정형 음향센서 위주였던 기존 음향탐지 방식과 달리, 마이크로폰을 탑재한 방어측 드론 군집이 공항·발전소·국경 등 보호구역 상공을 순찰하며 적응형 음향 탐지 장벽을 형성하는 프레임워크를 제시. 드론 탑재 마이크를 이용해 정적 탐지 범위를 이동 가능한 커버리지 레이어로 전환하는 것이 핵심 아이디어라고 주장.",
         "link": "https://arpi.unipi.it/handle/11568/1362908",
         "significance": "기존 음향탐지 연구 대부분이 지상 고정 센서를 전제한 것과 달리, 탐지 플랫폼 자체를 드론화해 이동형 음향탐지 장벽을 구성한 접근으로 국경·시설 경계 감시에 특화된 신규 음향탐지 방식을 제시"
+      },
+      {
+        "date": "2025-12",
+        "title": "AUDRON: A Deep Learning Framework with Fused Acoustic Signatures for Drone Type Recognition",
+        "authors": "Rajdeep Chatterjee, Sudip Chakrabarty, Trishaani Acharjee, Deepanjali Mishra",
+        "venue": "arXiv / IEEE INDICON 2025",
+        "topic": "음향탐지",
+        "summary": "MFCC 특징과 STFT 스펙트로그램을 융합하고 CNN·순환·오토인코더 구조를 결합한 하이브리드 음향 드론 인식 모델. 쿼드/헥사/옥토콥터·레이싱드론 등 합성음원과 실측 녹음을 함께 사용해 이진분류(드론 vs 비드론) 98.51%, 기종 다중분류 97.11% 정확도를 보고.",
+        "link": "https://arxiv.org/abs/2512.20407",
+        "significance": "단일 특징(MFCC) 기반 음향탐지의 한계를 특징융합+하이브리드 아키텍처로 보완해 기종 분류 정확도를 끌어올린 사례"
+      },
+      {
+        "date": "2026-01",
+        "title": "YOLOBirDrone: Dataset for Bird vs Drone Detection and Classification and a YOLO based enhanced learning architecture",
+        "authors": "Dapinder Kaur, Neeraj Battish, Arnav Bhavsar, Shashi Poddar",
+        "venue": "arXiv (cs.CV)",
+        "topic": "AI Vision",
+        "summary": "YOLOv9 기반에 적응형 확장계층집계(AELAN)와 다중스케일 이중주의(MPDA/RMPDA) 모듈을 추가해 조류-드론 오탐지 문제를 다룸. 자체 구축한 고해상도 영상 데이터셋 'BirDrone'(8,428장)에 기존 드론-조류 챌린지 데이터를 더해 총 11,495장으로 검증, mAP@0.5 0.948을 달성.",
+        "link": "https://arxiv.org/abs/2601.08319",
+        "significance": "소형 드론 탐지의 핵심 오탐 원인인 '조류 vs 드론' 구분 문제를 전용 데이터셋과 어텐션 모듈 결합으로 정면 공략한 연구"
       }
     ]
   }
