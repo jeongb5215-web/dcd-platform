@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-10-31T22:13:59Z",
+    "last_daily_run": "2026-11-01T22:18:20Z",
     "last_weekly_run": "2026-11-01T22:13:43Z",
     "schema_version": 1
   },
@@ -1840,6 +1840,41 @@
           "https://apostrophe.ua/society/rosija-atakuvala-ukrajinu-balistikoju-ta-113-dronami-skilki-tsilej-zbila-ppo.html"
         ],
         "note": "2026-10-29 야간~10-30 07:30 공격 기준(잠정치). 러시아가 이스칸데르-M/S-400/KN-23 탄도미사일, Kh-59/69 유도항공미사일 4발, 드론 113기(샤헤드 계열 중 제트추진형 83기 포함, Gerbera·Parodiya 혼합)로 공격. ПВО가 Kh-59/69 3발 및 드론 96기(제트추진형 71기 포함)를 요격·제압(드론 요격률 약 0.85). 탄도미사일은 발사량·요격여부 불명확해 missiles 집계에서 제외. 피격 17개 지점(키이우·폴타바·드니프로페트롭스크주 중심), 잔해낙하 5개 지점. 복수 매체(Ukrainska Pravda/Apostrophe/Racurs/우아홀로스/인쉐.tv)에서 핵심 수치(113/96/83/71/4/3) 일치 확인. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증으로 확인."
+      },
+      {
+        "date": "2026-10-31",
+        "attacks_total": 134,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4179957-air-defenses-down-105-out-of-134-russian-drones-launched-at-ukraine-overnight.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4179957-air-defenses-down-105-out-of-134-russian-drones-launched-at-ukraine-overnight.html",
+        "by_type": {},
+        "composition": {},
+        "launch_areas": [],
+        "target_areas": [],
+        "intercepted": 105,
+        "intercept_rate": 0.78,
+        "sources": [
+          "https://www.ukrinform.net/rubric-ato/4179957-air-defenses-down-105-out-of-134-russian-drones-launched-at-ukraine-overnight.html",
+          "https://ua.news/en/war-vs-rf/ppo-znishchila-ta-podavila-105-droniv-rf-za-nich-z-nikh-49-reaktivnikh"
+        ],
+        "note": "2026-10-30 야간~10-31 아침 공격 기준(우크라이나 공군 발표). 드론 134기 중 105기 요격·제압(요격률 약 0.78), 이 중 49기가 제트추진형으로 별도 확인(ua.news). 기종별 세부 구분·발사지역·표적지역은 교차검증된 1차 출처에 명확히 특정되지 않아 비움 — 상태: 검증 필요. 별도로 같은 날(10/31) 06:30~19:30 사이 주간에도 2차 공격(드론 168기, 제트추진형 51기 포함, 122기 요격)이 보고됐으나(ua.news, https://ua.news/en/war-vs-rf/rosiia-atakuvala-ukrayinu-168-udarnimi-dronami-ppo-zneshkodila-122) 통상의 '야간~익일 아침' 집계 기준과 달라 본 일일 집계(attacks_total/intercepted)에는 반영하지 않고 참고로만 기록. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증으로 확인."
+      },
+      {
+        "date": "2026-11-01",
+        "attacks_total": 433,
+        "attacks_total_source": "https://www.memesita.com/ukraine-intercepts-371-of-433-russian-drones-launched-overnight/",
+        "intercepted_source": "https://www.memesita.com/ukraine-intercepts-371-of-433-russian-drones-launched-overnight/",
+        "by_type": {},
+        "composition": {},
+        "launch_areas": [],
+        "target_areas": [],
+        "intercepted": 371,
+        "intercept_rate": 0.86,
+        "sources": [
+          "https://www.memesita.com/ukraine-intercepts-371-of-433-russian-drones-launched-overnight/",
+          "https://www.cnbc.com/amp/2026/11/01/russian-strikes-cut-power-to-thousands-in-ukraine.html",
+          "https://lavocedinewyork.com/en/news/2026/11/01/blackouts-hit-four-ukrainian-regions-as-russia-strikes-power-grid/"
+        ],
+        "note": "2026-10-31 저녁~11-01 아침 공격 기준(우크라이나 공군 발표). 드론 433기 중 371기 요격·제압(요격률 약 0.86), 이 중 64기가 제트추진형(샤헤드)으로 별도 확인. 피격 16개 지점, 잔해낙하 14개 지점 보고. 젤렌스키 대통령은 전력설비가 4개 주에서 피격돼 수십만 가구가 정전됐다고 발표(CNBC/라보체디뉴욕 보도), 키이우 등 일부 지역 긴급 절전조치 시행. 기종별 세부 구분·발사지역·표적지역 명칭은 교차검증된 1차 출처(우크라이나 공군/합참)에 명확히 특정되지 않아 비움(일부 매체가 오리올·쿠르스크·샤탈로보 등을 언급했으나 단일 출처로만 확인돼 신뢰도 낮음으로 간주해 미반영) — 상태: 검증 필요. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증으로 확인."
       }
     ],
     "monthly": [
@@ -1856,6 +1891,20 @@
           "missile_days_with_data": 5
         },
         "note": "2026-09-05~09-30 daily 데이터 기준 합산(09-01~09-04 미수집, 이 기간은 합계에서 제외됨). composition은 jet_propelled/missiles 수치가 명확히 보도된 날짜만 합산한 것으로 29일 중 각 5일분 — 전수조사 아님"
+      },
+      {
+        "month": "2026-10",
+        "attacks_total": 5283,
+        "intercepted_total": 4453,
+        "intercept_rate": 0.843,
+        "composition": {
+          "jet_propelled_total": 1657,
+          "jet_days_with_data": 22,
+          "missiles_total": 99,
+          "missiles_intercepted_total": 53,
+          "missile_days_with_data": 5
+        },
+        "note": "2026-10-01~10-31 daily 데이터 기준 합산(31일 전체 수집). composition은 jet_propelled/missiles 수치가 명확히 보도된 날짜만 합산한 것으로 jet_propelled 22일분, missiles 5일분 — 전수조사 아님"
       }
     ]
   },
