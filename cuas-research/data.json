@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-02T22:16:58Z",
+    "last_daily_run": "2026-11-03T22:15:01Z",
     "last_weekly_run": "2026-11-01T22:13:43Z",
     "schema_version": 1
   },
@@ -1897,6 +1897,30 @@
           "https://mezha.net/eng/news/mezha-c89f1a8ac94698ae810ece61/"
         ],
         "note": "2026-11-01 18:00~11-02 08:00 공격 기준(잠정치, 우크라이나 공군 발표). 드론 193기(제트추진형 샤헤드 75기 포함) 공격, 154기 요격·제압(요격률 약 0.80). 피격·잔해낙하 지점 수는 출처 간 상충(Pravda 26개소 보도 vs Mezha.net 35개소 보도) — 검증 필요. 발사지역·표적지역은 교차검증된 1차 출처에 명확히 특정되지 않아 비움. 별도로 같은 날(11-02) 06:30~19:00 주간에도 2차 공격(드론 171기 중 제트추진형 103기 포함, Gerbera 등 포함, S8000 Banderol/Dan-T 순항미사일 10발 포함 — 드론 139기(제트추진형 78기)·미사일 8발 요격·제압, 약 20기 잔존 비행 중으로 보도)이 보고됐으나(Pravda, https://www.pravda.com.ua/eng/news/2026/11/02/8060929/, 초기 집계로 변동 가능), 통상의 '야간~익일 아침' 집계 기준과 달라 본 일일 집계(attacks_total/intercepted)에는 반영하지 않고 참고로만 기록. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증으로 확인."
+      },
+      {
+        "date": "2026-11-03",
+        "attacks_total": 289,
+        "attacks_total_source": "https://en.interfax.com.ua/news/general/1230251.html",
+        "intercepted_source": "https://en.interfax.com.ua/news/general/1230251.html",
+        "by_type": {},
+        "composition": {
+          "missiles": {
+            "count": 59,
+            "intercepted": 49,
+            "types": ["Kh-101", "Kh-59/69", "Iskander-K"],
+            "source": "https://en.interfax.com.ua/news/general/1230251.html"
+          }
+        },
+        "launch_areas": [],
+        "target_areas": [],
+        "intercepted": 257,
+        "intercept_rate": 0.89,
+        "sources": [
+          "https://www.pravda.com.ua/eng/news/2026/11/03/8060979/",
+          "https://en.interfax.com.ua/news/general/1230251.html"
+        ],
+        "note": "2026-11-02 저녁~11-03 09:00 공격 기준(우크라이나 공군 발표). 드론 289기(샤헤드 계열) 중 257기 요격·제압(요격률 약 0.89), 순항미사일(Kh-101/Kh-59/69/Iskander-K) 59발 중 49발 요격(약 0.83), 탄도미사일(Iskander-M/KN-23/Zircon 계열) 3발도 요격·제압된 것으로 보도(발사량 불명확해 missiles 집계에서는 순항미사일만 반영). 드론+순항미사일+탄도미사일 합계 309개 표적 요격·제압, 피격 23개 지점 보도(Pravda/Interfax 교차확인, 제목에서 핵심 수치 일치). 기종별 세부 구분·발사지역·표적지역 명칭은 교차검증된 1차 출처에 명확히 특정되지 않아 비움. 별도로 같은 날(11-03) 주간에도 2차 공격(드론 62기 요격, ua.news 보도)이 있었으나 통상의 '야간~익일 아침' 집계 기준과 달라 본 일일 집계에는 반영하지 않고 참고로만 기록. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(Pravda/Interfax 제목 일치)으로 확인."
       }
     ],
     "monthly": [
