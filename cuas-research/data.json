@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-03T22:15:01Z",
+    "last_daily_run": "2026-11-04T22:16:28Z",
     "last_weekly_run": "2026-11-01T22:13:43Z",
     "schema_version": 1
   },
@@ -1921,6 +1921,28 @@
           "https://en.interfax.com.ua/news/general/1230251.html"
         ],
         "note": "2026-11-02 저녁~11-03 09:00 공격 기준(우크라이나 공군 발표). 드론 289기(샤헤드 계열) 중 257기 요격·제압(요격률 약 0.89), 순항미사일(Kh-101/Kh-59/69/Iskander-K) 59발 중 49발 요격(약 0.83), 탄도미사일(Iskander-M/KN-23/Zircon 계열) 3발도 요격·제압된 것으로 보도(발사량 불명확해 missiles 집계에서는 순항미사일만 반영). 드론+순항미사일+탄도미사일 합계 309개 표적 요격·제압, 피격 23개 지점 보도(Pravda/Interfax 교차확인, 제목에서 핵심 수치 일치). 기종별 세부 구분·발사지역·표적지역 명칭은 교차검증된 1차 출처에 명확히 특정되지 않아 비움. 별도로 같은 날(11-03) 주간에도 2차 공격(드론 62기 요격, ua.news 보도)이 있었으나 통상의 '야간~익일 아침' 집계 기준과 달라 본 일일 집계에는 반영하지 않고 참고로만 기록. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(Pravda/Interfax 제목 일치)으로 확인."
+      },
+      {
+        "date": "2026-11-04",
+        "attacks_total": 310,
+        "attacks_total_source": "https://www.kyivpost.com/post/89068",
+        "intercepted_source": "https://www.kyivpost.com/post/89068",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": {
+            "count": 81,
+            "source": "https://www.kyivpost.com/post/89068"
+          }
+        },
+        "launch_areas": [],
+        "target_areas": [],
+        "intercepted": 272,
+        "intercept_rate": 0.88,
+        "sources": [
+          "https://www.kyivpost.com/post/89068",
+          "https://www.hngn.com/articles/273693/20261104/russia-hits-ukraine-grid-kyiv-says-drones-targeted-nuclear-link.htm"
+        ],
+        "note": "2026-11-03 저녁부터 시작된 공격에 대해 우크라이나 공군이 11-04(수) 오전 8시 기준으로 발표한 잠정치 — 드론 310기(이 중 81기 제트추진형) 중 272기 요격·제압(요격률 약 0.88), 발표 시점 교전 지속 중으로 약 20기가 아직 공중에 있었다고 보도돼 최종 확정치와 다를 수 있음. 에너지 인프라(발전·변전시설) 다수 지역 피격, 흐멜니츠키 원전 관련 변전소 피격 가능성도 제기됨(Zelensky 발언). 기종별(by_type) 완전 구분 수치·발사지역/표적지역 명칭·미사일 수치는 교차검증된 출처에 명확히 특정되지 않아 비움(이번 공격은 드론 위주로 보도). 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(Kyiv Post/HNGN/Xinhua)으로 확인."
       }
     ],
     "monthly": [
