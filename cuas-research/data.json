@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-04T22:16:28Z",
+    "last_daily_run": "2026-11-05T22:13:42Z",
     "last_weekly_run": "2026-11-01T22:13:43Z",
     "schema_version": 1
   },
@@ -1972,7 +1972,7 @@
           "missiles_intercepted_total": 53,
           "missile_days_with_data": 5
         },
-        "note": "2026-10-01~10-31 daily 데이터 기준 합산(31일 전체 수집). composition은 jet_propelled/missiles 수치가 명확히 보도된 날짜만 합산한 것으로 jet_propelled 22일분, missiles 5일분 — 전수조사 아님"
+        "note": "2026-10-01~10-31 daily 데이터 기준 합산(31일 전체 수집). composition은 jet_propelled/missiles 수치가 명확히 보도된 날짜만 합산한 것으로 jet_propelled 22일분, missiles 5일분 — 전수조사 아님 [2026-11-05 추가] 우크라이나군 총참모부가 2026-11-02 발표한 10월 전체 공식 집계(샤헤드-131/136+238 계열 드론에 한정)는 발사 6,473기·격추 4,859기(요격률 약 75%)로, 본 집계(공군 일일 발표 attacks_total 단순합산, 기종 제한 없음) 5,283기/4,453기(0.843)와 수치가 상이함 — 집계 범위·기준(총참모부: 샤헤드 계열 드론 월간 전수집계 vs 본 집계: 공군 일일 발표치 단순합산, 일부 미사일 혼입 가능)이 서로 달라 직접 비교는 어려우나 교차검증용으로 병기, status: 검증 필요에 준함. 출처: https://news.liga.net/en/politics/news/ukraine-downs-two-out-of-three-jet-powered-shaheds-general-staff-says"
       }
     ]
   },
@@ -2661,6 +2661,15 @@
         "source": "https://www.janes.com/defence-intelligence-insights/defence-news/c4isr/kuwait-signs-conditional-gbp370-million-deal-for-counter-unmanned-network-from-marss",
         "source_name": "Janes / EDR Magazine / UK Defence Journal",
         "significance": "서방(영·호주계) AI 지휘통제 기반 국가급 다층 대드론 체계가 중동 역내 실제 조달로 이어진 사례 — 서방 C-UAS 업체의 비유럽권 수출 확대를 보여줌"
+      },
+      {
+        "date": "2026-11-02",
+        "system": "제트추진 계열 요격률 추세",
+        "event_type": "기술 개선",
+        "detail": "우크라이나군 총참모부(제너럴스태프)가 2026-11-02 발표한 10월 월간 집계에 따르면, 러시아가 10월 한 달간 발사한 샤헤드-131/136 및 샤헤드-238(게란-1/2/3/4/5 계열) 드론은 총 6,473기이며 이 중 4,859기(약 75%)를 격추·제압. 제트추진형(샤헤드-238/게란-4,5 계열)에 대한 요격률은 약 66%로, 재래식(피스톤) 샤헤드형 요격률 약 89%보다 뚜렷이 낮았다고 공식 확인.",
+        "source": "https://news.liga.net/en/politics/news/ukraine-downs-two-out-of-three-jet-powered-shaheds-general-staff-says",
+        "source_name": "Liga.net / Ukrinform (우크라이나군 총참모부 발표 인용)",
+        "significance": "10-13 로그에서 공군 대변인 이흐나트가 '일부 날짜 기준 최대 약 85%'까지 상승했다고 밝혔던 제트추진 요격률과 달리, 총참모부의 10월 전체월 공식 평균치는 66%에 불과함을 확인 — 특정일 최고치와 월간 평균치 간 상당한 격차가 존재함을 보여주는 사례(검증 필요에 준함). 재래식 대비 제트추진형 요격 격차(89% vs 66%)가 공식 수치로 처음 정량화됨"
       }
     ]
   },
