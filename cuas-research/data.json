@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-05T22:13:42Z",
+    "last_daily_run": "2026-11-06T22:15:46Z",
     "last_weekly_run": "2026-11-01T22:13:43Z",
     "schema_version": 1
   },
@@ -1943,6 +1943,28 @@
           "https://www.hngn.com/articles/273693/20261104/russia-hits-ukraine-grid-kyiv-says-drones-targeted-nuclear-link.htm"
         ],
         "note": "2026-11-03 저녁부터 시작된 공격에 대해 우크라이나 공군이 11-04(수) 오전 8시 기준으로 발표한 잠정치 — 드론 310기(이 중 81기 제트추진형) 중 272기 요격·제압(요격률 약 0.88), 발표 시점 교전 지속 중으로 약 20기가 아직 공중에 있었다고 보도돼 최종 확정치와 다를 수 있음. 에너지 인프라(발전·변전시설) 다수 지역 피격, 흐멜니츠키 원전 관련 변전소 피격 가능성도 제기됨(Zelensky 발언). 기종별(by_type) 완전 구분 수치·발사지역/표적지역 명칭·미사일 수치는 교차검증된 출처에 명확히 특정되지 않아 비움(이번 공격은 드론 위주로 보도). 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(Kyiv Post/HNGN/Xinhua)으로 확인."
+      },
+      {
+        "date": "2026-11-05",
+        "attacks_total": 128,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4181598-adf-neutralises-105-russian-drones-since-yesterday-evening.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4181598-adf-neutralises-105-russian-drones-since-yesterday-evening.html",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": {
+            "count": 65,
+            "source": "https://www.ukrinform.net/rubric-ato/4181598-adf-neutralises-105-russian-drones-since-yesterday-evening.html"
+          }
+        },
+        "launch_areas": [],
+        "target_areas": [],
+        "intercepted": 105,
+        "intercept_rate": 0.82,
+        "sources": [
+          "https://www.ukrinform.net/rubric-ato/4181598-adf-neutralises-105-russian-drones-since-yesterday-evening.html",
+          "https://mezha.net/eng/news/mezha-51af3628454cff272a4e05a9_air_defense_shot"
+        ],
+        "note": "2026-11-04 18:00~11-05 08:00 공격 기준(우크라이나 공군 발표, 잠정치). 흑해 방면에서 발사된 Kh-35 유도미사일 2발과 공격드론 128기(샤헤드 계열, 이 중 제트추진형 65기·게르베라/패러디야 등 기만체 포함) 공격 중 드론 105기(제트추진형 48기 포함) 요격·제압(요격률 약 0.82). 발표 시점 교전 지속 중으로 일부 드론이 영공에 남아있었다고 보도돼 최종치와 다를 수 있음. 피격 18개 지점, 잔해낙하 9개 지점 보고. Kh-35 미사일 2발의 요격 여부는 출처에 명확히 수치화되지 않아 missiles 집계에는 미반영(생략). 기종별(by_type) 완전 구분·발사지역/표적지역 명칭은 교차검증된 출처에 명확히 특정되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(Ukrinform/Mezha.net)으로 확인."
       }
     ],
     "monthly": [
@@ -2670,6 +2692,15 @@
         "source": "https://news.liga.net/en/politics/news/ukraine-downs-two-out-of-three-jet-powered-shaheds-general-staff-says",
         "source_name": "Liga.net / Ukrinform (우크라이나군 총참모부 발표 인용)",
         "significance": "10-13 로그에서 공군 대변인 이흐나트가 '일부 날짜 기준 최대 약 85%'까지 상승했다고 밝혔던 제트추진 요격률과 달리, 총참모부의 10월 전체월 공식 평균치는 66%에 불과함을 확인 — 특정일 최고치와 월간 평균치 간 상당한 격차가 존재함을 보여주는 사례(검증 필요에 준함). 재래식 대비 제트추진형 요격 격차(89% vs 66%)가 공식 수치로 처음 정량화됨"
+      },
+      {
+        "date": "2026-11-02",
+        "system": "C4I(NASAMS·IRIS-T 통합) / 로봇 건 터렛(Geran-4 요격 확장)",
+        "event_type": "체계 구축",
+        "detail": "국방장관 예우헨 흐마라가 2026-11-02 방공부대 현장방문에서 NASAMS·IRIS-T 등 서방제 지대공미사일(SAM) 체계 운용 경험을 공유받고, 이들을 단일 전술 지휘통제(C2) 네트워크로 통합하는 상호운용성 확보 작업과 구현계획을 논의했다고 발표. 같은 자리에서 국방부는 기존 10-05 로그에서 확인된 AI Vision 기반 자동사격 로봇 건 터렛의 요격 대상이 Geran-5에 이어 Geran-4까지 확장됐다고 공개, 탄종 다변화를 통한 요격률 개선 방안도 검토 중이라고 밝힘.",
+        "source": "https://en.interfax.com.ua/news/general/1229961.html",
+        "source_name": "Interfax-Ukraine (국방장관 예우헨 흐마라 발표 인용) / Unmanned Airspace",
+        "significance": "기존 '델타(Delta) C4I 통합체계'(10-14/10-19 로그)와 별개로, 서방제 SAM 체계(NASAMS/IRIS-T) 자체를 단일 전술 네트워크로 통합하려는 작업이 국방장관 차원에서 공식화된 사례. 로봇 건 터렛의 요격 대상도 Geran-5 단일종에서 Geran-4까지 확장되며 요격체계와 방공망 통합 흐름이 동시에 진행되는 전환점"
       }
     ]
   },
