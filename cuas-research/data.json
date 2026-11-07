@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-06T22:15:46Z",
+    "last_daily_run": "2026-11-07T22:16:53Z",
     "last_weekly_run": "2026-11-01T22:13:43Z",
     "schema_version": 1
   },
@@ -1965,6 +1965,29 @@
           "https://mezha.net/eng/news/mezha-51af3628454cff272a4e05a9_air_defense_shot"
         ],
         "note": "2026-11-04 18:00~11-05 08:00 공격 기준(우크라이나 공군 발표, 잠정치). 흑해 방면에서 발사된 Kh-35 유도미사일 2발과 공격드론 128기(샤헤드 계열, 이 중 제트추진형 65기·게르베라/패러디야 등 기만체 포함) 공격 중 드론 105기(제트추진형 48기 포함) 요격·제압(요격률 약 0.82). 발표 시점 교전 지속 중으로 일부 드론이 영공에 남아있었다고 보도돼 최종치와 다를 수 있음. 피격 18개 지점, 잔해낙하 9개 지점 보고. Kh-35 미사일 2발의 요격 여부는 출처에 명확히 수치화되지 않아 missiles 집계에는 미반영(생략). 기종별(by_type) 완전 구분·발사지역/표적지역 명칭은 교차검증된 출처에 명확히 특정되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(Ukrinform/Mezha.net)으로 확인."
+      },
+      {
+        "date": "2026-11-06",
+        "attacks_total": 227,
+        "attacks_total_source": "https://www.pravda.com.ua/eng/news/2026/11/06/8061507/",
+        "intercepted_source": "https://www.pravda.com.ua/eng/news/2026/11/06/8061507/",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": {
+            "count": 86,
+            "source": "https://www.pravda.com.ua/eng/news/2026/11/06/8061507/"
+          }
+        },
+        "launch_areas": [],
+        "target_areas": [],
+        "intercepted": 196,
+        "intercept_rate": 0.86,
+        "sources": [
+          "https://www.pravda.com.ua/eng/news/2026/11/06/8061507/",
+          "https://unn.ua/en/news/russia-attacked-ukraine-with-227-drones-how-many-did-air-defense-destroy",
+          "https://censor.net/en/news/4032316/shahed-drone-attack-on-november-6-how-did-the-air-defense-perform"
+        ],
+        "note": "2026-11-05 저녁~11-06 08:00 공격 기준(우크라이나 공군 발표, 잠정치). 드론 227기(이 중 제트추진형 86기 포함, 샤헤드·게르베라·파로디야 등) 공격 중 196기 요격·제압(요격률 약 0.86), 이 중 70기가 제트추진형으로 별도 확인. 발표 시점 약 15기가 아직 영공에 남아있었다고 보도돼 최종치와 다를 수 있음. 피격 14개 지점, 잔해낙하 8개 지점 보고. 발사지역·표적지역 명칭은 교차검증된 1차 출처에 명확히 특정되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(Pravda/UNN/Censor.NET)으로 확인."
       }
     ],
     "monthly": [
@@ -2701,6 +2724,24 @@
         "source": "https://en.interfax.com.ua/news/general/1229961.html",
         "source_name": "Interfax-Ukraine (국방장관 예우헨 흐마라 발표 인용) / Unmanned Airspace",
         "significance": "기존 '델타(Delta) C4I 통합체계'(10-14/10-19 로그)와 별개로, 서방제 SAM 체계(NASAMS/IRIS-T) 자체를 단일 전술 네트워크로 통합하려는 작업이 국방장관 차원에서 공식화된 사례. 로봇 건 터렛의 요격 대상도 Geran-5 단일종에서 Geran-4까지 확장되며 요격체계와 방공망 통합 흐름이 동시에 진행되는 전환점"
+      },
+      {
+        "date": "2026-10-28",
+        "system": "민간(사설) 방공 프로그램 확대(각료내각 결의 제1361호)",
+        "event_type": "체계 구축",
+        "detail": "우크라이나 각료내각이 2026-10-28 결의 제1361호로 민간 방공 실험 프로그램(2025-11-19 결의 제1506호 기반)을 확대하는 6개 항목을 승인. ① 참여 기업이 계약을 통해 타 기업의 시설도 보호 가능(공군사령부와 공동결정 시 방공자산 기업 간 이전 허용), ② 요격드론용 탄두·전기식 기폭장치 운용규정 정비, ③ 유인 항공기도 민간 방공 그룹에 포함 가능, ④ 참여 연령 하한을 21세에서 18세로 완화 등. 민간 그룹은 군 지휘통제체계 하에서만 운용되며 독자적 교전결정권은 없음. 2026년 10월 중순 기준 약 100개 기업이 참여, 해당 그룹들이 60기 이상의 공중표적을 격추한 것으로 국방부가 발표.",
+        "source": "https://mod.gov.ua/en/news/ukraine-private-air-defense-six-key-rule-changes",
+        "source_name": "우크라이나 국방부 / Censor.NET / Unmanned Airspace (2026-11-05 전후 서방 매체 보도)",
+        "significance": "기존 개별 사례(민간재단·기업 지원 요격드론 운용) 수준을 넘어, 민간 방공 참여의 법적·제도적 범위(타사 시설 보호, 유인기 포함, 탄두 규정)를 정부 결의로 공식 확대한 첫 사례 — 민간 영역의 대드론 방어 참여가 제도화 단계로 전환됨을 보여줌"
+      },
+      {
+        "date": "2026-11-02",
+        "system": "전자전(EW) '안티메시 돔'(키이우 상공, Flash/Beskrestnov)",
+        "event_type": "체계 구축",
+        "detail": "대통령실 자문관 Serhii 'Flash' Beskrestnov가 2026-11-02 텔레그램·페이스북을 통해 키이우 상공에 전자전(EW) '돔'을 구축하는 특수작업이 완료됐다고 발표. 러시아 조작병이 Shahed/Geran 계열 드론에 장착된 라디오모뎀으로 메시(mesh) 중계망을 통해 원격조종하는 방식(FPV식 수동유도, 기존 geran_drones 로그의 메시모뎀 유도와 동일 계열)을 전담 교란하는 것이 목적. 키이우 시내 수백 개 지점에 안테나·전자전 장비가 설치됐으며 우크라이나 주요 전자전 장비 제조사들이 참여. Beskrestnov는 이 조치로 러시아측이 운용을 일시 중단하고 드론을 개량하거나 대체 수단을 찾도록 압박했다고 주장(독립적 확인은 안 됨).",
+        "source": "https://militarnyi.com/en/news/anti-mesh-dome-kyiv-disrupt-shahed-comms/",
+        "source_name": "Militarnyi / Ukrainska Pravda / Ukrinform (Beskrestnov 발표 인용)",
+        "significance": "기존 RF/레이더·EO-IR 등 하드웨어 탐지·요격 중심 대응과 별개로, 샤헤드/게란 계열의 메시모뎀 기반 수동(FPV)유도 통신망 자체를 표적으로 하는 지역 단위 전자전 '돔' 방어 개념이 수도 키이우 전역 단위로 처음 구축·완료된 사례 — 공격측 유도방식(메시망)과 방어측 대응수단(EW)이 직접 맞물리는 전환점"
       }
     ]
   },
