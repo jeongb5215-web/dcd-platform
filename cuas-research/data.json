@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-07T22:16:53Z",
+    "last_daily_run": "2026-11-08T22:16:13Z",
     "last_weekly_run": "2026-11-08T22:10:03Z",
     "schema_version": 1
   },
@@ -2184,6 +2184,15 @@
         "source": "https://www.armadainternational.com/2026/08/blacktalon-ecosystem-trains-allied-operators-at-natos-batt26-exercise-in-latvia/",
         "source_name": "Armada International / NATO ACT",
         "significance": "기존 로그의 TIE26(5월, C2 소프트웨어 상호운용성 중심 검증)에 이어 나토가 실제 동부전선 인접 지역(발트해 연안)에서 센서-C2-효과기를 하나의 계층형 체계로 통합 운용하는 것을 대규모로 시험한 후속 단계 — 나토의 지역별 다층 방어체계 구축이 실전 배치 전 단계로 진입했음을 보여줌"
+      },
+      {
+        "date": "2026-08-18",
+        "system": "STING(Wild Hornets)",
+        "event_type": "실전 배치",
+        "detail": "우크라이나 국가수비대 제27 'Prince Sviatoslav the Brave' 연대(여단) 예하 무인체계부대 '흐림(Hrim)' 소속 '클레버(Klever)' 승무조가 Wild Hornets제 요격드론 STING으로 러시아 정찰드론(ZALA Z-20으로 추정)을 고도 7,472m에서 요격 — STING 요격 고도 신기록 수립. 직전 기록은 2026년 8월 초 SBU '알파' 특수작전센터의 6,955m, 국경수비대 제105체르니히우국경수비대의 6,858m(모두 러시아 ZALA Z-20급 고고도 정찰드론 대상)였음.",
+        "source": "https://militarnyi.com/en/news/27th-national-guard-regiment-shoots-down-enemy-drone-at-record-altitude-of-over-7-km-using-sting-drone/",
+        "source_name": "Militarnyi (Wild Hornets 제공 정보 인용)",
+        "significance": "제트추진 Geran 대응용으로 주목받던 STING 요격드론이 고고도(7km 이상)에서 운용되는 러시아 정찰드론까지 요격 가능함을 실전에서 입증 — 요격드론의 운용고도 한계가 짧은 기간 내 6,858m→6,955m→7,472m로 연속 경신되며 확장되고 있음을 보여주는 사례"
       },
       {
         "date": "2026-08-21",
