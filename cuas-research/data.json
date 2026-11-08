@@ -1,7 +1,7 @@
 {
   "meta": {
     "last_daily_run": "2026-11-07T22:16:53Z",
-    "last_weekly_run": "2026-11-01T22:13:43Z",
+    "last_weekly_run": "2026-11-08T22:10:03Z",
     "schema_version": 1
   },
   "geran_drones": {
@@ -2742,6 +2742,24 @@
         "source": "https://militarnyi.com/en/news/anti-mesh-dome-kyiv-disrupt-shahed-comms/",
         "source_name": "Militarnyi / Ukrainska Pravda / Ukrinform (Beskrestnov 발표 인용)",
         "significance": "기존 RF/레이더·EO-IR 등 하드웨어 탐지·요격 중심 대응과 별개로, 샤헤드/게란 계열의 메시모뎀 기반 수동(FPV)유도 통신망 자체를 표적으로 하는 지역 단위 전자전 '돔' 방어 개념이 수도 키이우 전역 단위로 처음 구축·완료된 사례 — 공격측 유도방식(메시망)과 방어측 대응수단(EW)이 직접 맞물리는 전환점"
+      },
+      {
+        "date": "2026-10-15",
+        "system": "SAMURAI/UNITAS(Honeywell, 다중업체 센서·효과기 통합 C4I)",
+        "event_type": "체계 구축",
+        "detail": "Honeywell이 AUSA 2026에서 대드론체계 SAMURAI의 통합 소프트웨어 'UNITAS'를 공개. 서로 다른 제조사의 센서·효과기(이펙터)를 단일 업체 패키지 구매 없이 개방형 아키텍처로 통합해, 기존에 운용자가 6~8개 개별 화면을 모니터링해야 했던 문제를 하나의 통합 인터페이스로 해결한다고 설명. 시간 민감한 교전 명령을 우선 처리하도록 일부 백그라운드 처리를 일시 중단하는 지연 저감 기능도 포함. Odys Aviation과 협력해 장거리 무인기 'Laila'에 공중판(airborne variant) 탑재를 추진 중이며 2026년 말 첫 생산분 고객 인도 예정.",
+        "source": "https://www.militarytimes.com/industry/techwatch/2026/10/15/honeywell-aerospaces-counter-drone-software-unites-data-from-multiple-sensors-into-one/",
+        "source_name": "Military Times / Defense News / Military Embedded Systems (AUSA 2026 현장 발언 인용)",
+        "significance": "C4I 통합의 핵심 과제가 하드웨어가 아니라 '이종 센서·이펙터를 묶는 통합 소프트웨어'라는 점을 업계가 명시적으로 지적한 사례로, 단일 업체 패키지 종속을 벗어나려는 개방형 C4I 아키텍처 경쟁이 본격화되고 있음을 보여줌"
+      },
+      {
+        "date": "2026-11-05",
+        "system": "NATO 대드론 마켓플레이스(C-UAS Marketplace)",
+        "event_type": "체계 구축",
+        "detail": "NATO가 2026-11-05 대드론 기술 조달을 가속화하는 'Counter-UAS Marketplace'를 공식 출범. NATO 통신정보국(NCIA, NATO Counter-UAS 센터오브엑설런스 운영)이 Alta Ares·Axon Enterprise·Northrop Grumman·OSL UK·Quantum Systems 5개사의 16개 체계(고정형·이동형·주행중 운용형 혼합)를 사전 선정해 카탈로그화, 회원국이 개별 입찰 없이 바로 주문할 수 있도록 함(이 중 Alta Ares가 16개 로트 중 6개를 수주). 추가 시험 지원을 위해 310만 유로(약 350만 달러) 예산을 별도 배정. 이번 마켓플레이스는 향후 5년간 400억 달러 이상 투자를 계획한 'Drone Edge' 구상의 일환.",
+        "source": "https://www.nato.int/en/news-and-events/articles/news/2026/11/05/nato-accelerates-procurement-for-counter-drone-technologies",
+        "source_name": "NATO 공식 발표 / Shephard Media / AeroTime",
+        "significance": "회원국별 개별 조달 대신 동맹 차원에서 사전 검증된 체계 목록을 통해 조달 속도를 높이는 구조적 전환으로, 기존 로그의 나토 혁신레인지(라트비아 등) 시험 체계와 결합해 '시험→채택→조달'을 제도화한 사례"
       }
     ]
   },
@@ -3026,6 +3044,36 @@
         "summary": "YOLOv9 기반에 적응형 확장계층집계(AELAN)와 다중스케일 이중주의(MPDA/RMPDA) 모듈을 추가해 조류-드론 오탐지 문제를 다룸. 자체 구축한 고해상도 영상 데이터셋 'BirDrone'(8,428장)에 기존 드론-조류 챌린지 데이터를 더해 총 11,495장으로 검증, mAP@0.5 0.948을 달성.",
         "link": "https://arxiv.org/abs/2601.08319",
         "significance": "소형 드론 탐지의 핵심 오탐 원인인 '조류 vs 드론' 구분 문제를 전용 데이터셋과 어텐션 모듈 결합으로 정면 공략한 연구"
+      },
+      {
+        "date": "2025-08",
+        "title": "Reinforcement Learning for Decision-Level Interception Prioritization in Drone Swarm Defense",
+        "authors": "Alessandro Palmas (Artificial Twin)",
+        "venue": "arXiv (cs.LG) — arXiv:2508.00641 (v2 2025-09)",
+        "topic": "자율요격",
+        "summary": "드론 군집(스웜) 공격 상황에서 개별 가미카제형 드론의 위협도를 평가해 요격 우선순위를 매기는 의사결정 지원용 심층강화학습 에이전트를 제시. 고정밀 시뮬레이션에서 다수의 요격 효과기(effector)를 동시에 조율하는 문제로 확장했으며, 전통적 휴리스틱 기반 정책 대비 평균 피해량 감소·방어 효율 향상을 확인. 코드와 시뮬레이션 자산을 공개.",
+        "link": "https://arxiv.org/abs/2508.00641",
+        "significance": "기존 연구자료의 '자율요격' 항목이 주로 1:1 교전(개별 요격드론의 추적·포획) 모델에 집중된 것과 달리, 다수 표적·다수 효과기 환경에서의 '요격 우선순위 결정' 문제를 다룬 의사결정 계층 연구로 범위를 확장"
+      },
+      {
+        "date": "2025-12",
+        "title": "How Far are Modern Trackers from UAV-Anti-UAV? A Million-Scale Benchmark and New Baseline",
+        "authors": "Chunhui Zhang, Li Liu, Zhipeng Zhang, Yong Wang, Hao Wen, Xi Zhou, Shiming Ge, Yanfeng Wang",
+        "venue": "arXiv (cs.CV) — arXiv:2512.07385",
+        "topic": "AI Vision",
+        "summary": "추격 드론(pursuer)이 적대적 드론(target)을 영상으로 추적하는 'UAV-Anti-UAV' 과제를 새로 정의하고, 1,810개 영상에 바운딩박스·언어 프롬프트·15종 속성을 수동 주석한 백만 단위 규모 데이터셋을 공개. 기존 트래커 50종을 평가한 결과 여전히 큰 개선 여지가 있음을 확인했으며, 영상의 인과적 시간흐름에 맞춘 단방향 스캐닝 기반 Mamba-Transformer 베이스라인 'MambaSTS'를 제안.",
+        "link": "https://arxiv.org/abs/2512.07385",
+        "significance": "기존 Anti-UAV 추적 연구가 대부분 지상·고정 카메라 시점이었던 데 비해, 추적 주체 자체가 이동하는 요격드론(추격 드론) 시점을 다루는 최초의 백만 규모 벤치마크로, 요격드론의 영상 기반 자율 추적·추격 연구에 직접 활용 가능"
+      },
+      {
+        "date": "2026-01",
+        "title": "CageDroneRF: A Large-Scale RF Benchmark and Toolkit for Drone Perception",
+        "authors": "Mohammad Rostami, Atik Faysal, Hongtao Xia, Hadi Kasasbeh, Ziang Gao, Huaxia Wang (Rowan University / AeroDefense)",
+        "venue": "arXiv (cs.CV) — arXiv:2601.03302",
+        "topic": "RF/Radar",
+        "summary": "실제 RF 신호 캡처와 체계적으로 생성한 합성 변형 데이터를 결합한 대규모 드론 RF 탐지·식별 벤치마크(CDRF)를 공개. SNR 제어, 간섭 주입, 주파수 이동 등 현실적 왜곡 조건을 반영했으며, 데이터 생성·전처리·증강·평가를 위한 오픈소스 툴킷을 기존 공개 벤치마크에도 적용 가능하도록 함께 배포(GitHub: DroneGoHome/U-RAPTOR-PUB).",
+        "link": "https://arxiv.org/abs/2601.03302",
+        "significance": "기존 연구자료 중 RF/Radar 분야 벤치마크가 1건(5G ISAC 기반)뿐이었던 공백을 메우는 대규모 RF 전용 공개 벤치마크·툴킷으로, 산업계(AeroDefense)와 학계가 공동 참여해 실무 적용성을 높인 점이 특징"
       }
     ]
   }
