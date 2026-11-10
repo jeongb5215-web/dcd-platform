@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-09T22:19:12Z",
+    "last_daily_run": "2026-11-10T22:21:22Z",
     "last_weekly_run": "2026-11-08T22:10:03Z",
     "schema_version": 1
   },
@@ -2027,6 +2027,24 @@
           "https://112.ua/en/rosia-atakuvala-ukrainu-317-dronami-sahed-ppo-znisila-271-udarnij-bpla-196905"
         ],
         "note": "2026-11-08 18:00~11-09 08:00 공격 기준(우크라이나 공군 발표, 잠정치). 드론 317기(샤헤드 계열 및 기만체 포함) 공격 중 271기 요격·제압(요격률 약 0.86). 일부 매체(ua.news)는 276기로 보도해 소폭 차이 있음(발표 시점 차이로 추정) — 최종 확정치와 다를 수 있음. 피격 31개 지점, 잔해낙하 9개 지점 보고. 같은 시기 드니프로페트롭스크주 등에서 대규모 정전(60만 가구 이상, 젤렌스키 발언)이 보고됐으나 이번 야간 공격과의 직접적 연계 여부는 명확히 특정되지 않음. 기종별(by_type) 세부 구분·제트추진형 수치·미사일 집계·발사지역/표적지역 명칭은 교차검증된 1차 출처에 명확히 특정되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(Ukrinform/112.ua/글라브노예)으로 확인."
+      },
+      {
+        "date": "2026-11-10",
+        "attacks_total": 162,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4183161-adf-down-135-of-162-russian-drones-launched-against-ukraine-overnight.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4183161-adf-down-135-of-162-russian-drones-launched-against-ukraine-overnight.html",
+        "by_type": {},
+        "composition": { "jet_propelled": { "count": 96, "source": "https://www.ukrinform.net/rubric-ato/4183161-adf-down-135-of-162-russian-drones-launched-against-ukraine-overnight.html" } },
+        "launch_areas": ["Millerovo"],
+        "target_areas": [],
+        "intercepted": 135,
+        "intercept_rate": 0.83,
+        "sources": [
+          "https://www.ukrinform.net/rubric-ato/4183161-adf-down-135-of-162-russian-drones-launched-against-ukraine-overnight.html",
+          "https://www.pravda.com.ua/eng/news/2026/11/10/8062064/",
+          "https://en.interfax.com.ua/news/general/1233819.html"
+        ],
+        "note": "2026-11-09 18:00~11-10 07:30 공격 기준(우크라이나 공군 발표, 잠정치). 이스칸데르-M 탄도미사일 1발(발사지역: Millerovo)과 샤헤드 계열 공격드론 162기(이 중 제트추진형 96기) 공격 중 드론 135기(제트추진형 70기 포함) 요격·제압(요격률 약 0.83). 이스칸데르-M의 요격 여부는 출처에 명확히 언급되지 않아 missiles 집계에는 미반영(생략). 발표 시점 일부 드론이 아직 영공에 남아있었다고 보도돼 최종치와 다를 수 있음. 피격 19개 지점, 잔해낙하 9개 지점 보고. 같은 날(11-10) 낮 06:30~19:00 사이에도 2차 공격(UAV 124기·제트추진형 73기 포함 및 반데롤/단-T 미사일 14발 요격, Interfax 보도)이 있었으나 통상의 '저녁~익일 아침' 집계 기준과 달라 본 일일 집계에는 반영하지 않고 참고로만 기록. 기종별(by_type) 세부 구분·발사지역(드론)·표적지역 명칭은 교차검증된 1차 출처에 명확히 특정되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(Ukrinform/Pravda/Interfax)으로 확인."
       }
     ],
     "monthly": [
