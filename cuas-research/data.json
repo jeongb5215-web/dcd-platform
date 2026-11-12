@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-11T22:16:18Z",
+    "last_daily_run": "2026-11-12T22:12:20Z",
     "last_weekly_run": "2026-11-08T22:10:03Z",
     "schema_version": 1
   },
@@ -430,6 +430,18 @@
         "confidence": "낮음",
         "status": "검증 필요",
         "note": "09-28 로그('Geran-5 K5' 고속 하위변종, DSMAC급 종말유도 탑재설)와 연속선상의 후속 보도로 추정되나, 본 10/23 보도는 공기역학적 설계 변경(후퇴익/엔진 매립 vs 다이아몬드익/V자미익) 위주로 09-28 로그와는 별개의 구체적 신규 정보 — 두 변종이 동일 계열의 하위분기인지, 명칭(K5 vs K5-K)이 같은 기체를 가리키는지 우크라이나 공식 출처(DIU/공군) 확인 전까지 baseline 미반영. 원문(Militarnyi) 직접 열람은 환경 네트워크 제약으로 실패, WebSearch 스니펫으로만 확인"
+      },
+      {
+        "date": "2026-11-09",
+        "variant": "Geran-5",
+        "field": "baseline_new",
+        "old_value": null,
+        "new_value": "우크라이나 국방정보국(HUR/GUR)이 거의 완전한 형태로 노획한 'Geran-5 K5-K' 변종 1기를 공식 분해·분석(티어다운)해 구체 제원을 발표. 전장 약 4m(기존 baseline 6~6.5m 대비 대폭 축소), 날개폭 약 3m(기존 09-30 로그 HUR 수치 3.2m 대비 소폭 축소)로 동체가 크게 소형화됨. 외국산 전자부품 93종을 식별했으며 이 중 미국산이 52종으로 최다(중국·스위스산 각 10종). 09-28/10-23 로그에서 러시아 군사블로거·모니터링 채널 발언으로만 간접 확인됐던 전자광학 지형대조 유도체계 '수사닌(Susanin)'(Kh-101 순항미사일과 유사한 DSMAC급 방식) 탑재가 이번 HUR 공식 분해조사로 처음 확인됨. 특정 기동 시 최고속도 약 1,000km/h까지 가속 가능하며 평상 순항속도는 450km/h 이상으로 보도. HUR은 이 기종을 설계·제원상 '소형 순항미사일'로 분류. HUR은 전쟁제재(War & Sanctions) 포털에 해당 기체의 인터랙티브 3D 모델 및 부품 상세정보를 공개",
+        "new_source": "https://unn.ua/en/news/the-defence-intelligence-of-ukraine-revealed-the-specifications-of-a-new-modification-of-the-geran-5",
+        "new_source_name": "UNN (우크라이나 국방정보국 HUR 공식 분해분석 인용) / United24 Media / Odessa Journal",
+        "confidence": "중간",
+        "status": "확인됨",
+        "note": "09-28 로그(Geran-5 'K5' 고속 하위변종·Susanin 탑재설, 블로거 발언 기반 낮은 신뢰도)와 10-23 로그(Militarnyi 보도, 'K5-K' 명칭 등장했으나 공식 확인 전)의 후속으로, 이번에는 HUR이 노획 기체를 직접 분해·분석해 Susanin 유도체계 탑재를 최초로 공식 확인하고 구체 치수·부품 원산지를 제시 — 신뢰도를 '중간'으로 상향. 다만 길이·날개폭 수치가 기존 로그(TWZ 잔해분석 6m/5.5m, 10-02 러시아측 발표, 09-30 HUR 수치 6.5m/3.2m)들과 상이한 것은 'K5-K'가 기존 baseline Geran-5와 별개의 소형화된 하위변종이기 때문으로 추정됨 — baseline.Geran-5 자체는 변경하지 않고 로그에만 반영, 추가 교차검증 대기. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(UNN/United24/Odessa Journal 복수 출처 일치)으로 확인"
       }
     ]
   },
