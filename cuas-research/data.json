@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-12T22:12:20Z",
+    "last_daily_run": "2026-11-13T22:19:50Z",
     "last_weekly_run": "2026-11-08T22:10:03Z",
     "schema_version": 1
   },
@@ -2074,6 +2074,44 @@
           "https://en.interfax.com.ua/news/general/1234487.html"
         ],
         "note": "2026-11-10 저녁~11-11 08:00 공격 기준(우크라이나 공군 발표, 잠정치). 흑해 방면에서 발사된 Kh-59/69 유도미사일 1발과 공격드론 163기(샤헤드·게르베라·파로디야 등, 일부 매체는 \"절반 가량 제트추진형\"이라고만 보도해 정확한 정수 미확인) 공격 중 드론 130기 요격·제압(요격률 약 0.80). 별도로 S8000 반데롤(Banderol)/Dan-T 미사일 14발도 전량 요격·제압된 것으로 보도(드론 130기+반데롤 14발=144개 표적 처리로 일부 매체 보도, 예: glavnoe.in.ua/112.ua) — 반데롤은 기존 관례상 드론과 별도 집계이며 발사량(14발)과 요격량(14발)이 동일해 missiles로 채울 수 있으나, 명칭상 미사일이 아닌 S8000 계열 UAV/순항탄 하이브리드로 분류가 불명확해 혼선 방지를 위해 본 집계에는 미반영(생략), note에만 기록. Kh-59/69 미사일 1발의 요격 여부는 출처에 명확히 언급되지 않아 missiles 집계에는 미반영. 발표 시점 이후 집계가 갱신되며 일부 매체(unn.ua)는 135기까지 증가했다고 보도 — 최종 확정치와 다를 수 있음. 피격 17개 지점, 잔해낙하 7개 지점 보고. 기종별(by_type) 세부 구분, 제트추진형 정확한 정수, 발사지역(드론)·표적지역 명칭은 교차검증된 1차 출처에 명확히 특정되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(Ukrinform/Interfax-Ukraine)으로 확인."
+      },
+      {
+        "date": "2026-11-12",
+        "attacks_total": 123,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4183987-adf-down-five-banderol-missiles-89-drones-launched-by-russia-against-ukraine-overnight.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4183987-adf-down-five-banderol-missiles-89-drones-launched-by-russia-against-ukraine-overnight.html",
+        "by_type": {},
+        "composition": {},
+        "launch_areas": ["Bryansk", "Voronezh", "Kursk"],
+        "target_areas": [],
+        "intercepted": 94,
+        "intercept_rate": 0.76,
+        "sources": [
+          "https://www.ukrinform.net/rubric-ato/4183987-adf-down-five-banderol-missiles-89-drones-launched-by-russia-against-ukraine-overnight.html"
+        ],
+        "note": "2026-11-11 18:00~11-12 08:00 공격 기준(우크라이나 공군 발표, 잠정치). 이스칸데르-M·KN-23·S-400 계열 탄도미사일 및 지르콘 대함미사일(발사지역: 브랸스크·보로네시·쿠르스크)과 공격드론 123기(샤헤드·게르베라·파로디야 등, S8000 반데롤/Dan-T 포함) 공격 중 드론 89기 및 반데롤/Dan-T 5기 전량 요격·제압(합계 94기, 요격률 약 0.76). 탄도·순항미사일의 요격 여부는 출처에 명확히 언급되지 않아 missiles 집계에는 미반영. 피격 17개 지점, 잔해낙하 18개 지점 보고. 기종별(by_type) 세부 구분, 제트추진형 수치, 표적지역 명칭은 교차검증된 1차 출처에 명확히 특정되지 않아 비움. 같은 날(11-12) 낮 06:30~19:00 사이 2차 공격(드론 143기·제트추진형 66기 포함 및 S8000 반데롤/Dan-T 미사일 2발, 드론 124기·제트추진형 60기 요격 및 반데롤/Dan-T 2발 전량 요격, Ukrinform 보도)이 있었으나 통상의 '저녁~익일 아침' 집계 기준과 달라 본 일일 집계에는 반영하지 않고 참고로만 기록. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(Ukrinform/Censor.NET/Mezha.net)으로 확인."
+      },
+      {
+        "date": "2026-11-13",
+        "attacks_total": 117,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4184168-air-defense-downs-80-of-117-russian-drones-launched-overnight.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4184168-air-defense-downs-80-of-117-russian-drones-launched-overnight.html",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": {
+            "count": 63,
+            "source": "https://www.ukrinform.net/rubric-ato/4184168-air-defense-downs-80-of-117-russian-drones-launched-overnight.html"
+          }
+        },
+        "launch_areas": [],
+        "target_areas": [],
+        "intercepted": 80,
+        "intercept_rate": 0.68,
+        "sources": [
+          "https://www.ukrinform.net/rubric-ato/4184168-air-defense-downs-80-of-117-russian-drones-launched-overnight.html",
+          "https://en.interfax.com.ua/news/general/1235901.html"
+        ],
+        "note": "2026-11-12 18:00~11-13 07:30 공격 기준(우크라이나 공군 발표, 잠정치, 발표 시점 교전 지속 중). 공격드론 117기(이 중 제트추진형 63기 포함, 샤헤드·게르베라·파로디야 등) 공격 중 80기(이 중 제트추진형 39기 포함) 요격·제압(요격률 약 0.68). 피격 24개 지점, 잔해낙하 10개 지점 보고. Kyiv Post는 이번 공격으로 민간인 최소 5명 사망·20명 이상 부상(어린이 포함)이라고 보도했으며, 같은 매체는 미국측 스타쉴드(Starshield) 서비스 제약이 제트추진형 드론 요격에 영향을 줬다는 단일 출처 주장도 전했으나 독립적 검증은 안 됨(참고로만 기록). 기종별(by_type) 세부 구분, 발사지역·표적지역 명칭은 교차검증된 1차 출처에 명확히 특정되지 않아 비움. 발표 시점 기준 일부 드론이 아직 영공에 남아있어 최종치와 다를 수 있음. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(Ukrinform/Censor.NET/Interfax-Ukraine/UNN/112.ua/ua.news)으로 확인."
       }
     ],
     "monthly": [
