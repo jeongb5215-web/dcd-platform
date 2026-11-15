@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-14T22:15:20Z",
+    "last_daily_run": "2026-11-15T22:15:21Z",
     "last_weekly_run": "2026-11-15T22:11:43Z",
     "schema_version": 1
   },
@@ -2933,6 +2933,15 @@
         "source": "https://www.act.nato.int/article/nato-fuses-emergent-technologies-battlefield-advantage/",
         "source_name": "NATO Allied Command Transformation",
         "significance": "기존 Baltic Trust 26(단일 계층형 체계 통합 시험)에서 한 단계 나아가 다중 공급사 체계를 나토 C2 네트워크에 직접 연동하는 단계로 진전된 것으로, 나토의 지역별 다층방어 구축이 개별 체계 시험을 넘어 동맹 지휘체계 통합 단계로 이동했음을 보여줌."
+      },
+      {
+        "date": "2026-11-13",
+        "system": "음향센서 탐지망 회피 전술(제트엔진 차단 저소음 종말접근)",
+        "event_type": "실전 배치",
+        "detail": "ISW(전쟁연구소)가 2026-11-12 평가에서, 대통령실 자문관 Serhii 'Flash' Beskrestnov의 설명을 인용해 러시아의 제트추진 샤헤드/게란 계열 드론이 표적 타격 직전 제트엔진을 의도적으로 차단(shutdown)하고, 축적된 속도·관성만으로 종말단계를 무음으로 활강 접근하는 전술을 쓰고 있다고 밝힘. Beskrestnov는 별도의 보조 전기모터가 탑재된 것은 아니라고 반박하며, 제트엔진이 제공한 가속력·관성만으로 이 무음 활강 비행이 가능하다고 설명. 드론이 개활지 상공을 매우 낮은 고도로 비행해 레이더 탐지도 함께 회피한다는 점도 지적됨.",
+        "source": "https://gwaramedia.com/en/russian-drones-shut-down-jet-engine-before-hitting-a-target-which-allows-them-to-fly-silently/",
+        "source_name": "Gwara Media / The New Voice of Ukraine / United24 Media / 112.ua (ISW 2026-11-12 평가 및 Beskrestnov 발표 인용)",
+        "significance": "기존 음향센서 기반 탐지망(Zvook/Sky Fortress, Fraunhofer 'The Hearing Car' 등, 2026-08-18 로그)이 전제하는 '엔진 가동음' 신호 자체가 종말단계에서 사라져, 음향탐지에 의존하는 기동 대공포대(레이더·EO-IR 미보유)의 반응시간이 크게 줄어들 수 있음을 보여주는 공격측 전술 전환점 — 음향 기반 탐지체계의 구조적 한계가 실전 사례로 처음 명시적으로 지적됨"
       }
     ]
   },
