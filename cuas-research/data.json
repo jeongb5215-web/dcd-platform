@@ -1,7 +1,7 @@
 {
   "meta": {
     "last_daily_run": "2026-11-14T22:15:20Z",
-    "last_weekly_run": "2026-11-08T22:10:03Z",
+    "last_weekly_run": "2026-11-15T22:11:43Z",
     "schema_version": 1
   },
   "geran_drones": {
@@ -2915,6 +2915,24 @@
         "source": "https://www.nato.int/en/news-and-events/articles/news/2026/11/05/nato-accelerates-procurement-for-counter-drone-technologies",
         "source_name": "NATO 공식 발표 / Shephard Media / AeroTime",
         "significance": "회원국별 개별 조달 대신 동맹 차원에서 사전 검증된 체계 목록을 통해 조달 속도를 높이는 구조적 전환으로, 기존 로그의 나토 혁신레인지(라트비아 등) 시험 체계와 결합해 '시험→채택→조달'을 제도화한 사례"
+      },
+      {
+        "date": "2026-09-29",
+        "system": "C4I(미육군 JIATF-401, Domestic Shield 프로그램)",
+        "event_type": "체계 구축",
+        "detail": "미 육군 합동통합기동부대(JIATF-401)가 2026-09-29 '국내방패(Domestic Shield)' 프로그램 산하 대드론 지휘통제(C2)·센서·무기체계 조달용 IDIQ(인도확정수량미정) 계약 10건을 발표, 합산 상한액 41.5억 달러 규모. Allen Control Systems·DroneShield·Digital Force Technologies·Napatree Technology·RADA Technologies·SRC·L3Harris WESCAM이 각 5억 달러 상한, Echodyne·PVP Advanced EO Systems가 각 2.5억 달러 상한 계약을 수주(계약 체결 시점 확정배정액은 약 5천만 달러 수준). 앞서 체결된 AeroVironment·CACI(각 약 5억 달러) 계약을 포함해 Domestic Shield 프로그램 전체 누적 계약 상한은 약 70억 달러 중 50억 달러 이상이 집행된 것으로 파악됨.",
+        "source": "https://www.govconwire.com/articles/army-jiatf-401-counter-drone-idiq-awards-domestic-shield",
+        "source_name": "GovConWire",
+        "significance": "미 본토 군사시설·핵심기반시설 방어를 위한 대드론 C4I·센서·효과기 조달이 단일 프로그램 하에 70억 달러 규모로 통합되는 추세를 보여주는 사례로, 서방의 C-UAS 조달 가속화를 뒷받침하는 대표적 사례."
+      },
+      {
+        "date": "2026-10-29",
+        "system": "C4I(NATO LCI-X Crucible 4-26 / FUSE, 다층방어 통합시험)",
+        "event_type": "체계 구축",
+        "detail": "나토 동맹군변혁사령부(ACT)가 2026-10-19~30 라트비아 리가에서 'LCI-X Crucible 4-26'을 디지털백본실험(DiBaX26)·차세대표적지정(NGT) 실험과 결합한 'NATO FUSE' 행사로 개최. 2026년 루마니아(4월, Crucible 1-26)·핀란드(6월, Crucible 2-26)·라트비아 Baltic Trust 26(8월, Crucible 3-26, 기존 09-03 로그 참고)으로 이어진 계층형 대드론 이니셔티브(LCI-X) 실험 시리즈의 2026년 마지막(4차) 단계로, ACT는 이를 '2026년 C-UAS 실험의 정점'으로 규정. 30개국·100개 기업·약 500명 인력이 3개 거점에서 참여했으며, 10/29~30 종합시연에는 나토 다국적여단 라트비아 소속 다수 소대와 드론 약 400기가 동원됨. 서로 다른 공급사의 센서·효과기·지휘통제(C2)를 나토 지휘통제체계와 연동하는 데 중점을 뒀으며, 나토의 강화된 경계활동(Enhanced Vigilance Activity) 'Eastern Sentry'와 작전적으로 연계됨. 2027년에도 후속 실험이 예정됨.",
+        "source": "https://www.act.nato.int/article/nato-fuses-emergent-technologies-battlefield-advantage/",
+        "source_name": "NATO Allied Command Transformation",
+        "significance": "기존 Baltic Trust 26(단일 계층형 체계 통합 시험)에서 한 단계 나아가 다중 공급사 체계를 나토 C2 네트워크에 직접 연동하는 단계로 진전된 것으로, 나토의 지역별 다층방어 구축이 개별 체계 시험을 넘어 동맹 지휘체계 통합 단계로 이동했음을 보여줌."
       }
     ]
   },
@@ -3229,6 +3247,26 @@
         "summary": "실제 RF 신호 캡처와 체계적으로 생성한 합성 변형 데이터를 결합한 대규모 드론 RF 탐지·식별 벤치마크(CDRF)를 공개. SNR 제어, 간섭 주입, 주파수 이동 등 현실적 왜곡 조건을 반영했으며, 데이터 생성·전처리·증강·평가를 위한 오픈소스 툴킷을 기존 공개 벤치마크에도 적용 가능하도록 함께 배포(GitHub: DroneGoHome/U-RAPTOR-PUB).",
         "link": "https://arxiv.org/abs/2601.03302",
         "significance": "기존 연구자료 중 RF/Radar 분야 벤치마크가 1건(5G ISAC 기반)뿐이었던 공백을 메우는 대규모 RF 전용 공개 벤치마크·툴킷으로, 산업계(AeroDefense)와 학계가 공동 참여해 실무 적용성을 높인 점이 특징"
+      },
+      {
+        "date": "2026-03",
+        "title": "SDD-YOLO: A Small-Target Detection Framework for Ground-to-Air Anti-UAV Surveillance with Edge-Efficient Deployment",
+        "authors": "Pengyu Chen, Haotian Sa, Yiwei Hu, Yuhan Cheng, Junbo Wang",
+        "venue": "arXiv (cs.CV) — arXiv:2603.25218",
+        "topic": "AI Vision",
+        "summary": "지상에서 공중을 올려다보는(ground-to-air) 시점의 소형 드론 탐지에 특화된 약 3만 장 규모 데이터셋 'DroneSOD-30K'와, YOLO26 기반에 4배 다운샘플링 P2 탐지헤드·NMS-free 설계를 적용한 경량 탐지기 'SDD-YOLO'를 함께 공개. SDD-YOLO-n은 DroneSOD-30K에서 mAP@0.5 86.0%로 YOLOv5n 대비 7.8%p 향상되었으며, RTX 5090에서 226FPS, 인텔 Xeon CPU에서도 35FPS로 엣지 배치 가능성을 입증.",
+        "link": "https://arxiv.org/abs/2603.25218",
+        "significance": "기존 공개 G2A(지상-대공) 데이터셋(Drone-vs-Bird, Anti-UAV410, Det-Fly)보다 규모가 크고, 저사양 CPU에서도 실시간 구동이 가능한 경량 탐지기를 함께 제시해 현장 배치형 지상 대드론 감시체계의 실용성을 높임."
+      },
+      {
+        "date": "2026-10",
+        "title": "Learning Without Bleeding: China's Lessons from the Russia-Ukraine Drone War",
+        "authors": "Lilly Min-Chen Lee, Kateryna Bondar",
+        "venue": "CSIS (Center for Strategic and International Studies)",
+        "topic": "C-UAS 일반",
+        "summary": "90개 이상의 중국어 자료를 분석해, 중국이 러-우 전쟁을 실전 참여 없이 군사적 교훈을 얻는 '실험장'으로 활용하는 방식을 공격·방어·조직·산업·미해결 쟁점 5개 영역으로 정리. 방어(대드론) 영역이 중국의 연구에서 가장 깊이 다뤄진 분야로 지적되며, 러시아가 실전에서 구축한 '전자전 교란 우선-화력요격 차단-자체방어 보완' 3단 대드론 체계를 중국 분석가들이 집중 연구하고 있다고 밝힘. 중국 분석가들은 평균 4개월 내 새 전술을 포착하지만 이를 장비·훈련·편제에 반영하는 데는 1년 이상 소요된다고 분석.",
+        "link": "https://www.csis.org/analysis/learning-without-bleeding-chinas-lessons-russia-ukraine-drone-war",
+        "significance": "서방뿐 아니라 중국도 우크라이나전의 대드론 교훈(특히 러시아의 계층형 방어체계)을 체계적으로 학습해 자국 장비·편제에 반영 중이라는 점을 1차 중국어 자료 기반으로 확인한 드문 분석으로, C-UAS 경쟁 구도를 평가하는 데 참고가치가 높음."
       }
     ]
   }
