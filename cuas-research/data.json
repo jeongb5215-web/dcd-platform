@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-15T22:15:21Z",
+    "last_daily_run": "2026-11-16T22:12:01Z",
     "last_weekly_run": "2026-11-15T22:11:43Z",
     "schema_version": 1
   },
@@ -2134,6 +2134,50 @@
           "https://112.ua/en/rosia-atakuvala-ukrainu-96-bezpilotnikami-ppo-znisila-81-vorozij-dron-u-nic-na-14-listopada-198092"
         ],
         "note": "2026-11-13 18:00~11-14 07:30 공격 기준(우크라이나 공군 발표, 잠정치, 발표 시점 교전 지속 중). 샤헤드 계열 공격드론 96기(이 중 제트추진형 61기 포함, 게르베라·파로디야 등 기만체 포함) 공격 중 81기(이 중 제트추진형 52기 포함) 요격·제압(요격률 약 0.84). 발사지역: 브랸스크·오룔·프리모르스코-아흐타르스크(러시아 본토) 및 점령된 도네츠크·흐바르디이스케(크림). 피격 8개 지점, 잔해낙하 2개 지점 보고. UNN(unn.ua)은 요격된 드론 중 제트추진형 비율을 '85%'로 보도했으나, 이는 Interfax-Ukraine/112.ua/ua.news가 공통으로 보도한 제트추진형 요격 52기(요격 81기 중 약 64%)와 상이함 — 상충으로 보고 복수 출처 일치하는 52기 기준으로 기록, 검증 필요에 준함. 기종별(by_type) 세부 구분, missiles(미사일) 집계는 이번 공격에 명확히 보도되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가(interfax.com.ua, ukrinform.net, ua.news 등 다수 도메인 DNS 차단), WebSearch 스니펫 교차검증(Interfax-Ukraine/112.ua/UNN/mezha.net/ua.news 5개 매체 일치)으로 확인."
+      },
+      {
+        "date": "2026-11-15",
+        "attacks_total": 132,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4184783-air-defense-neutralizes-106-of-132-russian-drones-used-to-attack-ukraine.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4184783-air-defense-neutralizes-106-of-132-russian-drones-used-to-attack-ukraine.html",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": {
+            "count": 78,
+            "source": "https://unn.ua/en/news/russia-attacked-ukraine-with-132-drones-air-defense-destroyed-and-suppressed-106"
+          }
+        },
+        "launch_areas": ["Bryansk", "Oryol", "Kursk", "Millerovo", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": ["Zaporizhzhia", "Sumy", "Odesa", "Zhytomyr", "Kirovohrad", "Donetsk", "Kyiv"],
+        "intercepted": 106,
+        "intercept_rate": 0.8,
+        "sources": [
+          "https://www.ukrinform.net/rubric-ato/4184783-air-defense-neutralizes-106-of-132-russian-drones-used-to-attack-ukraine.html",
+          "https://unn.ua/en/news/russia-attacked-ukraine-with-132-drones-air-defense-destroyed-and-suppressed-106"
+        ],
+        "note": "2026-11-14 18:00~11-15 08:00 공격 기준(우크라이나 공군 발표, 잠정치, 발표 시점 교전 지속 중). 샤헤드 계열 공격드론 132기(이 중 제트추진형 78기 포함, 게르베라·파로디야 등 기만체 포함) 공격 중 106기(이 중 제트추진형 61기 포함) 요격·제압(요격률 약 0.80). 발사지역: 브랸스크·오룔·쿠르스크·밀레로보·프리모르스코-아흐타르스크(러시아 본토) 및 점령된 도네츠크·흐바르디이스케(크림). 피격 20개 지점 보고. target_areas는 대통령실(젤렌스키) 발언을 인용한 ISW(Critical Threats) 2차 보도 기준으로, 자포리자·수미·오데사·지토미르·키로보흐라드·도네츠크·키이우주의 변전소 등 에너지 기반시설이 타격 대상으로 언급됨 — 단일 계열(젤렌스키 발언 인용) 출처라 교차검증 필요에 준함. by_type(기종별 세부 구분)은 교차검증된 1차 출처에 명확히 특정되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(Ukrinform/UNN/112.ua/Mezha.net)으로 확인."
+      },
+      {
+        "date": "2026-11-16",
+        "attacks_total": 158,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4185017-ukraines-adf-down-131-of-158-russian-drones-launched-since-evening.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4185017-ukraines-adf-down-131-of-158-russian-drones-launched-since-evening.html",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": {
+            "count": 77,
+            "source": "https://unn.ua/en/news/the-russian-federation-attacked-ukraine-with-158-drones-71percent-of-those-destroyed-were-jet-powered"
+          }
+        },
+        "launch_areas": ["Oryol", "Kursk", "Millerovo", "Shatalovo", "Primorsko-Akhtarsk", "Chauda/Crimea(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": ["Dnipro", "Odesa", "Cherkasy"],
+        "intercepted": 131,
+        "intercept_rate": 0.83,
+        "sources": [
+          "https://www.ukrinform.net/rubric-ato/4185017-ukraines-adf-down-131-of-158-russian-drones-launched-since-evening.html",
+          "https://en.interfax.com.ua/news/general/1236913.html"
+        ],
+        "note": "2026-11-15 18:00~11-16 08:00 공격 기준(우크라이나 공군 발표, 잠정치, 발표 시점 교전 지속 중). 샤헤드 계열 공격드론 158기(이 중 제트추진형 77기 포함, 게르베라·파로디야 등 기만체 포함) 공격 중 131기(이 중 제트추진형 55기, 약 71% 비율) 요격·제압(요격률 약 0.83). 발사지역: 오룔·쿠르스크·밀레로보·샤탈로보·프리모르스코-아흐타르스크(러시아 본토) 및 점령된 크림 차우다·흐바르디이스케. 피격 19개 지점, 잔해낙하 추가 지점 보고(Interfax-Ukraine). Kyiv Post는 드니프로에서 민간인 1명 사망·10명 이상 부상, 오데사 주거·에너지시설 피해, 체르카시주 정전을 보도(단일 매체 보도, 교차검증 일부 제한). by_type(기종별 세부 구분)은 교차검증된 1차 출처에 명확히 특정되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(Ukrinform/Interfax-Ukraine/UNN/Kyiv Post)으로 확인."
       }
     ],
     "monthly": [
