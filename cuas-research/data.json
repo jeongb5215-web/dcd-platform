@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-16T22:12:01Z",
+    "last_daily_run": "2026-11-17T22:12:20Z",
     "last_weekly_run": "2026-11-15T22:11:43Z",
     "schema_version": 1
   },
@@ -2178,6 +2178,28 @@
           "https://en.interfax.com.ua/news/general/1236913.html"
         ],
         "note": "2026-11-15 18:00~11-16 08:00 공격 기준(우크라이나 공군 발표, 잠정치, 발표 시점 교전 지속 중). 샤헤드 계열 공격드론 158기(이 중 제트추진형 77기 포함, 게르베라·파로디야 등 기만체 포함) 공격 중 131기(이 중 제트추진형 55기, 약 71% 비율) 요격·제압(요격률 약 0.83). 발사지역: 오룔·쿠르스크·밀레로보·샤탈로보·프리모르스코-아흐타르스크(러시아 본토) 및 점령된 크림 차우다·흐바르디이스케. 피격 19개 지점, 잔해낙하 추가 지점 보고(Interfax-Ukraine). Kyiv Post는 드니프로에서 민간인 1명 사망·10명 이상 부상, 오데사 주거·에너지시설 피해, 체르카시주 정전을 보도(단일 매체 보도, 교차검증 일부 제한). by_type(기종별 세부 구분)은 교차검증된 1차 출처에 명확히 특정되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(Ukrinform/Interfax-Ukraine/UNN/Kyiv Post)으로 확인."
+      },
+      {
+        "date": "2026-11-17",
+        "attacks_total": 306,
+        "attacks_total_source": "https://censor.net/en/news/4034141/russia-attacks-ukraine-with-missiles-and-306-drones-air-force",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4185574-ukraines-air-defense-neutralizes-three-russian-missiles-three-banderols-205-drones.html",
+        "by_type": {},
+        "composition": {
+          "jet_propelled": {
+            "count": 92,
+            "source": "https://censor.net/en/news/4034141/russia-attacks-ukraine-with-missiles-and-306-drones-air-force"
+          }
+        },
+        "launch_areas": [],
+        "target_areas": [],
+        "intercepted": 205,
+        "intercept_rate": 0.67,
+        "sources": [
+          "https://censor.net/en/news/4034141/russia-attacks-ukraine-with-missiles-and-306-drones-air-force",
+          "https://www.ukrinform.net/rubric-ato/4185574-ukraines-air-defense-neutralizes-three-russian-missiles-three-banderols-205-drones.html"
+        ],
+        "note": "2026-11-16 18:00~11-17 12:00 공격 기준(우크라이나 공군 발표, 잠정치, 발표 시점 교전 지속 중). 샤헤드 계열 공격드론 306기(이 중 제트추진형 92기 포함) 공격 중 205기(이 중 제트추진형 48기) 요격·제압(요격률 약 0.67, 기존 10월 평균 0.84 대비 낮음 — 공군은 추가 공중공격무기·드론 약 60기 분량 결과를 집계 중이라고 밝혀 최종 요격률은 상향 조정될 가능성 있음). 드론 외에 Kh-59/Kh-69 공대지유도미사일 3기, S8000 Banderol/Dan-T(순항형) 3기도 요격됨(발사량 미확인으로 composition.missiles는 비움). 미사일 발사지역: 이스칸데르-M/이스칸데르-K/칼리브르/지르콘 계열은 브랸스크·보로네지·쿠르스크·로스토프·오룔에서, Kh-59/69는 벨고로드에서 발사(Censor.NET, 공군 발표 인용) — 이는 미사일 발사지역이며 드론 자체의 launch_areas는 이번 보도에서 특정되지 않아 비움. 피격 44개 지점 보고, 구체 지명은 확인된 출처에 명시되지 않아 target_areas 비움. by_type(기종별 세부 구분)도 미확인. 환경 네트워크 제약으로 WebFetch 직접 열람 불가(ukrinform.net, censor.net 등 DNS 차단), WebSearch 스니펫 교차검증(Censor.NET/Ukrinform/Kyiv Post/NV 복수 매체 일치)으로 확인."
       }
     ],
     "monthly": [
