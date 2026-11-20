@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-19T22:15:18Z",
+    "last_daily_run": "2026-11-20T22:12:13Z",
     "last_weekly_run": "2026-11-15T22:11:43Z",
     "schema_version": 1
   },
@@ -2222,6 +2222,23 @@
           "https://en.interfax.com.ua/news/general/1238290.html"
         ],
         "note": "2026-11-17 저녁~11-18 아침 공격 기준(우크라이나 공군 발표, 잠정치). 샤헤드 계열 공격드론 141기(이 중 제트추진형 73기 포함, 게르베라·파로디야 등 기만체 포함) 공격 중 126기(이 중 제트추진형 59기 포함) 요격·제압(요격률 약 0.89). 발사지역: 오룔·밀레로보(러시아 본토) 및 점령된 크림 차우다·흐바르디이스케. 피격 7개 지점 보고. 드니프로주 당국에 따르면 드론 공격으로 6명 부상(15세 소년 포함). 발표 시점 일부 드론이 영공에 남아있어 최종치와 다를 수 있음. by_type(기종별 세부 구분), missiles(미사일) 집계는 이번 보도에 명확히 특정되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가(ukrinform.net/interfax.com.ua/censor.net 등 DNS 차단), WebSearch 스니펫 교차검증(Ukrinform/Interfax-Ukraine/Censor.NET/Ukrainska Pravda/112.ua/Mezha.net 6개 매체 수치 일치)으로 확인."
+      },
+      {
+        "date": "2026-11-20",
+        "attacks_total": 404,
+        "attacks_total_source": "https://kyivindependent.com/russia-launches-mass-missile-attack-against-ukraine-after-putin-vows-revenge/",
+        "intercepted_source": "https://www.yahoo.com/news/world/articles/ukrainian-air-defence-brought-down-090000112.html",
+        "by_type": {},
+        "composition": {},
+        "launch_areas": [],
+        "target_areas": ["Kyiv", "Kharkiv", "Dnipro(교량)", "Mykolaiv", "Drohobych(Lviv주)"],
+        "intercepted": 380,
+        "intercept_rate": 0.94,
+        "sources": [
+          "https://kyivindependent.com/russia-launches-mass-missile-attack-against-ukraine-after-putin-vows-revenge/",
+          "https://www.yahoo.com/news/world/articles/ukrainian-air-defence-brought-down-090000112.html"
+        ],
+        "note": "2026-11-19 야간~11-20 오전 공격 기준(우크라이나 공군 발표, 잠정치). 러시아가 크림대교(케르치해협)에 대한 우크라이나의 연이은 드론 타격에 '보복'을 예고(푸틴)한 직후 전쟁 중 최대 규모 공습 중 하나를 감행. 공군 대변인 이흐나트(Ihnat)는 생방송에서 순항미사일(칼리브르/Kh-101) 최대 80기, 탄도미사일(이스칸데르 계열) 최대 20기, 공격드론 약 400기(이 중 제트추진형 약 120기로 추정 — '약' 수치라 정확한 정수가 아니어서 composition에는 미반영)를 발사했다고 언급. 이후 별도 발표(10:30 현지시각 기준)에서 공군은 요격·제압 462건(탄도/지르콘 미사일 3기, 순항미사일 79기, 드론 380기)을 발표(Kyiv Independent/Yahoo 종합). attacks_total/intercepted는 드론만 집계(기존 관례 유지, 미사일은 별도). 미사일 발사량은 출처 간 상충(순항미사일 80(공군 대변인) vs 84(일부 매체 재집계), 탄도미사일 20(공군 대변인) vs 27(젤렌스키))하여 composition.missiles는 비움, 검증 필요에 준함. 피격 23개 지점·잔해낙하 10개 지점 보고. 키이우 드니프로강 교량 3곳(포딜스코-보스크레센스키·다르니츠키·피브덴니) 피격. 폴란드 동부(Molodycz 인근)에 Kh-101 순항미사일 2기와 '샤헤드'형 드론 1기가 낙하한 것으로 폴란드 국방부 확인, 영공 침해 조사 착수(2025년 이후 반복되는 폴란드 영공 침범 사례). 사망자 수는 매체·시점별로 상이(총리 발표 기준 전국 8명 사망·23~28명 부상; 키이우 시장 측 발표는 3명→6명으로 상향). 하르키우에서 드론이 병원 타격(부상 4명), 므콜라이우·드로호비치(리비우주) 등도 피해 보고. 트럼프-푸틴 회담(중국) 직후 발생해 다수 매체가 보복성 공습으로 해석. launch_areas는 이번 보도에서 드론 자체의 발사지역이 명확히 특정되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가(kyivindependent.com/kyivpost.com/pravda.com.ua/news.liga.net 등 다수 도메인 DNS 차단), WebSearch 스니펫 교차검증(Kyiv Independent/Kyiv Post/CNN/Yahoo/Censor.NET/NV.ua/Ukrinform/Pravda.com.ua/Euromaidan Press 다수 매체 일치)으로 확인."
       }
     ],
     "monthly": [
