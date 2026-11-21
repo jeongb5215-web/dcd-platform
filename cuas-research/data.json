@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-20T22:12:13Z",
+    "last_daily_run": "2026-11-21T22:15:19Z",
     "last_weekly_run": "2026-11-15T22:11:43Z",
     "schema_version": 1
   },
@@ -2239,6 +2239,23 @@
           "https://www.yahoo.com/news/world/articles/ukrainian-air-defence-brought-down-090000112.html"
         ],
         "note": "2026-11-19 야간~11-20 오전 공격 기준(우크라이나 공군 발표, 잠정치). 러시아가 크림대교(케르치해협)에 대한 우크라이나의 연이은 드론 타격에 '보복'을 예고(푸틴)한 직후 전쟁 중 최대 규모 공습 중 하나를 감행. 공군 대변인 이흐나트(Ihnat)는 생방송에서 순항미사일(칼리브르/Kh-101) 최대 80기, 탄도미사일(이스칸데르 계열) 최대 20기, 공격드론 약 400기(이 중 제트추진형 약 120기로 추정 — '약' 수치라 정확한 정수가 아니어서 composition에는 미반영)를 발사했다고 언급. 이후 별도 발표(10:30 현지시각 기준)에서 공군은 요격·제압 462건(탄도/지르콘 미사일 3기, 순항미사일 79기, 드론 380기)을 발표(Kyiv Independent/Yahoo 종합). attacks_total/intercepted는 드론만 집계(기존 관례 유지, 미사일은 별도). 미사일 발사량은 출처 간 상충(순항미사일 80(공군 대변인) vs 84(일부 매체 재집계), 탄도미사일 20(공군 대변인) vs 27(젤렌스키))하여 composition.missiles는 비움, 검증 필요에 준함. 피격 23개 지점·잔해낙하 10개 지점 보고. 키이우 드니프로강 교량 3곳(포딜스코-보스크레센스키·다르니츠키·피브덴니) 피격. 폴란드 동부(Molodycz 인근)에 Kh-101 순항미사일 2기와 '샤헤드'형 드론 1기가 낙하한 것으로 폴란드 국방부 확인, 영공 침해 조사 착수(2025년 이후 반복되는 폴란드 영공 침범 사례). 사망자 수는 매체·시점별로 상이(총리 발표 기준 전국 8명 사망·23~28명 부상; 키이우 시장 측 발표는 3명→6명으로 상향). 하르키우에서 드론이 병원 타격(부상 4명), 므콜라이우·드로호비치(리비우주) 등도 피해 보고. 트럼프-푸틴 회담(중국) 직후 발생해 다수 매체가 보복성 공습으로 해석. launch_areas는 이번 보도에서 드론 자체의 발사지역이 명확히 특정되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가(kyivindependent.com/kyivpost.com/pravda.com.ua/news.liga.net 등 다수 도메인 DNS 차단), WebSearch 스니펫 교차검증(Kyiv Independent/Kyiv Post/CNN/Yahoo/Censor.NET/NV.ua/Ukrinform/Pravda.com.ua/Euromaidan Press 다수 매체 일치)으로 확인."
+      },
+      {
+        "date": "2026-11-21",
+        "attacks_total": 148,
+        "attacks_total_source": "https://www.pravda.com.ua/news/2026/11/21/8063914/",
+        "intercepted_source": "https://interfax.com.ua/news/general/1240177.html",
+        "by_type": {},
+        "composition": { "jet_propelled": { "count": 87, "source": "https://www.pravda.com.ua/news/2026/11/21/8063914/" } },
+        "launch_areas": ["Oryol", "Bryansk", "Primorsko-Akhtarsk", "Millerovo", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": [],
+        "intercepted": 117,
+        "intercept_rate": 0.79,
+        "sources": [
+          "https://www.pravda.com.ua/news/2026/11/21/8063914/",
+          "https://interfax.com.ua/news/general/1240177.html"
+        ],
+        "note": "2026-11-20 야간~11-21 오전 공격 기준(우크라이나 공군 발표, 잠정치). 탄도미사일 3기(이스칸데르-M/KN-23 계열 추정)와 공격드론(샤헤드/게르베라/파로디야 혼합) 148기를 발사, 이 중 87기가 제트추진형으로 명시 보도(jet_propelled에 기록). 드론 148기 중 117기(제트추진형 67기 포함) 요격·제압(요격률 약 0.79, 약 10기는 발표 시점 영공에 잔류). 피격 19개 지점, 잔해 낙하 9개 지점 보고. 탄도미사일 3기의 요격 여부·수치는 보도에 명확히 특정되지 않아 missiles 필드 미기재. 피격 지역명은 원문에 구체 지명 없이 '19개 지점'으로만 보도되어 target_areas 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가(pravda.com.ua/interfax.com.ua/censor.net 등 DNS 차단), WebSearch 스니펫 교차검증(Українська правда/Інтерфакс-Україна/Censor.NET/24tv.ua/NV.ua/Kyiv24 등 다수 매체 수치 일치)으로 확인."
       }
     ],
     "monthly": [
@@ -3047,6 +3064,15 @@
         "source": "https://gwaramedia.com/en/russian-drones-shut-down-jet-engine-before-hitting-a-target-which-allows-them-to-fly-silently/",
         "source_name": "Gwara Media / The New Voice of Ukraine / United24 Media / 112.ua (ISW 2026-11-12 평가 및 Beskrestnov 발표 인용)",
         "significance": "기존 음향센서 기반 탐지망(Zvook/Sky Fortress, Fraunhofer 'The Hearing Car' 등, 2026-08-18 로그)이 전제하는 '엔진 가동음' 신호 자체가 종말단계에서 사라져, 음향탐지에 의존하는 기동 대공포대(레이더·EO-IR 미보유)의 반응시간이 크게 줄어들 수 있음을 보여주는 공격측 전술 전환점 — 음향 기반 탐지체계의 구조적 한계가 실전 사례로 처음 명시적으로 지적됨"
+      },
+      {
+        "date": "2026-11-10",
+        "system": "ZIRKA(Vyriy Industries/NOCTIS)",
+        "event_type": "기술 개선",
+        "detail": "2026년 6월 Vyriy Industries가 안티샤헤드 대대 'Darknode'의 실전 경험을 바탕으로 공개한 저가형 자율추적 요격드론 'ZIRKA'(최고속도 약 340~400km/h, 최대고도 약 6km, 작전반경 약 30km, 체공시간 약 20분, 자동 영상탐지·유도 탑재, 단가 약 2,000~5,000달러 — 출처 간 상충)가 2026년 7월 말 제트추진 게란-4(샤헤드)급을 처음 격추한 데 이어, 2026년 10월 하순 개량형이 제트추진 게란-5(약 400km/h, 고도 약 3,500m)를 요격하는 영상이 공개됨(11/10 NV 보도로 재확인).",
+        "source": "https://english.nv.ua/nation/ukraine-s-zirka-interceptor-downs-jet-powered-geran-5-speed-range-and-cost-50658070.html",
+        "source_name": "The New Voice of Ukraine (NV) / Militarnyi / Babel.ua",
+        "significance": "저가(2,000~5,000달러)·자율유도 요격드론이 제트추진 게란-4에 이어 더 고속인 게란-5까지 격추 범위를 넓힌 사례로, 기존 로그에 없던 신규 요격체계가 처음 기록됨"
       }
     ]
   },
