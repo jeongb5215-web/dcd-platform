@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-21T22:15:19Z",
+    "last_daily_run": "2026-11-22T22:21:30Z",
     "last_weekly_run": "2026-11-22T22:12:09Z",
     "schema_version": 1
   },
@@ -442,6 +442,18 @@
         "confidence": "중간",
         "status": "확인됨",
         "note": "09-28 로그(Geran-5 'K5' 고속 하위변종·Susanin 탑재설, 블로거 발언 기반 낮은 신뢰도)와 10-23 로그(Militarnyi 보도, 'K5-K' 명칭 등장했으나 공식 확인 전)의 후속으로, 이번에는 HUR이 노획 기체를 직접 분해·분석해 Susanin 유도체계 탑재를 최초로 공식 확인하고 구체 치수·부품 원산지를 제시 — 신뢰도를 '중간'으로 상향. 다만 길이·날개폭 수치가 기존 로그(TWZ 잔해분석 6m/5.5m, 10-02 러시아측 발표, 09-30 HUR 수치 6.5m/3.2m)들과 상이한 것은 'K5-K'가 기존 baseline Geran-5와 별개의 소형화된 하위변종이기 때문으로 추정됨 — baseline.Geran-5 자체는 변경하지 않고 로그에만 반영, 추가 교차검증 대기. 환경 네트워크 제약으로 WebFetch 직접 열람 불가, WebSearch 스니펫 교차검증(UNN/United24/Odessa Journal 복수 출처 일치)으로 확인"
+      },
+      {
+        "date": "2026-11-18",
+        "variant": "Geran-6",
+        "field": "baseline_new",
+        "old_value": null,
+        "new_value": "우크라이나 최고 라다(국회) 국가안보국방정보위원회 위원 Fedir Venislavskyi가 RBC-Ukraine 인터뷰(11/18, Censor.NET 등 재인용)에서 러시아가 신형 제트추진 드론 'Geran-6'을 시험 중이라고 밝힘. 우크라이나 정보당국 자료를 인용해 최고속도 약 1,000km/h, '상당한 규모의 탄두'를 탑재할 것으로 예상된다고 언급했으나 구체적 탄두 중량·항속거리·엔진 정보는 밝히지 않음. 핀란드 매체(Verkkouutiset) 등은 이 수치가 독립적으로 확인되지 않았다고 지적",
+        "new_source": "https://censor.net/en/news/4034294/the-rf-is-testing-the-geran-6-jet-powered-drone-which-has-a-speed-of-up-to-1-000-km-h",
+        "new_source_name": "Censor.NET (RBC-Ukraine 인용, 라다 국가안보국방정보위원회 Fedir Venislavskyi 발언)",
+        "confidence": "낮음",
+        "status": "검증 필요",
+        "note": "기존 baseline(Geran-2/3/4/5)에 없던 완전히 새로운 기종명이 처음 보도됨. 단일 국회의원의 '정보당국 입수 정보' 인용 발언으로, DIU/HUR의 공식 분석이나 잔해 노획 등 1차 검증은 아직 없음. 제시된 속도(약 1,000km/h)가 기존 2026-11-09 로그의 Geran-5 'K5-K'(HUR 공식 분해분석으로 확인된 최고속도 약 1,000km/h)와 동일해, Geran-6가 별개의 신형 기종인지 혹은 기존 K5-K 계열에 대한 명칭 혼용·과장 보도인지 불분명 — 교차검증 대기, baseline 미반영"
       }
     ]
   },
@@ -2256,6 +2268,23 @@
           "https://interfax.com.ua/news/general/1240177.html"
         ],
         "note": "2026-11-20 야간~11-21 오전 공격 기준(우크라이나 공군 발표, 잠정치). 탄도미사일 3기(이스칸데르-M/KN-23 계열 추정)와 공격드론(샤헤드/게르베라/파로디야 혼합) 148기를 발사, 이 중 87기가 제트추진형으로 명시 보도(jet_propelled에 기록). 드론 148기 중 117기(제트추진형 67기 포함) 요격·제압(요격률 약 0.79, 약 10기는 발표 시점 영공에 잔류). 피격 19개 지점, 잔해 낙하 9개 지점 보고. 탄도미사일 3기의 요격 여부·수치는 보도에 명확히 특정되지 않아 missiles 필드 미기재. 피격 지역명은 원문에 구체 지명 없이 '19개 지점'으로만 보도되어 target_areas 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가(pravda.com.ua/interfax.com.ua/censor.net 등 DNS 차단), WebSearch 스니펫 교차검증(Українська правда/Інтерфакс-Україна/Censor.NET/24tv.ua/NV.ua/Kyiv24 등 다수 매체 수치 일치)으로 확인."
+      },
+      {
+        "date": "2026-11-22",
+        "attacks_total": 186,
+        "attacks_total_source": "https://www.ukrinform.net/rubric-ato/4187288-air-defenses-down-161-of-186-russian-drones-launched-against-ukraine-since-evening.html",
+        "intercepted_source": "https://www.ukrinform.net/rubric-ato/4187288-air-defenses-down-161-of-186-russian-drones-launched-against-ukraine-since-evening.html",
+        "by_type": {},
+        "composition": { "jet_propelled": { "count": 56, "source": "https://112.ua/en/rosia-atakuvala-ukrainu-186-udarnimi-dronami-ppo-znisila-161-bezpilotnik-vklucno-z-56-reaktivnimi-199791" } },
+        "launch_areas": [],
+        "target_areas": ["Kyiv Oblast(Vyshhorod/Dymer)", "Odesa"],
+        "intercepted": 161,
+        "intercept_rate": 0.87,
+        "sources": [
+          "https://www.ukrinform.net/rubric-ato/4187288-air-defenses-down-161-of-186-russian-drones-launched-against-ukraine-since-evening.html",
+          "https://112.ua/en/rosia-atakuvala-ukrainu-186-udarnimi-dronami-ppo-znisila-161-bezpilotnik-vklucno-z-56-reaktivnimi-199791"
+        ],
+        "note": "2026-11-21 저녁~11-22 오전 공격 기준(우크라이나 공군 발표, Ukrinform 텔레그램 인용 보도, 잠정치). 공격드론 186기(이 중 제트추진형 56기 포함, 112.ua 보도) 중 161기 요격·제압(요격률 약 0.87). 피격 18개 지점, 잔해낙하 6개 지점 보고. 공군은 신형 러시아 미사일 'Filin' 1종도 요격했다고 밝혔으나 발사량 등 구체 수치는 보도되지 않아 composition.missiles는 비움. 키이우주 비셰호로드(Vyshhorod)구 디메르(Dymer) 소재 5층 아파트가 드론 직격으로 붕괴, 사망·실종자 다수 보고(매체별 수치 상이 — 1~3명 사망, 최대 15명 실종, 교차검증 필요에 준함). Euromaidan Press는 같은 날 밤 오데사주 전력망이 손상돼 공급 능력이 저하됐고 제트추진 드론 1기가 몰도바 영공을 두 차례 침범했다고 보도. 러시아 국방부는 자국이 우크라이나 드론 170기를 요격했다고 주장(독립 검증 불가, 별도 집계). launch_areas는 이번 보도에서 특정되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가(ukrinform.net/112.ua/censor.net/pravda.com.ua 등 DNS 차단), WebSearch 스니펫 교차검증(Ukrinform/112.ua/Euromaidan Press/Kyiv Post/The Peninsula Qatar 다수 매체 수치 일치)으로 확인."
       }
     ],
     "monthly": [
