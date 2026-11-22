@@ -1,7 +1,7 @@
 {
   "meta": {
     "last_daily_run": "2026-11-21T22:15:19Z",
-    "last_weekly_run": "2026-11-15T22:11:43Z",
+    "last_weekly_run": "2026-11-22T22:12:09Z",
     "schema_version": 1
   },
   "geran_drones": {
@@ -3073,6 +3073,42 @@
         "source": "https://english.nv.ua/nation/ukraine-s-zirka-interceptor-downs-jet-powered-geran-5-speed-range-and-cost-50658070.html",
         "source_name": "The New Voice of Ukraine (NV) / Militarnyi / Babel.ua",
         "significance": "저가(2,000~5,000달러)·자율유도 요격드론이 제트추진 게란-4에 이어 더 고속인 게란-5까지 격추 범위를 넓힌 사례로, 기존 로그에 없던 신규 요격체계가 처음 기록됨"
+      },
+      {
+        "date": "2026-04-14",
+        "system": "SECTR(Talon Avionics)",
+        "event_type": "신규 시험",
+        "detail": "미국 스타트업 Talon Avionics가 FPV·소형 정찰드론 요격용 자율 요격드론 'SECTR'을 공개. 요격체마다 16채널 마이크배열을 탑재해 자체 기체음·바람소음과 표적 음향을 AI로 분리하는 수동형(무신호 방출) 음향 탐지·추적 방식을 사용하며, 탐지~발사까지 1초 이내, 단발 요격확률 95% 이상, 최고속도 135km/h(최대 5분 비행), 발사관 최대 100개 구성의 거점형 운용을 주장(모두 제조사 발표치, 실전 검증 전). 레이더(200~1,000m)와도 융합 가능.",
+        "source": "https://www.uasvision.com/?p=114895",
+        "source_name": "UAS Vision",
+        "significance": "RF·GPS 신호를 전혀 방출하지 않는 순수 수동형 음향 유도 요격체 컨셉으로, 전자전 교란에 취약한 기존 RF/비전 기반 요격드론과 차별화되는 탐지방식의 실험적 사례(단, 실전 검증 전 제조사 주장치)."
+      },
+      {
+        "date": "2026-06-03",
+        "system": "Sanctum/GRIZZLY/JAGM(Lockheed Martin)",
+        "event_type": "신규 시험",
+        "detail": "Lockheed Martin이 2026-06-03 유마시험장(애리조나)에서 전투관리체계 'Sanctum'과 Fortem Technologies의 R-40 레이더로 Group 3급 자폭형(1회용 공격) 드론을 탐지·추적한 뒤, 컨테이너형 발사대 'GRIZZLY'에서 발사한 JAGM(합동공대지미사일)으로 최초 요격에 성공. 레이더·전투관리체계·발사대·유도탄 통합과 시험을 45일 이내에 완료했다고 발표. Lockheed는 지난 4월 Fortem에 2,500만 달러를 투자해 협력을 강화한 바 있음.",
+        "source": "https://news.lockheedmartin.com/2026-06-03-Lockheed-Martin-Demonstrates-First-Ever-Sanctum-TM-C-UAS-Launch-from-GRIZZLY-TM-Containerized-Launcher",
+        "source_name": "Lockheed Martin",
+        "significance": "레이더-전투관리체계-컨테이너형 발사대-복합유도탄을 하나로 묶은 다층방어 패키지의 실사격 검증으로, 중가(中價) 정밀유도탄을 저비용·신속통합 방식으로 대드론 임무에 전용하는 서방 업계의 체계통합 사례(제조사 발표 기준)."
+      },
+      {
+        "date": "2026-10-08",
+        "system": "C4I(Systematic SitaWare, 덴마크 DALO)",
+        "event_type": "체계 구축",
+        "detail": "덴마크 국방물자청(DALO)이 2026-10-08 소프트웨어기업 Systematic과 대드론 지휘통제(C2) 체계 구축 계약 체결을 발표. Systematic의 SitaWare Suite를 덴마크 Terma 자회사 OSL의 대드론 효과기 체계 등 기존 센서·효과기와 연동해 AI 기반 위협분석을 지원하는 통합 작전상황판을 구축, 덴마크 전역 단위로 배치할 예정. Systematic은 이를 '나토 회원국 최초의 AI 지원형 대드론 C2 계약'으로 설명.",
+        "source": "https://janes.com/defence-intelligence-insights/defence-news/c4isr/denmark-awards-contract-to-systematic-for-c-uav-c2-system",
+        "source_name": "Janes",
+        "significance": "C4I 통합이 센서·효과기 수준을 넘어 국가 단위 AI 지원 지휘통제 소프트웨어로 확산되는 사례로, 덴마크가 서방 국가 중 선행적으로 대드론 C2 소프트웨어를 표준화하는 조달 트렌드를 보여줌."
+      },
+      {
+        "date": "2026-11-17",
+        "system": "델타체계(DELTA) - 독일 연방군 도입 검토",
+        "event_type": "체계 구축",
+        "detail": "독일 국방장관 보리스 피스토리우스가 2026-11-17 브뤼셀에서 열린 제37차 우크라이나 국방컨택트그룹(람슈타인 포맷) 회의에서, 독일 육군이 지난 10월 드론전 훈련 중 우크라이나 DELTA 전장지휘통제체계를 시험 운용했으며 이를 토대로 독일 연방군(Bundeswehr) 자체 전력에 DELTA(또는 그 일부 기능)를 도입·통합하는 방안을 검토 중이라고 발표. 독일은 2026년 4월 체결한 협정에 따라 이미 DELTA의 전투데이터 접근권을 확보한 상태였음.",
+        "source": "https://en.interfax.com.ua/news/general/1238158.html",
+        "source_name": "Interfax-Ukraine",
+        "significance": "DELTA가 우크라이나 자국군 운용체계를 넘어 나토 회원국(독일)의 자체 전력 통합 후보로 검토되는 최초의 공개 사례로, 우크라이나發 C4I 기술의 서방 역수출 가능성을 보여주는 전환점."
       }
     ]
   },
@@ -3407,6 +3443,26 @@
         "summary": "90개 이상의 중국어 자료를 분석해, 중국이 러-우 전쟁을 실전 참여 없이 군사적 교훈을 얻는 '실험장'으로 활용하는 방식을 공격·방어·조직·산업·미해결 쟁점 5개 영역으로 정리. 방어(대드론) 영역이 중국의 연구에서 가장 깊이 다뤄진 분야로 지적되며, 러시아가 실전에서 구축한 '전자전 교란 우선-화력요격 차단-자체방어 보완' 3단 대드론 체계를 중국 분석가들이 집중 연구하고 있다고 밝힘. 중국 분석가들은 평균 4개월 내 새 전술을 포착하지만 이를 장비·훈련·편제에 반영하는 데는 1년 이상 소요된다고 분석.",
         "link": "https://www.csis.org/analysis/learning-without-bleeding-chinas-lessons-russia-ukraine-drone-war",
         "significance": "서방뿐 아니라 중국도 우크라이나전의 대드론 교훈(특히 러시아의 계층형 방어체계)을 체계적으로 학습해 자국 장비·편제에 반영 중이라는 점을 1차 중국어 자료 기반으로 확인한 드문 분석으로, C-UAS 경쟁 구도를 평가하는 데 참고가치가 높음."
+      },
+      {
+        "date": "2025-08",
+        "title": "Shepherd Grid Strategy: Towards Reliable SWARM Interception",
+        "authors": "Kriuk Boris 외 (홍콩과기대 HKUST)",
+        "venue": "arXiv",
+        "topic": "자율요격",
+        "summary": "드론 스웜(군집) 요격을 위한 다단계 협조 프레임워크로, '목동형(shepherd)' 행동 기반 격자 전략을 제안. 저자들은 전통적 요격 방식 대비(약 65%) 95% 이상의 요격 성공률을 시뮬레이션에서 보였다고 주장(언론 인용 수치, 동료검토 전 보고치).",
+        "link": "https://arxiv.org/abs/2508.09536",
+        "significance": "개별 표적 추적·요격이 아니라 군집 전체의 행동을 '몰이(herding)'하듯 제어하는 접근으로, 다수 드론의 동시 공격(스웜 공격)에 대한 요격 전략 연구의 새로운 갈래를 제시."
+      },
+      {
+        "date": "2026-06",
+        "title": "EventRadar: Long-Range Visual UAV Discovery through Spatiotemporal Event Sensing",
+        "authors": "Zhiting Zhou, Xingchen Liu, Xinglin Yu 외",
+        "venue": "arXiv (cs.CV)",
+        "topic": "AI Vision",
+        "summary": "이벤트 카메라(event camera)로 드론 프로펠러의 주기적 미세운동(micro-motion)을 포착해 장거리에서 드론을 탐지하는 시스템. 기존 RGB 비전 기반 탐지보다 더 먼 거리에서 작은 표적을 식별할 수 있다고 주장.",
+        "link": "https://arxiv.org/pdf/2606.11285",
+        "significance": "일반 RGB 카메라의 해상도·프레임레이트 한계를 이벤트 센싱(시공간 이벤트 기반)으로 우회해 장거리 소형 드론 탐지를 시도한 사례로, AI Vision 기반 탐지의 센서 하드웨어 다변화 흐름을 보여줌."
       }
     ]
   }
