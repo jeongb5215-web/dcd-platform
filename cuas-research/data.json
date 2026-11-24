@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-23T22:13:08Z",
+    "last_daily_run": "2026-11-24T22:12:20Z",
     "last_weekly_run": "2026-11-22T22:12:09Z",
     "schema_version": 1
   },
@@ -2302,6 +2302,23 @@
           "https://suspilne.media/1456207-sili-ppo-zneskodili-134-rosijski-droni/"
         ],
         "note": "2026-11-22 저녁~11-23 아침(08:00 기준) 공격 기준(우크라이나 공군 발표, 잠정치, 발표 시점 일부 드론 영공 잔류로 최종치와 다를 수 있음). 샤헤드 계열(이 중 제트추진형 60기)·게르베라·파로디야(기만체) 혼합 공격드론 153기 공격 중 134기(이 중 제트추진형 42기) 요격·제압(요격률 약 0.88). 피격 11개 지점, 잔해낙하 7개 지점 보고. by_type(기종별 세부 구분), missiles(미사일) 집계는 이번 보도에 명확히 특정되지 않아 비움. launch_areas/target_areas는 확인된 출처에 구체 지명이 명시되지 않아 비움. 키이우주 비셰호로드/디메르 아파트 붕괴(2026-11-22 로그 기록) 사망자 수가 일부 출처(단일, 교차검증 미확인)에서 11명으로 상향 보도됐으나 복수 매체 교차검증 전이라 본 로그에는 반영하지 않음. 환경 네트워크 제약으로 WebFetch 직접 열람 불가(lb.ua/suspilne.media/rayon.in.ua/slovoidilo.ua/dsnews.ua 등 DNS 차단), WebSearch 스니펫 교차검증(LB.ua/Суспільне/Rayon.in.ua/Slovo i Dilo/DSnews.ua/Обозреватель/КиївВлада 다수 매체 수치(153/134/60/42/11개 지점) 일치)으로 확인."
+      },
+      {
+        "date": "2026-11-24",
+        "attacks_total": 96,
+        "attacks_total_source": "https://www.pravda.com.ua/news/2026/11/24/8064334/",
+        "intercepted_source": "https://en.interfax.com.ua/news/general/1241278.html",
+        "by_type": {},
+        "composition": { "jet_propelled": { "count": 64, "source": "https://www.dsnews.ua/ukr/politics/v-nich-na-24-listopada-ppo-zneshkodila-73-iz-96-rosiyskih-droniv-z-yakih-45-reaktivni-24112026-472472" } },
+        "launch_areas": ["Oryol", "Bryansk", "Primorsko-Akhtarsk", "Donetsk(점령지)", "Hvardiiske/Crimea(점령지)"],
+        "target_areas": [],
+        "intercepted": 73,
+        "intercept_rate": 0.76,
+        "sources": [
+          "https://www.pravda.com.ua/news/2026/11/24/8064334/",
+          "https://en.interfax.com.ua/news/general/1241278.html"
+        ],
+        "note": "2026-11-23 18시~11-24 오전(08:00 기준) 공격 기준(우크라이나 공군 발표, 잠정치, 발표 시점 일부 드론 영공 잔류로 최종치와 다를 수 있음). 샤헤드·게르베라·파로디야(기만체) 혼합 공격드론 96기(이 중 제트추진형 64기) 공격 중 73기(이 중 제트추진형 45기) 요격·제압(요격률 약 0.76). 피격 13개 지점, 잔해낙하 2개 지점 보고. 발사지역은 오룔·브랸스크·프리모르스코-아흐타르스크(러시아 본토) 및 도네츠크·흐바르디이스케/크림(점령지)에서 확인. by_type(기종별 세부 구분), missiles(미사일) 집계, target_areas(구체 피격 지명)는 이번 보도에 명확히 특정되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가(pravda.com.ua/lb.ua/dsnews.ua/interfax.com.ua 등 DNS 차단), WebSearch 스니펫 교차검증(Українська правда/LB.ua/DSnews.ua/Інтерфакс-Україна/Gazeta.ua/weukraine.tv 다수 매체 수치(96/73/64/45/13개 지점/2개 잔해낙하) 일치)으로 확인."
       }
     ],
     "monthly": [
