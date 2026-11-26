@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-24T22:12:20Z",
+    "last_daily_run": "2026-11-26T22:12:30Z",
     "last_weekly_run": "2026-11-22T22:12:09Z",
     "schema_version": 1
   },
@@ -2319,6 +2319,23 @@
           "https://en.interfax.com.ua/news/general/1241278.html"
         ],
         "note": "2026-11-23 18시~11-24 오전(08:00 기준) 공격 기준(우크라이나 공군 발표, 잠정치, 발표 시점 일부 드론 영공 잔류로 최종치와 다를 수 있음). 샤헤드·게르베라·파로디야(기만체) 혼합 공격드론 96기(이 중 제트추진형 64기) 공격 중 73기(이 중 제트추진형 45기) 요격·제압(요격률 약 0.76). 피격 13개 지점, 잔해낙하 2개 지점 보고. 발사지역은 오룔·브랸스크·프리모르스코-아흐타르스크(러시아 본토) 및 도네츠크·흐바르디이스케/크림(점령지)에서 확인. by_type(기종별 세부 구분), missiles(미사일) 집계, target_areas(구체 피격 지명)는 이번 보도에 명확히 특정되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가(pravda.com.ua/lb.ua/dsnews.ua/interfax.com.ua 등 DNS 차단), WebSearch 스니펫 교차검증(Українська правда/LB.ua/DSnews.ua/Інтерфакс-Україна/Gazeta.ua/weukraine.tv 다수 매체 수치(96/73/64/45/13개 지점/2개 잔해낙하) 일치)으로 확인."
+      },
+      {
+        "date": "2026-11-26",
+        "attacks_total": 113,
+        "attacks_total_source": "https://www.pravda.com.ua/news/2026/11/26/8064725/",
+        "intercepted_source": "https://www.pravda.com.ua/news/2026/11/26/8064725/",
+        "by_type": {},
+        "composition": { "jet_propelled": { "count": 76, "source": "https://lb.ua/society/2026/11/26/783802_unochi_rosiya_atakuvala.html" } },
+        "launch_areas": [],
+        "target_areas": ["Kyiv", "Kharkiv"],
+        "intercepted": 87,
+        "intercept_rate": 0.77,
+        "sources": [
+          "https://www.pravda.com.ua/news/2026/11/26/8064725/",
+          "https://lb.ua/society/2026/11/26/783802_unochi_rosiya_atakuvala.html"
+        ],
+        "note": "2026-11-25 저녁~11-26 아침(08:00 기준) 공격 기준(우크라이나 공군 발표, 잠정치). 러시아는 탄도미사일(발사량·요격량 불명, 발사지역 미확인)과 샤헤드·게르베라 등 혼합 공격드론 113기(이 중 제트추진형 76기, lb.ua 보도)로 공격, 이 중 87기(이 중 제트추진형 52기, pravda.com.ua 보도) 요격·제압(요격률 약 0.77). 피격 20개 지점, 잔해낙하 6개 지점 보고. 수도 키이우는 탄도미사일 공격으로 7명 부상. 하르키우주에서는 드론이 주거용 건물에 직격, 2명 사망·3명 부상(slovoidilo.ua 보도). launch_areas(발사지역)는 이번 보도에서 구체적으로 특정되지 않아 비움 — 교차검증 중 발견된 날짜 불명확 유사 보도(hromadske.ua, 쿠르스크·오룔·미예로보·프리모르스코-아흐타르스크·크림 거론)는 요일(수요일) 불일치로 2025-11-26 보도로 추정되어 이번 항목에 반영하지 않음. missiles(미사일) 집계는 발사량·요격량이 모두 불명확해 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가(pravda.com.ua/lb.ua/suspilne.media/slovoidilo.ua/apostrophe.ua 등 DNS 차단), WebSearch 스니펫 교차검증(Українська правда/LB.ua/Суспільне/Слово і Діло/Апостроф/ДніпроТВ 다수 매체가 113/87/76/52/20개 지점/6개 잔해낙하 수치에 대체로 일치, 일부 매체는 87 대신 86으로 보도 — 근소한 차이로 판단해 반영)으로 확인."
       }
     ],
     "monthly": [
