@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_daily_run": "2026-11-26T22:12:30Z",
+    "last_daily_run": "2026-11-27T22:15:57Z",
     "last_weekly_run": "2026-11-22T22:12:09Z",
     "schema_version": 1
   },
@@ -454,6 +454,30 @@
         "confidence": "낮음",
         "status": "검증 필요",
         "note": "기존 baseline(Geran-2/3/4/5)에 없던 완전히 새로운 기종명이 처음 보도됨. 단일 국회의원의 '정보당국 입수 정보' 인용 발언으로, DIU/HUR의 공식 분석이나 잔해 노획 등 1차 검증은 아직 없음. 제시된 속도(약 1,000km/h)가 기존 2026-11-09 로그의 Geran-5 'K5-K'(HUR 공식 분해분석으로 확인된 최고속도 약 1,000km/h)와 동일해, Geran-6가 별개의 신형 기종인지 혹은 기존 K5-K 계열에 대한 명칭 혼용·과장 보도인지 불분명 — 교차검증 대기, baseline 미반영"
+      },
+      {
+        "date": "2026-11-27",
+        "variant": "Geran-5",
+        "field": "speed_kmh",
+        "old_value": 600,
+        "new_value": "HUR(우크라이나 국방정보국)이 2026-11-09 K5-K 분해분석 발표 시점에 자체 기존 발표치(2026년 1월, 450~600km/h)를 400~450km/h로 하향 수정한 것으로 FDD's Long War Journal이 보도",
+        "new_source": "https://www.fdd.org/?p=312690",
+        "new_source_name": "FDD's Long War Journal (John Hardie, 2026-11-11, HUR 발표 인용)",
+        "confidence": "중간",
+        "status": "검증 필요",
+        "note": "기존 baseline.Geran-5.speed_kmh(600, Militarnyi/Defense Express 2026-05-09 보도)와 별도로, 이번 수치 원출처인 HUR 자신이 2026-01 발표치(450~600km/h)를 2026-11-09 K5-K 공식 분해분석 발표 시점에 400~450km/h로 하향 수정한 사실이 FDD 보도로 확인됨 — 표준형 Geran-5의 순항속도 추정치가 출처(HUR) 내부에서도 시간에 따라 하향 조정되고 있음을 보여줌. baseline은 기존 Militarnyi 수치(600)를 그대로 유지하고 로그에만 반영, 추가 교차검증 대기. 환경 네트워크 제약으로 WebFetch 직접 열람 불가(fdd.org DNS 차단), WebSearch 스니펫 교차검증으로 확인."
+      },
+      {
+        "date": "2026-11-27",
+        "variant": "Geran-6",
+        "field": "baseline_new",
+        "old_value": "2026-11-18 로그: 라다 국가안보국방정보위원회 Fedir Venislavskyi 의원 발언(RBC-Ukraine/Censor.NET 인용) — 최고속도 약 1,000km/h, '상당한 규모의 탄두'(구체 중량 미공개) 외 제원 미확인",
+        "new_value": "ISW(전쟁연구소)가 2026-11-18 평가(Russian Offensive Campaign Assessment)에서 우크라이나 오픈소스 정보(OSINT) 소식통을 인용해 Geran-6 관련 추가 세부사항을 보도. 해당 소식통에 따르면 Geran-6는 기존 게란 계열의 활공형 궤적이 아닌 탄도형 비행궤적(ballistic trajectory)으로 비행할 수 있으며, 탄두는 약 300kg 또는 약 600kg 중 하나를 탑재하는 두 가지 변종으로 구성될 것으로 추정됨. 같은 소식통은 러시아가 Geran-6의 전면 생산(full-scale production)을 2028년 중반으로 계획 중이며, 최초 실전 배치는 빠르면 2027년 6월경 가능할 것으로 전망. ISW는 이 수치들이 단일 우크라이나 OSINT 소식통에 근거한 것으로 독립적으로 확인되지 않았다고 명시",
+        "new_source": "https://www.criticalthreats.org/analysis/russian-offensive-campaign-assessment-november-18-2026",
+        "new_source_name": "ISW / Critical Threats Project, Russian Offensive Campaign Assessment (2026-11-18)",
+        "confidence": "낮음",
+        "status": "검증 필요",
+        "note": "2026-11-18 로그(Censor.NET, Venislavskyi 의원 발언 인용 — 속도와 모호한 탄두 묘사만 확인됐던 상태)와 같은 날짜의 ISW 평가가 우크라이나 OSINT 소식통을 인용해 탄두 중량(300kg/600kg 두 변종), 탄도형 비행궤적, 생산·배치 일정(2028년 중반 양산 개시, 2027년 6월 최초 배치 가능성)이라는 훨씬 구체적인 수치를 제시 — 기존 로그와 동일 발언을 보도한 것인지 별도 소식통인지는 불분명하나, 제시된 세부 정보 수준이 기존 로그를 크게 넘어서 추가 기록함. ISW 자체도 단일 OSINT 소식통 기반으로 독립 검증 전이라고 명시하며, 러시아 측 공식 확인이나 잔해 노획 등 1차 검증은 아직 없음 — baseline 미반영. 환경 네트워크 제약으로 WebFetch 직접 열람 불가(criticalthreats.org DNS 차단), WebSearch 스니펫 교차검증(United24 Media 등 재인용 매체 포함)으로 확인."
       }
     ]
   },
@@ -2336,6 +2360,23 @@
           "https://lb.ua/society/2026/11/26/783802_unochi_rosiya_atakuvala.html"
         ],
         "note": "2026-11-25 저녁~11-26 아침(08:00 기준) 공격 기준(우크라이나 공군 발표, 잠정치). 러시아는 탄도미사일(발사량·요격량 불명, 발사지역 미확인)과 샤헤드·게르베라 등 혼합 공격드론 113기(이 중 제트추진형 76기, lb.ua 보도)로 공격, 이 중 87기(이 중 제트추진형 52기, pravda.com.ua 보도) 요격·제압(요격률 약 0.77). 피격 20개 지점, 잔해낙하 6개 지점 보고. 수도 키이우는 탄도미사일 공격으로 7명 부상. 하르키우주에서는 드론이 주거용 건물에 직격, 2명 사망·3명 부상(slovoidilo.ua 보도). launch_areas(발사지역)는 이번 보도에서 구체적으로 특정되지 않아 비움 — 교차검증 중 발견된 날짜 불명확 유사 보도(hromadske.ua, 쿠르스크·오룔·미예로보·프리모르스코-아흐타르스크·크림 거론)는 요일(수요일) 불일치로 2025-11-26 보도로 추정되어 이번 항목에 반영하지 않음. missiles(미사일) 집계는 발사량·요격량이 모두 불명확해 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가(pravda.com.ua/lb.ua/suspilne.media/slovoidilo.ua/apostrophe.ua 등 DNS 차단), WebSearch 스니펫 교차검증(Українська правда/LB.ua/Суспільне/Слово і Діло/Апостроф/ДніпроТВ 다수 매체가 113/87/76/52/20개 지점/6개 잔해낙하 수치에 대체로 일치, 일부 매체는 87 대신 86으로 보도 — 근소한 차이로 판단해 반영)으로 확인."
+      },
+      {
+        "date": "2026-11-27",
+        "attacks_total": 155,
+        "attacks_total_source": "https://www.kyivpost.com/post/91387",
+        "intercepted_source": "https://www.kyivpost.com/post/91387",
+        "by_type": {},
+        "composition": {},
+        "launch_areas": [],
+        "target_areas": ["Chernihiv Oblast(Nizhyn)", "Kharkiv Oblast"],
+        "intercepted": 110,
+        "intercept_rate": 0.71,
+        "sources": [
+          "https://www.kyivpost.com/post/91387",
+          "https://babel.ua/en/amp/news/132076-russians-attacked-ukraine-with-155-drones-overnight-over-5-people-injured-in-the-kharkiv-region"
+        ],
+        "note": "2026-11-26 저녁~11-27 아침(08:00 기준) 공격 기준(우크라이나 공군 발표, 잠정치). 러시아가 샤헤드 계열 등 공격드론 155기로 공격, 이 중 110기 요격·제압(요격률 약 0.71). 피격 27개 지점, 잔해낙하 4개 지점 보고. 제트추진형 드론 수치는 매체 간 상충(일부 보도 83기 vs 일부 보도 51기 — 51기는 요격량 수치와 혼용된 것으로 추정)되어 composition.jet_propelled는 비움. 체르니히우주 니진(Nizhyn)에서 기업시설이 피격돼 사망·부상자 발생(매체별 2~3명 사망·4~5명 부상으로 수치 상이), 하르키우주에서도 5명 이상 부상 보도. 우크라이나 에너지부는 남부·동부 6개 주에서 정전이 발생했다고 발표. 이번 공습 여파로 에스토니아·라트비아가 발트 항공경계임무(Baltic Air Policing) NATO 전투기를 긴급 발진시키고 영공위협경보를 발령(에스토니아 공영방송 ERR 인용). launch_areas는 이번 보도에서 특정되지 않아 비움. 환경 네트워크 제약으로 WebFetch 직접 열람 불가(kyivpost.com/babel.ua/unn.ua/en.h.ua/hromadske.ua 등 DNS 차단), WebSearch 스니펫 교차검증(Kyiv Post/Babel.ua/UNN/h.ua/Hromadske 다수 매체 수치(155/110/27개 지점/4개 잔해낙하지점) 일치)으로 확인."
       }
     ],
     "monthly": [
